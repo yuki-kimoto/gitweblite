@@ -12,7 +12,8 @@ our $version = '0.01';
 my $conf = plugin 'Config';
 
 # Config
-our $projectroot = $conf->{projectroot} // '/git/pub';
+our $projectroots = $conf->{projectroots};
+our $projectroot = $conf->{projectroots}->[0];
 our $projects_list = $conf->{projects_list} //= $projectroot;
 our $export_ok = $conf->{export_ok} // '';
 our $export_auth_hook = $conf->{export_ok} // undef;
@@ -116,6 +117,27 @@ our %feature = (
 
 get '/' => sub {
   my $self = shift;
+  
+  my $projectroots = $self->app->config('projectroots');
+  my $projectroot_descriptions
+    = $self->app->config('projectroot_descriptions');
+  
+  warn $self->dumper($self->app->config);
+  
+  $self->render(
+    projectroots => $projectroots,
+    projectroot_descriptions => $projectroot_descriptions
+  );
+} => 'projectroots';
+
+get '/projects' => sub {
+  my $self = shift;
+  
+  my $root = $self->param('root');
+  
+  my $projectroots = app->config->{projectroots};
+  
+  die "Error" unless grep { $_ eq $root } @$projectroots;
   
   my @projects = git_get_projects_list();
   @projects = fill_project_list_info(\@projects);
@@ -1268,535 +1290,11 @@ sub configure_gitweb_features {
   }
 }
 
-# custom error handler: 'die <message>' is Internal Server Error
-sub handle_errors_html {
-  my $msg = shift; # it is already HTML escaped
-
-  # to avoid infinite loop where error occurs in die_error,
-  # change handler to default handler, disabling handle_errors_html
-  set_message("Error occured when inside die_error:\n$msg");
-
-  # you cannot jump out of die_error when called as error handler;
-  # the subroutine set via CGI::Carp::set_message is called _after_
-  # HTTP headers are already written, so it cannot write them itself
-  die_error(undef, undef, $msg, -error_handler => 1, -no_http_header => 1);
-}
-# set_message(\&handle_errors_html);
-
-# dispatch
-sub dispatch {
-  if (!defined $action) {
-    if (defined $hash) {
-      $action = git_get_type($hash);
-    } elsif (defined $hash_base && defined $file_name) {
-      $action = git_get_type("$hash_base:$file_name");
-    } elsif (defined $project) {
-      $action = 'summary';
-    } else {
-      $action = 'project_list';
-    }
-  }
-  if (!defined($actions{$action})) {
-    die_error(400, "Unknown action");
-  }
-  if ($action !~ m/^(?:opml|project_list|project_index)$/ &&
-      !$project) {
-    die_error(400, "Project needed");
-  }
-  $actions{$action}->();
-}
-
 sub reset_timer {
   our $t0 = [ gettimeofday() ]
     if defined $t0;
   our $number_of_git_cmds = 0;
 }
-
-our $first_request = 1;
-sub run_request {
-  reset_timer();
-
-  evaluate_uri();
-  if ($first_request) {
-    evaluate_gitweb_config();
-    evaluate_git_version();
-  }
-  if ($per_request_config) {
-    if (ref($per_request_config) eq 'CODE') {
-      $per_request_config->();
-    } elsif (!$first_request) {
-      evaluate_gitweb_config();
-    }
-  }
-  check_loadavg();
-
-  # $projectroot and $projects_list might be set in gitweb config file
-  $projects_list ||= $projectroot;
-
-  evaluate_query_params();
-  evaluate_path_info();
-  evaluate_and_validate_params();
-  evaluate_git_dir();
-
-  configure_gitweb_features();
-
-  dispatch();
-}
-
-our $is_last_request = sub { 1 };
-our ($pre_dispatch_hook, $post_dispatch_hook, $pre_listen_hook);
-our $CGI = 'CGI';
-our $cgi;
-sub configure_as_fcgi {
-  require CGI::Fast;
-  our $CGI = 'CGI::Fast';
-
-  my $request_number = 0;
-  # let each child service 100 requests
-  our $is_last_request = sub { ++$request_number > 100 };
-}
-sub evaluate_argv {
-  my $script_name = $ENV{'SCRIPT_NAME'} || $ENV{'SCRIPT_FILENAME'} || __FILE__;
-  configure_as_fcgi()
-    if $script_name =~ /\.fcgi$/;
-
-  return unless (@ARGV);
-
-  require Getopt::Long;
-  Getopt::Long::GetOptions(
-    'fastcgi|fcgi|f' => \&configure_as_fcgi,
-    'nproc|n=i' => sub {
-      my ($arg, $val) = @_;
-      return unless eval { require FCGI::ProcManager; 1; };
-      my $proc_manager = FCGI::ProcManager->new({
-        n_processes => $val,
-      });
-      our $pre_listen_hook    = sub { $proc_manager->pm_manage()        };
-      our $pre_dispatch_hook  = sub { $proc_manager->pm_pre_dispatch()  };
-      our $post_dispatch_hook = sub { $proc_manager->pm_post_dispatch() };
-    },
-  );
-}
-
-sub run {
-  evaluate_argv();
-
-  $first_request = 1;
-  $pre_listen_hook->()
-    if $pre_listen_hook;
-
- REQUEST:
-  while ($cgi = $CGI->new()) {
-    $pre_dispatch_hook->()
-      if $pre_dispatch_hook;
-
-    run_request();
-
-    $post_dispatch_hook->()
-      if $post_dispatch_hook;
-    $first_request = 0;
-
-    last REQUEST if ($is_last_request->());
-  }
-
- DONE_GITWEB:
-  1;
-}
-
-# run();
-
-if (defined caller) {
-  # wrapped in a subroutine processing requests,
-  # e.g. mod_perl with ModPerl::Registry, or PSGI with Plack::App::WrapCGI
-  return;
-} else {
-  # pure CGI script, serving single request
-  exit;
-}
-
-## ======================================================================
-## action links
-
-# possible values of extra options
-# -full => 0|1      - use absolute/full URL ($my_uri/$my_url as base)
-# -replay => 1      - start from a current view (replay with modifications)
-# -path_info => 0|1 - don't use/use path_info URL (if possible)
-# -anchor => ANCHOR - add #ANCHOR to end of URL, implies -replay if used alone
-sub href {
-  my %params = @_;
-  # default is to use -absolute url() i.e. $my_uri
-  my $href = $params{-full} ? $my_url : $my_uri;
-
-  # implicit -replay, must be first of implicit params
-  $params{-replay} = 1 if (keys %params == 1 && $params{-anchor});
-
-  $params{'project'} = $project unless exists $params{'project'};
-
-  if ($params{-replay}) {
-    while (my ($name, $symbol) = each %cgi_param_mapping) {
-      if (!exists $params{$name}) {
-        $params{$name} = $input_params{$name};
-      }
-    }
-  }
-
-  my $use_pathinfo = gitweb_check_feature('pathinfo');
-  if (defined $params{'project'} &&
-      (exists $params{-path_info} ? $params{-path_info} : $use_pathinfo)) {
-    # try to put as many parameters as possible in PATH_INFO:
-    #   - project name
-    #   - action
-    #   - hash_parent or hash_parent_base:/file_parent
-    #   - hash or hash_base:/filename
-    #   - the snapshot_format as an appropriate suffix
-
-    # When the script is the root DirectoryIndex for the domain,
-    # $href here would be something like http://gitweb.example.com/
-    # Thus, we strip any trailing / from $href, to spare us double
-    # slashes in the final URL
-    $href =~ s,/$,,;
-
-    # Then add the project name, if present
-    $href .= "/".esc_path_info($params{'project'});
-    delete $params{'project'};
-
-    # since we destructively absorb parameters, we keep this
-    # boolean that remembers if we're handling a snapshot
-    my $is_snapshot = $params{'action'} eq 'snapshot';
-
-    # Summary just uses the project path URL, any other action is
-    # added to the URL
-    if (defined $params{'action'}) {
-      $href .= "/".esc_path_info($params{'action'})
-        unless $params{'action'} eq 'summary';
-      delete $params{'action'};
-    }
-
-    # Next, we put hash_parent_base:/file_parent..hash_base:/file_name,
-    # stripping nonexistent or useless pieces
-    $href .= "/" if ($params{'hash_base'} || $params{'hash_parent_base'}
-      || $params{'hash_parent'} || $params{'hash'});
-    if (defined $params{'hash_base'}) {
-      if (defined $params{'hash_parent_base'}) {
-        $href .= esc_path_info($params{'hash_parent_base'});
-        # skip the file_parent if it's the same as the file_name
-        if (defined $params{'file_parent'}) {
-          if (defined $params{'file_name'} && $params{'file_parent'} eq $params{'file_name'}) {
-            delete $params{'file_parent'};
-          } elsif ($params{'file_parent'} !~ /\.\./) {
-            $href .= ":/".esc_path_info($params{'file_parent'});
-            delete $params{'file_parent'};
-          }
-        }
-        $href .= "..";
-        delete $params{'hash_parent'};
-        delete $params{'hash_parent_base'};
-      } elsif (defined $params{'hash_parent'}) {
-        $href .= esc_path_info($params{'hash_parent'}). "..";
-        delete $params{'hash_parent'};
-      }
-
-      $href .= esc_path_info($params{'hash_base'});
-      if (defined $params{'file_name'} && $params{'file_name'} !~ /\.\./) {
-        $href .= ":/".esc_path_info($params{'file_name'});
-        delete $params{'file_name'};
-      }
-      delete $params{'hash'};
-      delete $params{'hash_base'};
-    } elsif (defined $params{'hash'}) {
-      $href .= esc_path_info($params{'hash'});
-      delete $params{'hash'};
-    }
-
-    # If the action was a snapshot, we can absorb the
-    # snapshot_format parameter too
-    if ($is_snapshot) {
-      my $fmt = $params{'snapshot_format'};
-      # snapshot_format should always be defined when href()
-      # is called, but just in case some code forgets, we
-      # fall back to the default
-      $fmt ||= $snapshot_fmts[0];
-      $href .= $known_snapshot_formats{$fmt}{'suffix'};
-      delete $params{'snapshot_format'};
-    }
-  }
-
-  # now encode the parameters explicitly
-  my @result = ();
-  for (my $i = 0; $i < @cgi_param_mapping; $i += 2) {
-    my ($name, $symbol) = ($cgi_param_mapping[$i], $cgi_param_mapping[$i+1]);
-    if (defined $params{$name}) {
-      if (ref($params{$name}) eq "ARRAY") {
-        foreach my $par (@{$params{$name}}) {
-          push @result, $symbol . "=" . esc_param($par);
-        }
-      } else {
-        push @result, $symbol . "=" . esc_param($params{$name});
-      }
-    }
-  }
-  $href .= "?" . join(';', @result) if scalar @result;
-
-  # final transformation: trailing spaces must be escaped (URI-encoded)
-  $href =~ s/(\s+)$/CGI::escape($1)/e;
-
-  if ($params{-anchor}) {
-    $href .= "#".esc_param($params{-anchor});
-  }
-
-  return $href;
-}
-
-
-## ======================================================================
-## validation, quoting/unquoting and escaping
-
-sub validate_action {
-  my $input = shift || return undef;
-  return undef unless exists $actions{$input};
-  return $input;
-}
-
-sub validate_project {
-  my $input = shift || return undef;
-  if (!validate_pathname($input) ||
-    !(-d "$projectroot/$input") ||
-    !check_export_ok("$projectroot/$input") ||
-    ($strict_export && !project_in_list($input))) {
-    return undef;
-  } else {
-    return $input;
-  }
-}
-
-sub validate_pathname {
-  my $input = shift || return undef;
-
-  # no '.' or '..' as elements of path, i.e. no '.' nor '..'
-  # at the beginning, at the end, and between slashes.
-  # also this catches doubled slashes
-  if ($input =~ m!(^|/)(|\.|\.\.)(/|$)!) {
-    return undef;
-  }
-  # no null characters
-  if ($input =~ m!\0!) {
-    return undef;
-  }
-  return $input;
-}
-
-sub validate_refname {
-  my $input = shift || return undef;
-
-  # textual hashes are O.K.
-  if ($input =~ m/^[0-9a-fA-F]{40}$/) {
-    return $input;
-  }
-  # it must be correct pathname
-  $input = validate_pathname($input)
-    or return undef;
-  # restrictions on ref name according to git-check-ref-format
-  if ($input =~ m!(/\.|\.\.|[\000-\040\177 ~^:?*\[]|/$)!) {
-    return undef;
-  }
-  return $input;
-}
-
-# quote unsafe chars, but keep the slash, even when it's not
-# correct, but quoted slashes look too horrible in bookmarks
-sub esc_param {
-  my $str = shift;
-  return undef unless defined $str;
-  $str =~ s/([^A-Za-z0-9\-_.~()\/:@ ]+)/CGI::escape($1)/eg;
-  $str =~ s/ /\+/g;
-  return $str;
-}
-
-# the quoting rules for path_info fragment are slightly different
-sub esc_path_info {
-  my $str = shift;
-  return undef unless defined $str;
-
-  # path_info doesn't treat '+' as space (specially), but '?' must be escaped
-  $str =~ s/([^A-Za-z0-9\-_.~();\/;:@&= +]+)/CGI::escape($1)/eg;
-
-  return $str;
-}
-
-# quote unsafe chars in whole URL, so some characters cannot be quoted
-sub esc_url {
-  my $str = shift;
-  return undef unless defined $str;
-  $str =~ s/([^A-Za-z0-9\-_.~();\/;?:@&= ]+)/CGI::escape($1)/eg;
-  $str =~ s/ /\+/g;
-  return $str;
-}
-
-# quote unsafe characters in HTML attributes
-sub esc_attr {
-
-  # for XHTML conformance escaping '"' to '&quot;' is not enough
-  return esc_html(@_);
-}
-
-# replace invalid utf8 character with SUBSTITUTION sequence
-sub esc_html {
-  my $str = shift;
-  my %opts = @_;
-
-  return undef unless defined $str;
-
-  $str = to_utf8($str);
-  $str = $cgi->escapeHTML($str);
-  if ($opts{'-nbsp'}) {
-    $str =~ s/ /&nbsp;/g;
-  }
-  $str =~ s|([[:cntrl:]])|(($1 ne "\t") ? quot_cec($1) : $1)|eg;
-  return $str;
-}
-
-# quote control characters and escape filename to HTML
-sub esc_path {
-  my $str = shift;
-  my %opts = @_;
-
-  return undef unless defined $str;
-
-  $str = to_utf8($str);
-  $str = $cgi->escapeHTML($str);
-  if ($opts{'-nbsp'}) {
-    $str =~ s/ /&nbsp;/g;
-  }
-  $str =~ s|([[:cntrl:]])|quot_cec($1)|eg;
-  return $str;
-}
-
-# Sanitize for use in XHTML + application/xml+xhtm (valid XML 1.0)
-sub sanitize {
-  my $str = shift;
-
-  return undef unless defined $str;
-
-  $str = to_utf8($str);
-  $str =~ s|([[:cntrl:]])|($1 =~ /[\t\n\r]/ ? $1 : quot_cec($1))|eg;
-  return $str;
-}
-
-# Make control characters "printable", using character escape codes (CEC)
-sub quot_cec {
-  my $cntrl = shift;
-  my %opts = @_;
-  my %es = ( # character escape codes, aka escape sequences
-    "\t" => '\t',   # tab            (HT)
-    "\n" => '\n',   # line feed      (LF)
-    "\r" => '\r',   # carrige return (CR)
-    "\f" => '\f',   # form feed      (FF)
-    "\b" => '\b',   # backspace      (BS)
-    "\a" => '\a',   # alarm (bell)   (BEL)
-    "\e" => '\e',   # escape         (ESC)
-    "\013" => '\v', # vertical tab   (VT)
-    "\000" => '\0', # nul character  (NUL)
-  );
-  my $chr = ( (exists $es{$cntrl})
-        ? $es{$cntrl}
-        : sprintf('\%2x', ord($cntrl)) );
-  if ($opts{-nohtml}) {
-    return $chr;
-  } else {
-    return "<span class=\"cntrl\">$chr</span>";
-  }
-}
-
-# Alternatively use unicode control pictures codepoints,
-# Unicode "printable representation" (PR)
-sub quot_upr {
-  my $cntrl = shift;
-  my %opts = @_;
-
-  my $chr = sprintf('&#%04d;', 0x2400+ord($cntrl));
-  if ($opts{-nohtml}) {
-    return $chr;
-  } else {
-    return "<span class=\"cntrl\">$chr</span>";
-  }
-}
-
-# git may return quoted and escaped filenames
-sub unquote {
-  my $str = shift;
-
-  sub unq {
-    my $seq = shift;
-    my %es = ( # character escape codes, aka escape sequences
-      't' => "\t",   # tab            (HT, TAB)
-      'n' => "\n",   # newline        (NL)
-      'r' => "\r",   # return         (CR)
-      'f' => "\f",   # form feed      (FF)
-      'b' => "\b",   # backspace      (BS)
-      'a' => "\a",   # alarm (bell)   (BEL)
-      'e' => "\e",   # escape         (ESC)
-      'v' => "\013", # vertical tab   (VT)
-    );
-
-    if ($seq =~ m/^[0-7]{1,3}$/) {
-      # octal char sequence
-      return chr(oct($seq));
-    } elsif (exists $es{$seq}) {
-      # C escape sequence, aka character escape code
-      return $es{$seq};
-    }
-    # quoted ordinary character
-    return $seq;
-  }
-
-  if ($str =~ m/^"(.*)"$/) {
-    # needs unquoting
-    $str = $1;
-    $str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
-  }
-  return $str;
-}
-
-# escape tabs (convert tabs to spaces)
-sub untabify {
-  my $line = shift;
-
-  while ((my $pos = index($line, "\t")) != -1) {
-    if (my $count = (8 - ($pos % 8))) {
-      my $spaces = ' ' x $count;
-      $line =~ s/\t/$spaces/;
-    }
-  }
-
-  return $line;
-}
-
-sub project_in_list {
-  my $project = shift;
-  my @list = git_get_projects_list();
-  return @list && scalar(grep { $_->{'path'} eq $project } @list);
-}
-
-# takes the same arguments as _chop_str, but also wraps a <span> around the
-# result with a title attribute if it does get chopped. Additionally, the
-# string is HTML-escaped.
-sub chop_and_escape_str {
-  my ($str) = @_;
-
-  my $chopped = _chop_str(@_);
-  $str = to_utf8($str);
-  if ($chopped eq $str) {
-    return esc_html($chopped);
-  } else {
-    $str =~ s/[[:cntrl:]]/?/g;
-    return $cgi->span({-title=>$str}, esc_html($chopped));
-  }
-}
-
-## ----------------------------------------------------------------------
-## functions returning short strings
-
-# CSS class for given age value (in seconds)
 sub age_class {
   my $age = shift;
 
@@ -1896,11 +1394,6 @@ sub file_type_long {
 }
 
 
-## ----------------------------------------------------------------------
-## functions returning short HTML fragments, or transforming HTML fragments
-## which don't belong to other sections
-
-# format line of commit message.
 sub format_log_line_html {
   my $line = shift;
 
@@ -1913,13 +1406,6 @@ sub format_log_line_html {
   return $line;
 }
 
-# format marker of refs pointing to given object
-
-# the destination action is chosen based on object type and current context:
-# - for annotated tags, we choose the tag view unless it's the current view
-#   already, in which case we go to shortlog view
-# - for other refs, we keep the current view if we're in history, shortlog or
-#   log view, and select shortlog otherwise
 sub format_ref_marker {
   my ($refs, $id) = @_;
   my $markers = '';
@@ -1973,7 +1459,6 @@ sub format_ref_marker {
   }
 }
 
-# format, perhaps shortened and with markers, title line
 sub format_subject_html {
   my ($long, $short, $href, $extra) = @_;
   $extra = '' unless defined($extra);
@@ -1989,16 +1474,8 @@ sub format_subject_html {
   }
 }
 
-# Rather than recomputing the url for an email multiple times, we cache it
-# after the first hit. This gives a visible benefit in views where the avatar
-# for the same email is used repeatedly (e.g. shortlog).
-# The cache is shared by all avatar engines (currently gravatar only), which
-# are free to use it as preferred. Since only one avatar engine is used for any
-# given page, there's no risk for cache conflicts.
 our %avatar_cache = ();
 
-# Compute the picon url for a given email, by using the picon search service over at
-# http://www.cs.indiana.edu/picons/search.html
 sub picon_url {
   my $email = lc shift;
   if (!$avatar_cache{$email}) {
@@ -2011,10 +1488,6 @@ sub picon_url {
   return $avatar_cache{$email};
 }
 
-# Compute the gravatar url for a given email, if it's not in the cache already.
-# Gravatar stores only the part of the URL before the size, since that's the
-# one computationally more expensive. This also allows reuse of the cache for
-# different sizes (for this particular engine).
 sub gravatar_url {
   my $email = lc shift;
   my $size = shift;
@@ -2024,8 +1497,6 @@ sub gravatar_url {
   return $avatar_cache{$email} . $size;
 }
 
-# Insert an avatar for the given $email at the given $size if the feature
-# is enabled.
 sub git_get_avatar {
   my ($email, %opts) = @_;
   my $pre_white  = ($opts{-pad_before} ? "&nbsp;" : "");
@@ -2076,9 +1547,6 @@ sub format_search_author {
   }
 }
 
-# format the author name of the given commit with the given tag
-# the author name is chopped and escaped according to the other
-# optional parameters (see _chop_str).
 sub format_author_html {
   my $tag = shift;
   my $co = shift;
@@ -2090,7 +1558,6 @@ sub format_author_html {
          "</$tag>";
 }
 
-# format git diff header line, i.e. "diff --(git|combined|cc) ..."
 sub format_git_diff_header_line {
   my $line = shift;
   my $diffinfo = shift;
@@ -2126,7 +1593,6 @@ sub format_git_diff_header_line {
   return "<div class=\"diff header\">$line</div>\n";
 }
 
-# format extended diff header line, before patch itself
 sub format_extended_diff_header_line {
   my $line = shift;
   my $diffinfo = shift;
@@ -2192,7 +1658,6 @@ sub format_extended_diff_header_line {
   return $line . "<br/>\n";
 }
 
-# format from-file/to-file diff header
 sub format_diff_from_to_header {
   my ($from_line, $to_line, $diffinfo, $from, $to, @parents) = @_;
   my $line;
@@ -2770,126 +2235,6 @@ sub git_get_project_url_list {
   return wantarray ? @git_project_url_list : \@git_project_url_list;
 }
 
-
-# written with help of Tree::Trie module (Perl Artistic License, GPL compatibile)
-# as side effects it sets 'forks' field to list of forks for forked projects
-sub filter_forks_from_projects_list {
-  my $projects = shift;
-
-  my %trie; # prefix tree of directories (path components)
-  # generate trie out of those directories that might contain forks
-  foreach my $pr (@$projects) {
-    my $path = $pr->{'path'};
-    $path =~ s/\.git$//;      # forks of 'repo.git' are in 'repo/' directory
-    next if ($path =~ m!/$!); # skip non-bare repositories, e.g. 'repo/.git'
-    next unless ($path);      # skip '.git' repository: tests, git-instaweb
-    next unless (-d "$projectroot/$path"); # containing directory exists
-    $pr->{'forks'} = [];      # there can be 0 or more forks of project
-
-    # add to trie
-    my @dirs = split('/', $path);
-    # walk the trie, until either runs out of components or out of trie
-    my $ref = \%trie;
-    while (scalar @dirs &&
-           exists($ref->{$dirs[0]})) {
-      $ref = $ref->{shift @dirs};
-    }
-    # create rest of trie structure from rest of components
-    foreach my $dir (@dirs) {
-      $ref = $ref->{$dir} = {};
-    }
-    # create end marker, store $pr as a data
-    $ref->{''} = $pr if (!exists $ref->{''});
-  }
-
-  # filter out forks, by finding shortest prefix match for paths
-  my @filtered;
- PROJECT:
-  foreach my $pr (@$projects) {
-    # trie lookup
-    my $ref = \%trie;
-  DIR:
-    foreach my $dir (split('/', $pr->{'path'})) {
-      if (exists $ref->{''}) {
-        # found [shortest] prefix, is a fork - skip it
-        push @{$ref->{''}{'forks'}}, $pr;
-        next PROJECT;
-      }
-      if (!exists $ref->{$dir}) {
-        # not in trie, cannot have prefix, not a fork
-        push @filtered, $pr;
-        next PROJECT;
-      }
-      # If the dir is there, we just walk one step down the trie.
-      $ref = $ref->{$dir};
-    }
-    # we ran out of trie
-    # (shouldn't happen: it's either no match, or end marker)
-    push @filtered, $pr;
-  }
-
-  return @filtered;
-}
-
-# note: fill_project_list_info must be run first,
-# for 'descr_long' and 'ctags' to be filled
-sub search_projects_list {
-  my ($projlist, %opts) = @_;
-  my $tagfilter  = $opts{'tagfilter'};
-  my $searchtext = $opts{'searchtext'};
-
-  return @$projlist
-    unless ($tagfilter || $searchtext);
-
-  my @projects;
- PROJECT:
-  foreach my $pr (@$projlist) {
-
-    if ($tagfilter) {
-      next unless ref($pr->{'ctags'}) eq 'HASH';
-      next unless
-        grep { lc($_) eq lc($tagfilter) } keys %{$pr->{'ctags'}};
-    }
-
-    if ($searchtext) {
-      next unless
-        $pr->{'path'} =~ /$searchtext/ ||
-        $pr->{'descr_long'} =~ /$searchtext/;
-    }
-
-    push @projects, $pr;
-  }
-
-  return @projects;
-}
-
-# Implementation note: when a single remote is wanted, we cannot use 'git
-# remote show -n' because that command always work (assuming it's a remote URL
-# if it's not defined), and we cannot use 'git remote show' because that would
-# try to make a network roundtrip. So the only way to find if that particular
-# remote is defined is to walk the list provided by 'git remote -v' and stop if
-# and when we find what we want.
-sub git_get_remotes_list {
-  my $wanted = shift;
-  my %remotes = ();
-
-  open my $fd, '-|' , git_cmd(), 'remote', '-v';
-  return unless $fd;
-  while (my $remote = <$fd>) {
-    chomp $remote;
-    $remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
-    next if $wanted and not $remote eq $wanted;
-    my ($url, $key) = ($1, $2);
-
-    $remotes{$remote} ||= { 'heads' => () };
-    $remotes{$remote}{$key} = $url;
-  }
-  close $fd or return;
-  return wantarray ? %remotes : \%remotes;
-}
-
-# Takes a hash of remotes as first parameter and fills it by adding the
-# available remote heads for each of the indicated remotes.
 sub fill_remote_heads {
   my $remotes = shift;
   my @heads = map { "remotes/$_" } keys %$remotes;

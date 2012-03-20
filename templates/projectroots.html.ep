@@ -1,0 +1,19 @@
+% layout 'common';
+  <div class="page_header">
+    <a href="/">Roots</a> <small>/</small>
+  </div>
+  <table class="project_list">
+    <tr>
+      <th>Roots</th>
+      <th>Descriptions</th>
+    </tr>
+    % for my $projectroot (@$projectroots) {
+      <tr class="dark">
+        <td>
+          <a class="list" href="<%= url_for('/project')->query(root => $projectroot) %>">
+            <%= $projectroot %>
+          </a>
+        </td>
+        <td><%= $projectroot_descriptions->{$projectroot} // '' %></td>
+    % }
+  </table>
