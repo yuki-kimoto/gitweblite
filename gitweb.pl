@@ -6,6 +6,8 @@ use File::Find 'find';
 use File::Basename 'basename';
 use Time::HiRes qw/gettimeofday tv_interval/;
 binmode STDOUT, ':utf8';
+use Carp 'croak';
+use utf8;
 
 our $version = '0.01';
 
@@ -30,6 +32,7 @@ our $number_of_git_cmds = 0;
 our $fallback_encoding = 'latin1';
 our $project_list_default_category = "";
 our $projects_list_group_categories = 0;
+our $project_maxdepth = 1;
 
 our %feature = (
   'blame' => {
@@ -139,7 +142,8 @@ get '/projects' => sub {
   
   die "Error" unless grep { $_ eq $root } @$projectroots;
   
-  my @projects = git_get_projects_list();
+  our $project_list = $root;
+  my @projects = get_projects($root);
   @projects = fill_project_list_info(\@projects);
  
   $self->render(projects => \@projects);
@@ -450,38 +454,38 @@ sub fill_project_list_info {
   return @projects;
 }
 
-get '/(:name).git' => sub {
+get '/summary' => sub {
   my $self = shift;
   $self->render(format => 'html');
-} => 'summary';
+};
 
-get '/(:name).git/shortlog' => sub {
+get '/shortlog' => sub {
   shift->render;
-} => 'shortlog';
+};
 
-get '/(:name).git/log' => sub {
+get '/log' => sub {
   shift->render;
-} => 'log';
+};
 
-get '/(:name).git/commit/:commit' => sub {
+get '/commit' => sub {
   shift->render;
-} => 'commit';
+};
 
-get '/(:name).git/commitdiff/:commit' => sub {
+get '/commitdiff' => sub {
   shift->render;
-} => 'commitdiff';
+};
 
-get '/(:name).git/tree/:commit' => sub {
+get '/tree' => sub {
   shift->render;
-} => 'tree';
+};
 
-get '/(:name).git/snapshot/:commit' => sub {
+get '/snapshot' => sub {
   shift->render(text => 'snapshot');
-} => 'snapshot';
+};
 
-get '/(:name).git/tag/:commit' => sub {
+get '/tag' => sub {
   shift->render;
-} => 'tag';
+};
 
 sub git_get_project_description {
   my $path = shift;
@@ -502,83 +506,39 @@ sub git_get_file_or_project_config {
   return $conf;
 }
 
+sub e($) { encode('UTF-8', shift) }
+
 sub git_get_projects_list {
   my $filter = shift || '';
-  my @list;
-
-  $filter =~ s/\.git$//;
-
-  if (-d $projects_list) {
-    # search in directory
-    my $dir = $projects_list;
-    # remove the trailing "/"
-    $dir =~ s!/+$!!;
-    my $pfxlen = length("$dir");
-    my $pfxdepth = ($dir =~ tr!/!!);
-    # when filtering, search only given subdirectory
-    if ($filter) {
-      $dir .= "/$filter";
-      $dir =~ s!/+$!!;
-    }
-
-    File::Find::find({
-      follow_fast => 1, # follow symbolic links
-      follow_skip => 2, # ignore duplicates
-      dangling_symlinks => 0, # ignore dangling symlinks, silently
-      wanted => sub {
-        # global variables
-        our $project_maxdepth;
-        our $projectroot;
-        # skip project-list toplevel, if we get it.
-        return if (m!^[/.]$!);
-        # only directories can be git repositories
-        return unless (-d $_);
-        # don't traverse too deep (Find is super slow on os x)
-        # $project_maxdepth excludes depth of $projectroot
-        if (($File::Find::name =~ tr!/!!) - $pfxdepth > $project_maxdepth) {
-          $File::Find::prune = 1;
-          return;
-        }
-
-        my $path = substr($File::Find::name, $pfxlen + 1);
-        # we check related file in $projectroot
-        if (check_export_ok("$projectroot/$path")) {
-          push @list, { path => $path };
-          $File::Find::prune = 1;
-        }
-      },
-    }, "$dir");
-
-  } elsif (-f $projects_list) {
-    # read from file(url-encoded):
-    # 'git%2Fgit.git Linus+Torvalds'
-    # 'libs%2Fklibc%2Fklibc.git H.+Peter+Anvin'
-    # 'linux%2Fhotplug%2Fudev.git Greg+Kroah-Hartman'
-    open my $fd, '<', $projects_list or return;
-  PROJECT:
-    while (my $line = <$fd>) {
-      chomp $line;
-      my ($path, $owner) = split ' ', $line;
-      $path = unescape($path);
-      $owner = unescape($owner);
-      if (!defined $path) {
-        next;
-      }
-      # if $filter is rpovided, check if $path begins with $filter
-      if ($filter && $path !~ m!^\Q$filter\E/!) {
-        next;
-      }
-      if (check_export_ok("$projectroot/$path")) {
-        my $pr = {
-          path => $path,
-          owner => to_utf8($owner),
-        };
-        push @list, $pr;
-      }
-    }
-    close $fd;
+  my $root = shift;
+  my @projects;
+  
+  opendir my $dh, e$root
+    or croak qq/Can't open directory $root: $!/;
+  
+  while (my $project = readdir $dh) {
+    next unless $project =~ /\.git$/;
+    next unless check_export_ok("$root/$project");
+    push @projects, { path => $project };
   }
-  return @list;
+
+  return @projects;
+}
+
+sub get_projects {
+  my $root = shift;
+  
+  opendir my $dh, e$root
+    or croak qq/Can't open directory $root: $!/;
+  
+  my @projects;
+  while (my $project = readdir $dh) {
+    next unless $project =~ /\.git$/;
+    next unless check_export_ok("$root/$project");
+    push @projects, { path => $project };
+  }
+
+  return @projects;
 }
 
 sub check_export_ok {
@@ -599,9 +559,6 @@ our $t0 = [ gettimeofday() ];
 
 our ($my_url, $my_uri, $base_url, $path_info, $home_link);
 
-# fs traversing limit for getting project list
-# the number is relative to the projectroot
-our $project_maxdepth = 2007;
 
 # string of the home link on top of all pages
 our $home_link_str = "projects";

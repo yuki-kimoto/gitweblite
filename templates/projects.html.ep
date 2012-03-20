@@ -1,6 +1,7 @@
 % layout 'common';
   <div class="page_header">
-  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / </div>
+    <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) / <a href="<%= url_for->query($self->req->params->clone) %>">projects</a> /
+  </div>
   <table class="project_list">
     <tr>
       <th>Project</th>

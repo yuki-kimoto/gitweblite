@@ -2202,3 +2202,507 @@ Global symbol "$project_root" requires explicit package name at template "projec
 [Wed Mar 21 07:14:05 2012] [debug] Rendering template "projectroots.html.ep".
 [Wed Mar 21 07:14:05 2012] [debug] Rendering template "layouts/common.html.ep".
 [Wed Mar 21 07:14:05 2012] [debug] 200 OK (0.013111s, 76.272/s).
+[Wed Mar 21 07:15:56 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:15:56 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:16:07 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:16:07 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:17:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:17:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:17:40 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:17:40 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:17:41 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:17:41 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:17:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:17:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:17:46 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:17:46 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:19:11 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:19:11 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:19:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:19:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:19:22 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:19:22 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:19:22 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:19:22 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 07:19:22 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:19:22 2012] [debug] 200 OK (0.011067s, 90.359/s).
+[Wed Mar 21 07:19:24 2012] [debug] GET /project (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:19:24 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 07:19:24 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 07:19:24 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:19:24 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:19:24 2012] [debug] 404 Not Found (0.019634s, 50.932/s).
+[Wed Mar 21 07:19:34 2012] [debug] GET /project (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:19:34 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 07:19:34 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 07:19:34 2012] [debug] 404 Not Found (0.010880s, 91.912/s).
+[Wed Mar 21 07:20:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:20:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:20:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:20:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:20:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:20:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:20:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:20:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:20:50 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:20:50 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:20:54 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:20:54 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:01 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:01 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:02 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:02 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:03 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:03 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:04 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:04 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:07 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:07 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:09 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:09 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:11 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:11 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:17 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:17 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:18 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:18 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:21 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:21 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:22 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:22 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:27 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:27 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:31 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:31 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:34 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:34 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:21:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:21:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:22:28 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:22:28 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:22:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:22:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:22:29 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:22:29 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:22:29 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:22:29 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 07:22:29 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:22:29 2012] [debug] 200 OK (0.011016s, 90.777/s).
+[Wed Mar 21 07:22:31 2012] [debug] GET /project (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:22:31 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 07:22:31 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 07:22:31 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:22:31 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:22:31 2012] [debug] 404 Not Found (0.016344s, 61.185/s).
+[Wed Mar 21 07:23:05 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:23:05 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:23:06 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:23:06 2012] [debug] GET /project (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:23:06 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 07:23:06 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 07:23:06 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:23:06 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:23:06 2012] [debug] 404 Not Found (0.026573s, 37.632/s).
+[Wed Mar 21 07:23:20 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:23:20 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:23:22 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:23:22 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:23:22 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:23:22 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 07:23:22 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:23:22 2012] [debug] 200 OK (0.011907s, 83.984/s).
+[Wed Mar 21 07:23:24 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:23:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:23:25 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:23:25 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:23:25 2012] [debug] 200 OK (0.673573s, 1.485/s).
+[Wed Mar 21 07:24:07 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:24:07 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:24:07 2012] [debug] 200 OK (0.092144s, 10.853/s).
+[Wed Mar 21 07:24:45 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:24:45 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:24:45 2012] [debug] 200 OK (0.132123s, 7.569/s).
+[Wed Mar 21 07:25:27 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:25:27 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:25:27 2012] [debug] 200 OK (0.085965s, 11.633/s).
+[Wed Mar 21 07:26:00 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:26:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:26:00 2012] [debug] 200 OK (0.108120s, 9.249/s).
+[Wed Mar 21 07:26:14 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:26:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:26:15 2012] [debug] 200 OK (0.123749s, 8.081/s).
+[Wed Mar 21 07:26:22 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:26:22 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:26:22 2012] [debug] 200 OK (0.105198s, 9.506/s).
+[Wed Mar 21 07:26:37 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:26:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:26:37 2012] [debug] 200 OK (0.079214s, 12.624/s).
+[Wed Mar 21 07:27:05 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:27:05 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:27:05 2012] [debug] 200 OK (0.122243s, 8.180/s).
+[Wed Mar 21 07:27:15 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:27:15 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:27:15 2012] [debug] 200 OK (0.103426s, 9.669/s).
+[Wed Mar 21 07:27:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:27:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:27:57 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:27:57 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:28:10 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:28:10 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:28:17 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:28:17 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:28:22 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:28:22 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:28:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:28:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:28:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:28:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:28:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:28:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:29:00 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:29:00 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:29:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:29:00 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:29:00 2012] [error] Can't call method "clone" on an undefined value at template "projects.html.ep" line 3, near "  </div>".
+1: % layout 'common';
+2:   <div class="page_header">
+3:     <a href="<%= url_for '/' %>">Roots</a> / <a href="<%= url_for->query($self->req->param->clone) %>">projects</a> /
+4:   </div>
+5:   <table class="project_list">
+6:     <tr>
+7:       <th>Project</th>
+8:       <th>Description</th>
+
+[Wed Mar 21 07:29:00 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:29:00 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:29:00 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:29:00 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:29:00 2012] [debug] 500 Internal Server Error (0.187990s, 5.319/s).
+[Wed Mar 21 07:29:25 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:29:25 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:29:26 2012] [error] Can't call method "clone" on an undefined value at template "projects.html.ep" line 3, near "  </div>".
+1: % layout 'common';
+2:   <div class="page_header">
+3:     <a href="<%= url_for '/' %>">Roots</a> / <a href="<%= url_for->query($self->req->param->clone) %>">projects</a> /
+4:   </div>
+5:   <table class="project_list">
+6:     <tr>
+7:       <th>Project</th>
+8:       <th>Description</th>
+
+[Wed Mar 21 07:29:26 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:29:26 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:29:26 2012] [debug] 500 Internal Server Error (0.142583s, 7.013/s).
+[Wed Mar 21 07:29:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:29:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:29:26 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:29:39 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:29:39 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:29:39 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:29:39 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:29:39 2012] [debug] 200 OK (0.105881s, 9.445/s).
+[Wed Mar 21 07:29:43 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:29:43 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:29:43 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 07:29:43 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:29:43 2012] [debug] 200 OK (0.008701s, 114.929/s).
+[Wed Mar 21 07:29:47 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:29:47 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:29:47 2012] [debug] 200 OK (0.007335s, 136.333/s).
+[Wed Mar 21 07:29:54 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:29:54 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:29:54 2012] [debug] 200 OK (0.104968s, 9.527/s).
+[Wed Mar 21 07:30:35 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:30:35 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:30:35 2012] [debug] 200 OK (0.004977s, 200.924/s).
+[Wed Mar 21 07:30:37 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:30:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:30:37 2012] [debug] 200 OK (0.107343s, 9.316/s).
+[Wed Mar 21 07:31:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:31:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:31:31 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:31:31 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:31:31 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:31:31 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:31:31 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:31:31 2012] [debug] 200 OK (0.021403s, 46.722/s).
+[Wed Mar 21 07:32:02 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:32:02 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:32:02 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 07:32:02 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:32:02 2012] [debug] 200 OK (0.010280s, 97.276/s).
+[Wed Mar 21 07:32:05 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:32:05 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:32:05 2012] [debug] 200 OK (0.014185s, 70.497/s).
+[Wed Mar 21 07:32:59 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:32:59 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:33:00 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:33:00 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:33:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:33:00 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:33:00 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:33:00 2012] [debug] 200 OK (0.021789s, 45.895/s).
+[Wed Mar 21 07:33:06 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:33:06 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:33:22 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:33:22 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:33:24 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:33:24 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:33:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:33:24 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:33:24 2012] [error] syntax error at template "projects.html.ep" line 3, near "  </div>".
+1: % layout 'common';
+2:   <div class="page_header">
+3:     <a href="<%= url_for '/' %>">Roots</a> (<%= (<%= param('root') %> / <a href="<%= url_for->query($self->req->params->clone) %>">projects</a> /
+4:   </div>
+5:   <table class="project_list">
+6:     <tr>
+7:       <th>Project</th>
+8:       <th>Description</th>
+
+[Wed Mar 21 07:33:24 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:33:24 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:33:24 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:33:24 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:33:24 2012] [debug] 500 Internal Server Error (0.053227s, 18.787/s).
+[Wed Mar 21 07:33:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:33:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:33:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:33:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:33:43 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:33:43 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:33:43 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:33:43 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:33:43 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:33:43 2012] [debug] 200 OK (0.046809s, 21.363/s).
+[Wed Mar 21 07:34:11 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:11 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:11 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 07:34:11 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:34:11 2012] [debug] 200 OK (0.014151s, 70.666/s).
+[Wed Mar 21 07:34:13 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:13 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:13 2012] [debug] 200 OK (0.017713s, 56.456/s).
+[Wed Mar 21 07:34:17 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:17 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:17 2012] [debug] 200 OK (0.013750s, 72.727/s).
+[Wed Mar 21 07:34:21 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:21 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:21 2012] [debug] 200 OK (0.014565s, 68.658/s).
+[Wed Mar 21 07:34:24 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:24 2012] [debug] 200 OK (0.014680s, 68.120/s).
+[Wed Mar 21 07:34:31 2012] [debug] GET /DBIx-Custom.git (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:31 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 07:34:31 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 07:34:31 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:34:31 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:34:31 2012] [debug] 404 Not Found (0.035974s, 27.798/s).
+[Wed Mar 21 07:34:35 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:35 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:35 2012] [debug] 200 OK (0.002615s, 382.409/s).
+[Wed Mar 21 07:34:37 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:34:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:34:37 2012] [debug] 200 OK (0.015042s, 66.481/s).
+[Wed Mar 21 07:35:23 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:35:23 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:35:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:35:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:35:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:35:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:36:04 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:36:04 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:38:46 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:38:46 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:38:48 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:38:48 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:38:48 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:38:48 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:38:48 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:38:48 2012] [debug] 200 OK (0.038706s, 25.836/s).
+[Wed Mar 21 07:38:50 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:38:50 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:38:50 2012] [debug] 200 OK (0.014959s, 66.849/s).
+[Wed Mar 21 07:39:16 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:39:16 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:39:17 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:39:17 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:39:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:39:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:39:27 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:39:27 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:39:28 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:39:28 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:39:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:39:28 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:39:28 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:39:28 2012] [debug] 200 OK (0.022977s, 43.522/s).
+[Wed Mar 21 07:46:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:46:26 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:46:26 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:46:26 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:46:26 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:46:26 2012] [error] Can't open directory : ãã®ãããªãã¡ã¤ã«ããã£ã¬ã¯ããªã¯ããã¾ãã at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/Mojolicious/Routes.pm line 327
+
+[Wed Mar 21 07:46:26 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:46:26 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:46:26 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:46:27 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:46:27 2012] [debug] 500 Internal Server Error (0.045334s, 22.058/s).
+[Wed Mar 21 07:46:27 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:46:27 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:46:27 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:47:06 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:06 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:14 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:14 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:34 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:34 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:39 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:39 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:47:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:47:46 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:47:46 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:47:46 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:47:46 2012] [error] Can't open directory : ãã®ãããªãã¡ã¤ã«ããã£ã¬ã¯ããªã¯ããã¾ãã at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/Mojolicious/Routes.pm line 327
+
+[Wed Mar 21 07:47:46 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:47:46 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:47:46 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:47:46 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:47:46 2012] [debug] 500 Internal Server Error (0.036140s, 27.670/s).
+[Wed Mar 21 07:47:49 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:47:49 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:47:49 2012] [error] Can't open directory : ãã®ãããªãã¡ã¤ã«ããã£ã¬ã¯ããªã¯ããã¾ãã at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/Mojolicious/Routes.pm line 327
+
+[Wed Mar 21 07:47:49 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:47:49 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:47:49 2012] [debug] 500 Internal Server Error (0.015437s, 64.779/s).
+[Wed Mar 21 07:48:00 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:48:00 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:48:01 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:48:01 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:48:02 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:48:02 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:48:02 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:48:02 2012] [error] Can't open directory : ãã®ãããªãã¡ã¤ã«ããã£ã¬ã¯ããªã¯ããã¾ãã at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/Mojolicious/Routes.pm line 327
+
+[Wed Mar 21 07:48:02 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 07:48:02 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 07:48:02 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:48:02 2012] [debug] Rendering inline template.
+[Wed Mar 21 07:48:02 2012] [debug] 500 Internal Server Error (0.074084s, 13.498/s).
+[Wed Mar 21 07:48:41 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:48:41 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:48:43 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:48:43 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:48:43 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:48:43 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:48:43 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:48:43 2012] [debug] 200 OK (0.013723s, 72.870/s).
+[Wed Mar 21 07:49:02 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:49:02 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:49:02 2012] [debug] 200 OK (0.003429s, 291.630/s).
+[Wed Mar 21 07:49:11 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:49:11 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:49:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:49:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:49:13 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:49:13 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:49:13 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:49:13 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:49:13 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:49:13 2012] [debug] 200 OK (0.015063s, 66.388/s).
+[Wed Mar 21 07:49:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:49:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:49:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:49:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:49:40 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:49:40 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:49:40 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:49:40 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:49:40 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:49:40 2012] [debug] 200 OK (0.025738s, 38.853/s).
+[Wed Mar 21 07:49:56 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:49:56 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:49:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:49:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:09 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:09 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:10 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:10 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:16 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:51:16 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:51:16 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:51:16 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:51:16 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:51:16 2012] [debug] 200 OK (0.031808s, 31.439/s).
+[Wed Mar 21 07:51:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:38 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:44 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:44 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:53 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:53 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:54 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:54 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:51:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:51:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:00 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:00 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:01 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:01 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:09 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:09 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:10 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:10 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:12 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:13 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:13 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:16 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:16 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:24 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:24 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:25 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:25 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 07:52:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 07:52:30 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 07:52:30 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 07:52:30 2012] [debug] Dispatching callback.
+[Wed Mar 21 07:52:30 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 07:52:30 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 07:52:30 2012] [debug] 200 OK (0.022929s, 43.613/s).

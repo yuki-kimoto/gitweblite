@@ -1,6 +1,6 @@
 % layout 'common';
   <div class="page_header">
-    <a href="/">Roots</a> <small>/</small>
+    <a href="/">Roots</a> /
   </div>
   <table class="project_list">
     <tr>
@@ -10,7 +10,7 @@
     % for my $projectroot (@$projectroots) {
       <tr class="dark">
         <td>
-          <a class="list" href="<%= url_for('/project')->query(root => $projectroot) %>">
+          <a class="list" href="<%= url_for('/projects')->query(root => $projectroot) %>">
             <%= $projectroot %>
           </a>
         </td>
