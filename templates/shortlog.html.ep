@@ -1,0 +1,536 @@
+
+  <div class="page_header">
+  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / shortlog
+  </div>
+  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
+  <div class="search">
+  <input name="a" type="hidden" value="search" />
+  <input name="h" type="hidden" value="f6067adc61108c3398de698bb0294d95f09b55ef" />
+  <select name="st" >
+  <option selected="selected" value="free">free</option>
+  <option value="commit">commit</option>
+  <option value="grep">grep</option>
+  <option value="author">author</option>
+  <option value="committer">committer</option>
+  <option value="pickaxe">pickaxe</option>
+  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
+  <input type="text" name="s"  />
+  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+  </form>
+  <div class="page_nav">
+  <a href="/perl.git">summary</a> | shortlog | <a href="/perl.git/log/f6067adc61108c3398de698bb0294d95f09b55ef">log</a> | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a><br/>
+  HEAD &sdot; prev &sdot; <a title="Alt-n" accesskey="n" href="/perl.git/shortlog?pg=1">next</a><br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git">perl.git</a>
+  </div>
+  <table class="shortlog">
+  <tr class="dark">
+  <td title="2012-03-20"><i>2 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">charnames: Clarify viacode pod <span class="refs"> <span class="head" title="heads/blead"><a href="/perl.git/shortlog/refs/heads/blead">blead</a></span></span></a></td>
+  <td class="link"><a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/f6067adc61108c3398de698bb0294d95f09b55ef.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>2 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">charnames pod: slight rewording</a></td>
+  <td class="link"><a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">commit</a> | <a href="/perl.git/commitdiff/ffec675822f6354e94f29a96daa07ef9465a43bc">commitdiff</a> | <a href="/perl.git/tree/ffec675822f6354e94f29a96daa07ef9465a43bc">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/ffec675822f6354e94f29a96daa07ef9465a43bc.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>2 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">charnames: re-order pod sections</a></td>
+  <td class="link"><a href="/perl.git/commit/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">commit</a> | <a href="/perl.git/commitdiff/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">commitdiff</a> | <a href="/perl.git/tree/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/228e8c7b6cef1e12cb12f45083fdcae7b35fba27.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>6 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/41c3b428c4a3ce29a0f80c7f63eda133089137de">Fix spelling errors in pod/perldelta.pod</a></td>
+  <td class="link"><a href="/perl.git/commit/41c3b428c4a3ce29a0f80c7f63eda133089137de">commit</a> | <a href="/perl.git/commitdiff/41c3b428c4a3ce29a0f80c7f63eda133089137de">commitdiff</a> | <a href="/perl.git/tree/41c3b428c4a3ce29a0f80c7f63eda133089137de">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/41c3b428c4a3ce29a0f80c7f63eda133089137de.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>6 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/fae9e8f42caa843805a479b6d6bf28a777f61037">Document new versions of Data::Dumper and XS::APItest.</a></td>
+  <td class="link"><a href="/perl.git/commit/fae9e8f42caa843805a479b6d6bf28a777f61037">commit</a> | <a href="/perl.git/commitdiff/fae9e8f42caa843805a479b6d6bf28a777f61037">commitdiff</a> | <a href="/perl.git/tree/fae9e8f42caa843805a479b6d6bf28a777f61037">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/fae9e8f42caa843805a479b6d6bf28a777f61037.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/16737d47697ef8f812d9cea1abfcb616af5887f1">5160delta: Note that feasible to remain on Unicode 6.0</a></td>
+  <td class="link"><a href="/perl.git/commit/16737d47697ef8f812d9cea1abfcb616af5887f1">commit</a> | <a href="/perl.git/commitdiff/16737d47697ef8f812d9cea1abfcb616af5887f1">commitdiff</a> | <a href="/perl.git/tree/16737d47697ef8f812d9cea1abfcb616af5887f1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/16737d47697ef8f812d9cea1abfcb616af5887f1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/c88a046d255fcd4d5ec54f477da11f3417fa8756">Paste in the output of Porting/corelist-perldelta.pl</a></td>
+  <td class="link"><a href="/perl.git/commit/c88a046d255fcd4d5ec54f477da11f3417fa8756">commit</a> | <a href="/perl.git/commitdiff/c88a046d255fcd4d5ec54f477da11f3417fa8756">commitdiff</a> | <a href="/perl.git/tree/c88a046d255fcd4d5ec54f477da11f3417fa8756">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c88a046d255fcd4d5ec54f477da11f3417fa8756.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/977c1d31fff4d41aa42e40c904fe08b509e3a34e">Deprecate utf8_to_uvchr() and utf8_to_uvuni()</a></td>
+  <td class="link"><a href="/perl.git/commit/977c1d31fff4d41aa42e40c904fe08b509e3a34e">commit</a> | <a href="/perl.git/commitdiff/977c1d31fff4d41aa42e40c904fe08b509e3a34e">commitdiff</a> | <a href="/perl.git/tree/977c1d31fff4d41aa42e40c904fe08b509e3a34e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/977c1d31fff4d41aa42e40c904fe08b509e3a34e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/4b88fb76efce8c436e63b907c9842345d4fa77c7">Use the new utf8 to code point functions</a></td>
+  <td class="link"><a href="/perl.git/commit/4b88fb76efce8c436e63b907c9842345d4fa77c7">commit</a> | <a href="/perl.git/commitdiff/4b88fb76efce8c436e63b907c9842345d4fa77c7">commitdiff</a> | <a href="/perl.git/tree/4b88fb76efce8c436e63b907c9842345d4fa77c7">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/4b88fb76efce8c436e63b907c9842345d4fa77c7.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">utf8.c: Add valid_utf8_to_uvuni() and valid_utf8_to_uvchr()</a></td>
+  <td class="link"><a href="/perl.git/commit/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">commit</a> | <a href="/perl.git/commitdiff/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">commitdiff</a> | <a href="/perl.git/tree/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/27d6c58a7e12243bef66c58b38e7d1415d9ca07e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">utf8.c: Add utf8_to_uvchr_buf() and utf8_to_uvuni_buf()</a></td>
+  <td class="link"><a href="/perl.git/commit/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">commit</a> | <a href="/perl.git/commitdiff/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">commitdiff</a> | <a href="/perl.git/tree/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/d0460f306d2b79d09a9e5694f9f72c50a2481b83">utf8.c: pod clarification</a></td>
+  <td class="link"><a href="/perl.git/commit/d0460f306d2b79d09a9e5694f9f72c50a2481b83">commit</a> | <a href="/perl.git/commitdiff/d0460f306d2b79d09a9e5694f9f72c50a2481b83">commitdiff</a> | <a href="/perl.git/tree/d0460f306d2b79d09a9e5694f9f72c50a2481b83">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/d0460f306d2b79d09a9e5694f9f72c50a2481b83.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/a1433954f53591f4446530df211b86112c6c2446">utf8.c: pod (mostly formatting) + comments changes</a></td>
+  <td class="link"><a href="/perl.git/commit/a1433954f53591f4446530df211b86112c6c2446">commit</a> | <a href="/perl.git/commitdiff/a1433954f53591f4446530df211b86112c6c2446">commitdiff</a> | <a href="/perl.git/tree/a1433954f53591f4446530df211b86112c6c2446">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/a1433954f53591f4446530df211b86112c6c2446.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/3c813ed0ab90d1f1f16ca848d265616ae5315536">perlapi (from sv.h) clarifications</a></td>
+  <td class="link"><a href="/perl.git/commit/3c813ed0ab90d1f1f16ca848d265616ae5315536">commit</a> | <a href="/perl.git/commitdiff/3c813ed0ab90d1f1f16ca848d265616ae5315536">commitdiff</a> | <a href="/perl.git/tree/3c813ed0ab90d1f1f16ca848d265616ae5315536">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/3c813ed0ab90d1f1f16ca848d265616ae5315536.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">autodoc.pl: pod format fix</a></td>
+  <td class="link"><a href="/perl.git/commit/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">commit</a> | <a href="/perl.git/commitdiff/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">commitdiff</a> | <a href="/perl.git/tree/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" title="perlguts, warnings.t: Update references to obsolete fcn names" href="/perl.git/commit/95701e00f8e747fe1c24564cb038be375695df5a">perlguts, warnings.t: Update references to obsolete... </a></td>
+  <td class="link"><a href="/perl.git/commit/95701e00f8e747fe1c24564cb038be375695df5a">commit</a> | <a href="/perl.git/commitdiff/95701e00f8e747fe1c24564cb038be375695df5a">commitdiff</a> | <a href="/perl.git/tree/95701e00f8e747fe1c24564cb038be375695df5a">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/95701e00f8e747fe1c24564cb038be375695df5a.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-20"><i>7 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">perldelta: clarification</a></td>
+  <td class="link"><a href="/perl.git/commit/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">commit</a> | <a href="/perl.git/commitdiff/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">commitdiff</a> | <a href="/perl.git/tree/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>8 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">Update Module::CoreList for 5.15.9</a></td>
+  <td class="link"><a href="/perl.git/commit/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">commit</a> | <a href="/perl.git/commitdiff/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">commitdiff</a> | <a href="/perl.git/tree/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/68a91acb87c0e5d700bf9bc52e8374e6ce77f878.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>8 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/688b7920048b177348001477c975ca96c37c3e6e">Point out CoreList's CAVEATS section is in CoreList.pod</a></td>
+  <td class="link"><a href="/perl.git/commit/688b7920048b177348001477c975ca96c37c3e6e">commit</a> | <a href="/perl.git/commitdiff/688b7920048b177348001477c975ca96c37c3e6e">commitdiff</a> | <a href="/perl.git/tree/688b7920048b177348001477c975ca96c37c3e6e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/688b7920048b177348001477c975ca96c37c3e6e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>8 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/564ac620902c38056c0c8bc7099cadf6b5961faa">Eliminate a warning</a></td>
+  <td class="link"><a href="/perl.git/commit/564ac620902c38056c0c8bc7099cadf6b5961faa">commit</a> | <a href="/perl.git/commitdiff/564ac620902c38056c0c8bc7099cadf6b5961faa">commitdiff</a> | <a href="/perl.git/tree/564ac620902c38056c0c8bc7099cadf6b5961faa">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/564ac620902c38056c0c8bc7099cadf6b5961faa.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/4cc560b23649f322bae0315aed9b9665e537c44e">mktables: white-space only</a></td>
+  <td class="link"><a href="/perl.git/commit/4cc560b23649f322bae0315aed9b9665e537c44e">commit</a> | <a href="/perl.git/commitdiff/4cc560b23649f322bae0315aed9b9665e537c44e">commitdiff</a> | <a href="/perl.git/tree/4cc560b23649f322bae0315aed9b9665e537c44e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/4cc560b23649f322bae0315aed9b9665e537c44e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" title="mktables: Backport name_alias changes to earlier Unicode versions" href="/perl.git/commit/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">mktables: Backport name_alias changes to earlier Unicod... </a></td>
+  <td class="link"><a href="/perl.git/commit/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">commit</a> | <a href="/perl.git/commitdiff/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">commitdiff</a> | <a href="/perl.git/tree/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/21a1aff7e1eddd8acb5f096dd264e2f967ad5401.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/6901521e3ffe762ff8e3f268762b0d2f667771a7">mktables: Don't duplicate entries</a></td>
+  <td class="link"><a href="/perl.git/commit/6901521e3ffe762ff8e3f268762b0d2f667771a7">commit</a> | <a href="/perl.git/commitdiff/6901521e3ffe762ff8e3f268762b0d2f667771a7">commitdiff</a> | <a href="/perl.git/tree/6901521e3ffe762ff8e3f268762b0d2f667771a7">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6901521e3ffe762ff8e3f268762b0d2f667771a7.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/6342d44542ab62d41255e7655319b5f5ce0975a3">mktables: A leading zero is different than an only 0</a></td>
+  <td class="link"><a href="/perl.git/commit/6342d44542ab62d41255e7655319b5f5ce0975a3">commit</a> | <a href="/perl.git/commitdiff/6342d44542ab62d41255e7655319b5f5ce0975a3">commitdiff</a> | <a href="/perl.git/tree/6342d44542ab62d41255e7655319b5f5ce0975a3">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6342d44542ab62d41255e7655319b5f5ce0975a3.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/b577d4a6d9513ee5434c94e3104462fdd700d6a7">Unicode::UCD::prop_invmap: Fix returned format</a></td>
+  <td class="link"><a href="/perl.git/commit/b577d4a6d9513ee5434c94e3104462fdd700d6a7">commit</a> | <a href="/perl.git/commitdiff/b577d4a6d9513ee5434c94e3104462fdd700d6a7">commitdiff</a> | <a href="/perl.git/tree/b577d4a6d9513ee5434c94e3104462fdd700d6a7">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/b577d4a6d9513ee5434c94e3104462fdd700d6a7.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/294705a8c512970205c6ab76033cb59703476097">Unicode::UCD: typos in error messages</a></td>
+  <td class="link"><a href="/perl.git/commit/294705a8c512970205c6ab76033cb59703476097">commit</a> | <a href="/perl.git/commitdiff/294705a8c512970205c6ab76033cb59703476097">commitdiff</a> | <a href="/perl.git/tree/294705a8c512970205c6ab76033cb59703476097">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/294705a8c512970205c6ab76033cb59703476097.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/22bc5f56c4cdabb8df1b2acae33971781fb1814e">mktables: Add required parens and reword warning msg</a></td>
+  <td class="link"><a href="/perl.git/commit/22bc5f56c4cdabb8df1b2acae33971781fb1814e">commit</a> | <a href="/perl.git/commitdiff/22bc5f56c4cdabb8df1b2acae33971781fb1814e">commitdiff</a> | <a href="/perl.git/tree/22bc5f56c4cdabb8df1b2acae33971781fb1814e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/22bc5f56c4cdabb8df1b2acae33971781fb1814e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/c256547e3b6143ea565019347505bc1996fc59e7">pat.t: Fix typo in comment</a></td>
+  <td class="link"><a href="/perl.git/commit/c256547e3b6143ea565019347505bc1996fc59e7">commit</a> | <a href="/perl.git/commitdiff/c256547e3b6143ea565019347505bc1996fc59e7">commitdiff</a> | <a href="/perl.git/tree/c256547e3b6143ea565019347505bc1996fc59e7">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c256547e3b6143ea565019347505bc1996fc59e7.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>9 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/3b318f16bd82320be5768efa37201351e3a0ff2e">Bump the perl version in various places for 5.15.9</a></td>
+  <td class="link"><a href="/perl.git/commit/3b318f16bd82320be5768efa37201351e3a0ff2e">commit</a> | <a href="/perl.git/commitdiff/3b318f16bd82320be5768efa37201351e3a0ff2e">commitdiff</a> | <a href="/perl.git/tree/3b318f16bd82320be5768efa37201351e3a0ff2e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/3b318f16bd82320be5768efa37201351e3a0ff2e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>10 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">More perldelta work.</a></td>
+  <td class="link"><a href="/perl.git/commit/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">commit</a> | <a href="/perl.git/commitdiff/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">commitdiff</a> | <a href="/perl.git/tree/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>10 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" title="Mention the fix to perlfunc.html in &quot;Configuration and Compilation&quot; as well." href="/perl.git/commit/6cd577feeaf75f6e140a8584b4c805a7799b33c1">Mention the fix to perlfunc.html in &quot;Configuration... </a></td>
+  <td class="link"><a href="/perl.git/commit/6cd577feeaf75f6e140a8584b4c805a7799b33c1">commit</a> | <a href="/perl.git/commitdiff/6cd577feeaf75f6e140a8584b4c805a7799b33c1">commitdiff</a> | <a href="/perl.git/tree/6cd577feeaf75f6e140a8584b4c805a7799b33c1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6cd577feeaf75f6e140a8584b4c805a7799b33c1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Note in the source of perlhist.pod that &quot;cow orker&quot; is no typo." href="/perl.git/commit/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">Note in the source of perlhist.pod that &quot;cow orker... </a></td>
+  <td class="link"><a href="/perl.git/commit/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">commit</a> | <a href="/perl.git/commitdiff/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">commitdiff</a> | <a href="/perl.git/tree/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Mention Porting/bisect.pl in perlgit.pod, before describing git bisect." href="/perl.git/commit/5b9539f4da00738fffe89191e08276ee61978834">Mention Porting/bisect.pl in perlgit.pod, before descri... </a></td>
+  <td class="link"><a href="/perl.git/commit/5b9539f4da00738fffe89191e08276ee61978834">commit</a> | <a href="/perl.git/commitdiff/5b9539f4da00738fffe89191e08276ee61978834">commitdiff</a> | <a href="/perl.git/tree/5b9539f4da00738fffe89191e08276ee61978834">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/5b9539f4da00738fffe89191e08276ee61978834.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Add two missing &quot;file&quot;s to the documentation of Porting/bisect.pl" href="/perl.git/commit/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">Add two missing &quot;file&quot;s to the documentation of Porting... </a></td>
+  <td class="link"><a href="/perl.git/commit/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">commit</a> | <a href="/perl.git/commitdiff/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">commitdiff</a> | <a href="/perl.git/tree/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Move the example git bisect shell script from perlgit.pod to Porting/" href="/perl.git/commit/6d4be29ed416c7245eb4f21c700d825aca9a4e93">Move the example git bisect shell script from perlgit... </a></td>
+  <td class="link"><a href="/perl.git/commit/6d4be29ed416c7245eb4f21c700d825aca9a4e93">commit</a> | <a href="/perl.git/commitdiff/6d4be29ed416c7245eb4f21c700d825aca9a4e93">commitdiff</a> | <a href="/perl.git/tree/6d4be29ed416c7245eb4f21c700d825aca9a4e93">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6d4be29ed416c7245eb4f21c700d825aca9a4e93.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="bisect-runner.pl should detect ccache with -V, not --version" href="/perl.git/commit/c34d842973a74ded7d9fae683eaa8645afa9d6bb">bisect-runner.pl should detect ccache with -V, not... </a></td>
+  <td class="link"><a href="/perl.git/commit/c34d842973a74ded7d9fae683eaa8645afa9d6bb">commit</a> | <a href="/perl.git/commitdiff/c34d842973a74ded7d9fae683eaa8645afa9d6bb">commitdiff</a> | <a href="/perl.git/tree/c34d842973a74ded7d9fae683eaa8645afa9d6bb">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c34d842973a74ded7d9fae683eaa8645afa9d6bb.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Add a placeholder man page for perltodo, directing people to look at git." href="/perl.git/commit/5d0b49e8365d66ddadfdd132c33441717b9f1485">Add a placeholder man page for perltodo, directing... </a></td>
+  <td class="link"><a href="/perl.git/commit/5d0b49e8365d66ddadfdd132c33441717b9f1485">commit</a> | <a href="/perl.git/commitdiff/5d0b49e8365d66ddadfdd132c33441717b9f1485">commitdiff</a> | <a href="/perl.git/tree/5d0b49e8365d66ddadfdd132c33441717b9f1485">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/5d0b49e8365d66ddadfdd132c33441717b9f1485.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>11 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" href="/perl.git/commit/c31435083c160a0aaf86b974b86976d3d3e9d208">Move the todo list from pod/ to Porting/</a></td>
+  <td class="link"><a href="/perl.git/commit/c31435083c160a0aaf86b974b86976d3d3e9d208">commit</a> | <a href="/perl.git/commitdiff/c31435083c160a0aaf86b974b86976d3d3e9d208">commitdiff</a> | <a href="/perl.git/tree/c31435083c160a0aaf86b974b86976d3d3e9d208">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c31435083c160a0aaf86b974b86976d3d3e9d208.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>15 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/c221a2194823bb2fb485e0e197025139bb49ed7f">Add a TODO test for RT 111842</a></td>
+  <td class="link"><a href="/perl.git/commit/c221a2194823bb2fb485e0e197025139bb49ed7f">commit</a> | <a href="/perl.git/commitdiff/c221a2194823bb2fb485e0e197025139bb49ed7f">commitdiff</a> | <a href="/perl.git/tree/c221a2194823bb2fb485e0e197025139bb49ed7f">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c221a2194823bb2fb485e0e197025139bb49ed7f.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>18 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">Bail out if it looks scary.</a></td>
+  <td class="link"><a href="/perl.git/commit/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">commit</a> | <a href="/perl.git/commitdiff/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">commitdiff</a> | <a href="/perl.git/tree/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/b5bf278af31bbe7f859e02da0ad3793feb6a55e8.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>18 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/e81fec2c92c338f9d506a01f47364f85ef3b7b75">Don't remove --tarball</a></td>
+  <td class="link"><a href="/perl.git/commit/e81fec2c92c338f9d506a01f47364f85ef3b7b75">commit</a> | <a href="/perl.git/commitdiff/e81fec2c92c338f9d506a01f47364f85ef3b7b75">commitdiff</a> | <a href="/perl.git/tree/e81fec2c92c338f9d506a01f47364f85ef3b7b75">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/e81fec2c92c338f9d506a01f47364f85ef3b7b75.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>18 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/33e80a479f628997e99534cde168f74bb9444d15">Use #!/usr/bin/env</a></td>
+  <td class="link"><a href="/perl.git/commit/33e80a479f628997e99534cde168f74bb9444d15">commit</a> | <a href="/perl.git/commitdiff/33e80a479f628997e99534cde168f74bb9444d15">commitdiff</a> | <a href="/perl.git/tree/33e80a479f628997e99534cde168f74bb9444d15">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/33e80a479f628997e99534cde168f74bb9444d15.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/8cfc9af613d5c73745f210535cf8921067507306">More work on perldelta</a></td>
+  <td class="link"><a href="/perl.git/commit/8cfc9af613d5c73745f210535cf8921067507306">commit</a> | <a href="/perl.git/commitdiff/8cfc9af613d5c73745f210535cf8921067507306">commitdiff</a> | <a href="/perl.git/tree/8cfc9af613d5c73745f210535cf8921067507306">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/8cfc9af613d5c73745f210535cf8921067507306.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" href="/perl.git/commit/c9ebf02397fb525998acacd7b4ac9a55323b54ab">Merge the feature and B::Deparse refactoring to blead.</a></td>
+  <td class="link"><a href="/perl.git/commit/c9ebf02397fb525998acacd7b4ac9a55323b54ab">commit</a> | <a href="/perl.git/commitdiff/c9ebf02397fb525998acacd7b4ac9a55323b54ab">commitdiff</a> | <a href="/perl.git/tree/c9ebf02397fb525998acacd7b4ac9a55323b54ab">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c9ebf02397fb525998acacd7b4ac9a55323b54ab.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Note the improvements to B::Deparse and feature in perldelta." href="/perl.git/commit/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">Note the improvements to B::Deparse and feature in... </a></td>
+  <td class="link"><a href="/perl.git/commit/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">commit</a> | <a href="/perl.git/commitdiff/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">commitdiff</a> | <a href="/perl.git/tree/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/58856662e3d8fc062bbb58ba29d28f4d9d29cbba.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In feature.pm, inline current_bundle() into __common(), its only caller." href="/perl.git/commit/0c8d50175e8fc59ffe16de8607996905f18a8b28">In feature.pm, inline current_bundle() into __common... </a></td>
+  <td class="link"><a href="/perl.git/commit/0c8d50175e8fc59ffe16de8607996905f18a8b28">commit</a> | <a href="/perl.git/commitdiff/0c8d50175e8fc59ffe16de8607996905f18a8b28">commitdiff</a> | <a href="/perl.git/tree/0c8d50175e8fc59ffe16de8607996905f18a8b28">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/0c8d50175e8fc59ffe16de8607996905f18a8b28.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In feature.pm, inline normalise_hints() into __common(), its only caller." href="/perl.git/commit/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">In feature.pm, inline normalise_hints() into __common... </a></td>
+  <td class="link"><a href="/perl.git/commit/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">commit</a> | <a href="/perl.git/commitdiff/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">commitdiff</a> | <a href="/perl.git/tree/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Merge the code common to feature::import and feature::unimport." href="/perl.git/commit/d37572645496516ed45536ef36684ba890c8f09b">Merge the code common to feature::import and feature... </a></td>
+  <td class="link"><a href="/perl.git/commit/d37572645496516ed45536ef36684ba890c8f09b">commit</a> | <a href="/perl.git/commitdiff/d37572645496516ed45536ef36684ba890c8f09b">commitdiff</a> | <a href="/perl.git/tree/d37572645496516ed45536ef36684ba890c8f09b">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/d37572645496516ed45536ef36684ba890c8f09b.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In feature.pm, use a consistent code style in import() and unimport()." href="/perl.git/commit/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">In feature.pm, use a consistent code style in import... </a></td>
+  <td class="link"><a href="/perl.git/commit/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">commit</a> | <a href="/perl.git/commitdiff/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">commitdiff</a> | <a href="/perl.git/tree/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In B::Deparse::_features_from_bundle(), don't call feature::current_bundle()" href="/perl.git/commit/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">In B::Deparse::_features_from_bundle(), don't call... </a></td>
+  <td class="link"><a href="/perl.git/commit/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">commit</a> | <a href="/perl.git/commitdiff/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">commitdiff</a> | <a href="/perl.git/tree/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In Deparse, use $feature::hint_mask directly, instead of copying its value." href="/perl.git/commit/149758b3fc289aa2e2cbf92de18c3cee9475fe83">In Deparse, use $feature::hint_mask directly, instead... </a></td>
+  <td class="link"><a href="/perl.git/commit/149758b3fc289aa2e2cbf92de18c3cee9475fe83">commit</a> | <a href="/perl.git/commitdiff/149758b3fc289aa2e2cbf92de18c3cee9475fe83">commitdiff</a> | <a href="/perl.git/tree/149758b3fc289aa2e2cbf92de18c3cee9475fe83">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/149758b3fc289aa2e2cbf92de18c3cee9475fe83.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In B::Deparse, refactor common code into _features_from_bundle()." href="/perl.git/commit/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">In B::Deparse, refactor common code into _features_from... </a></td>
+  <td class="link"><a href="/perl.git/commit/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">commit</a> | <a href="/perl.git/commitdiff/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">commitdiff</a> | <a href="/perl.git/tree/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In B::Deparse, refactor the two places that feature::current_bundle()" href="/perl.git/commit/c63c25b23f61fe3136dbeb1c42bcfda18736c094">In B::Deparse, refactor the two places that feature... </a></td>
+  <td class="link"><a href="/perl.git/commit/c63c25b23f61fe3136dbeb1c42bcfda18736c094">commit</a> | <a href="/perl.git/commitdiff/c63c25b23f61fe3136dbeb1c42bcfda18736c094">commitdiff</a> | <a href="/perl.git/tree/c63c25b23f61fe3136dbeb1c42bcfda18736c094">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c63c25b23f61fe3136dbeb1c42bcfda18736c094.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" href="/perl.git/commit/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">Fix regression in deparsing say (etc) under use 5.10.0</a></td>
+  <td class="link"><a href="/perl.git/commit/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">commit</a> | <a href="/perl.git/commitdiff/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">commitdiff</a> | <a href="/perl.git/tree/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Add tests for deparsing C&lt;say&gt; under various combinations of pragmas." href="/perl.git/commit/8f57bb34632c3884eb14455ddf9dcb86975886af">Add tests for deparsing C&lt;say&gt; under various combinatio... </a></td>
+  <td class="link"><a href="/perl.git/commit/8f57bb34632c3884eb14455ddf9dcb86975886af">commit</a> | <a href="/perl.git/commitdiff/8f57bb34632c3884eb14455ddf9dcb86975886af">commitdiff</a> | <a href="/perl.git/tree/8f57bb34632c3884eb14455ddf9dcb86975886af">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/8f57bb34632c3884eb14455ddf9dcb86975886af.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Avoid deparse.t testing everything under use feature ':5.10'" href="/perl.git/commit/205fef8800760e59c00e57b4e56a9851113e96cb">Avoid deparse.t testing everything under use feature... </a></td>
+  <td class="link"><a href="/perl.git/commit/205fef8800760e59c00e57b4e56a9851113e96cb">commit</a> | <a href="/perl.git/commitdiff/205fef8800760e59c00e57b4e56a9851113e96cb">commitdiff</a> | <a href="/perl.git/tree/205fef8800760e59c00e57b4e56a9851113e96cb">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/205fef8800760e59c00e57b4e56a9851113e96cb.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Add a 'context' feature to deparse.t, to better test ambient pragmas." href="/perl.git/commit/a6087f241d4f8df274ed95db66813909e8eba7cc">Add a 'context' feature to deparse.t, to better test... </a></td>
+  <td class="link"><a href="/perl.git/commit/a6087f241d4f8df274ed95db66813909e8eba7cc">commit</a> | <a href="/perl.git/commitdiff/a6087f241d4f8df274ed95db66813909e8eba7cc">commitdiff</a> | <a href="/perl.git/tree/a6087f241d4f8df274ed95db66813909e8eba7cc">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/a6087f241d4f8df274ed95db66813909e8eba7cc.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" href="/perl.git/commit/c4a350e6709d60f02654f36bb02d403e6763ecc1">In deparse.t, rename %reason to %meta.</a></td>
+  <td class="link"><a href="/perl.git/commit/c4a350e6709d60f02654f36bb02d403e6763ecc1">commit</a> | <a href="/perl.git/commitdiff/c4a350e6709d60f02654f36bb02d403e6763ecc1">commitdiff</a> | <a href="/perl.git/tree/c4a350e6709d60f02654f36bb02d403e6763ecc1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/c4a350e6709d60f02654f36bb02d403e6763ecc1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-19"><i>22 hours ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Note in perldelta that C&lt;no feature;&gt; now means reset to default." href="/perl.git/commit/d333a65555483b42982abcf933ffae2cf0b8a6a9">Note in perldelta that C&lt;no feature;&gt; now means reset... </a></td>
+  <td class="link"><a href="/perl.git/commit/d333a65555483b42982abcf933ffae2cf0b8a6a9">commit</a> | <a href="/perl.git/commitdiff/d333a65555483b42982abcf933ffae2cf0b8a6a9">commitdiff</a> | <a href="/perl.git/tree/d333a65555483b42982abcf933ffae2cf0b8a6a9">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/d333a65555483b42982abcf933ffae2cf0b8a6a9.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-19"><i>29 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">Retry first shot at perldelta.pod.</a></td>
+  <td class="link"><a href="/perl.git/commit/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">commit</a> | <a href="/perl.git/commitdiff/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">commitdiff</a> | <a href="/perl.git/tree/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-18"><i>32 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/a6b91202136a6ce25cd5212bf1f2e81489688050">Update Pod::Perldoc to version 3.17</a></td>
+  <td class="link"><a href="/perl.git/commit/a6b91202136a6ce25cd5212bf1f2e81489688050">commit</a> | <a href="/perl.git/commitdiff/a6b91202136a6ce25cd5212bf1f2e81489688050">commitdiff</a> | <a href="/perl.git/tree/a6b91202136a6ce25cd5212bf1f2e81489688050">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/a6b91202136a6ce25cd5212bf1f2e81489688050.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-18"><i>32 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">Add a --tarball option</a></td>
+  <td class="link"><a href="/perl.git/commit/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">commit</a> | <a href="/perl.git/commitdiff/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">commitdiff</a> | <a href="/perl.git/tree/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-18"><i>33 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/350bd8f1230fca459d025043f2a9a9f23b0c3537">Some backslashes turn out not to be always there.</a></td>
+  <td class="link"><a href="/perl.git/commit/350bd8f1230fca459d025043f2a9a9f23b0c3537">commit</a> | <a href="/perl.git/commitdiff/350bd8f1230fca459d025043f2a9a9f23b0c3537">commitdiff</a> | <a href="/perl.git/tree/350bd8f1230fca459d025043f2a9a9f23b0c3537">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/350bd8f1230fca459d025043f2a9a9f23b0c3537.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-18"><i>33 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/e529a3872c59db57c97daa13c04fb14035b7fd66">Fix a cut-and-paste error</a></td>
+  <td class="link"><a href="/perl.git/commit/e529a3872c59db57c97daa13c04fb14035b7fd66">commit</a> | <a href="/perl.git/commitdiff/e529a3872c59db57c97daa13c04fb14035b7fd66">commitdiff</a> | <a href="/perl.git/tree/e529a3872c59db57c97daa13c04fb14035b7fd66">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/e529a3872c59db57c97daa13c04fb14035b7fd66.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-18"><i>33 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/534c8e032e0b46d72b78272d2daa69c3a0a22267">Revert &quot;First shot at perl5159delta.pod&quot;</a></td>
+  <td class="link"><a href="/perl.git/commit/534c8e032e0b46d72b78272d2daa69c3a0a22267">commit</a> | <a href="/perl.git/commitdiff/534c8e032e0b46d72b78272d2daa69c3a0a22267">commitdiff</a> | <a href="/perl.git/tree/534c8e032e0b46d72b78272d2daa69c3a0a22267">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/534c8e032e0b46d72b78272d2daa69c3a0a22267.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-18"><i>33 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" title="Revert &quot;Paste in the output of Porting/acknowledgements.pl in pod/perl5159delta.pod&quot;" href="/perl.git/commit/2a0c0f7e189bc00ac45b3dbbe586401632124954">Revert &quot;Paste in the output of Porting/acknowledgements... </a></td>
+  <td class="link"><a href="/perl.git/commit/2a0c0f7e189bc00ac45b3dbbe586401632124954">commit</a> | <a href="/perl.git/commitdiff/2a0c0f7e189bc00ac45b3dbbe586401632124954">commitdiff</a> | <a href="/perl.git/tree/2a0c0f7e189bc00ac45b3dbbe586401632124954">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/2a0c0f7e189bc00ac45b3dbbe586401632124954.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-18"><i>38 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" title="Paste in the output of Porting/acknowledgements.pl in pod/perl5159delta.pod" href="/perl.git/commit/98f0737d71a92167bf1aace8a8d8411b985e3200">Paste in the output of Porting/acknowledgements.pl... </a></td>
+  <td class="link"><a href="/perl.git/commit/98f0737d71a92167bf1aace8a8d8411b985e3200">commit</a> | <a href="/perl.git/commitdiff/98f0737d71a92167bf1aace8a8d8411b985e3200">commitdiff</a> | <a href="/perl.git/tree/98f0737d71a92167bf1aace8a8d8411b985e3200">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/98f0737d71a92167bf1aace8a8d8411b985e3200.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-18"><i>38 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/08dc3bc803c7923db799f27c4e5183decbebc2f4">Attempt to find an author if (s)he comes via RT.</a></td>
+  <td class="link"><a href="/perl.git/commit/08dc3bc803c7923db799f27c4e5183decbebc2f4">commit</a> | <a href="/perl.git/commitdiff/08dc3bc803c7923db799f27c4e5183decbebc2f4">commitdiff</a> | <a href="/perl.git/tree/08dc3bc803c7923db799f27c4e5183decbebc2f4">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/08dc3bc803c7923db799f27c4e5183decbebc2f4.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-18"><i>39 hours ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/21ffc8459b739cc13a32f22a2edb7be485a062e0">First shot at perl5159delta.pod</a></td>
+  <td class="link"><a href="/perl.git/commit/21ffc8459b739cc13a32f22a2edb7be485a062e0">commit</a> | <a href="/perl.git/commitdiff/21ffc8459b739cc13a32f22a2edb7be485a062e0">commitdiff</a> | <a href="/perl.git/tree/21ffc8459b739cc13a32f22a2edb7be485a062e0">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/21ffc8459b739cc13a32f22a2edb7be485a062e0.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author"><span title="Chris 'BinGOs' Williams">Chris 'BinGOs... </span></td><td><a class="list subject" href="/perl.git/commit/7ab791555672f50a01181f675c399d278879e60e">Update CPANPLUS to CPAN version 0.9121</a></td>
+  <td class="link"><a href="/perl.git/commit/7ab791555672f50a01181f675c399d278879e60e">commit</a> | <a href="/perl.git/commitdiff/7ab791555672f50a01181f675c399d278879e60e">commitdiff</a> | <a href="/perl.git/tree/7ab791555672f50a01181f675c399d278879e60e">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/7ab791555672f50a01181f675c399d278879e60e.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In S_parse_body(), don't &quot;leak&quot; linestr_sv until global destruction." href="/perl.git/commit/95670bde8957add23fdad6b1c9da76ef317f788f">In S_parse_body(), don't &quot;leak&quot; linestr_sv until global... </a></td>
+  <td class="link"><a href="/perl.git/commit/95670bde8957add23fdad6b1c9da76ef317f788f">commit</a> | <a href="/perl.git/commitdiff/95670bde8957add23fdad6b1c9da76ef317f788f">commitdiff</a> | <a href="/perl.git/tree/95670bde8957add23fdad6b1c9da76ef317f788f">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/95670bde8957add23fdad6b1c9da76ef317f788f.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="Remove all the never used parameters from the macro validate_suid()" href="/perl.git/commit/b24bc0958ea575493f4672819334c2b884f1e90d">Remove all the never used parameters from the macro... </a></td>
+  <td class="link"><a href="/perl.git/commit/b24bc0958ea575493f4672819334c2b884f1e90d">commit</a> | <a href="/perl.git/commitdiff/b24bc0958ea575493f4672819334c2b884f1e90d">commitdiff</a> | <a href="/perl.git/tree/b24bc0958ea575493f4672819334c2b884f1e90d">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/b24bc0958ea575493f4672819334c2b884f1e90d.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In perlfunc, don't have functions in &quot;Misc&quot; and a second category." href="/perl.git/commit/17d155413b0e201ca149c3701d53539001559d4d">In perlfunc, don't have functions in &quot;Misc&quot; and a secon... </a></td>
+  <td class="link"><a href="/perl.git/commit/17d155413b0e201ca149c3701d53539001559d4d">commit</a> | <a href="/perl.git/commitdiff/17d155413b0e201ca149c3701d53539001559d4d">commitdiff</a> | <a href="/perl.git/tree/17d155413b0e201ca149c3701d53539001559d4d">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/17d155413b0e201ca149c3701d53539001559d4d.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" href="/perl.git/commit/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">De-emphasise switch-related keywords in perlfunc.</a></td>
+  <td class="link"><a href="/perl.git/commit/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">commit</a> | <a href="/perl.git/commitdiff/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">commitdiff</a> | <a href="/perl.git/tree/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="In the perlfunc cross-reference sections, link to the section within a page." href="/perl.git/commit/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">In the perlfunc cross-reference sections, link to the... </a></td>
+  <td class="link"><a href="/perl.git/commit/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">commit</a> | <a href="/perl.git/commitdiff/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">commitdiff</a> | <a href="/perl.git/tree/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-17"><i>2 days ago</i></td>
+  <td class="author">Nicholas Clark</td><td><a class="list subject" title="DESTROY is documented in perlobj - correct the cross-reference in perlfunc." href="/perl.git/commit/081753c830d198a217b6d919d68090aab769b724">DESTROY is documented in perlobj - correct the cross... </a></td>
+  <td class="link"><a href="/perl.git/commit/081753c830d198a217b6d919d68090aab769b724">commit</a> | <a href="/perl.git/commitdiff/081753c830d198a217b6d919d68090aab769b724">commitdiff</a> | <a href="/perl.git/tree/081753c830d198a217b6d919d68090aab769b724">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/081753c830d198a217b6d919d68090aab769b724.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-17"><i>3 days ago</i></td>
+  <td class="author">Tony Cook</td><td><a class="list subject" title="ignore new build result from splitting docs for Module::CoreList" href="/perl.git/commit/0b721e491b9f3684d24ec056752af46db8ebb87c">ignore new build result from splitting docs for Module... </a></td>
+  <td class="link"><a href="/perl.git/commit/0b721e491b9f3684d24ec056752af46db8ebb87c">commit</a> | <a href="/perl.git/commitdiff/0b721e491b9f3684d24ec056752af46db8ebb87c">commitdiff</a> | <a href="/perl.git/tree/0b721e491b9f3684d24ec056752af46db8ebb87c">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/0b721e491b9f3684d24ec056752af46db8ebb87c.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-16"><i>3 days ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/6329003cd882963712174461f03a3f11db150a50">Unicode::UCD: pod clarifications, corrections</a></td>
+  <td class="link"><a href="/perl.git/commit/6329003cd882963712174461f03a3f11db150a50">commit</a> | <a href="/perl.git/commitdiff/6329003cd882963712174461f03a3f11db150a50">commitdiff</a> | <a href="/perl.git/tree/6329003cd882963712174461f03a3f11db150a50">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6329003cd882963712174461f03a3f11db150a50.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-16"><i>3 days ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/34ea573bc5236fc856e9ef46efe729e09da2b167">charnames.t: Attempt to fix probable timing issue</a></td>
+  <td class="link"><a href="/perl.git/commit/34ea573bc5236fc856e9ef46efe729e09da2b167">commit</a> | <a href="/perl.git/commitdiff/34ea573bc5236fc856e9ef46efe729e09da2b167">commitdiff</a> | <a href="/perl.git/tree/34ea573bc5236fc856e9ef46efe729e09da2b167">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/34ea573bc5236fc856e9ef46efe729e09da2b167.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-16"><i>3 days ago</i></td>
+  <td class="author">Karl Williamson</td><td><a class="list subject" href="/perl.git/commit/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">cherrymaint: Beef up --help option</a></td>
+  <td class="link"><a href="/perl.git/commit/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">commit</a> | <a href="/perl.git/commitdiff/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">commitdiff</a> | <a href="/perl.git/tree/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-16"><i>4 days ago</i></td>
+  <td class="author">Dave Rolsky</td><td><a class="list subject" href="/perl.git/commit/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">Run podtidy on perlsource.pod</a></td>
+  <td class="link"><a href="/perl.git/commit/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">commit</a> | <a href="/perl.git/commitdiff/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">commitdiff</a> | <a href="/perl.git/tree/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-16"><i>4 days ago</i></td>
+  <td class="author">Dave Rolsky</td><td><a class="list subject" href="/perl.git/commit/dde1c085b98418e83ca77e219ed1f77f858c5f34">Add a missing word to perlsource.pod</a></td>
+  <td class="link"><a href="/perl.git/commit/dde1c085b98418e83ca77e219ed1f77f858c5f34">commit</a> | <a href="/perl.git/commitdiff/dde1c085b98418e83ca77e219ed1f77f858c5f34">commitdiff</a> | <a href="/perl.git/tree/dde1c085b98418e83ca77e219ed1f77f858c5f34">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/dde1c085b98418e83ca77e219ed1f77f858c5f34.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-15"><i>4 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">Fix POD issues</a></td>
+  <td class="link"><a href="/perl.git/commit/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">commit</a> | <a href="/perl.git/commitdiff/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">commitdiff</a> | <a href="/perl.git/tree/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-15"><i>4 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/9c39c5366bcf770efa7af1f634be0a019c74bf8f">Document upgrading a module in cpan/</a></td>
+  <td class="link"><a href="/perl.git/commit/9c39c5366bcf770efa7af1f634be0a019c74bf8f">commit</a> | <a href="/perl.git/commitdiff/9c39c5366bcf770efa7af1f634be0a019c74bf8f">commitdiff</a> | <a href="/perl.git/tree/9c39c5366bcf770efa7af1f634be0a019c74bf8f">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/9c39c5366bcf770efa7af1f634be0a019c74bf8f.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-15"><i>4 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/036935f1993182e7c6f159b90e0e79e791177741">Clearify this is for even numbered (BLEAD-FINAL) releases.</a></td>
+  <td class="link"><a href="/perl.git/commit/036935f1993182e7c6f159b90e0e79e791177741">commit</a> | <a href="/perl.git/commitdiff/036935f1993182e7c6f159b90e0e79e791177741">commitdiff</a> | <a href="/perl.git/tree/036935f1993182e7c6f159b90e0e79e791177741">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/036935f1993182e7c6f159b90e0e79e791177741.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-15"><i>4 days ago</i></td>
+  <td class="author">Ricardo Signes</td><td><a class="list subject" href="/perl.git/commit/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">correct argument handling in Term::ReadLine</a></td>
+  <td class="link"><a href="/perl.git/commit/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">commit</a> | <a href="/perl.git/commitdiff/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">commitdiff</a> | <a href="/perl.git/tree/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-15"><i>4 days ago</i></td>
+  <td class="author"><span title="Chris 'BinGOs' Williams">Chris 'BinGOs... </span></td><td><a class="list subject" title="Separate the POD from the corelist data in Module::CoreList" href="/perl.git/commit/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">Separate the POD from the corelist data in Module:... </a></td>
+  <td class="link"><a href="/perl.git/commit/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">commit</a> | <a href="/perl.git/commitdiff/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">commitdiff</a> | <a href="/perl.git/tree/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/dd4d388c3449c7b39c81d0a9714e4d966b5b845c.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/30a7372d99391a59ada56a6bf8e6b9955e828bec">Revert &quot;Upgrade IO-Compress to 2.049&quot;</a></td>
+  <td class="link"><a href="/perl.git/commit/30a7372d99391a59ada56a6bf8e6b9955e828bec">commit</a> | <a href="/perl.git/commitdiff/30a7372d99391a59ada56a6bf8e6b9955e828bec">commitdiff</a> | <a href="/perl.git/tree/30a7372d99391a59ada56a6bf8e6b9955e828bec">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/30a7372d99391a59ada56a6bf8e6b9955e828bec.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/1d4b9cf3270c936605a07ecd7414f808755d3184">Upgrade IO-Compress to 2.049</a></td>
+  <td class="link"><a href="/perl.git/commit/1d4b9cf3270c936605a07ecd7414f808755d3184">commit</a> | <a href="/perl.git/commitdiff/1d4b9cf3270c936605a07ecd7414f808755d3184">commitdiff</a> | <a href="/perl.git/tree/1d4b9cf3270c936605a07ecd7414f808755d3184">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/1d4b9cf3270c936605a07ecd7414f808755d3184.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/5b73aae5f11067a2f45e856ae2113f569949cf8f">Allow passing the name of the CPAN module</a></td>
+  <td class="link"><a href="/perl.git/commit/5b73aae5f11067a2f45e856ae2113f569949cf8f">commit</a> | <a href="/perl.git/commitdiff/5b73aae5f11067a2f45e856ae2113f569949cf8f">commitdiff</a> | <a href="/perl.git/tree/5b73aae5f11067a2f45e856ae2113f569949cf8f">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/5b73aae5f11067a2f45e856ae2113f569949cf8f.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/233d887d0c6b144420b64ec4ba0b3b4838c76490">Upgrade CPANPLUS to 0.9120</a></td>
+  <td class="link"><a href="/perl.git/commit/233d887d0c6b144420b64ec4ba0b3b4838c76490">commit</a> | <a href="/perl.git/commitdiff/233d887d0c6b144420b64ec4ba0b3b4838c76490">commitdiff</a> | <a href="/perl.git/tree/233d887d0c6b144420b64ec4ba0b3b4838c76490">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/233d887d0c6b144420b64ec4ba0b3b4838c76490.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/9c259538f794249b4c29c8a9c858250e7c749d92">Deal with files in the CUSTOMIZED sections.</a></td>
+  <td class="link"><a href="/perl.git/commit/9c259538f794249b4c29c8a9c858250e7c749d92">commit</a> | <a href="/perl.git/commitdiff/9c259538f794249b4c29c8a9c858250e7c749d92">commitdiff</a> | <a href="/perl.git/tree/9c259538f794249b4c29c8a9c858250e7c749d92">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/9c259538f794249b4c29c8a9c858250e7c749d92.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/eabcd9c8d7e00e51ae2636e566e70bb210289338">Upgrade Socket to 2.000</a></td>
+  <td class="link"><a href="/perl.git/commit/eabcd9c8d7e00e51ae2636e566e70bb210289338">commit</a> | <a href="/perl.git/commitdiff/eabcd9c8d7e00e51ae2636e566e70bb210289338">commitdiff</a> | <a href="/perl.git/tree/eabcd9c8d7e00e51ae2636e566e70bb210289338">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/eabcd9c8d7e00e51ae2636e566e70bb210289338.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/a56b274156c02a5cd8c3a59e6714f42705281f39">Upgrade Socket to version 2,000</a></td>
+  <td class="link"><a href="/perl.git/commit/a56b274156c02a5cd8c3a59e6714f42705281f39">commit</a> | <a href="/perl.git/commitdiff/a56b274156c02a5cd8c3a59e6714f42705281f39">commitdiff</a> | <a href="/perl.git/tree/a56b274156c02a5cd8c3a59e6714f42705281f39">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/a56b274156c02a5cd8c3a59e6714f42705281f39.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/a812178126ae9e8787bcd14b429624d02297260d">Fix the fixing of MANIFEST</a></td>
+  <td class="link"><a href="/perl.git/commit/a812178126ae9e8787bcd14b429624d02297260d">commit</a> | <a href="/perl.git/commitdiff/a812178126ae9e8787bcd14b429624d02297260d">commitdiff</a> | <a href="/perl.git/tree/a812178126ae9e8787bcd14b429624d02297260d">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/a812178126ae9e8787bcd14b429624d02297260d.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/b7657688a7a906fc8146026c4cac58976ed20856">Upgrade Unicode::Normalize to 1.14.</a></td>
+  <td class="link"><a href="/perl.git/commit/b7657688a7a906fc8146026c4cac58976ed20856">commit</a> | <a href="/perl.git/commitdiff/b7657688a7a906fc8146026c4cac58976ed20856">commitdiff</a> | <a href="/perl.git/tree/b7657688a7a906fc8146026c4cac58976ed20856">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/b7657688a7a906fc8146026c4cac58976ed20856.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-14"><i>6 days ago</i></td>
+  <td class="author">Ricardo Signes</td><td><a class="list subject" href="/perl.git/commit/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">Revert changes to compression libraries <span class="refs"> <span class="head" title="heads/rjbs/revert-compress"><a href="/perl.git/shortlog/refs/heads/rjbs/revert-compress">rjbs/revert-compress</a></span></span></a></td>
+  <td class="link"><a href="/perl.git/commit/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">commit</a> | <a href="/perl.git/commitdiff/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">commitdiff</a> | <a href="/perl.git/tree/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-13"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/cba8842c354197460eeef36ed34e9e904fc9836b">Upgrade Unicode-Collate to 0.89</a></td>
+  <td class="link"><a href="/perl.git/commit/cba8842c354197460eeef36ed34e9e904fc9836b">commit</a> | <a href="/perl.git/commitdiff/cba8842c354197460eeef36ed34e9e904fc9836b">commitdiff</a> | <a href="/perl.git/tree/cba8842c354197460eeef36ed34e9e904fc9836b">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/cba8842c354197460eeef36ed34e9e904fc9836b.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="dark">
+  <td title="2012-03-13"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/6f865444a9d214a69e0a53f941d29037e5aca6b2">List one more TODO</a></td>
+  <td class="link"><a href="/perl.git/commit/6f865444a9d214a69e0a53f941d29037e5aca6b2">commit</a> | <a href="/perl.git/commitdiff/6f865444a9d214a69e0a53f941d29037e5aca6b2">commitdiff</a> | <a href="/perl.git/tree/6f865444a9d214a69e0a53f941d29037e5aca6b2">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/6f865444a9d214a69e0a53f941d29037e5aca6b2.tar.gz">snapshot</a></td>
+  </tr>
+  <tr class="light">
+  <td title="2012-03-13"><i>6 days ago</i></td>
+  <td class="author">Abigail</td><td><a class="list subject" href="/perl.git/commit/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">Upgrade Digest-SHA to 5.71.</a></td>
+  <td class="link"><a href="/perl.git/commit/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">commit</a> | <a href="/perl.git/commitdiff/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">commitdiff</a> | <a href="/perl.git/tree/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/9dd45029de8b01334e1d5eab97881b9cb0fa1e08.tar.gz">snapshot</a></td>
+  </tr>
+  <tr>
+  <td colspan="4"><a title="Alt-n" accesskey="n" href="/perl.git/shortlog?pg=1">next</a></td>
+  </tr>
+  </table>
+  <div class="page_footer">
+  <div class="page_footer_text">Perl5 Master Repository</div>
+  <a class="rss_logo" title="log RSS feed" href="/perl.git/rss">RSS</a>
+  <a class="rss_logo" title="log Atom feed" href="/perl.git/atom">Atom</a>
+  </div>
