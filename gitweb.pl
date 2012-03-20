@@ -577,16 +577,10 @@ our $home_text = "indextext.html";
 # filename of html text to include at bottom of each page
 our $site_footer = "";
 
-# URI of stylesheets
-our @stylesheets = ("static/gitweb.css");
-# URI of a single stylesheet, which can be overridden in GITWEB_CONFIG.
-our $stylesheet = undef;
 # URI of GIT logo (72x27 size)
 our $logo = "static/git-logo.png";
 # URI of GIT favicon, assumed to be image/png type
 our $favicon = "static/git-favicon.png";
-# URI of gitweb.js (JavaScript code for gitweb)
-our $javascript = "static/gitweb.js";
 
 # URI and label (title) of GIT logo link
 #our $logo_url = "http://www.kernel.org/pub/software/scm/git/docs/";
@@ -901,8 +895,6 @@ our @cgi_param_mapping = (
   search_use_regexp => "sr",
   ctag => "by_tag",
   diff_style => "ds",
-  # this must be last entry (for manipulation from JavaScript)
-  javascript => "js"
 );
 our %cgi_param_mapping = @cgi_param_mapping;
 

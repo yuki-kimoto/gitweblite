@@ -1,27 +1,20 @@
 % layout 'common';
   <div class="page_header">
-  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / summary
+    <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
+    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">projects</a> /
+    <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
+    summary
   </div>
-  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
-  <div class="search">
-  <input name="a" type="hidden" value="search" />
-  <input name="h" type="hidden" value="HEAD" />
-  <select name="st" >
-  <option selected="selected" value="free">free</option>
-  <option value="commit">commit</option>
-  <option value="grep">grep</option>
-  <option value="author">author</option>
-  <option value="committer">committer</option>
-  <option value="pickaxe">pickaxe</option>
-  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
-  <input type="text" name="s"  />
-  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
-  </form>
+  % my $commit = 'f6067adc61108c3398de698bb0294d95f09b55ef';
   <div class="page_nav">
-  summary | <a href="/perl.git/shortlog">shortlog</a> | <a href="/perl.git/log">log</a> | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree">tree</a><br/>
-  <br/>
+    summary |
+    <a href="<%= url_for('/shortlog')->query($self->req->params->clone) %>">shortlog</a> |
+    <a href="<%= url_for('/log')->query($self->req->params->clone) %>">log</a> |
+    <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit]) %>">commit</a> |
+    <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([commit => $commit]) %>">commitdiff</a> |
+    <a href="<%= url_for('/tree')->query($self->req->params->clone) %>">tree</a><br/>
+    <br/>
   </div>
-  <div class="title">&nbsp;</div>
   <table class="projects_list">
   <tr id="metadata_desc"><td>description</td><td>Perl5 Master Repository</td></tr>
   <tr id="metadata_owner"><td>owner</td><td>perl5-porters@perl.org</td></tr>
