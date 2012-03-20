@@ -11,18 +11,29 @@ our $version = '0.01';
 
 my $conf = plugin 'Config';
 
-
+# Config
 our $projectroot = $conf->{projectroot} // '/git/pub';
 our $projects_list = $conf->{projects_list} //= $projectroot;
-our $export_ok = "";
-our $export_auth_hook = undef;
+our $export_ok = $conf->{export_ok} // '';
+our $export_auth_hook = $conf->{export_ok} // undef;
+our $GIT = $conf->{git_bindir}
+  ? $conf->{git_bindir} . '/git'
+  : '/usr/local/bin/git';
+
 our $projects_list_description_width = 25;
 our $git_dir;
+our $gitweb_project_owner = undef;
+our $config_file = '';
+our %config;
+our $number_of_git_cmds = 0;
+our $fallback_encoding = 'latin1';
 
 get '/' => sub {
   my $self = shift;
   
   my @projects = git_get_projects_list();
+  
+  # Descriptions
   my $descriptions = {};
   for my $project (@projects) {
     my $path = $project->{path};
@@ -30,10 +41,156 @@ get '/' => sub {
     $descriptions->{$path} = $description;
   }
   
-  warn $self->dumper($descriptions);
+  # Owners
+  my $owners = {};
+  for my $project (@projects) {
+    my $path = $project->{path};
+    my $owner = git_get_project_owner($path);
+    $owners->{$path} = $owner;
+  }
+  
+  warn $self->dumper($owners);
   
   $self->render(projects => \@projects);
 } => 'projects';
+
+sub git_get_project_owner {
+  my $project = shift;
+  my $owner;
+
+  return undef unless $project;
+  $git_dir = "$projectroot/$project";
+
+  if (!defined $gitweb_project_owner) {
+    git_get_project_list_from_file();
+  }
+
+  if (exists $gitweb_project_owner->{$project}) {
+    $owner = $gitweb_project_owner->{$project};
+  }
+  if (!defined $owner){
+    $owner = git_get_project_config('owner');
+  }
+  if (!defined $owner) {
+    $owner = get_file_owner("$git_dir");
+  }
+
+  return $owner;
+}
+
+sub git_get_project_list_from_file {
+
+  return if (defined $gitweb_project_owner);
+
+  $gitweb_project_owner = {};
+  if (-f $projects_list) {
+    open(my $fd, '<', $projects_list);
+    while (my $line = <$fd>) {
+      chomp $line;
+      my ($pr, $ow) = split ' ', $line;
+      $pr = unescape($pr);
+      $ow = unescape($ow);
+      $gitweb_project_owner->{$pr} = to_utf8($ow);
+    }
+    close $fd;
+  }
+}
+
+sub git_get_project_config {
+  my ($key, $type) = @_;
+
+  return unless defined $git_dir;
+
+  # key sanity check
+  return unless ($key);
+  # only subsection, if exists, is case sensitive,
+  # and not lowercased by 'git config -z -l'
+  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
+    $key = join(".", lc($hi), $mi, lc($lo));
+  } else {
+    $key = lc($key);
+  }
+  $key =~ s/^gitweb\.//;
+  return if ($key =~ m/\W/);
+
+  # type sanity check
+  if (defined $type) {
+    $type =~ s/^--//;
+    $type = undef
+      unless ($type eq 'bool' || $type eq 'int');
+  }
+
+  # get config
+  if (!defined $config_file ||
+      $config_file ne "$git_dir/config") {
+    %config = git_parse_project_config('gitweb');
+    $config_file = "$git_dir/config";
+  }
+
+  # check if config variable (key) exists
+  return unless exists $config{"gitweb.$key"};
+
+  # ensure given type
+  if (!defined $type) {
+    return $config{"gitweb.$key"};
+  } elsif ($type eq 'bool') {
+    # backward compatibility: 'git config --bool' returns true/false
+    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
+  } elsif ($type eq 'int') {
+    return config_to_int($config{"gitweb.$key"});
+  }
+  return $config{"gitweb.$key"};
+}
+
+sub git_parse_project_config {
+  my $section_regexp = shift;
+  my %config;
+
+  local $/ = "\0";
+
+  open my $fh, "-|", git_cmd(), "config", '-z', '-l',
+    or return;
+
+  while (my $keyval = <$fh>) {
+    chomp $keyval;
+    my ($key, $value) = split(/\n/, $keyval, 2);
+
+    hash_set_multi(\%config, $key, $value)
+      if (!defined $section_regexp || $key =~ /^(?:$section_regexp)\./o);
+  }
+  close $fh;
+
+  return %config;
+}
+
+sub git_cmd {
+  $number_of_git_cmds++;
+  return $GIT, '--git-dir='.$git_dir;
+}
+
+sub get_file_owner {
+  my $path = shift;
+
+  my ($dev, $ino, $mode, $nlink, $st_uid, $st_gid, $rdev, $size) = stat($path);
+  my ($name, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell) = getpwuid($st_uid);
+  if (!defined $gcos) {
+    return undef;
+  }
+  my $owner = $gcos;
+  $owner =~ s/[,;].*$//;
+  return to_utf8($owner);
+}
+
+sub to_utf8 {
+  my $str = shift;
+  return undef unless defined $str;
+
+  if (utf8::is_utf8($str) || utf8::decode($str)) {
+    return $str;
+  } else {
+    return decode($fallback_encoding, $str, Encode::FB_DEFAULT);
+  }
+}
 
 get '/(:name).git' => sub {
   my $self = shift;
@@ -181,13 +338,8 @@ sub check_head_link {
 }
 
 our $t0 = [ gettimeofday() ];
-our $number_of_git_cmds = 0;
 
 our ($my_url, $my_uri, $base_url, $path_info, $home_link);
-
-# core git executable to use
-# this can just be "git" if your webserver has a sensible PATH
-our $GIT = "/usr/local/bin/git";
 
 # fs traversing limit for getting project list
 # the number is relative to the projectroot
@@ -254,12 +406,6 @@ our $default_text_plain_charset  = undef;
 # (relative to the current git repository)
 our $mimetypes_file = undef;
 
-# assume this charset if line contains non-UTF-8 characters;
-# it should be valid encoding (see Encoding::Supported(3pm) for list),
-# for which encoding all byte sequences are valid, for example
-# 'iso-8859-1' aka 'latin1' (it is decoded without checking, so it
-# could be even 'utf-8' for the old behavior)
-our $fallback_encoding = 'latin1';
 
 # rename detection options for git-diff and git-diff-tree
 # - default is '-M', with the cost proportional to
@@ -1528,20 +1674,6 @@ sub validate_refname {
   return $input;
 }
 
-# decode sequences of octets in utf8 into Perl's internal form,
-# which is utf-8 with utf8 flag set if needed.  gitweb writes out
-# in utf-8 thanks to "binmode STDOUT, ':utf8'" at beginning
-sub to_utf8 {
-  my $str = shift;
-  return undef unless defined $str;
-
-  if (utf8::is_utf8($str) || utf8::decode($str)) {
-    return $str;
-  } else {
-    return decode($fallback_encoding, $str, Encode::FB_DEFAULT);
-  }
-}
-
 # quote unsafe chars, but keep the slash, even when it's not
 # correct, but quoted slashes look too horrible in bookmarks
 sub esc_param {
@@ -2508,14 +2640,7 @@ sub get_feed_info {
   return %res;
 }
 
-## ----------------------------------------------------------------------
-## git utility subroutines, invoking git commands
 
-# returns path to the core git executable and the --git-dir parameter as list
-sub git_cmd {
-  $number_of_git_cmds++;
-  return $GIT, '--git-dir='.$git_dir;
-}
 
 # quote the given arguments for passing them to the shell
 # quote_command("command", "arg 1", "arg with ' and ! characters")
@@ -2567,10 +2692,6 @@ sub git_get_type {
   return $type;
 }
 
-# repository configuration
-our $config_file = '';
-our %config;
-
 # store multiple values for single key as anonymous array reference
 # single values stored directly in the hash, not as [ <value> ]
 sub hash_set_multi {
@@ -2585,28 +2706,7 @@ sub hash_set_multi {
   }
 }
 
-# return hash of git project configuration
-# optionally limited to some section, e.g. 'gitweb'
-sub git_parse_project_config {
-  my $section_regexp = shift;
-  my %config;
 
-  local $/ = "\0";
-
-  open my $fh, "-|", git_cmd(), "config", '-z', '-l',
-    or return;
-
-  while (my $keyval = <$fh>) {
-    chomp $keyval;
-    my ($key, $value) = split(/\n/, $keyval, 2);
-
-    hash_set_multi(\%config, $key, $value)
-      if (!defined $section_regexp || $key =~ /^(?:$section_regexp)\./o);
-  }
-  close $fh;
-
-  return %config;
-}
 
 # convert config value to boolean: 'true' or 'false'
 # no value, number > 0, 'true' and 'yes' values are true
@@ -2649,52 +2749,6 @@ sub config_to_multi {
   my $val = shift;
 
   return ref($val) ? $val : (defined($val) ? [ $val ] : []);
-}
-
-sub git_get_project_config {
-  my ($key, $type) = @_;
-
-  return unless defined $git_dir;
-
-  # key sanity check
-  return unless ($key);
-  # only subsection, if exists, is case sensitive,
-  # and not lowercased by 'git config -z -l'
-  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
-    $key = join(".", lc($hi), $mi, lc($lo));
-  } else {
-    $key = lc($key);
-  }
-  $key =~ s/^gitweb\.//;
-  return if ($key =~ m/\W/);
-
-  # type sanity check
-  if (defined $type) {
-    $type =~ s/^--//;
-    $type = undef
-      unless ($type eq 'bool' || $type eq 'int');
-  }
-
-  # get config
-  if (!defined $config_file ||
-      $config_file ne "$git_dir/config") {
-    %config = git_parse_project_config('gitweb');
-    $config_file = "$git_dir/config";
-  }
-
-  # check if config variable (key) exists
-  return unless exists $config{"gitweb.$key"};
-
-  # ensure given type
-  if (!defined $type) {
-    return $config{"gitweb.$key"};
-  } elsif ($type eq 'bool') {
-    # backward compatibility: 'git config --bool' returns true/false
-    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
-  } elsif ($type eq 'int') {
-    return config_to_int($config{"gitweb.$key"});
-  }
-  return $config{"gitweb.$key"};
 }
 
 # get hash of given path at given ref
@@ -2987,53 +3041,6 @@ sub search_projects_list {
   }
 
   return @projects;
-}
-
-our $gitweb_project_owner = undef;
-sub git_get_project_list_from_file {
-
-  return if (defined $gitweb_project_owner);
-
-  $gitweb_project_owner = {};
-  # read from file (url-encoded):
-  # 'git%2Fgit.git Linus+Torvalds'
-  # 'libs%2Fklibc%2Fklibc.git H.+Peter+Anvin'
-  # 'linux%2Fhotplug%2Fudev.git Greg+Kroah-Hartman'
-  if (-f $projects_list) {
-    open(my $fd, '<', $projects_list);
-    while (my $line = <$fd>) {
-      chomp $line;
-      my ($pr, $ow) = split ' ', $line;
-      $pr = unescape($pr);
-      $ow = unescape($ow);
-      $gitweb_project_owner->{$pr} = to_utf8($ow);
-    }
-    close $fd;
-  }
-}
-
-sub git_get_project_owner {
-  my $project = shift;
-  my $owner;
-
-  return undef unless $project;
-  $git_dir = "$projectroot/$project";
-
-  if (!defined $gitweb_project_owner) {
-    git_get_project_list_from_file();
-  }
-
-  if (exists $gitweb_project_owner->{$project}) {
-    $owner = $gitweb_project_owner->{$project};
-  }
-  if (!defined $owner){
-    $owner = git_get_project_config('owner');
-  }
-  if (!defined $owner) {
-    $owner = get_file_owner("$git_dir");
-  }
-
-  return $owner;
 }
 
 sub git_get_last_activity {
@@ -3580,22 +3587,6 @@ sub git_get_tags_list {
   close $fd;
 
   return wantarray ? @tagslist : \@tagslist;
-}
-
-## ----------------------------------------------------------------------
-## filesystem-related functions
-
-sub get_file_owner {
-  my $path = shift;
-
-  my ($dev, $ino, $mode, $nlink, $st_uid, $st_gid, $rdev, $size) = stat($path);
-  my ($name, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell) = getpwuid($st_uid);
-  if (!defined $gcos) {
-    return undef;
-  }
-  my $owner = $gcos;
-  $owner =~ s/[,;].*$//;
-  return to_utf8($owner);
 }
 
 # assume that file exists
