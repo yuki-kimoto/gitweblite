@@ -641,3 +641,182 @@
 [Tue Mar 20 17:41:09 2012] [debug] Rendering template "tag.html.ep".
 [Tue Mar 20 17:41:09 2012] [debug] Rendering template "layouts/common.html.ep".
 [Tue Mar 20 17:41:09 2012] [debug] 200 OK (0.013462s, 74.283/s).
+[Tue Mar 20 17:41:52 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:41:52 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:41:52 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:41:52 2012] [debug] 200 OK (0.009630s, 103.842/s).
+[Tue Mar 20 17:42:26 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:42:26 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:42:26 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:42:26 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:42:26 2012] [debug] 200 OK (0.008068s, 123.946/s).
+[Tue Mar 20 17:42:34 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 17:42:36 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:42:36 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:42:36 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:42:36 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:42:36 2012] [debug] 200 OK (0.012104s, 82.617/s).
+[Tue Mar 20 17:42:42 2012] [debug] GET /perl.git (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:42:42 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:42:42 2012] [debug] Rendering template "summary.html.ep".
+[Tue Mar 20 17:42:42 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:42:42 2012] [debug] 200 OK (0.014047s, 71.190/s).
+[Tue Mar 20 17:42:42 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:42:42 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:42:42 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:42:42 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:42:42 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:42:42 2012] [debug] 404 Not Found (0.028990s, 34.495/s).
+[Tue Mar 20 17:54:38 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 17:54:44 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:54:44 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:54:44 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:54:44 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:54:44 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:54:44 2012] [debug] 200 OK (0.017220s, 58.072/s).
+[Tue Mar 20 17:55:13 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:55:13 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:55:13 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:55:13 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:55:13 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:55:13 2012] [debug] 200 OK (0.024037s, 41.603/s).
+[Tue Mar 20 17:55:35 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 17:55:38 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:55:38 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:55:38 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:55:38 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:55:38 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:55:38 2012] [debug] 200 OK (0.012905s, 77.489/s).
+[Tue Mar 20 17:58:39 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 17:58:42 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:58:42 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:58:42 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:58:42 2012] [error] Undefined subroutine &Mojo::Server::SandBox::2b124c5f69896281dc6facc829a481d4::check_export_ok called at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/5.14.2/File/Find.pm line 924
+
+[Tue Mar 20 17:58:42 2012] [debug] Template "exception.development.html.ep" not found.
+[Tue Mar 20 17:58:42 2012] [debug] Template "exception.html.ep" not found.
+[Tue Mar 20 17:58:42 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:58:42 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:58:42 2012] [debug] 500 Internal Server Error (0.064043s, 15.615/s).
+[Tue Mar 20 18:00:22 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 18:00:22 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 18:00:22 2012] [debug] Dispatching callback.
+[Tue Mar 20 18:00:22 2012] [error] Undefined subroutine &Mojo::Server::SandBox::e065021ddbd6b6bfcb9646761fde93a7::check_head_link called at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/5.14.2/File/Find.pm line 924
+
+[Tue Mar 20 18:00:22 2012] [debug] Template "exception.development.html.ep" not found.
+[Tue Mar 20 18:00:22 2012] [debug] Template "exception.html.ep" not found.
+[Tue Mar 20 18:00:22 2012] [debug] Rendering inline template.
+[Tue Mar 20 18:00:22 2012] [debug] Rendering inline template.
+[Tue Mar 20 18:00:22 2012] [debug] 500 Internal Server Error (0.037832s, 26.433/s).
+[Tue Mar 20 18:01:07 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 18:01:07 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 18:01:07 2012] [debug] Dispatching callback.
+[Tue Mar 20 18:01:20 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 18:01:20 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 18:01:20 2012] [debug] 200 OK (12.631212s, 0.079/s).
+[Tue Mar 20 18:03:08 2012] [debug] GET / (Mozilla/5.0 (compatible;  Page2RSS/0.7; +http://page2rss.com/)).
+[Tue Mar 20 18:03:08 2012] [debug] Dispatching callback.
+[Tue Mar 20 18:03:09 2012] [debug] 200 OK (0.648025s, 1.543/s).
+[Tue Mar 20 18:12:33 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 18:12:33 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 18:12:33 2012] [debug] Dispatching callback.
+[Tue Mar 20 18:12:33 2012] [error] Undefined subroutine &Mojo::Server::SandBox::f93fb007b841c6276a94876e2d0cbfe1::git_get_file_or_project_config called at /home/kimoto/perl5/perlbrew/perls/perl-5.14.2/lib/site_perl/5.14.2/Mojolicious/Routes.pm line 327
+
+[Tue Mar 20 18:12:33 2012] [debug] Template "exception.development.html.ep" not found.
+[Tue Mar 20 18:12:33 2012] [debug] Template "exception.html.ep" not found.
+[Tue Mar 20 18:12:33 2012] [debug] Rendering inline template.
+[Tue Mar 20 18:12:33 2012] [debug] Rendering inline template.
+[Tue Mar 20 18:12:33 2012] [debug] 500 Internal Server Error (0.554896s, 1.802/s).
+[Tue Mar 20 18:15:36 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 18:15:36 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 18:15:36 2012] [debug] Dispatching callback.
+[Tue Mar 20 18:15:37 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 18:15:37 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 18:15:37 2012] [debug] 200 OK (0.834397s, 1.198/s).
+[Tue Mar 20 18:16:14 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 18:16:14 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 18:16:14 2012] [debug] Dispatching callback.
+[Tue Mar 20 18:16:14 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 18:16:14 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 18:16:14 2012] [debug] 200 OK (0.518063s, 1.930/s).
+[Tue Mar 20 19:55:10 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 19:55:29 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 19:55:29 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 19:55:29 2012] [debug] Dispatching callback.
+[Tue Mar 20 19:55:29 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 19:55:29 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 19:55:29 2012] [debug] 200 OK (0.009434s, 106.000/s).
+[Tue Mar 20 19:56:15 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 19:56:15 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 19:56:15 2012] [debug] Dispatching callback.
+[Tue Mar 20 19:56:15 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 19:56:15 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 19:56:15 2012] [debug] 200 OK (0.489139s, 2.044/s).
+[Tue Mar 20 19:57:00 2012] [debug] GET /admin (DoCoMo/2.0 N905i(c100;TB;W24H16) (compatible; Googlebot-Mobile/2.1; +http://www.google.com/bot.html)).
+[Tue Mar 20 19:57:00 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 19:57:00 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 19:57:00 2012] [debug] Rendering inline template.
+[Tue Mar 20 19:57:00 2012] [debug] Rendering inline template.
+[Tue Mar 20 19:57:00 2012] [debug] 404 Not Found (0.023095s, 43.299/s).
+[Tue Mar 20 19:59:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 19:59:49 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 19:59:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 19:59:52 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:01:52 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 20:01:52 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:01:52 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:01:52 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 20:01:52 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 20:01:52 2012] [debug] 200 OK (0.016844s, 59.368/s).
+[Tue Mar 20 20:01:57 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:01:57 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:01:57 2012] [debug] 200 OK (0.004679s, 213.721/s).
+[Tue Mar 20 20:03:13 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:13 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:14 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:14 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:32 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:33 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:33 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:42 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:03:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:03:43 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:04:53 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 20:04:53 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:04:53 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:05:44 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:05:44 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:06:34 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:06:34 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:06:34 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 20:06:38 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 20:06:38 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:06:38 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:07:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:07:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:07:51 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 20:07:53 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 20:07:53 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:07:53 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:07:53 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 20:07:53 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 20:07:53 2012] [debug] 200 OK (0.482841s, 2.071/s).
+[Tue Mar 20 20:19:56 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:19:56 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:19:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Tue Mar 20 20:19:58 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Tue Mar 20 20:23:57 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 20:23:57 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:23:57 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:23:58 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 20:23:58 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 20:23:58 2012] [debug] 200 OK (0.553210s, 1.808/s).
+[Tue Mar 20 20:23:59 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 20:23:59 2012] [debug] Dispatching callback.
+[Tue Mar 20 20:24:00 2012] [debug] 200 OK (0.499246s, 2.003/s).

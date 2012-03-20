@@ -9,7 +9,31 @@ binmode STDOUT, ':utf8';
 
 our $version = '0.01';
 
-get '/' => 'projects';
+my $conf = plugin 'Config';
+
+
+our $projectroot = $conf->{projectroot} // '/git/pub';
+our $projects_list = $conf->{projects_list} //= $projectroot;
+our $export_ok = "";
+our $export_auth_hook = undef;
+our $projects_list_description_width = 25;
+our $git_dir;
+
+get '/' => sub {
+  my $self = shift;
+  
+  my @projects = git_get_projects_list();
+  my $descriptions = {};
+  for my $project (@projects) {
+    my $path = $project->{path};
+    my $description = git_get_project_description($path);
+    $descriptions->{$path} = $description;
+  }
+  
+  warn $self->dumper($descriptions);
+  
+  $self->render(projects => \@projects);
+} => 'projects';
 
 get '/(:name).git' => sub {
   my $self = shift;
@@ -44,11 +68,117 @@ get '/(:name).git/tag/:commit' => sub {
   shift->render;
 } => 'tag';
 
-app->start;
+sub git_get_project_description {
+  my $path = shift;
+  return git_get_file_or_project_config($path, 'description');
+}
 
-__DATA__
+sub git_get_file_or_project_config {
+  my ($path, $name) = @_;
 
-__END__
+  $git_dir = "$projectroot/$path";
+  open my $fd, '<', "$git_dir/$name"
+    or return git_get_project_config($name);
+  my $conf = <$fd>;
+  close $fd;
+  if (defined $conf) {
+    chomp $conf;
+  }
+  return $conf;
+}
+
+sub git_get_projects_list {
+  my $filter = shift || '';
+  my @list;
+
+  $filter =~ s/\.git$//;
+
+  if (-d $projects_list) {
+    # search in directory
+    my $dir = $projects_list;
+    # remove the trailing "/"
+    $dir =~ s!/+$!!;
+    my $pfxlen = length("$dir");
+    my $pfxdepth = ($dir =~ tr!/!!);
+    # when filtering, search only given subdirectory
+    if ($filter) {
+      $dir .= "/$filter";
+      $dir =~ s!/+$!!;
+    }
+
+    File::Find::find({
+      follow_fast => 1, # follow symbolic links
+      follow_skip => 2, # ignore duplicates
+      dangling_symlinks => 0, # ignore dangling symlinks, silently
+      wanted => sub {
+        # global variables
+        our $project_maxdepth;
+        our $projectroot;
+        # skip project-list toplevel, if we get it.
+        return if (m!^[/.]$!);
+        # only directories can be git repositories
+        return unless (-d $_);
+        # don't traverse too deep (Find is super slow on os x)
+        # $project_maxdepth excludes depth of $projectroot
+        if (($File::Find::name =~ tr!/!!) - $pfxdepth > $project_maxdepth) {
+          $File::Find::prune = 1;
+          return;
+        }
+
+        my $path = substr($File::Find::name, $pfxlen + 1);
+        # we check related file in $projectroot
+        if (check_export_ok("$projectroot/$path")) {
+          push @list, { path => $path };
+          $File::Find::prune = 1;
+        }
+      },
+    }, "$dir");
+
+  } elsif (-f $projects_list) {
+    # read from file(url-encoded):
+    # 'git%2Fgit.git Linus+Torvalds'
+    # 'libs%2Fklibc%2Fklibc.git H.+Peter+Anvin'
+    # 'linux%2Fhotplug%2Fudev.git Greg+Kroah-Hartman'
+    open my $fd, '<', $projects_list or return;
+  PROJECT:
+    while (my $line = <$fd>) {
+      chomp $line;
+      my ($path, $owner) = split ' ', $line;
+      $path = unescape($path);
+      $owner = unescape($owner);
+      if (!defined $path) {
+        next;
+      }
+      # if $filter is rpovided, check if $path begins with $filter
+      if ($filter && $path !~ m!^\Q$filter\E/!) {
+        next;
+      }
+      if (check_export_ok("$projectroot/$path")) {
+        my $pr = {
+          path => $path,
+          owner => to_utf8($owner),
+        };
+        push @list, $pr;
+      }
+    }
+    close $fd;
+  }
+  return @list;
+}
+
+sub check_export_ok {
+  my ($dir) = @_;
+  return (check_head_link($dir) &&
+    (!$export_ok || -e "$dir/$export_ok") &&
+    (!$export_auth_hook || $export_auth_hook->($dir)));
+}
+
+sub check_head_link {
+  my ($dir) = @_;
+  my $headfile = "$dir/HEAD";
+  return ((-e $headfile) ||
+    (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
+}
 
 our $t0 = [ gettimeofday() ];
 our $number_of_git_cmds = 0;
@@ -58,10 +188,6 @@ our ($my_url, $my_uri, $base_url, $path_info, $home_link);
 # core git executable to use
 # this can just be "git" if your webserver has a sensible PATH
 our $GIT = "/usr/local/bin/git";
-
-# absolute fs-path which will be prepended to the project path
-#our $projectroot = "/pub/scm";
-our $projectroot = "/pub/git";
 
 # fs traversing limit for getting project list
 # the number is relative to the projectroot
@@ -101,12 +227,6 @@ our $javascript = "static/gitweb.js";
 our $logo_url = "http://git-scm.com/";
 our $logo_label = "git homepage";
 
-# source of projects list
-our $projects_list = "";
-
-# the width (in characters) of the projects list "Description" column
-our $projects_list_description_width = 25;
-
 # group projects by category on the projects list
 # (enabled if this variable evaluates to true)
 our $projects_list_group_categories = 0;
@@ -118,15 +238,6 @@ our $project_list_default_category = "";
 # default order of projects list
 # valid values are none, project, descr, owner, and age
 our $default_projects_order = "project";
-
-# show repository only if this file exists
-# (only effective if this variable evaluates to true)
-our $export_ok = "";
-
-# show repository only if this subroutine returns true
-# when given the path to the project, for example:
-#    sub { return -e "$_[0]/git-daemon-export-ok"; }
-our $export_auth_hook = undef;
 
 # only allow viewing of repositories also shown on the overview page
 our $strict_export = "";
@@ -527,6 +638,9 @@ our %feature = (
     'default' => [0]},
 );
 
+app->start;
+
+__END__
 
 sub gitweb_get_feature {
   my ($name) = @_;
@@ -602,23 +716,6 @@ sub feature_avatar {
   my @val = (git_get_project_config('avatar'));
 
   return @val ? @val : @_;
-}
-
-# checking HEAD file with -e is fragile if the repository was
-# initialized long time ago (i.e. symlink HEAD) and was pack-ref'ed
-# and then pruned.
-sub check_head_link {
-  my ($dir) = @_;
-  my $headfile = "$dir/HEAD";
-  return ((-e $headfile) ||
-    (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
-}
-
-sub check_export_ok {
-  my ($dir) = @_;
-  return (check_head_link($dir) &&
-    (!$export_ok || -e "$dir/$export_ok") &&
-    (!$export_auth_hook || $export_auth_hook->($dir)));
 }
 
 # process alternate names for backward compatibility
@@ -1075,12 +1172,6 @@ sub evaluate_and_validate_params {
       $search_regexp = quotemeta $searchtext;
     }
   }
-}
-
-# path to the current git repository
-our $git_dir;
-sub evaluate_git_dir {
-  our $git_dir = "$projectroot/$project" if $project;
 }
 
 our (@snapshot_fmts, $git_avatar);
@@ -2657,26 +2748,6 @@ sub git_get_path_by_hash {
   return undef;
 }
 
-## ......................................................................
-## git utility functions, directly accessing git repository
-
-# get the value of config variable either from file named as the variable
-# itself in the repository ($GIT_DIR/$name file), or from gitweb.$name
-# configuration variable in the repository config file.
-sub git_get_file_or_project_config {
-  my ($path, $name) = @_;
-
-  $git_dir = "$projectroot/$path";
-  open my $fd, '<', "$git_dir/$name"
-    or return git_get_project_config($name);
-  my $conf = <$fd>;
-  close $fd;
-  if (defined $conf) {
-    chomp $conf;
-  }
-  return $conf;
-}
-
 sub git_get_project_description {
   my $path = shift;
   return git_get_file_or_project_config($path, 'description');
@@ -2825,84 +2896,6 @@ sub git_get_project_url_list {
   return wantarray ? @git_project_url_list : \@git_project_url_list;
 }
 
-sub git_get_projects_list {
-  my $filter = shift || '';
-  my @list;
-
-  $filter =~ s/\.git$//;
-
-  if (-d $projects_list) {
-    # search in directory
-    my $dir = $projects_list;
-    # remove the trailing "/"
-    $dir =~ s!/+$!!;
-    my $pfxlen = length("$dir");
-    my $pfxdepth = ($dir =~ tr!/!!);
-    # when filtering, search only given subdirectory
-    if ($filter) {
-      $dir .= "/$filter";
-      $dir =~ s!/+$!!;
-    }
-
-    File::Find::find({
-      follow_fast => 1, # follow symbolic links
-      follow_skip => 2, # ignore duplicates
-      dangling_symlinks => 0, # ignore dangling symlinks, silently
-      wanted => sub {
-        # global variables
-        our $project_maxdepth;
-        our $projectroot;
-        # skip project-list toplevel, if we get it.
-        return if (m!^[/.]$!);
-        # only directories can be git repositories
-        return unless (-d $_);
-        # don't traverse too deep (Find is super slow on os x)
-        # $project_maxdepth excludes depth of $projectroot
-        if (($File::Find::name =~ tr!/!!) - $pfxdepth > $project_maxdepth) {
-          $File::Find::prune = 1;
-          return;
-        }
-
-        my $path = substr($File::Find::name, $pfxlen + 1);
-        # we check related file in $projectroot
-        if (check_export_ok("$projectroot/$path")) {
-          push @list, { path => $path };
-          $File::Find::prune = 1;
-        }
-      },
-    }, "$dir");
-
-  } elsif (-f $projects_list) {
-    # read from file(url-encoded):
-    # 'git%2Fgit.git Linus+Torvalds'
-    # 'libs%2Fklibc%2Fklibc.git H.+Peter+Anvin'
-    # 'linux%2Fhotplug%2Fudev.git Greg+Kroah-Hartman'
-    open my $fd, '<', $projects_list or return;
-  PROJECT:
-    while (my $line = <$fd>) {
-      chomp $line;
-      my ($path, $owner) = split ' ', $line;
-      $path = unescape($path);
-      $owner = unescape($owner);
-      if (!defined $path) {
-        next;
-      }
-      # if $filter is rpovided, check if $path begins with $filter
-      if ($filter && $path !~ m!^\Q$filter\E/!) {
-        next;
-      }
-      if (check_export_ok("$projectroot/$path")) {
-        my $pr = {
-          path => $path,
-          owner => to_utf8($owner),
-        };
-        push @list, $pr;
-      }
-    }
-    close $fd;
-  }
-  return @list;
-}
 
 # written with help of Tree::Trie module (Perl Artistic License, GPL compatibile)
 # as side effects it sets 'forks' field to list of forks for forked projects
@@ -5121,12 +5114,6 @@ sub git_patchset_body {
   print "</div>\n"; # class="patchset"
 }
 
-# . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
-
-# fills project list info (age, description, owner, category, forks)
-# for each project in the list, removing invalid projects from
-# returned list
-# NOTE: modifies $projlist, but does not remove entries from it
 sub fill_project_list_info {
   my $projlist = shift;
   my @projects;
@@ -5271,93 +5258,6 @@ sub git_project_list_rows {
           "</td>\n" .
           "</tr>\n";
   }
-}
-
-sub git_project_list_body {
-  # actually uses global variable $project
-  my ($projlist, $order, $from, $to, $extra, $no_header) = @_;
-  my @projects = @$projlist;
-
-  my $check_forks = gitweb_check_feature('forks');
-  my $show_ctags  = gitweb_check_feature('ctags');
-  my $tagfilter = $show_ctags ? $input_params{'ctag'} : undef;
-  $check_forks = undef
-    if ($tagfilter || $searchtext);
-
-  # filtering out forks before filling info allows to do less work
-  @projects = filter_forks_from_projects_list(\@projects)
-    if ($check_forks);
-  @projects = fill_project_list_info(\@projects);
-  # searching projects require filling to be run before it
-  @projects = search_projects_list(\@projects,
-                                   'searchtext' => $searchtext,
-                                   'tagfilter'  => $tagfilter)
-    if ($tagfilter || $searchtext);
-
-  $order ||= $default_projects_order;
-  $from = 0 unless defined $from;
-  $to = $#projects if (!defined $to || $#projects < $to);
-
-  # short circuit
-  if ($from > $to) {
-    print "<center>\n".
-          "<b>No such projects found</b><br />\n".
-          "Click ".$cgi->a({-href=>href(project=>undef)},"here")." to view all projects<br />\n".
-          "</center>\n<br />\n";
-    return;
-  }
-
-  @projects = sort_projects_list(\@projects, $order);
-
-  if ($show_ctags) {
-    my $ctags = git_gather_all_ctags(\@projects);
-    my $cloud = git_populate_project_tagcloud($ctags);
-    print git_show_project_tagcloud($cloud, 64);
-  }
-
-  print "<table class=\"project_list\">\n";
-  unless ($no_header) {
-    print "<tr>\n";
-    if ($check_forks) {
-      print "<th></th>\n";
-    }
-    print_sort_th('project', $order, 'Project');
-    print_sort_th('descr', $order, 'Description');
-    print_sort_th('owner', $order, 'Owner');
-    print_sort_th('age', $order, 'Last Change');
-    print "<th></th>\n" . # for links
-          "</tr>\n";
-  }
-
-  if ($projects_list_group_categories) {
-    # only display categories with projects in the $from-$to window
-    @projects = sort {$a->{'category'} cmp $b->{'category'}} @projects[$from..$to];
-    my %categories = build_projlist_by_category(\@projects, $from, $to);
-    foreach my $cat (sort keys %categories) {
-      unless ($cat eq "") {
-        print "<tr>\n";
-        if ($check_forks) {
-          print "<td></td>\n";
-        }
-        print "<td class=\"category\" colspan=\"5\">".esc_html($cat)."</td>\n";
-        print "</tr>\n";
-      }
-
-      git_project_list_rows($categories{$cat}, undef, undef, $check_forks);
-    }
-  } else {
-    git_project_list_rows(\@projects, $from, $to, $check_forks);
-  }
-
-  if (defined $extra) {
-    print "<tr>\n";
-    if ($check_forks) {
-      print "<td></td>\n";
-    }
-    print "<td colspan=\"5\">$extra</td>\n" .
-          "</tr>\n";
-  }
-  print "</table>\n";
 }
 
 sub git_log_body {
@@ -5968,36 +5868,6 @@ sub git_search_grep_body {
           "</tr>\n";
   }
   print "</table>\n";
-}
-
-## ======================================================================
-## ======================================================================
-## actions
-
-sub git_project_list {
-  my $order = $input_params{'order'};
-  if (defined $order && $order !~ m/none|project|descr|owner|age/) {
-    die_error(400, "Unknown order parameter");
-  }
-
-  my @list = git_get_projects_list();
-  if (!@list) {
-    die_error(404, "No projects found");
-  }
-
-  git_header_html();
-  if (defined $home_text && -f $home_text) {
-    print "<div class=\"index_include\">\n";
-    insert_file($home_text);
-    print "</div>\n";
-  }
-  print $cgi->startform(-method => "get") .
-        "<p class=\"projsearch\">Search:\n" .
-        $cgi->textfield(-name => "s", -value => $searchtext, -override => 1) . "\n" .
-        "</p>" .
-        $cgi->end_form() . "\n";
-  git_project_list_body(\@list, $order);
-  git_footer_html();
 }
 
 sub git_forks {
@@ -7588,315 +7458,93 @@ sub git_shortlog {
                   $hash, $hash_parent);
 }
 
-## ......................................................................
-## feeds (RSS, Atom; OPML)
+sub git_project_list_body {
+  # actually uses global variable $project
+  my ($projlist, $order, $from, $to, $extra, $no_header) = @_;
+  my @projects = @$projlist;
 
-sub git_feed {
-  my $format = shift || 'atom';
-  my $have_blame = gitweb_check_feature('blame');
+  my $check_forks = gitweb_check_feature('forks');
+  my $show_ctags  = gitweb_check_feature('ctags');
+  my $tagfilter = $show_ctags ? $input_params{'ctag'} : undef;
+  $check_forks = undef
+    if ($tagfilter || $searchtext);
 
-  # Atom: http://www.atomenabled.org/developers/syndication/
-  # RSS:  http://www.notestips.com/80256B3A007F2692/1/NAMO5P9UPQ
-  if ($format ne 'rss' && $format ne 'atom') {
-    die_error(400, "Unknown web feed format");
+  # filtering out forks before filling info allows to do less work
+  @projects = filter_forks_from_projects_list(\@projects)
+    if ($check_forks);
+  @projects = fill_project_list_info(\@projects);
+  # searching projects require filling to be run before it
+  @projects = search_projects_list(\@projects,
+                                   'searchtext' => $searchtext,
+                                   'tagfilter'  => $tagfilter)
+    if ($tagfilter || $searchtext);
+
+  $order ||= $default_projects_order;
+  $from = 0 unless defined $from;
+  $to = $#projects if (!defined $to || $#projects < $to);
+
+  # short circuit
+  if ($from > $to) {
+    print "<center>\n".
+          "<b>No such projects found</b><br />\n".
+          "Click ".$cgi->a({-href=>href(project=>undef)},"here")." to view all projects<br />\n".
+          "</center>\n<br />\n";
+    return;
   }
 
-  # log/feed of current (HEAD) branch, log of given branch, history of file/directory
-  my $head = $hash || 'HEAD';
-  my @commitlist = parse_commits($head, 150, 0, $file_name);
+  @projects = sort_projects_list(\@projects, $order);
 
-  my %latest_commit;
-  my %latest_date;
-  my $content_type = "application/$format+xml";
-  if (defined $cgi->http('HTTP_ACCEPT') &&
-     $cgi->Accept('text/xml') > $cgi->Accept($content_type)) {
-    # browser (feed reader) prefers text/xml
-    $content_type = 'text/xml';
+  if ($show_ctags) {
+    my $ctags = git_gather_all_ctags(\@projects);
+    my $cloud = git_populate_project_tagcloud($ctags);
+    print git_show_project_tagcloud($cloud, 64);
   }
-  if (defined($commitlist[0])) {
-    %latest_commit = %{$commitlist[0]};
-    my $latest_epoch = $latest_commit{'committer_epoch'};
-    %latest_date   = parse_date($latest_epoch, $latest_commit{'comitter_tz'});
-    my $if_modified = $cgi->http('IF_MODIFIED_SINCE');
-    if (defined $if_modified) {
-      my $since;
-      if (eval { require HTTP::Date; 1; }) {
-        $since = HTTP::Date::str2time($if_modified);
-      } elsif (eval { require Time::ParseDate; 1; }) {
-        $since = Time::ParseDate::parsedate($if_modified, GMT => 1);
-      }
-      if (defined $since && $latest_epoch <= $since) {
-        print $cgi->header(
-          -type => $content_type,
-          -charset => 'utf-8',
-          -last_modified => $latest_date{'rfc2822'},
-          -status => '304 Not Modified');
-        return;
-      }
+
+  print "<table class=\"project_list\">\n";
+  unless ($no_header) {
+    print "<tr>\n";
+    if ($check_forks) {
+      print "<th></th>\n";
     }
-    print $cgi->header(
-      -type => $content_type,
-      -charset => 'utf-8',
-      -last_modified => $latest_date{'rfc2822'});
+    print_sort_th('project', $order, 'Project');
+    print_sort_th('descr', $order, 'Description');
+    print_sort_th('owner', $order, 'Owner');
+    print_sort_th('age', $order, 'Last Change');
+    print "<th></th>\n" . # for links
+          "</tr>\n";
+  }
+
+  if ($projects_list_group_categories) {
+    # only display categories with projects in the $from-$to window
+    @projects = sort {$a->{'category'} cmp $b->{'category'}} @projects[$from..$to];
+    my %categories = build_projlist_by_category(\@projects, $from, $to);
+    foreach my $cat (sort keys %categories) {
+      unless ($cat eq "") {
+        print "<tr>\n";
+        if ($check_forks) {
+          print "<td></td>\n";
+        }
+        print "<td class=\"category\" colspan=\"5\">".esc_html($cat)."</td>\n";
+        print "</tr>\n";
+      }
+
+      git_project_list_rows($categories{$cat}, undef, undef, $check_forks);
+    }
   } else {
-    print $cgi->header(
-      -type => $content_type,
-      -charset => 'utf-8');
+    git_project_list_rows(\@projects, $from, $to, $check_forks);
   }
 
-  # Optimization: skip generating the body if client asks only
-  # for Last-Modified date.
-  return if ($cgi->request_method() eq 'HEAD');
-
-  # header variables
-  my $title = "$site_name - $project/$action";
-  my $feed_type = 'log';
-  if (defined $hash) {
-    $title .= " - '$hash'";
-    $feed_type = 'branch log';
-    if (defined $file_name) {
-      $title .= " :: $file_name";
-      $feed_type = 'history';
+  if (defined $extra) {
+    print "<tr>\n";
+    if ($check_forks) {
+      print "<td></td>\n";
     }
-  } elsif (defined $file_name) {
-    $title .= " - $file_name";
-    $feed_type = 'history';
+    print "<td colspan=\"5\">$extra</td>\n" .
+          "</tr>\n";
   }
-  $title .= " $feed_type";
-  my $descr = git_get_project_description($project);
-  if (defined $descr) {
-    $descr = esc_html($descr);
-  } else {
-    $descr = "$project " .
-             ($format eq 'rss' ? 'RSS' : 'Atom') .
-             " feed";
-  }
-  my $owner = git_get_project_owner($project);
-  $owner = esc_html($owner);
-
-  #header
-  my $alt_url;
-  if (defined $file_name) {
-    $alt_url = href(-full=>1, action=>"history", hash=>$hash, file_name=>$file_name);
-  } elsif (defined $hash) {
-    $alt_url = href(-full=>1, action=>"log", hash=>$hash);
-  } else {
-    $alt_url = href(-full=>1, action=>"summary");
-  }
-  print qq!<?xml version="1.0" encoding="utf-8"?>\n!;
-  if ($format eq 'rss') {
-    print <<XML;
-<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-<channel>
-XML
-    print "<title>$title</title>\n" .
-          "<link>$alt_url</link>\n" .
-          "<description>$descr</description>\n" .
-          "<language>en</language>\n" .
-          # project owner is responsible for 'editorial' content
-          "<managingEditor>$owner</managingEditor>\n";
-    if (defined $logo || defined $favicon) {
-      # prefer the logo to the favicon, since RSS
-      # doesn't allow both
-      my $img = esc_url($logo || $favicon);
-      print "<image>\n" .
-            "<url>$img</url>\n" .
-            "<title>$title</title>\n" .
-            "<link>$alt_url</link>\n" .
-            "</image>\n";
-    }
-    if (%latest_date) {
-      print "<pubDate>$latest_date{'rfc2822'}</pubDate>\n";
-      print "<lastBuildDate>$latest_date{'rfc2822'}</lastBuildDate>\n";
-    }
-    print "<generator>gitweb v.$version/$git_version</generator>\n";
-  } elsif ($format eq 'atom') {
-    print <<XML;
-<feed xmlns="http://www.w3.org/2005/Atom">
-XML
-    print "<title>$title</title>\n" .
-          "<subtitle>$descr</subtitle>\n" .
-          '<link rel="alternate" type="text/html" href="' .
-          $alt_url . '" />' . "\n" .
-          '<link rel="self" type="' . $content_type . '" href="' .
-          $cgi->self_url() . '" />' . "\n" .
-          "<id>" . href(-full=>1) . "</id>\n" .
-          # use project owner for feed author
-          "<author><name>$owner</name></author>\n";
-    if (defined $favicon) {
-      print "<icon>" . esc_url($favicon) . "</icon>\n";
-    }
-    if (defined $logo) {
-      # not twice as wide as tall: 72 x 27 pixels
-      print "<logo>" . esc_url($logo) . "</logo>\n";
-    }
-    if (! %latest_date) {
-      # dummy date to keep the feed valid until commits trickle in:
-      print "<updated>1970-01-01T00:00:00Z</updated>\n";
-    } else {
-      print "<updated>$latest_date{'iso-8601'}</updated>\n";
-    }
-    print "<generator version='$version/$git_version'>gitweb</generator>\n";
-  }
-
-  # contents
-  for (my $i = 0; $i <= $#commitlist; $i++) {
-    my %co = %{$commitlist[$i]};
-    my $commit = $co{'id'};
-    # we read 150, we always show 30 and the ones more recent than 48 hours
-    if (($i >= 20) && ((time - $co{'author_epoch'}) > 48*60*60)) {
-      last;
-    }
-    my %cd = parse_date($co{'author_epoch'}, $co{'author_tz'});
-
-    # get list of changed files
-    open my $fd, "-|", git_cmd(), "diff-tree", '-r', @diff_opts,
-      $co{'parent'} || "--root",
-      $co{'id'}, "--", (defined $file_name ? $file_name : ())
-      or next;
-    my @difftree = map { chomp; $_ } <$fd>;
-    close $fd
-      or next;
-
-    # print element (entry, item)
-    my $co_url = href(-full=>1, action=>"commitdiff", hash=>$commit);
-    if ($format eq 'rss') {
-      print "<item>\n" .
-            "<title>" . esc_html($co{'title'}) . "</title>\n" .
-            "<author>" . esc_html($co{'author'}) . "</author>\n" .
-            "<pubDate>$cd{'rfc2822'}</pubDate>\n" .
-            "<guid isPermaLink=\"true\">$co_url</guid>\n" .
-            "<link>$co_url</link>\n" .
-            "<description>" . esc_html($co{'title'}) . "</description>\n" .
-            "<content:encoded>" .
-            "<![CDATA[\n";
-    } elsif ($format eq 'atom') {
-      print "<entry>\n" .
-            "<title type=\"html\">" . esc_html($co{'title'}) . "</title>\n" .
-            "<updated>$cd{'iso-8601'}</updated>\n" .
-            "<author>\n" .
-            "  <name>" . esc_html($co{'author_name'}) . "</name>\n";
-      if ($co{'author_email'}) {
-        print "  <email>" . esc_html($co{'author_email'}) . "</email>\n";
-      }
-      print "</author>\n" .
-            # use committer for contributor
-            "<contributor>\n" .
-            "  <name>" . esc_html($co{'committer_name'}) . "</name>\n";
-      if ($co{'committer_email'}) {
-        print "  <email>" . esc_html($co{'committer_email'}) . "</email>\n";
-      }
-      print "</contributor>\n" .
-            "<published>$cd{'iso-8601'}</published>\n" .
-            "<link rel=\"alternate\" type=\"text/html\" href=\"$co_url\" />\n" .
-            "<id>$co_url</id>\n" .
-            "<content type=\"xhtml\" xml:base=\"" . esc_url($my_url) . "\">\n" .
-            "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n";
-    }
-    my $comment = $co{'comment'};
-    print "<pre>\n";
-    foreach my $line (@$comment) {
-      $line = esc_html($line);
-      print "$line\n";
-    }
-    print "</pre><ul>\n";
-    foreach my $difftree_line (@difftree) {
-      my %difftree = parse_difftree_raw_line($difftree_line);
-      next if !$difftree{'from_id'};
-
-      my $file = $difftree{'file'} || $difftree{'to_file'};
-
-      print "<li>" .
-            "[" .
-            $cgi->a({-href => href(-full=>1, action=>"blobdiff",
-                                   hash=>$difftree{'to_id'}, hash_parent=>$difftree{'from_id'},
-                                   hash_base=>$co{'id'}, hash_parent_base=>$co{'parent'},
-                                   file_name=>$file, file_parent=>$difftree{'from_file'}),
-                    -title => "diff"}, 'D');
-      if ($have_blame) {
-        print $cgi->a({-href => href(-full=>1, action=>"blame",
-                                     file_name=>$file, hash_base=>$commit),
-                      -title => "blame"}, 'B');
-      }
-      # if this is not a feed of a file history
-      if (!defined $file_name || $file_name ne $file) {
-        print $cgi->a({-href => href(-full=>1, action=>"history",
-                                     file_name=>$file, hash=>$commit),
-                      -title => "history"}, 'H');
-      }
-      $file = esc_path($file);
-      print "] ".
-            "$file</li>\n";
-    }
-    if ($format eq 'rss') {
-      print "</ul>]]>\n" .
-            "</content:encoded>\n" .
-            "</item>\n";
-    } elsif ($format eq 'atom') {
-      print "</ul>\n</div>\n" .
-            "</content>\n" .
-            "</entry>\n";
-    }
-  }
-
-  # end of feed
-  if ($format eq 'rss') {
-    print "</channel>\n</rss>\n";
-  } elsif ($format eq 'atom') {
-    print "</feed>\n";
-  }
+  print "</table>\n";
 }
 
-sub git_rss {
-  git_feed('rss');
-}
-
-sub git_atom {
-  git_feed('atom');
-}
-
-sub git_opml {
-  my @list = git_get_projects_list();
-  if (!@list) {
-    die_error(404, "No projects found");
-  }
-
-  print $cgi->header(
-    -type => 'text/xml',
-    -charset => 'utf-8',
-    -content_disposition => 'inline; filename="opml.xml"');
-
-  my $title = esc_html($site_name);
-  print <<XML;
-<?xml version="1.0" encoding="utf-8"?>
-<opml version="1.0">
-<head>
-  <title>$title OPML Export</title>
-</head>
-<body>
-<outline text="git RSS feeds">
-XML
-
-  foreach my $pr (@list) {
-    my %proj = %$pr;
-    my $head = git_get_head_hash($proj{'path'});
-    if (!defined $head) {
-      next;
-    }
-    $git_dir = "$projectroot/$proj{'path'}";
-    my %co = parse_commit($head);
-    if (!%co) {
-      next;
-    }
-
-    my $path = esc_html(chop_str($proj{'path'}, 25, 5));
-    my $rss  = href('project' => $proj{'path'}, 'action' => 'rss', -full => 1);
-    my $html = href('project' => $proj{'path'}, 'action' => 'summary', -full => 1);
-    print "<outline type=\"rss\" text=\"$path\" title=\"$path\" xmlUrl=\"$rss\" htmlUrl=\"$html\"/>\n";
-  }
-  print <<XML;
-</outline>
-</body>
-</opml>
-XML
+sub evaluate_git_dir {
+  our $git_dir = "$projectroot/$project" if $project;
 }
