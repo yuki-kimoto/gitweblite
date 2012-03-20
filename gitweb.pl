@@ -27,32 +27,232 @@ our $config_file = '';
 our %config;
 our $number_of_git_cmds = 0;
 our $fallback_encoding = 'latin1';
+our $project_list_default_category = "";
+our $projects_list_group_categories = 0;
+
+our %feature = (
+  'blame' => {
+    'sub' => sub { feature_bool('blame', @_) },
+    'override' => 0,
+    'default' => [0]},
+
+  'snapshot' => {
+    'sub' => \&feature_snapshot,
+    'override' => 0,
+    'default' => ['tgz']},
+
+  'search' => {
+    'override' => 0,
+    'default' => [1]},
+
+  'grep' => {
+    'sub' => sub { feature_bool('grep', @_) },
+    'override' => 0,
+    'default' => [1]},
+
+  'pickaxe' => {
+    'sub' => sub { feature_bool('pickaxe', @_) },
+    'override' => 0,
+    'default' => [1]},
+
+  'show-sizes' => {
+    'sub' => sub { feature_bool('showsizes', @_) },
+    'override' => 0,
+    'default' => [1]},
+
+  'pathinfo' => {
+    'override' => 0,
+    'default' => [0]},
+
+  'forks' => {
+    'override' => 0,
+    'default' => [0]},
+
+  'actions' => {
+    'override' => 0,
+    'default' => []},
+
+  'ctags' => {
+    'override' => 0,
+    'default' => [0]},
+
+  'patches' => {
+    'sub' => \&feature_patches,
+    'override' => 0,
+    'default' => [16]},
+
+  'avatar' => {
+    'sub' => \&feature_avatar,
+    'override' => 0,
+    'default' => ['']},
+
+  'timed' => {
+    'override' => 0,
+    'default' => [0]},
+
+  'javascript-actions' => {
+    'override' => 0,
+    'default' => [0]},
+
+  'javascript-timezone' => {
+    'override' => 0,
+    'default' => [
+      'local',     # default timezone: 'utc', 'local', or '(-|+)HHMM' format,
+                   # or undef to turn off this feature
+      'gitweb_tz', # name of cookie where to store selected timezone
+      'datetime',  # CSS class used to mark up dates for manipulation
+    ]},
+
+  'highlight' => {
+    'sub' => sub { feature_bool('highlight', @_) },
+    'override' => 0,
+    'default' => [0]},
+
+  'remote_heads' => {
+    'sub' => sub { feature_bool('remote_heads', @_) },
+    'override' => 0,
+    'default' => [0]},
+);
 
 get '/' => sub {
   my $self = shift;
   
   my @projects = git_get_projects_list();
-  
-  # Descriptions
-  my $descriptions = {};
-  for my $project (@projects) {
-    my $path = $project->{path};
-    my $description = git_get_project_description($path);
-    $descriptions->{$path} = $description;
-  }
-  
-  # Owners
-  my $owners = {};
-  for my $project (@projects) {
-    my $path = $project->{path};
-    my $owner = git_get_project_owner($path);
-    $owners->{$path} = $owner;
-  }
-  
-  warn $self->dumper($owners);
-  
+  @projects = fill_project_list_info(\@projects);
+ 
   $self->render(projects => \@projects);
 } => 'projects';
+
+sub age_string {
+  my $age = shift;
+  my $age_str;
+
+  if ($age > 60*60*24*365*2) {
+    $age_str = (int $age/60/60/24/365);
+    $age_str .= " years ago";
+  } elsif ($age > 60*60*24*(365/12)*2) {
+    $age_str = int $age/60/60/24/(365/12);
+    $age_str .= " months ago";
+  } elsif ($age > 60*60*24*7*2) {
+    $age_str = int $age/60/60/24/7;
+    $age_str .= " weeks ago";
+  } elsif ($age > 60*60*24*2) {
+    $age_str = int $age/60/60/24;
+    $age_str .= " days ago";
+  } elsif ($age > 60*60*2) {
+    $age_str = int $age/60/60;
+    $age_str .= " hours ago";
+  } elsif ($age > 60*2) {
+    $age_str = int $age/60;
+    $age_str .= " min ago";
+  } elsif ($age > 2) {
+    $age_str = int $age;
+    $age_str .= " sec ago";
+  } else {
+    $age_str .= " right now";
+  }
+  return $age_str;
+}
+
+sub git_get_last_activity {
+  my ($path) = @_;
+  my $fd;
+
+  $git_dir = "$projectroot/$path";
+  open($fd, "-|", git_cmd(), 'for-each-ref',
+       '--format=%(committer)',
+       '--sort=-committerdate',
+       '--count=1',
+       'refs/heads') or return;
+  my $most_recent = <$fd>;
+  close $fd or return;
+  if (defined $most_recent &&
+      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
+    my $timestamp = $1;
+    my $age = time - $timestamp;
+    return ($age, age_string($age));
+  }
+  return (undef, undef);
+}
+
+sub gitweb_get_feature {
+  my ($name) = @_;
+  return unless exists $feature{$name};
+  my ($sub, $override, @defaults) = (
+    $feature{$name}{'sub'},
+    $feature{$name}{'override'},
+    @{$feature{$name}{'default'}});
+  # project specific override is possible only if we have project
+  our $git_dir; # global variable, declared later
+  if (!$override || !defined $git_dir) {
+    return @defaults;
+  }
+  if (!defined $sub) {
+    warn "feature $name is not overridable";
+    return @defaults;
+  }
+  return $sub->(@defaults);
+}
+
+sub gitweb_check_feature {
+  return (gitweb_get_feature(@_))[0];
+}
+
+sub _chop_str {
+  my $str = shift;
+  my $len = shift;
+  my $add_len = shift || 10;
+  my $where = shift || 'right'; # 'left' | 'center' | 'right'
+
+  # Make sure perl knows it is utf8 encoded so we don't
+  # cut in the middle of a utf8 multibyte char.
+  $str = to_utf8($str);
+
+  # allow only $len chars, but don't cut a word if it would fit in $add_len
+  # if it doesn't fit, cut it if it's still longer than the dots we would add
+  # remove chopped character entities entirely
+
+  # when chopping in the middle, distribute $len into left and right part
+  # return early if chopping wouldn't make string shorter
+  if ($where eq 'center') {
+    return $str if ($len + 5 >= length($str)); # filler is length 5
+    $len = int($len/2);
+  } else {
+    return $str if ($len + 4 >= length($str)); # filler is length 4
+  }
+
+  # regexps: ending and beginning with word part up to $add_len
+  my $endre = qr/.{$len}\w{0,$add_len}/;
+  my $begre = qr/\w{0,$add_len}.{$len}/;
+
+  if ($where eq 'left') {
+    $str =~ m/^(.*?)($begre)$/;
+    my ($lead, $body) = ($1, $2);
+    if (length($lead) > 4) {
+      $lead = " ...";
+    }
+    return "$lead$body";
+
+  } elsif ($where eq 'center') {
+    $str =~ m/^($endre)(.*)$/;
+    my ($left, $str)  = ($1, $2);
+    $str =~ m/^(.*?)($begre)$/;
+    my ($mid, $right) = ($1, $2);
+    if (length($mid) > 5) {
+      $mid = " ... ";
+    }
+    return "$left$mid$right";
+
+  } else {
+    $str =~ m/^($endre)(.*)$/;
+    my $body = $1;
+    my $tail = $2;
+    if (length($tail) > 4) {
+      $tail = "... ";
+    }
+    return "$body$tail";
+  }
+}
 
 sub git_get_project_owner {
   my $project = shift;
@@ -190,6 +390,42 @@ sub to_utf8 {
   } else {
     return decode($fallback_encoding, $str, Encode::FB_DEFAULT);
   }
+}
+
+sub fill_project_list_info {
+  my $projlist = shift;
+  my @projects;
+
+  my $show_ctags = gitweb_check_feature('ctags');
+ PROJECT:
+  foreach my $pr (@$projlist) {
+    my (@activity) = git_get_last_activity($pr->{'path'});
+    unless (@activity) {
+      next PROJECT;
+    }
+    ($pr->{'age'}, $pr->{'age_string'}) = @activity;
+    if (!defined $pr->{'descr'}) {
+      my $descr = git_get_project_description($pr->{'path'}) || "";
+      $descr = to_utf8($descr);
+      $pr->{'descr_long'} = $descr;
+      $pr->{'descr'} = _chop_str($descr, $projects_list_description_width, 5);
+    }
+    if (!defined $pr->{'owner'}) {
+      $pr->{'owner'} = git_get_project_owner("$pr->{'path'}") || "";
+    }
+    if ($show_ctags) {
+      $pr->{'ctags'} = git_get_project_ctags($pr->{'path'});
+    }
+    if ($projects_list_group_categories && !defined $pr->{'category'}) {
+      my $cat = git_get_project_category($pr->{'path'}) ||
+                                         $project_list_default_category;
+      $pr->{'category'} = to_utf8($cat);
+    }
+
+    push @projects, $pr;
+  }
+
+  return @projects;
 }
 
 get '/(:name).git' => sub {
@@ -379,13 +615,6 @@ our $javascript = "static/gitweb.js";
 our $logo_url = "http://git-scm.com/";
 our $logo_label = "git homepage";
 
-# group projects by category on the projects list
-# (enabled if this variable evaluates to true)
-our $projects_list_group_categories = 0;
-
-# default category if none specified
-# (leave the empty string for no category)
-our $project_list_default_category = "";
 
 # default order of projects list
 # valid values are none, project, descr, owner, and age
@@ -518,310 +747,9 @@ our %highlight_ext = (
   map { $_ => 'xml' } qw(xhtml html htm),
 );
 
-# You define site-wide feature defaults here; override them with
-# $GITWEB_CONFIG as necessary.
-our %feature = (
-  # feature => {
-  #   'sub' => feature-sub (subroutine),
-  #   'override' => allow-override (boolean),
-  #   'default' => [ default options...] (array reference)}
-  #
-  # if feature is overridable (it means that allow-override has true value),
-  # then feature-sub will be called with default options as parameters;
-  # return value of feature-sub indicates if to enable specified feature
-  #
-  # if there is no 'sub' key (no feature-sub), then feature cannot be
-  # overridden
-  #
-  # use gitweb_get_feature(<feature>) to retrieve the <feature> value
-  # (an array) or gitweb_check_feature(<feature>) to check if <feature>
-  # is enabled
-
-  # Enable the 'blame' blob view, showing the last commit that modified
-  # each line in the file. This can be very CPU-intensive.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'blame'}{'default'} = [1];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'blame'}{'override'} = 1;
-  # and in project config gitweb.blame = 0|1;
-  'blame' => {
-    'sub' => sub { feature_bool('blame', @_) },
-    'override' => 0,
-    'default' => [0]},
-
-  # Enable the 'snapshot' link, providing a compressed archive of any
-  # tree. This can potentially generate high traffic if you have large
-  # project.
-
-  # Value is a list of formats defined in %known_snapshot_formats that
-  # you wish to offer.
-  # To disable system wide have in $GITWEB_CONFIG
-  # $feature{'snapshot'}{'default'} = [];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'snapshot'}{'override'} = 1;
-  # and in project config, a comma-separated list of formats or "none"
-  # to disable.  Example: gitweb.snapshot = tbz2,zip;
-  'snapshot' => {
-    'sub' => \&feature_snapshot,
-    'override' => 0,
-    'default' => ['tgz']},
-
-  # Enable text search, which will list the commits which match author,
-  # committer or commit text to a given string.  Enabled by default.
-  # Project specific override is not supported.
-  #
-  # Note that this controls all search features, which means that if
-  # it is disabled, then 'grep' and 'pickaxe' search would also be
-  # disabled.
-  'search' => {
-    'override' => 0,
-    'default' => [1]},
-
-  # Enable grep search, which will list the files in currently selected
-  # tree containing the given string. Enabled by default. This can be
-  # potentially CPU-intensive, of course.
-  # Note that you need to have 'search' feature enabled too.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'grep'}{'default'} = [1];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'grep'}{'override'} = 1;
-  # and in project config gitweb.grep = 0|1;
-  'grep' => {
-    'sub' => sub { feature_bool('grep', @_) },
-    'override' => 0,
-    'default' => [1]},
-
-  # Enable the pickaxe search, which will list the commits that modified
-  # a given string in a file. This can be practical and quite faster
-  # alternative to 'blame', but still potentially CPU-intensive.
-  # Note that you need to have 'search' feature enabled too.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'pickaxe'}{'default'} = [1];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'pickaxe'}{'override'} = 1;
-  # and in project config gitweb.pickaxe = 0|1;
-  'pickaxe' => {
-    'sub' => sub { feature_bool('pickaxe', @_) },
-    'override' => 0,
-    'default' => [1]},
-
-  # Enable showing size of blobs in a 'tree' view, in a separate
-  # column, similar to what 'ls -l' does.  This cost a bit of IO.
-
-  # To disable system wide have in $GITWEB_CONFIG
-  # $feature{'show-sizes'}{'default'} = [0];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'show-sizes'}{'override'} = 1;
-  # and in project config gitweb.showsizes = 0|1;
-  'show-sizes' => {
-    'sub' => sub { feature_bool('showsizes', @_) },
-    'override' => 0,
-    'default' => [1]},
-
-  # Make gitweb use an alternative format of the URLs which can be
-  # more readable and natural-looking: project name is embedded
-  # directly in the path and the query string contains other
-  # auxiliary information. All gitweb installations recognize
-  # URL in either format; this configures in which formats gitweb
-  # generates links.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'pathinfo'}{'default'} = [1];
-  # Project specific override is not supported.
-
-  # Note that you will need to change the default location of CSS,
-  # favicon, logo and possibly other files to an absolute URL. Also,
-  # if gitweb.cgi serves as your indexfile, you will need to force
-  # $my_uri to contain the script name in your $GITWEB_CONFIG.
-  'pathinfo' => {
-    'override' => 0,
-    'default' => [0]},
-
-  # Make gitweb consider projects in project root subdirectories
-  # to be forks of existing projects. Given project $projname.git,
-  # projects matching $projname/*.git will not be shown in the main
-  # projects list, instead a '+' mark will be added to $projname
-  # there and a 'forks' view will be enabled for the project, listing
-  # all the forks. If project list is taken from a file, forks have
-  # to be listed after the main project.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'forks'}{'default'} = [1];
-  # Project specific override is not supported.
-  'forks' => {
-    'override' => 0,
-    'default' => [0]},
-
-  # Insert custom links to the action bar of all project pages.
-  # This enables you mainly to link to third-party scripts integrating
-  # into gitweb; e.g. git-browser for graphical history representation
-  # or custom web-based repository administration interface.
-
-  # The 'default' value consists of a list of triplets in the form
-  # (label, link, position) where position is the label after which
-  # to insert the link and link is a format string where %n expands
-  # to the project name, %f to the project path within the filesystem,
-  # %h to the current hash (h gitweb parameter) and %b to the current
-  # hash base (hb gitweb parameter); %% expands to %.
-
-  # To enable system wide have in $GITWEB_CONFIG e.g.
-  # $feature{'actions'}{'default'} = [('graphiclog',
-  #   '/git-browser/by-commit.html?r=%n', 'summary')];
-  # Project specific override is not supported.
-  'actions' => {
-    'override' => 0,
-    'default' => []},
-
-  # Allow gitweb scan project content tags of project repository,
-  # and display the popular Web 2.0-ish "tag cloud" near the projects
-  # list.  Note that this is something COMPLETELY different from the
-  # normal Git tags.
-
-  # gitweb by itself can show existing tags, but it does not handle
-  # tagging itself; you need to do it externally, outside gitweb.
-  # The format is described in git_get_project_ctags() subroutine.
-  # You may want to install the HTML::TagCloud Perl module to get
-  # a pretty tag cloud instead of just a list of tags.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'ctags'}{'default'} = [1];
-  # Project specific override is not supported.
-
-  # In the future whether ctags editing is enabled might depend
-  # on the value, but using 1 should always mean no editing of ctags.
-  'ctags' => {
-    'override' => 0,
-    'default' => [0]},
-
-  # The maximum number of patches in a patchset generated in patch
-  # view. Set this to 0 or undef to disable patch view, or to a
-  # negative number to remove any limit.
-
-  # To disable system wide have in $GITWEB_CONFIG
-  # $feature{'patches'}{'default'} = [0];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'patches'}{'override'} = 1;
-  # and in project config gitweb.patches = 0|n;
-  # where n is the maximum number of patches allowed in a patchset.
-  'patches' => {
-    'sub' => \&feature_patches,
-    'override' => 0,
-    'default' => [16]},
-
-  # Avatar support. When this feature is enabled, views such as
-  # shortlog or commit will display an avatar associated with
-  # the email of the committer(s) and/or author(s).
-
-  # Currently available providers are gravatar and picon.
-  # If an unknown provider is specified, the feature is disabled.
-
-  # Gravatar depends on Digest::MD5.
-  # Picon currently relies on the indiana.edu database.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'avatar'}{'default'} = ['<provider>'];
-  # where <provider> is either gravatar or picon.
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'avatar'}{'override'} = 1;
-  # and in project config gitweb.avatar = <provider>;
-  'avatar' => {
-    'sub' => \&feature_avatar,
-    'override' => 0,
-    'default' => ['']},
-
-  # Enable displaying how much time and how many git commands
-  # it took to generate and display page.  Disabled by default.
-  # Project specific override is not supported.
-  'timed' => {
-    'override' => 0,
-    'default' => [0]},
-
-  # Enable turning some links into links to actions which require
-  # JavaScript to run (like 'blame_incremental').  Not enabled by
-  # default.  Project specific override is currently not supported.
-  'javascript-actions' => {
-    'override' => 0,
-    'default' => [0]},
-
-  # Enable and configure ability to change common timezone for dates
-  # in gitweb output via JavaScript.  Enabled by default.
-  # Project specific override is not supported.
-  'javascript-timezone' => {
-    'override' => 0,
-    'default' => [
-      'local',     # default timezone: 'utc', 'local', or '(-|+)HHMM' format,
-                   # or undef to turn off this feature
-      'gitweb_tz', # name of cookie where to store selected timezone
-      'datetime',  # CSS class used to mark up dates for manipulation
-    ]},
-
-  # Syntax highlighting support. This is based on Daniel Svensson's
-  # and Sham Chukoury's work in gitweb-xmms2.git.
-  # It requires the 'highlight' program present in $PATH,
-  # and therefore is disabled by default.
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'highlight'}{'default'} = [1];
-
-  'highlight' => {
-    'sub' => sub { feature_bool('highlight', @_) },
-    'override' => 0,
-    'default' => [0]},
-
-  # Enable displaying of remote heads in the heads list
-
-  # To enable system wide have in $GITWEB_CONFIG
-  # $feature{'remote_heads'}{'default'} = [1];
-  # To have project specific config enable override in $GITWEB_CONFIG
-  # $feature{'remote_heads'}{'override'} = 1;
-  # and in project config gitweb.remote_heads = 0|1;
-  'remote_heads' => {
-    'sub' => sub { feature_bool('remote_heads', @_) },
-    'override' => 0,
-    'default' => [0]},
-);
-
 app->start;
 
 __END__
-
-sub gitweb_get_feature {
-  my ($name) = @_;
-  return unless exists $feature{$name};
-  my ($sub, $override, @defaults) = (
-    $feature{$name}{'sub'},
-    $feature{$name}{'override'},
-    @{$feature{$name}{'default'}});
-  # project specific override is possible only if we have project
-  our $git_dir; # global variable, declared later
-  if (!$override || !defined $git_dir) {
-    return @defaults;
-  }
-  if (!defined $sub) {
-    warn "feature $name is not overridable";
-    return @defaults;
-  }
-  return $sub->(@defaults);
-}
-
-# A wrapper to check if a given feature is enabled.
-# With this, you can say
-#
-#   my $bool_feat = gitweb_check_feature('bool_feat');
-#   gitweb_check_feature('bool_feat') or somecode;
-#
-# instead of
-#
-#   my ($bool_feat) = gitweb_get_feature('bool_feat');
-#   (gitweb_get_feature('bool_feat'))[0] or somecode;
-#
-sub gitweb_check_feature {
-  return (gitweb_get_feature(@_))[0];
-}
-
 
 sub feature_bool {
   my $key = shift;
@@ -1849,76 +1777,13 @@ sub project_in_list {
   return @list && scalar(grep { $_->{'path'} eq $project } @list);
 }
 
-## ----------------------------------------------------------------------
-## HTML aware string manipulation
-
-# Try to chop given string on a word boundary between position
-# $len and $len+$add_len. If there is no word boundary there,
-# chop at $len+$add_len. Do not chop if chopped part plus ellipsis
-# (marking chopped part) would be longer than given string.
-sub chop_str {
-  my $str = shift;
-  my $len = shift;
-  my $add_len = shift || 10;
-  my $where = shift || 'right'; # 'left' | 'center' | 'right'
-
-  # Make sure perl knows it is utf8 encoded so we don't
-  # cut in the middle of a utf8 multibyte char.
-  $str = to_utf8($str);
-
-  # allow only $len chars, but don't cut a word if it would fit in $add_len
-  # if it doesn't fit, cut it if it's still longer than the dots we would add
-  # remove chopped character entities entirely
-
-  # when chopping in the middle, distribute $len into left and right part
-  # return early if chopping wouldn't make string shorter
-  if ($where eq 'center') {
-    return $str if ($len + 5 >= length($str)); # filler is length 5
-    $len = int($len/2);
-  } else {
-    return $str if ($len + 4 >= length($str)); # filler is length 4
-  }
-
-  # regexps: ending and beginning with word part up to $add_len
-  my $endre = qr/.{$len}\w{0,$add_len}/;
-  my $begre = qr/\w{0,$add_len}.{$len}/;
-
-  if ($where eq 'left') {
-    $str =~ m/^(.*?)($begre)$/;
-    my ($lead, $body) = ($1, $2);
-    if (length($lead) > 4) {
-      $lead = " ...";
-    }
-    return "$lead$body";
-
-  } elsif ($where eq 'center') {
-    $str =~ m/^($endre)(.*)$/;
-    my ($left, $str)  = ($1, $2);
-    $str =~ m/^(.*?)($begre)$/;
-    my ($mid, $right) = ($1, $2);
-    if (length($mid) > 5) {
-      $mid = " ... ";
-    }
-    return "$left$mid$right";
-
-  } else {
-    $str =~ m/^($endre)(.*)$/;
-    my $body = $1;
-    my $tail = $2;
-    if (length($tail) > 4) {
-      $tail = "... ";
-    }
-    return "$body$tail";
-  }
-}
-
-# takes the same arguments as chop_str, but also wraps a <span> around the
+# takes the same arguments as _chop_str, but also wraps a <span> around the
 # result with a title attribute if it does get chopped. Additionally, the
 # string is HTML-escaped.
 sub chop_and_escape_str {
   my ($str) = @_;
 
-  my $chopped = chop_str(@_);
+  my $chopped = _chop_str(@_);
   $str = to_utf8($str);
   if ($chopped eq $str) {
     return esc_html($chopped);
@@ -1944,38 +1809,6 @@ sub age_class {
   } else {
     return "age2";
   }
-}
-
-# convert age in seconds to "nn units ago" string
-sub age_string {
-  my $age = shift;
-  my $age_str;
-
-  if ($age > 60*60*24*365*2) {
-    $age_str = (int $age/60/60/24/365);
-    $age_str .= " years ago";
-  } elsif ($age > 60*60*24*(365/12)*2) {
-    $age_str = int $age/60/60/24/(365/12);
-    $age_str .= " months ago";
-  } elsif ($age > 60*60*24*7*2) {
-    $age_str = int $age/60/60/24/7;
-    $age_str .= " weeks ago";
-  } elsif ($age > 60*60*24*2) {
-    $age_str = int $age/60/60/24;
-    $age_str .= " days ago";
-  } elsif ($age > 60*60*2) {
-    $age_str = int $age/60/60;
-    $age_str .= " hours ago";
-  } elsif ($age > 60*2) {
-    $age_str = int $age/60;
-    $age_str .= " min ago";
-  } elsif ($age > 2) {
-    $age_str = int $age;
-    $age_str .= " sec ago";
-  } else {
-    $age_str .= " right now";
-  }
-  return $age_str;
 }
 
 use constant {
@@ -2245,7 +2078,7 @@ sub format_search_author {
 
 # format the author name of the given commit with the given tag
 # the author name is chopped and escaped according to the other
-# optional parameters (see chop_str).
+# optional parameters (see _chop_str).
 sub format_author_html {
   my $tag = shift;
   my $co = shift;
@@ -2802,24 +2635,11 @@ sub git_get_path_by_hash {
   return undef;
 }
 
-sub git_get_project_description {
-  my $path = shift;
-  return git_get_file_or_project_config($path, 'description');
-}
-
 sub git_get_project_category {
   my $path = shift;
   return git_get_file_or_project_config($path, 'category');
 }
 
-
-# supported formats:
-# * $GIT_DIR/ctags/<tagname> file (in 'ctags' subdirectory)
-#   - if its contents is a number, use it as tag weight,
-#   - otherwise add a tag with weight 1
-# * $GIT_DIR/ctags file, each line is a tag (with weight 1)
-#   the same value multiple times increases tag weight
-# * `gitweb.ctag' multi-valued repo config variable
 sub git_get_project_ctags {
   my $project = shift;
   my $ctags = {};
@@ -3043,27 +2863,6 @@ sub search_projects_list {
   return @projects;
 }
 
-sub git_get_last_activity {
-  my ($path) = @_;
-  my $fd;
-
-  $git_dir = "$projectroot/$path";
-  open($fd, "-|", git_cmd(), 'for-each-ref',
-       '--format=%(committer)',
-       '--sort=-committerdate',
-       '--count=1',
-       'refs/heads') or return;
-  my $most_recent = <$fd>;
-  close $fd or return;
-  if (defined $most_recent &&
-      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
-    my $timestamp = $1;
-    my $age = time - $timestamp;
-    return ($age, age_string($age));
-  }
-  return (undef, undef);
-}
-
 # Implementation note: when a single remote is wanted, we cannot use 'git
 # remote show -n' because that command always work (assuming it's a remote URL
 # if it's not defined), and we cannot use 'git remote show' because that would
@@ -3272,7 +3071,7 @@ sub parse_commit_text {
   foreach my $title (@commit_lines) {
     $title =~ s/^    //;
     if ($title ne "") {
-      $co{'title'} = chop_str($title, 80, 5);
+      $co{'title'} = _chop_str($title, 80, 5);
       # remove leading stuff of merges to make the interesting part visible
       if (length($title) > 50) {
         $title =~ s/^Automatic //;
@@ -3290,7 +3089,7 @@ sub parse_commit_text {
           $title =~ s/\/pub\/scm//;
         }
       }
-      $co{'title_short'} = chop_str($title, 50, 5);
+      $co{'title_short'} = _chop_str($title, 50, 5);
       last;
     }
   }
@@ -5105,42 +4904,6 @@ sub git_patchset_body {
   print "</div>\n"; # class="patchset"
 }
 
-sub fill_project_list_info {
-  my $projlist = shift;
-  my @projects;
-
-  my $show_ctags = gitweb_check_feature('ctags');
- PROJECT:
-  foreach my $pr (@$projlist) {
-    my (@activity) = git_get_last_activity($pr->{'path'});
-    unless (@activity) {
-      next PROJECT;
-    }
-    ($pr->{'age'}, $pr->{'age_string'}) = @activity;
-    if (!defined $pr->{'descr'}) {
-      my $descr = git_get_project_description($pr->{'path'}) || "";
-      $descr = to_utf8($descr);
-      $pr->{'descr_long'} = $descr;
-      $pr->{'descr'} = chop_str($descr, $projects_list_description_width, 5);
-    }
-    if (!defined $pr->{'owner'}) {
-      $pr->{'owner'} = git_get_project_owner("$pr->{'path'}") || "";
-    }
-    if ($show_ctags) {
-      $pr->{'ctags'} = git_get_project_ctags($pr->{'path'});
-    }
-    if ($projects_list_group_categories && !defined $pr->{'category'}) {
-      my $cat = git_get_project_category($pr->{'path'}) ||
-                                         $project_list_default_category;
-      $pr->{'category'} = to_utf8($cat);
-    }
-
-    push @projects, $pr;
-  }
-
-  return @projects;
-}
-
 sub sort_projects_list {
   my ($projlist, $order) = @_;
   my @projects;
@@ -5362,7 +5125,7 @@ sub git_history_body {
     print "<td title=\"$co{'age_string_age'}\"><i>$co{'age_string_date'}</i></td>\n" .
   # shortlog:   format_author_html('td', \%co, 10)
           format_author_html('td', \%co, 15, 3) . "<td>";
-    # originally git_history used chop_str($co{'title'}, 50)
+    # originally git_history used _chop_str($co{'title'}, 50)
     print format_subject_html($co{'title'}, $co{'title_short'},
                               href(action=>"commit", hash=>$commit), $ref);
     print "</td>\n" .
@@ -5408,7 +5171,7 @@ sub git_tags_body {
     my $comment = $tag{'subject'};
     my $comment_short;
     if (defined $comment) {
-      $comment_short = chop_str($comment, 30, 5);
+      $comment_short = _chop_str($comment, 30, 5);
     }
     if ($alternate) {
       print "<tr class=\"dark\">\n";
@@ -5830,11 +5593,11 @@ sub git_search_grep_body {
     foreach my $line (@$comment) {
       if ($line =~ m/^(.*?)($search_regexp)(.*)$/i) {
         my ($lead, $match, $trail) = ($1, $2, $3);
-        $match = chop_str($match, 70, 5, 'center');
+        $match = _chop_str($match, 70, 5, 'center');
         my $contextlen = int((80 - length($match))/2);
         $contextlen = 30 if ($contextlen > 30);
-        $lead  = chop_str($lead,  $contextlen, 10, 'left');
-        $trail = chop_str($trail, $contextlen, 10, 'right');
+        $lead  = _chop_str($lead,  $contextlen, 10, 'left');
+        $trail = _chop_str($trail, $contextlen, 10, 'right');
 
         $lead  = esc_html($lead);
         $match = esc_html($match);
@@ -5877,33 +5640,6 @@ sub git_forks {
   git_print_header_div('summary', "$project forks");
   git_project_list_body(\@list, $order);
   git_footer_html();
-}
-
-sub git_project_index {
-  my @projects = git_get_projects_list();
-  if (!@projects) {
-    die_error(404, "No projects found");
-  }
-
-  print $cgi->header(
-    -type => 'text/plain',
-    -charset => 'utf-8',
-    -content_disposition => 'inline; filename="index.aux"');
-
-  foreach my $pr (@projects) {
-    if (!exists $pr->{'owner'}) {
-      $pr->{'owner'} = git_get_project_owner("$pr->{'path'}");
-    }
-
-    my ($path, $owner) = ($pr->{'path'}, $pr->{'owner'});
-    # quote as in CGI::Util::encode, but keep the slash, and use '+' for ' '
-    $path  =~ s/([^a-zA-Z0-9_.\-\/ ])/sprintf("%%%02X", ord($1))/eg;
-    $owner =~ s/([^a-zA-Z0-9_.\-\/ ])/sprintf("%%%02X", ord($1))/eg;
-    $path  =~ s/ /\+/g;
-    $owner =~ s/ /\+/g;
-
-    print "$path $owner\n";
-  }
 }
 
 sub git_summary {
@@ -7447,93 +7183,6 @@ EOT
 sub git_shortlog {
   git_log_generic('shortlog', \&git_shortlog_body,
                   $hash, $hash_parent);
-}
-
-sub git_project_list_body {
-  # actually uses global variable $project
-  my ($projlist, $order, $from, $to, $extra, $no_header) = @_;
-  my @projects = @$projlist;
-
-  my $check_forks = gitweb_check_feature('forks');
-  my $show_ctags  = gitweb_check_feature('ctags');
-  my $tagfilter = $show_ctags ? $input_params{'ctag'} : undef;
-  $check_forks = undef
-    if ($tagfilter || $searchtext);
-
-  # filtering out forks before filling info allows to do less work
-  @projects = filter_forks_from_projects_list(\@projects)
-    if ($check_forks);
-  @projects = fill_project_list_info(\@projects);
-  # searching projects require filling to be run before it
-  @projects = search_projects_list(\@projects,
-                                   'searchtext' => $searchtext,
-                                   'tagfilter'  => $tagfilter)
-    if ($tagfilter || $searchtext);
-
-  $order ||= $default_projects_order;
-  $from = 0 unless defined $from;
-  $to = $#projects if (!defined $to || $#projects < $to);
-
-  # short circuit
-  if ($from > $to) {
-    print "<center>\n".
-          "<b>No such projects found</b><br />\n".
-          "Click ".$cgi->a({-href=>href(project=>undef)},"here")." to view all projects<br />\n".
-          "</center>\n<br />\n";
-    return;
-  }
-
-  @projects = sort_projects_list(\@projects, $order);
-
-  if ($show_ctags) {
-    my $ctags = git_gather_all_ctags(\@projects);
-    my $cloud = git_populate_project_tagcloud($ctags);
-    print git_show_project_tagcloud($cloud, 64);
-  }
-
-  print "<table class=\"project_list\">\n";
-  unless ($no_header) {
-    print "<tr>\n";
-    if ($check_forks) {
-      print "<th></th>\n";
-    }
-    print_sort_th('project', $order, 'Project');
-    print_sort_th('descr', $order, 'Description');
-    print_sort_th('owner', $order, 'Owner');
-    print_sort_th('age', $order, 'Last Change');
-    print "<th></th>\n" . # for links
-          "</tr>\n";
-  }
-
-  if ($projects_list_group_categories) {
-    # only display categories with projects in the $from-$to window
-    @projects = sort {$a->{'category'} cmp $b->{'category'}} @projects[$from..$to];
-    my %categories = build_projlist_by_category(\@projects, $from, $to);
-    foreach my $cat (sort keys %categories) {
-      unless ($cat eq "") {
-        print "<tr>\n";
-        if ($check_forks) {
-          print "<td></td>\n";
-        }
-        print "<td class=\"category\" colspan=\"5\">".esc_html($cat)."</td>\n";
-        print "</tr>\n";
-      }
-
-      git_project_list_rows($categories{$cat}, undef, undef, $check_forks);
-    }
-  } else {
-    git_project_list_rows(\@projects, $from, $to, $check_forks);
-  }
-
-  if (defined $extra) {
-    print "<tr>\n";
-    if ($check_forks) {
-      print "<td></td>\n";
-    }
-    print "<td colspan=\"5\">$extra</td>\n" .
-          "</tr>\n";
-  }
-  print "</table>\n";
 }
 
 sub evaluate_git_dir {

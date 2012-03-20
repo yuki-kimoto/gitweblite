@@ -2,34 +2,21 @@
   <div class="page_header">
   <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / </div>
   <table class="project_list">
-  <tr>
-  <th>Project</th>
-  <th><a class="header" href="/?o=descr">Description</a></th>
-  <th><a class="header" href="/?o=owner">Owner</a></th>
-  <th><a class="header" href="/?o=age">Last Change</a></th>
-  <th></th>
-  </tr>
-  <tr class="dark">
-  <td><a class="list" href="/metaconfig.git">metaconfig.git</a></td>
-  <td><a class="list" title="perl5 metaconfig repository" href="/metaconfig.git">perl5 metaconfig repository</a></td>
-  <td><i>perl5-porters@perl.org</i></td>
-  <td class="age2">4 weeks ago</td>
-  <td class="link"><a href="/metaconfig.git">summary</a> | <a href="/metaconfig.git/shortlog">shortlog</a> | <a href="/metaconfig.git/log">log</a> | <a href="/metaconfig.git/tree">tree</a></td>
-  </tr>
-  <tr class="light">
-  <td><a class="list" href="/perl.git">perl.git</a></td>
-  <td><a class="list" title="Perl5 Master Repository" href="/perl.git">Perl5 Master Repository</a></td>
-  <td><i>perl5-porters@perl.org</i></td>
-  <td class="age0">70 min ago</td>
-  <td class="link"><a href="/perl.git">summary</a> | <a href="/perl.git/shortlog">shortlog</a> | <a href="/perl.git/log">log</a> | <a href="/perl.git/tree">tree</a></td>
-  </tr>
-  <tr class="dark">
-  <td><a class="list" href="/perlbrowse.git">perlbrowse.git</a></td>
-  <td><a class="list" title="Perl Perforce repository browser (by Dave Mitchell)" href="/perlbrowse.git">Perl Perforce repository brows... </a></td>
-  <td><i>Rafael Garcia-Suarez</i></td>
-  <td class="age2">3 years ago</td>
-  <td class="link"><a href="/perlbrowse.git">summary</a> | <a href="/perlbrowse.git/shortlog">shortlog</a> | <a href="/perlbrowse.git/log">log</a> | <a href="/perlbrowse.git/tree">tree</a></td>
-  </tr>
+    <tr>
+      <th>Project</th>
+      <th>Description</th>
+      <th>Owner</th>
+      <th>Last Change</th>
+      <th></th>
+    </tr>
+    % for my $project (@$projects) {
+      <tr class="dark">
+        <td><a class="list" href="<%= $project->{path} %>"><%= $project->{path} %></a></td>
+        <td><a class="list" title="<%= $project->{descr_long} %>" href="<%= $project->{path} %>"><%= $project->{descr} %></a></td>
+        <td><i><%= $project->{owner} %></i></td>
+        <td class="age2"><%= $project->{age_string} %></td>
+        <td class="link"><a href="/metaconfig.git">summary</a> | <a href="/metaconfig.git/shortlog">shortlog</a> | <a href="/metaconfig.git/log">log</a> | <a href="/metaconfig.git/tree">tree</a></td>
+      </tr>
+    % }
   </table>
-  <div class="page_footer">
-  </div>
+  <div class="page_footer"></div>
