@@ -593,3 +593,51 @@
 [Tue Mar 20 17:37:26 2012] [debug] GET /perl.git/snapshot/f6067adc61108c3398de698bb0294d95f09b55ef.tar.gz (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
 [Tue Mar 20 17:37:26 2012] [debug] Dispatching callback.
 [Tue Mar 20 17:37:26 2012] [debug] 200 OK (0.001001s, 999.001/s).
+[Tue Mar 20 17:38:36 2012] [debug] GET /perl.git (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:38:36 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:38:36 2012] [debug] Rendering template "summary.html.ep".
+[Tue Mar 20 17:38:36 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:38:36 2012] [debug] 200 OK (0.017146s, 58.323/s).
+[Tue Mar 20 17:38:36 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:38:36 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:38:36 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:38:36 2012] [debug] 404 Not Found (0.009579s, 104.395/s).
+[Tue Mar 20 17:38:40 2012] [debug] GET /perl.git/shortlog/refs/heads/blead (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:38:40 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:38:40 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:38:40 2012] [debug] 404 Not Found (0.018688s, 53.510/s).
+[Tue Mar 20 17:38:55 2012] [debug] GET /perl.git (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:38:55 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:38:55 2012] [debug] 200 OK (0.002366s, 422.654/s).
+[Tue Mar 20 17:38:55 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:38:55 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:38:55 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:38:55 2012] [debug] 404 Not Found (0.010235s, 97.704/s).
+[Tue Mar 20 17:38:57 2012] [debug] GET / (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:38:57 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:38:57 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:38:57 2012] [debug] 200 OK (0.008975s, 111.421/s).
+[Tue Mar 20 17:39:00 2012] [debug] GET /perl.git (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:39:00 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:39:00 2012] [debug] 200 OK (0.002413s, 414.422/s).
+[Tue Mar 20 17:39:00 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:39:00 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:39:00 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:39:00 2012] [debug] 404 Not Found (0.009067s, 110.290/s).
+[Tue Mar 20 17:39:11 2012] [debug] GET /perl.git/tag/9b30811fee3478af913382334909acde68afd36d (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:39:11 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:39:11 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:39:11 2012] [debug] 404 Not Found (0.009100s, 109.890/s).
+[Tue Mar 20 17:40:48 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:40:48 2012] [debug] GET /robots.txt (Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)).
+[Tue Mar 20 17:40:48 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:40:48 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:40:48 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:40:48 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:40:48 2012] [debug] 404 Not Found (0.023438s, 42.666/s).
+[Tue Mar 20 17:41:09 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:41:09 2012] [debug] GET /perl.git/tag/9b30811fee3478af913382334909acde68afd36d (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:41:09 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:41:09 2012] [debug] Rendering template "tag.html.ep".
+[Tue Mar 20 17:41:09 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:41:09 2012] [debug] 200 OK (0.013462s, 74.283/s).

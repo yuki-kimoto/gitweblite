@@ -1,0 +1,45 @@
+% layout 'common';
+  <div class="page_header">
+  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / tag
+  </div>
+  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
+  <div class="search">
+  <input name="a" type="hidden" value="search" />
+  <input name="h" type="hidden" value="9b30811fee3478af913382334909acde68afd36d" />
+  <select name="st" >
+  <option selected="selected" value="free">free</option>
+  <option value="commit">commit</option>
+  <option value="grep">grep</option>
+  <option value="author">author</option>
+  <option value="committer">committer</option>
+  <option value="pickaxe">pickaxe</option>
+  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
+  <input type="text" name="s"  />
+  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+  </form>
+  <div class="page_nav">
+  <a href="/perl.git">summary</a> | <a href="/perl.git/shortlog">shortlog</a> | <a href="/perl.git/log">log</a> | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a><br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/9b30811fee3478af913382334909acde68afd36d">v5.15.8</a>
+  </div>
+  <div class="title_text">
+  <table class="object_header">
+  <tr>
+  <td>object</td>
+  <td><a class="list" href="/perl.git/commit/05ccd577e15cc66bbb7414fad5ee3c02f536c7a5">05ccd577e15cc66bbb7414fad5ee3c02f536c7a5</a></td>
+  <td class="link"><a href="/perl.git/commit/05ccd577e15cc66bbb7414fad5ee3c02f536c7a5">commit</a></td>
+  </tr>
+  <tr><td>author</td><td>Max Maischein &lt;corion@cpan.org&gt;</td><td rowspan="2"></td></tr>
+  <tr><td></td><td> Mon, 20 Feb 2012 22:58:17 +0000 (23:58 +0100)</td></tr>
+  </table>
+
+  </div>
+  <div class="page_body">Release&nbsp;of&nbsp;v5.15.8<br/>
+  </div>
+  <div class="page_footer">
+  <div class="page_footer_text">Perl5 Master Repository</div>
+  <a class="rss_logo generic" title="log RSS feed" href="/perl.git/rss">RSS</a>
+  <a class="rss_logo generic" title="log Atom feed" href="/perl.git/atom">Atom</a>
+  </div>

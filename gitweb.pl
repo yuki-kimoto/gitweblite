@@ -40,6 +40,10 @@ get '/(:name).git/snapshot/:commit' => sub {
   shift->render(text => 'snapshot');
 } => 'snapshot';
 
+get '/(:name).git/tag/:commit' => sub {
+  shift->render;
+} => 'tag';
+
 app->start;
 
 __DATA__
