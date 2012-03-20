@@ -1,0 +1,1702 @@
+% layout 'common';
+  <div class="page_header">
+  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / log
+  </div>
+  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
+  <div class="search">
+  <input name="a" type="hidden" value="search" />
+  <input name="h" type="hidden" value="f6067adc61108c3398de698bb0294d95f09b55ef" />
+  <select name="st" >
+  <option selected="selected" value="free">free</option>
+  <option value="commit">commit</option>
+  <option value="grep">grep</option>
+  <option value="author">author</option>
+  <option value="committer">committer</option>
+  <option value="pickaxe">pickaxe</option>
+  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
+  <input type="text" name="s"  />
+  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+  </form>
+  <div class="page_nav">
+  <a href="/perl.git">summary</a> | <a href="/perl.git/shortlog/f6067adc61108c3398de698bb0294d95f09b55ef">shortlog</a> | log | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree">tree</a><br/>
+  HEAD &sdot; prev &sdot; <a title="Alt-n" accesskey="n" href="/perl.git/log/f6067adc61108c3398de698bb0294d95f09b55ef?pg=1">next</a><br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef"><span class="age">2 hours ago</span>charnames: Clarify viacode pod <span class="refs"> <span class="head" title="heads/blead"><a href="/perl.git/log/refs/heads/blead">blead</a></span></span></a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Tue, 20 Mar 2012 05:15:07 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  charnames:&nbsp;Clarify&nbsp;viacode&nbsp;pod<br/>
+  <br/>
+  This&nbsp;mentions&nbsp;that&nbsp;viacode's&nbsp;return&nbsp;can&nbsp;change&nbsp;as&nbsp;a&nbsp;result&nbsp;of<br/>
+  corrections&nbsp;to&nbsp;the&nbsp;Unicode&nbsp;standard.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc"><span class="age">2 hours ago</span>charnames pod: slight rewording</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">commit</a> | <a href="/perl.git/commitdiff/ffec675822f6354e94f29a96daa07ef9465a43bc">commitdiff</a> | <a href="/perl.git/tree/ffec675822f6354e94f29a96daa07ef9465a43bc">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Tue, 20 Mar 2012 05:14:28 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  charnames&nbsp;pod:&nbsp;slight&nbsp;rewording<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/228e8c7b6cef1e12cb12f45083fdcae7b35fba27"><span class="age">2 hours ago</span>charnames: re-order pod sections</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">commit</a> | <a href="/perl.git/commitdiff/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">commitdiff</a> | <a href="/perl.git/tree/228e8c7b6cef1e12cb12f45083fdcae7b35fba27">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Tue, 20 Mar 2012 04:10:18 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  charnames:&nbsp;re-order&nbsp;pod&nbsp;sections<br/>
+  <br/>
+  This&nbsp;merely&nbsp;moves&nbsp;one&nbsp;=head1&nbsp;section&nbsp;to&nbsp;later&nbsp;in&nbsp;the&nbsp;pod,&nbsp;so&nbsp;that&nbsp;future<br/>
+  changes&nbsp;will&nbsp;make&nbsp;more&nbsp;sense;&nbsp;and&nbsp;it&nbsp;has&nbsp;to&nbsp;bump&nbsp;the&nbsp;version.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/41c3b428c4a3ce29a0f80c7f63eda133089137de"><span class="age">6 hours ago</span>Fix spelling errors in pod/perldelta.pod</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/41c3b428c4a3ce29a0f80c7f63eda133089137de">commit</a> | <a href="/perl.git/commitdiff/41c3b428c4a3ce29a0f80c7f63eda133089137de">commitdiff</a> | <a href="/perl.git/tree/41c3b428c4a3ce29a0f80c7f63eda133089137de">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 20 Mar 2012 02:05:46 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Fix&nbsp;spelling&nbsp;errors&nbsp;in&nbsp;pod/perldelta.pod<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/fae9e8f42caa843805a479b6d6bf28a777f61037"><span class="age">6 hours ago</span>Document new versions of Data::Dumper and XS::APItest.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/fae9e8f42caa843805a479b6d6bf28a777f61037">commit</a> | <a href="/perl.git/commitdiff/fae9e8f42caa843805a479b6d6bf28a777f61037">commitdiff</a> | <a href="/perl.git/tree/fae9e8f42caa843805a479b6d6bf28a777f61037">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 20 Mar 2012 01:48:29 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Document&nbsp;new&nbsp;versions&nbsp;of&nbsp;Data::Dumper&nbsp;and&nbsp;XS::APItest.<br/>
+  <br/>
+  Updated&nbsp;Module::CoreList&nbsp;and&nbsp;perldelta&nbsp;to&nbsp;reflect&nbsp;the&nbsp;changes.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/16737d47697ef8f812d9cea1abfcb616af5887f1"><span class="age">7 hours ago</span>5160delta: Note that feasible to remain on Unicode 6.0</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/16737d47697ef8f812d9cea1abfcb616af5887f1">commit</a> | <a href="/perl.git/commitdiff/16737d47697ef8f812d9cea1abfcb616af5887f1">commitdiff</a> | <a href="/perl.git/tree/16737d47697ef8f812d9cea1abfcb616af5887f1">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Tue, 20 Mar 2012 00:49:46 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  5160delta:&nbsp;Note&nbsp;that&nbsp;feasible&nbsp;to&nbsp;remain&nbsp;on&nbsp;Unicode&nbsp;6.0<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c88a046d255fcd4d5ec54f477da11f3417fa8756"><span class="age">7 hours ago</span>Paste in the output of Porting/corelist-perldelta.pl</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c88a046d255fcd4d5ec54f477da11f3417fa8756">commit</a> | <a href="/perl.git/commitdiff/c88a046d255fcd4d5ec54f477da11f3417fa8756">commitdiff</a> | <a href="/perl.git/tree/c88a046d255fcd4d5ec54f477da11f3417fa8756">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 20 Mar 2012 00:41:52 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Paste&nbsp;in&nbsp;the&nbsp;output&nbsp;of&nbsp;Porting/corelist-perldelta.pl<br/>
+  <br/>
+  -&nbsp;Manually&nbsp;added&nbsp;feature.<br/>
+  -&nbsp;Data::Dumper&nbsp;was&nbsp;upgraded&nbsp;while&nbsp;working&nbsp;on&nbsp;this;&nbsp;so&nbsp;we'll&nbsp;have&nbsp;to<br/>
+  &nbsp;&nbsp;redo&nbsp;the&nbsp;corelist,&nbsp;and&nbsp;adjust&nbsp;the&nbsp;&quot;Updated&nbsp;Modules&nbsp;and&nbsp;Pragmata&quot;<br/>
+  &nbsp;&nbsp;section.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/977c1d31fff4d41aa42e40c904fe08b509e3a34e"><span class="age">8 hours ago</span>Deprecate utf8_to_uvchr() and utf8_to_uvuni()</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/977c1d31fff4d41aa42e40c904fe08b509e3a34e">commit</a> | <a href="/perl.git/commitdiff/977c1d31fff4d41aa42e40c904fe08b509e3a34e">commitdiff</a> | <a href="/perl.git/tree/977c1d31fff4d41aa42e40c904fe08b509e3a34e">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 22:31:18 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Deprecate&nbsp;utf8_to_uvchr()&nbsp;and&nbsp;utf8_to_uvuni()<br/>
+  <br/>
+  These&nbsp;functions&nbsp;can&nbsp;read&nbsp;beyond&nbsp;the&nbsp;end&nbsp;of&nbsp;their&nbsp;input&nbsp;strings&nbsp;if<br/>
+  presented&nbsp;with&nbsp;malformed&nbsp;UTF-8&nbsp;input.&nbsp;&nbsp;Perl&nbsp;core&nbsp;code&nbsp;has&nbsp;been&nbsp;converted<br/>
+  to&nbsp;use&nbsp;other&nbsp;functions&nbsp;instead&nbsp;of&nbsp;these.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/4b88fb76efce8c436e63b907c9842345d4fa77c7"><span class="age">8 hours ago</span>Use the new utf8 to code point functions</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/4b88fb76efce8c436e63b907c9842345d4fa77c7">commit</a> | <a href="/perl.git/commitdiff/4b88fb76efce8c436e63b907c9842345d4fa77c7">commitdiff</a> | <a href="/perl.git/tree/4b88fb76efce8c436e63b907c9842345d4fa77c7">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 21:38:06 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Use&nbsp;the&nbsp;new&nbsp;utf8&nbsp;to&nbsp;code&nbsp;point&nbsp;functions<br/>
+  <br/>
+  These&nbsp;functions&nbsp;should&nbsp;be&nbsp;used&nbsp;in&nbsp;preference&nbsp;to&nbsp;the&nbsp;old&nbsp;ones&nbsp;which&nbsp;can<br/>
+  read&nbsp;beyond&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;input&nbsp;string.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/27d6c58a7e12243bef66c58b38e7d1415d9ca07e"><span class="age">8 hours ago</span>utf8.c: Add valid_utf8_to_uvuni() and valid_utf8_to_uvchr()</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">commit</a> | <a href="/perl.git/commitdiff/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">commitdiff</a> | <a href="/perl.git/tree/27d6c58a7e12243bef66c58b38e7d1415d9ca07e">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 21:13:19 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  utf8.c:&nbsp;Add&nbsp;valid_utf8_to_uvuni()&nbsp;and&nbsp;valid_utf8_to_uvchr()<br/>
+  <br/>
+  These&nbsp;functions&nbsp;are&nbsp;like&nbsp;utf8_to_uvuni()&nbsp;and&nbsp;utf8_to_uvchr(),&nbsp;but&nbsp;their<br/>
+  name&nbsp;implies&nbsp;that&nbsp;the&nbsp;input&nbsp;UTF-8&nbsp;has&nbsp;been&nbsp;validated.<br/>
+  <br/>
+  They&nbsp;are&nbsp;not&nbsp;currently&nbsp;documented,&nbsp;as&nbsp;it's&nbsp;best&nbsp;for&nbsp;XS&nbsp;writers&nbsp;to&nbsp;call<br/>
+  the&nbsp;functions&nbsp;that&nbsp;do&nbsp;validation.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1"><span class="age">8 hours ago</span>utf8.c: Add utf8_to_uvchr_buf() and utf8_to_uvuni_buf()</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">commit</a> | <a href="/perl.git/commitdiff/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">commitdiff</a> | <a href="/perl.git/tree/ec5f19d09949aac9034bb62ade44ffba8d4d2bb1">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 21:03:01 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  utf8.c:&nbsp;Add&nbsp;utf8_to_uvchr_buf()&nbsp;and&nbsp;utf8_to_uvuni_buf()<br/>
+  <br/>
+  The&nbsp;existing&nbsp;functions&nbsp;(utf8_to_uvchr&nbsp;and&nbsp;utf8_to_uvuni)&nbsp;have&nbsp;a<br/>
+  deficiency&nbsp;in&nbsp;that&nbsp;they&nbsp;could&nbsp;read&nbsp;beyond&nbsp;the&nbsp;end&nbsp;of&nbsp;the&nbsp;input&nbsp;string&nbsp;if<br/>
+  given&nbsp;malformed&nbsp;input.&nbsp;&nbsp;This&nbsp;commit&nbsp;creates&nbsp;two&nbsp;new&nbsp;functions&nbsp;which<br/>
+  behave&nbsp;as&nbsp;the&nbsp;old&nbsp;ones&nbsp;did,&nbsp;but&nbsp;have&nbsp;an&nbsp;extra&nbsp;parameter&nbsp;each,&nbsp;which<br/>
+  gives&nbsp;the&nbsp;upper&nbsp;limit&nbsp;to&nbsp;the&nbsp;string,&nbsp;so&nbsp;no&nbsp;read&nbsp;beyond&nbsp;it&nbsp;is&nbsp;done.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/d0460f306d2b79d09a9e5694f9f72c50a2481b83"><span class="age">8 hours ago</span>utf8.c: pod clarification</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/d0460f306d2b79d09a9e5694f9f72c50a2481b83">commit</a> | <a href="/perl.git/commitdiff/d0460f306d2b79d09a9e5694f9f72c50a2481b83">commitdiff</a> | <a href="/perl.git/tree/d0460f306d2b79d09a9e5694f9f72c50a2481b83">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 20:48:51 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  utf8.c:&nbsp;pod&nbsp;clarification<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/a1433954f53591f4446530df211b86112c6c2446"><span class="age">8 hours ago</span>utf8.c: pod (mostly formatting) + comments changes</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/a1433954f53591f4446530df211b86112c6c2446">commit</a> | <a href="/perl.git/commitdiff/a1433954f53591f4446530df211b86112c6c2446">commitdiff</a> | <a href="/perl.git/tree/a1433954f53591f4446530df211b86112c6c2446">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 19:48:58 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  utf8.c:&nbsp;pod&nbsp;(mostly&nbsp;formatting)&nbsp;+&nbsp;comments&nbsp;changes<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/3c813ed0ab90d1f1f16ca848d265616ae5315536"><span class="age">8 hours ago</span>perlapi (from sv.h) clarifications</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/3c813ed0ab90d1f1f16ca848d265616ae5315536">commit</a> | <a href="/perl.git/commitdiff/3c813ed0ab90d1f1f16ca848d265616ae5315536">commitdiff</a> | <a href="/perl.git/tree/3c813ed0ab90d1f1f16ca848d265616ae5315536">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 19:21:26 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  perlapi&nbsp;(from&nbsp;sv.h)&nbsp;clarifications<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49"><span class="age">8 hours ago</span>autodoc.pl: pod format fix</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">commit</a> | <a href="/perl.git/commitdiff/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">commitdiff</a> | <a href="/perl.git/tree/ef9741a5409c0b7bf9f7ff7d92654a26eb435a49">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 19:01:11 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  autodoc.pl:&nbsp;pod&nbsp;format&nbsp;fix<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/95701e00f8e747fe1c24564cb038be375695df5a"><span class="age">8 hours ago</span>perlguts, warnings.t: Update references to obsolete fcn names</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/95701e00f8e747fe1c24564cb038be375695df5a">commit</a> | <a href="/perl.git/commitdiff/95701e00f8e747fe1c24564cb038be375695df5a">commitdiff</a> | <a href="/perl.git/tree/95701e00f8e747fe1c24564cb038be375695df5a">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 16:52:25 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  perlguts,&nbsp;warnings.t:&nbsp;Update&nbsp;references&nbsp;to&nbsp;obsolete&nbsp;fcn&nbsp;names<br/>
+  <br/>
+  These&nbsp;functions&nbsp;were&nbsp;replaced&nbsp;long&nbsp;ago,&nbsp;apparently&nbsp;in&nbsp;5.8,&nbsp;but&nbsp;I&nbsp;didn't<br/>
+  verify&nbsp;that&nbsp;for&nbsp;sure.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd"><span class="age">8 hours ago</span>perldelta: clarification</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">commit</a> | <a href="/perl.git/commitdiff/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">commitdiff</a> | <a href="/perl.git/tree/8752e5a8bd5a13883a0909d80ec0e205f71f8dbd">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Mon, 19 Mar 2012 16:44:08 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  perldelta:&nbsp;clarification<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/68a91acb87c0e5d700bf9bc52e8374e6ce77f878"><span class="age">8 hours ago</span>Update Module::CoreList for 5.15.9</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">commit</a> | <a href="/perl.git/commitdiff/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">commitdiff</a> | <a href="/perl.git/tree/68a91acb87c0e5d700bf9bc52e8374e6ce77f878">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 23:43:04 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Update&nbsp;Module::CoreList&nbsp;for&nbsp;5.15.9<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/688b7920048b177348001477c975ca96c37c3e6e"><span class="age">8 hours ago</span>Point out CoreList's CAVEATS section is in CoreList.pod</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/688b7920048b177348001477c975ca96c37c3e6e">commit</a> | <a href="/perl.git/commitdiff/688b7920048b177348001477c975ca96c37c3e6e">commitdiff</a> | <a href="/perl.git/tree/688b7920048b177348001477c975ca96c37c3e6e">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 23:39:21 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Point&nbsp;out&nbsp;CoreList's&nbsp;CAVEATS&nbsp;section&nbsp;is&nbsp;in&nbsp;CoreList.pod<br/>
+  <br/>
+  Fix&nbsp;the&nbsp;git&nbsp;commit&nbsp;line&nbsp;as&nbsp;well.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/564ac620902c38056c0c8bc7099cadf6b5961faa"><span class="age">9 hours ago</span>Eliminate a warning</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/564ac620902c38056c0c8bc7099cadf6b5961faa">commit</a> | <a href="/perl.git/commitdiff/564ac620902c38056c0c8bc7099cadf6b5961faa">commitdiff</a> | <a href="/perl.git/tree/564ac620902c38056c0c8bc7099cadf6b5961faa">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 23:14:24 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Eliminate&nbsp;a&nbsp;warning<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/4cc560b23649f322bae0315aed9b9665e537c44e"><span class="age">9 hours ago</span>mktables: white-space only</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/4cc560b23649f322bae0315aed9b9665e537c44e">commit</a> | <a href="/perl.git/commitdiff/4cc560b23649f322bae0315aed9b9665e537c44e">commitdiff</a> | <a href="/perl.git/tree/4cc560b23649f322bae0315aed9b9665e537c44e">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Fri, 16 Mar 2012 17:01:21 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  mktables:&nbsp;white-space&nbsp;only<br/>
+  <br/>
+  This&nbsp;outdents&nbsp;code&nbsp;to&nbsp;line&nbsp;up&nbsp;vertically&nbsp;with&nbsp;surrounding&nbsp;text<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/21a1aff7e1eddd8acb5f096dd264e2f967ad5401"><span class="age">9 hours ago</span>mktables: Backport name_alias changes to earlier Unicode versions</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">commit</a> | <a href="/perl.git/commitdiff/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">commitdiff</a> | <a href="/perl.git/tree/21a1aff7e1eddd8acb5f096dd264e2f967ad5401">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Fri, 16 Mar 2012 16:54:24 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  mktables:&nbsp;Backport&nbsp;name_alias&nbsp;changes&nbsp;to&nbsp;earlier&nbsp;Unicode&nbsp;versions<br/>
+  <br/>
+  This&nbsp;allow&nbsp;mktables&nbsp;to&nbsp;be&nbsp;compiled&nbsp;for&nbsp;earlier&nbsp;Unicode&nbsp;versions&nbsp;and<br/>
+  work&nbsp;for&nbsp;them.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6901521e3ffe762ff8e3f268762b0d2f667771a7"><span class="age">9 hours ago</span>mktables: Don't duplicate entries</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6901521e3ffe762ff8e3f268762b0d2f667771a7">commit</a> | <a href="/perl.git/commitdiff/6901521e3ffe762ff8e3f268762b0d2f667771a7">commitdiff</a> | <a href="/perl.git/tree/6901521e3ffe762ff8e3f268762b0d2f667771a7">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Fri, 16 Mar 2012 19:12:49 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  mktables:&nbsp;Don't&nbsp;duplicate&nbsp;entries<br/>
+  <br/>
+  The&nbsp;Name&nbsp;table&nbsp;can&nbsp;have&nbsp;multiple&nbsp;names&nbsp;for&nbsp;each&nbsp;code&nbsp;point.&nbsp;&nbsp;The&nbsp;highest<br/>
+  priority&nbsp;ones&nbsp;are&nbsp;first&nbsp;in&nbsp;the&nbsp;file.&nbsp;&nbsp;Prior&nbsp;to&nbsp;this&nbsp;patch,&nbsp;adding&nbsp;a<br/>
+  high&nbsp;priority&nbsp;name&nbsp;to&nbsp;a&nbsp;code&nbsp;point&nbsp;which&nbsp;already&nbsp;had&nbsp;the&nbsp;same&nbsp;name,&nbsp;the<br/>
+  old&nbsp;name&nbsp;could&nbsp;be&nbsp;retained,&nbsp;leaving&nbsp;two&nbsp;identical&nbsp;names&nbsp;for&nbsp;the&nbsp;code<br/>
+  point.&nbsp;&nbsp;This&nbsp;patch&nbsp;causes&nbsp;the&nbsp;lower-priority&nbsp;one&nbsp;to&nbsp;be&nbsp;deleted.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6342d44542ab62d41255e7655319b5f5ce0975a3"><span class="age">9 hours ago</span>mktables: A leading zero is different than an only 0</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6342d44542ab62d41255e7655319b5f5ce0975a3">commit</a> | <a href="/perl.git/commitdiff/6342d44542ab62d41255e7655319b5f5ce0975a3">commitdiff</a> | <a href="/perl.git/tree/6342d44542ab62d41255e7655319b5f5ce0975a3">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Sun, 11 Mar 2012 22:46:18 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  mktables:&nbsp;A&nbsp;leading&nbsp;zero&nbsp;is&nbsp;different&nbsp;than&nbsp;an&nbsp;only&nbsp;0<br/>
+  <br/>
+  Commit&nbsp;<a class="text" href="/perl.git/object/b91749bce0ff3d86c6e210a0b35289b4ad36c144">b91749bce0ff3d86c6e210a0b35289b4ad36c144</a>&nbsp;assumed&nbsp;that&nbsp;a&nbsp;single<br/>
+  0&nbsp;was&nbsp;a&nbsp;leading&nbsp;0.&nbsp;&nbsp;This&nbsp;inappropriately&nbsp;makes&nbsp;a&nbsp;table&nbsp;appear&nbsp;to&nbsp;be&nbsp;hex<br/>
+  when&nbsp;it&nbsp;isn't.&nbsp;&nbsp;This&nbsp;currently&nbsp;affects&nbsp;the&nbsp;kPrimaryNumeric&nbsp;property<br/>
+  which&nbsp;is&nbsp;part&nbsp;of&nbsp;the&nbsp;Unihan&nbsp;database,&nbsp;and&nbsp;is&nbsp;not&nbsp;normally&nbsp;generated&nbsp;by<br/>
+  mktables;&nbsp;it&nbsp;is&nbsp;generated&nbsp;only&nbsp;if&nbsp;an&nbsp;installation&nbsp;decides&nbsp;they&nbsp;want<br/>
+  to&nbsp;compile&nbsp;Perl&nbsp;to&nbsp;use&nbsp;the&nbsp;Unihan&nbsp;properties.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/b577d4a6d9513ee5434c94e3104462fdd700d6a7"><span class="age">9 hours ago</span>Unicode::UCD::prop_invmap: Fix returned format</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/b577d4a6d9513ee5434c94e3104462fdd700d6a7">commit</a> | <a href="/perl.git/commitdiff/b577d4a6d9513ee5434c94e3104462fdd700d6a7">commitdiff</a> | <a href="/perl.git/tree/b577d4a6d9513ee5434c94e3104462fdd700d6a7">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Tue, 6 Mar 2012 17:39:15 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Unicode::UCD::prop_invmap:&nbsp;Fix&nbsp;returned&nbsp;format<br/>
+  <br/>
+  The&nbsp;type&nbsp;of&nbsp;an&nbsp;'a'&nbsp;table&nbsp;should&nbsp;not&nbsp;be&nbsp;changed&nbsp;to&nbsp;'s'.&nbsp;&nbsp;This&nbsp;bug<br/>
+  happened&nbsp;currently&nbsp;only&nbsp;if&nbsp;someone&nbsp;changed&nbsp;mktables&nbsp;to&nbsp;output&nbsp;one&nbsp;of&nbsp;the<br/>
+  optional&nbsp;files.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/294705a8c512970205c6ab76033cb59703476097"><span class="age">9 hours ago</span>Unicode::UCD: typos in error messages</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/294705a8c512970205c6ab76033cb59703476097">commit</a> | <a href="/perl.git/commitdiff/294705a8c512970205c6ab76033cb59703476097">commitdiff</a> | <a href="/perl.git/tree/294705a8c512970205c6ab76033cb59703476097">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Tue, 6 Mar 2012 17:37:37 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Unicode::UCD:&nbsp;typos&nbsp;in&nbsp;error&nbsp;messages<br/>
+  <br/>
+  These&nbsp;concatenated&nbsp;the&nbsp;package&nbsp;name&nbsp;with&nbsp;the&nbsp;beginning&nbsp;of&nbsp;the&nbsp;text&nbsp;with<br/>
+  no&nbsp;intervening&nbsp;punctuation.&nbsp;&nbsp;Add&nbsp;also&nbsp;the&nbsp;function&nbsp;within&nbsp;the&nbsp;package<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/22bc5f56c4cdabb8df1b2acae33971781fb1814e"><span class="age">9 hours ago</span>mktables: Add required parens and reword warning msg</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/22bc5f56c4cdabb8df1b2acae33971781fb1814e">commit</a> | <a href="/perl.git/commitdiff/22bc5f56c4cdabb8df1b2acae33971781fb1814e">commitdiff</a> | <a href="/perl.git/tree/22bc5f56c4cdabb8df1b2acae33971781fb1814e">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Wed, 29 Feb 2012 18:15:17 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  mktables:&nbsp;Add&nbsp;required&nbsp;parens&nbsp;and&nbsp;reword&nbsp;warning&nbsp;msg<br/>
+  <br/>
+  Should&nbsp;this&nbsp;message&nbsp;ever&nbsp;get&nbsp;triggered,&nbsp;it&nbsp;would&nbsp;fail&nbsp;because&nbsp;the<br/>
+  precedence&nbsp;is&nbsp;wrong:&nbsp;the&nbsp;argument&nbsp;to&nbsp;hex&nbsp;needs&nbsp;parens.&nbsp;&nbsp;Also&nbsp;reword<br/>
+  somewhat&nbsp;for&nbsp;clarity.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c256547e3b6143ea565019347505bc1996fc59e7"><span class="age">9 hours ago</span>pat.t: Fix typo in comment</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c256547e3b6143ea565019347505bc1996fc59e7">commit</a> | <a href="/perl.git/commitdiff/c256547e3b6143ea565019347505bc1996fc59e7">commitdiff</a> | <a href="/perl.git/tree/c256547e3b6143ea565019347505bc1996fc59e7">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Wed, 29 Feb 2012 18:04:59 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  pat.t:&nbsp;Fix&nbsp;typo&nbsp;in&nbsp;comment<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/3b318f16bd82320be5768efa37201351e3a0ff2e"><span class="age">9 hours ago</span>Bump the perl version in various places for 5.15.9</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/3b318f16bd82320be5768efa37201351e3a0ff2e">commit</a> | <a href="/perl.git/commitdiff/3b318f16bd82320be5768efa37201351e3a0ff2e">commitdiff</a> | <a href="/perl.git/tree/3b318f16bd82320be5768efa37201351e3a0ff2e">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 22:49:34 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Bump&nbsp;the&nbsp;perl&nbsp;version&nbsp;in&nbsp;various&nbsp;places&nbsp;for&nbsp;5.15.9<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9"><span class="age">11 hours ago</span>More perldelta work.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">commit</a> | <a href="/perl.git/commitdiff/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">commitdiff</a> | <a href="/perl.git/tree/78de934f39c2d076a0a3b7b73bc4bb7d0d5780f9">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 21:18:15 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  More&nbsp;perldelta&nbsp;work.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6cd577feeaf75f6e140a8584b4c805a7799b33c1"><span class="age">11 hours ago</span>Mention the fix to perlfunc.html in &quot;Configuration and Compilation&quot; as well.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6cd577feeaf75f6e140a8584b4c805a7799b33c1">commit</a> | <a href="/perl.git/commitdiff/6cd577feeaf75f6e140a8584b4c805a7799b33c1">commitdiff</a> | <a href="/perl.git/tree/6cd577feeaf75f6e140a8584b4c805a7799b33c1">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 21:04:14 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Mention&nbsp;the&nbsp;fix&nbsp;to&nbsp;perlfunc.html&nbsp;in&nbsp;&quot;Configuration&nbsp;and&nbsp;Compilation&quot;&nbsp;as&nbsp;well.<br/>
+  <br/>
+  Also,&nbsp;fix&nbsp;the&nbsp;spelling&nbsp;of&nbsp;html.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9"><span class="age">11 hours ago</span>Note in the source of perlhist.pod that &quot;cow orker&quot; is no typo.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">commit</a> | <a href="/perl.git/commitdiff/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">commitdiff</a> | <a href="/perl.git/tree/6d1b6114a4d33a5b9514d5db4a9676bd79646cb9">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 13:43:15 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Note&nbsp;in&nbsp;the&nbsp;source&nbsp;of&nbsp;perlhist.pod&nbsp;that&nbsp;&quot;cow&nbsp;orker&quot;&nbsp;is&nbsp;no&nbsp;typo.<br/>
+  <br/>
+  This&nbsp;won't&nbsp;change&nbsp;the&nbsp;rendered&nbsp;pod,&nbsp;but&nbsp;will&nbsp;clarify&nbsp;to&nbsp;anyone&nbsp;thinking&nbsp;to<br/>
+  patch&nbsp;the&nbsp;&quot;mistake&quot;&nbsp;that&nbsp;the&nbsp;seeming&nbsp;typo&nbsp;is&nbsp;intentional.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/5b9539f4da00738fffe89191e08276ee61978834"><span class="age">11 hours ago</span>Mention Porting/bisect.pl in perlgit.pod, before describing git bisect.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/5b9539f4da00738fffe89191e08276ee61978834">commit</a> | <a href="/perl.git/commitdiff/5b9539f4da00738fffe89191e08276ee61978834">commitdiff</a> | <a href="/perl.git/tree/5b9539f4da00738fffe89191e08276ee61978834">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 13:22:32 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Mention&nbsp;Porting/bisect.pl&nbsp;in&nbsp;perlgit.pod,&nbsp;before&nbsp;describing&nbsp;git&nbsp;bisect.<br/>
+  <br/>
+  Porting/bisect.pl&nbsp;is&nbsp;intended&nbsp;to&nbsp;cover&nbsp;90%&nbsp;of&nbsp;use&nbsp;cases,&nbsp;whilst&nbsp;being&nbsp;simpler<br/>
+  to&nbsp;use&nbsp;than&nbsp;git&nbsp;bisect,&nbsp;so&nbsp;mention&nbsp;it&nbsp;first.&nbsp;Condense&nbsp;the&nbsp;description&nbsp;of<br/>
+  git&nbsp;bisect&nbsp;slightly&nbsp;-&nbsp;it's&nbsp;giving&nbsp;implementation&nbsp;details&nbsp;which&nbsp;duplicate<br/>
+  git&nbsp;help&nbsp;bisect,&nbsp;which&nbsp;we&nbsp;already&nbsp;refer&nbsp;the&nbsp;reader&nbsp;to.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a"><span class="age">11 hours ago</span>Add two missing &quot;file&quot;s to the documentation of Porting/bisect.pl</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">commit</a> | <a href="/perl.git/commitdiff/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">commitdiff</a> | <a href="/perl.git/tree/a9b1bbfe0792c586f7e5c9b8e9525db88a97089a">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 12:58:47 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;two&nbsp;missing&nbsp;&quot;file&quot;s&nbsp;to&nbsp;the&nbsp;documentation&nbsp;of&nbsp;Porting/bisect.pl<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6d4be29ed416c7245eb4f21c700d825aca9a4e93"><span class="age">11 hours ago</span>Move the example git bisect shell script from perlgit.pod to Porting/</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6d4be29ed416c7245eb4f21c700d825aca9a4e93">commit</a> | <a href="/perl.git/commitdiff/6d4be29ed416c7245eb4f21c700d825aca9a4e93">commitdiff</a> | <a href="/perl.git/tree/6d4be29ed416c7245eb4f21c700d825aca9a4e93">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 12:27:28 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Move&nbsp;the&nbsp;example&nbsp;git&nbsp;bisect&nbsp;shell&nbsp;script&nbsp;from&nbsp;perlgit.pod&nbsp;to&nbsp;Porting/<br/>
+  <br/>
+  This&nbsp;both&nbsp;avoids&nbsp;cluttering&nbsp;the&nbsp;flow&nbsp;of&nbsp;manpage&nbsp;with&nbsp;auxiliary&nbsp;data,&nbsp;and<br/>
+  saves&nbsp;the&nbsp;user&nbsp;from&nbsp;having&nbsp;to&nbsp;extract&nbsp;the&nbsp;script&nbsp;from&nbsp;within&nbsp;the&nbsp;pod&nbsp;file.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c34d842973a74ded7d9fae683eaa8645afa9d6bb"><span class="age">11 hours ago</span>bisect-runner.pl should detect ccache with -V, not --version</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c34d842973a74ded7d9fae683eaa8645afa9d6bb">commit</a> | <a href="/perl.git/commitdiff/c34d842973a74ded7d9fae683eaa8645afa9d6bb">commitdiff</a> | <a href="/perl.git/tree/c34d842973a74ded7d9fae683eaa8645afa9d6bb">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 11:48:31 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  bisect-runner.pl&nbsp;should&nbsp;detect&nbsp;ccache&nbsp;with&nbsp;-V,&nbsp;not&nbsp;--version<br/>
+  <br/>
+  ccache&nbsp;2.4&nbsp;doesn't&nbsp;support&nbsp;the&nbsp;--version&nbsp;parameter,&nbsp;only&nbsp;-V.&nbsp;ccache&nbsp;3<br/>
+  supports&nbsp;both.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/5d0b49e8365d66ddadfdd132c33441717b9f1485"><span class="age">11 hours ago</span>Add a placeholder man page for perltodo, directing people to look at git.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/5d0b49e8365d66ddadfdd132c33441717b9f1485">commit</a> | <a href="/perl.git/commitdiff/5d0b49e8365d66ddadfdd132c33441717b9f1485">commitdiff</a> | <a href="/perl.git/tree/5d0b49e8365d66ddadfdd132c33441717b9f1485">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 11:18:18 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;a&nbsp;placeholder&nbsp;man&nbsp;page&nbsp;for&nbsp;perltodo,&nbsp;directing&nbsp;people&nbsp;to&nbsp;look&nbsp;at&nbsp;git.<br/>
+  <br/>
+  (Done&nbsp;as&nbsp;a&nbsp;second&nbsp;commit&nbsp;to&nbsp;avoid&nbsp;confusing&nbsp;git's&nbsp;rename&nbsp;detection.)<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c31435083c160a0aaf86b974b86976d3d3e9d208"><span class="age">11 hours ago</span>Move the todo list from pod/ to Porting/</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c31435083c160a0aaf86b974b86976d3d3e9d208">commit</a> | <a href="/perl.git/commitdiff/c31435083c160a0aaf86b974b86976d3d3e9d208">commitdiff</a> | <a href="/perl.git/tree/c31435083c160a0aaf86b974b86976d3d3e9d208">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 10:42:15 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Move&nbsp;the&nbsp;todo&nbsp;list&nbsp;from&nbsp;pod/&nbsp;to&nbsp;Porting/<br/>
+  <br/>
+  Installing&nbsp;the&nbsp;Perl&nbsp;5&nbsp;to-do&nbsp;list&nbsp;as&nbsp;a&nbsp;manpage&nbsp;isn't&nbsp;that&nbsp;useful&nbsp;to&nbsp;anyone,&nbsp;as<br/>
+  it's&nbsp;a&nbsp;snapshot&nbsp;that&nbsp;becomes&nbsp;increasingly&nbsp;out&nbsp;of&nbsp;date.&nbsp;Much&nbsp;better&nbsp;to&nbsp;point<br/>
+  anyone&nbsp;interested&nbsp;in&nbsp;contributing&nbsp;direct&nbsp;to&nbsp;git&nbsp;HEAD,&nbsp;to&nbsp;view&nbsp;the&nbsp;current&nbsp;list.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c221a2194823bb2fb485e0e197025139bb49ed7f"><span class="age">16 hours ago</span>Add a TODO test for RT 111842</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c221a2194823bb2fb485e0e197025139bb49ed7f">commit</a> | <a href="/perl.git/commitdiff/c221a2194823bb2fb485e0e197025139bb49ed7f">commitdiff</a> | <a href="/perl.git/tree/c221a2194823bb2fb485e0e197025139bb49ed7f">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 16:16:21 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;a&nbsp;TODO&nbsp;test&nbsp;for&nbsp;RT&nbsp;111842<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/b5bf278af31bbe7f859e02da0ad3793feb6a55e8"><span class="age">18 hours ago</span>Bail out if it looks scary.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">commit</a> | <a href="/perl.git/commitdiff/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">commitdiff</a> | <a href="/perl.git/tree/b5bf278af31bbe7f859e02da0ad3793feb6a55e8">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 13:40:02 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Bail&nbsp;out&nbsp;if&nbsp;it&nbsp;looks&nbsp;scary.<br/>
+  <br/>
+  Porting/sync-with-cpan&nbsp;hasn't&nbsp;automated&nbsp;all&nbsp;situations&nbsp;yet.&nbsp;In&nbsp;particular,<br/>
+  it&nbsp;assumes&nbsp;the&nbsp;FILE&nbsp;entry&nbsp;has&nbsp;just&nbsp;one&nbsp;element,&nbsp;and&nbsp;that&nbsp;element&nbsp;is&nbsp;a<br/>
+  directory.&nbsp;It&nbsp;also&nbsp;does&nbsp;not&nbsp;know&nbsp;what&nbsp;to&nbsp;do&nbsp;with&nbsp;MAP.&nbsp;If&nbsp;we&nbsp;determine<br/>
+  this&nbsp;situation,&nbsp;we&nbsp;terminate&nbsp;the&nbsp;program&nbsp;before&nbsp;making&nbsp;any&nbsp;changes.<br/>
+  Although&nbsp;there's&nbsp;the&nbsp;--force&nbsp;option&nbsp;for&nbsp;the&nbsp;braves.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/e81fec2c92c338f9d506a01f47364f85ef3b7b75"><span class="age">19 hours ago</span>Don't remove --tarball</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/e81fec2c92c338f9d506a01f47364f85ef3b7b75">commit</a> | <a href="/perl.git/commitdiff/e81fec2c92c338f9d506a01f47364f85ef3b7b75">commitdiff</a> | <a href="/perl.git/tree/e81fec2c92c338f9d506a01f47364f85ef3b7b75">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 13:26:12 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Don't&nbsp;remove&nbsp;--tarball<br/>
+  <br/>
+  By&nbsp;default,&nbsp;the&nbsp;script&nbsp;removes&nbsp;the&nbsp;tarball&nbsp;of&nbsp;the&nbsp;new&nbsp;distributions.<br/>
+  However,&nbsp;if&nbsp;the&nbsp;--tarball&nbsp;option&nbsp;was&nbsp;given&nbsp;(and&nbsp;hence,&nbsp;the&nbsp;file&nbsp;was&nbsp;not<br/>
+  downloaded&nbsp;from&nbsp;CPAN),&nbsp;we&nbsp;opt&nbsp;to&nbsp;keep&nbsp;this&nbsp;file&nbsp;around.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/33e80a479f628997e99534cde168f74bb9444d15"><span class="age">19 hours ago</span>Use #!/usr/bin/env</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/33e80a479f628997e99534cde168f74bb9444d15">commit</a> | <a href="/perl.git/commitdiff/33e80a479f628997e99534cde168f74bb9444d15">commitdiff</a> | <a href="/perl.git/tree/33e80a479f628997e99534cde168f74bb9444d15">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 13:23:12 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Use&nbsp;#!/usr/bin/env<br/>
+  <br/>
+  /usr/bin/perl&nbsp;on&nbsp;dromedary&nbsp;is&nbsp;5.8.8;&nbsp;but&nbsp;the&nbsp;script&nbsp;requires&nbsp;5.10.<br/>
+  By&nbsp;using&nbsp;#!/usr/bin/env,&nbsp;we&nbsp;give&nbsp;the&nbsp;user&nbsp;more&nbsp;control&nbsp;over&nbsp;which&nbsp;perl<br/>
+  should&nbsp;be&nbsp;used.&nbsp;(And&nbsp;this&nbsp;benefits&nbsp;not&nbsp;just&nbsp;dromedary&nbsp;usesr)<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/8cfc9af613d5c73745f210535cf8921067507306"><span class="age">22 hours ago</span>More work on perldelta</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/8cfc9af613d5c73745f210535cf8921067507306">commit</a> | <a href="/perl.git/commitdiff/8cfc9af613d5c73745f210535cf8921067507306">commitdiff</a> | <a href="/perl.git/tree/8cfc9af613d5c73745f210535cf8921067507306">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 10:14:15 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  More&nbsp;work&nbsp;on&nbsp;perldelta<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c9ebf02397fb525998acacd7b4ac9a55323b54ab"><span class="age">22 hours ago</span>Merge the feature and B::Deparse refactoring to blead.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c9ebf02397fb525998acacd7b4ac9a55323b54ab">commit</a> | <a href="/perl.git/commitdiff/c9ebf02397fb525998acacd7b4ac9a55323b54ab">commitdiff</a> | <a href="/perl.git/tree/c9ebf02397fb525998acacd7b4ac9a55323b54ab">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 09:30:34 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Merge&nbsp;the&nbsp;feature&nbsp;and&nbsp;B::Deparse&nbsp;refactoring&nbsp;to&nbsp;blead.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/58856662e3d8fc062bbb58ba29d28f4d9d29cbba"><span class="age">22 hours ago</span>Note the improvements to B::Deparse and feature in perldelta.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">commit</a> | <a href="/perl.git/commitdiff/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">commitdiff</a> | <a href="/perl.git/tree/58856662e3d8fc062bbb58ba29d28f4d9d29cbba">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 09:29:48 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Note&nbsp;the&nbsp;improvements&nbsp;to&nbsp;B::Deparse&nbsp;and&nbsp;feature&nbsp;in&nbsp;perldelta.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/0c8d50175e8fc59ffe16de8607996905f18a8b28"><span class="age">23 hours ago</span>In feature.pm, inline current_bundle() into __common(), its only caller.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/0c8d50175e8fc59ffe16de8607996905f18a8b28">commit</a> | <a href="/perl.git/commitdiff/0c8d50175e8fc59ffe16de8607996905f18a8b28">commitdiff</a> | <a href="/perl.git/tree/0c8d50175e8fc59ffe16de8607996905f18a8b28">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 22:54:10 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;feature.pm,&nbsp;inline&nbsp;current_bundle()&nbsp;into&nbsp;__common(),&nbsp;its&nbsp;only&nbsp;caller.<br/>
+  <br/>
+  current_bundle()&nbsp;was&nbsp;added&nbsp;after&nbsp;5.14.0&nbsp;was&nbsp;released,&nbsp;so&nbsp;has&nbsp;never&nbsp;been&nbsp;in<br/>
+  a&nbsp;stable&nbsp;release.&nbsp;Hence&nbsp;it's&nbsp;totally&nbsp;safe&nbsp;to&nbsp;kill&nbsp;it.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae"><span class="age">23 hours ago</span>In feature.pm, inline normalise_hints() into __common(), its only caller.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">commit</a> | <a href="/perl.git/commitdiff/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">commitdiff</a> | <a href="/perl.git/tree/d9ee6ccb5fa3d256d9d020e332ee8ba52706c2ae">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 27 Feb 2012 17:33:08 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;feature.pm,&nbsp;inline&nbsp;normalise_hints()&nbsp;into&nbsp;__common(),&nbsp;its&nbsp;only&nbsp;caller.<br/>
+  <br/>
+  normalise_hints()&nbsp;was&nbsp;added&nbsp;after&nbsp;5.14.0&nbsp;was&nbsp;released,&nbsp;so&nbsp;has&nbsp;never&nbsp;been&nbsp;in<br/>
+  a&nbsp;stable&nbsp;release.&nbsp;Hence&nbsp;it's&nbsp;totally&nbsp;safe&nbsp;to&nbsp;kill&nbsp;it.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/d37572645496516ed45536ef36684ba890c8f09b"><span class="age">23 hours ago</span>Merge the code common to feature::import and feature::unimport.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/d37572645496516ed45536ef36684ba890c8f09b">commit</a> | <a href="/perl.git/commitdiff/d37572645496516ed45536ef36684ba890c8f09b">commitdiff</a> | <a href="/perl.git/tree/d37572645496516ed45536ef36684ba890c8f09b">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 27 Feb 2012 17:24:57 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Merge&nbsp;the&nbsp;code&nbsp;common&nbsp;to&nbsp;feature::import&nbsp;and&nbsp;feature::unimport.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2"><span class="age">23 hours ago</span>In feature.pm, use a consistent code style in import() and unimport().</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">commit</a> | <a href="/perl.git/commitdiff/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">commitdiff</a> | <a href="/perl.git/tree/36143a0c55b8cfba5c5c2c2b40c5e00bce067bf2">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 27 Feb 2012 16:57:54 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;feature.pm,&nbsp;use&nbsp;a&nbsp;consistent&nbsp;code&nbsp;style&nbsp;in&nbsp;import()&nbsp;and&nbsp;unimport().<br/>
+  <br/>
+  There&nbsp;were&nbsp;a&nbsp;couple&nbsp;of&nbsp;inconsistencies&nbsp;(shift&nbsp;with/without&nbsp;an&nbsp;explicit&nbsp;@_,<br/>
+  exists&nbsp;with/without(),&nbsp;!@_&nbsp;vs&nbsp;@_&nbsp;==&nbsp;0)&nbsp;which&nbsp;turn&nbsp;out&nbsp;to&nbsp;date&nbsp;back&nbsp;to<br/>
+  before&nbsp;5.10.0<br/>
+  <br/>
+  Also&nbsp;fix&nbsp;an&nbsp;inadvertent&nbsp;use&nbsp;of&nbsp;a&nbsp;single&nbsp;element&nbsp;array&nbsp;slice&nbsp;with&nbsp;a&nbsp;simple<br/>
+  array&nbsp;lookup&nbsp;in&nbsp;current_bundle().<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11"><span class="age">23 hours ago</span>In B::Deparse::_features_from_bundle(), don't call feature::current_bundle()</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">commit</a> | <a href="/perl.git/commitdiff/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">commitdiff</a> | <a href="/perl.git/tree/1873980aaeb3ef1e5a2e1ef646a831ce8ddc3e11">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 22:30:30 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;B::Deparse::_features_from_bundle(),&nbsp;don't&nbsp;call&nbsp;feature::current_bundle()<br/>
+  <br/>
+  Instead,&nbsp;directly&nbsp;access&nbsp;feature's&nbsp;package&nbsp;variables,&nbsp;as&nbsp;B::Deparse&nbsp;already<br/>
+  does&nbsp;in&nbsp;14&nbsp;other&nbsp;places.&nbsp;(It&nbsp;also&nbsp;has&nbsp;its&nbsp;tentacles&nbsp;firmly&nbsp;into&nbsp;strict<br/>
+  and&nbsp;warning's&nbsp;package&nbsp;variables&nbsp;-&nbsp;it's&nbsp;not&nbsp;fussy)<br/>
+  <br/>
+  feature::current_bundle()&nbsp;was&nbsp;not&nbsp;part&nbsp;of&nbsp;the&nbsp;documented&nbsp;API&nbsp;of&nbsp;feature<br/>
+  either,&nbsp;so&nbsp;B::Deparse&nbsp;wasn't&nbsp;clean&nbsp;previously.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/149758b3fc289aa2e2cbf92de18c3cee9475fe83"><span class="age">23 hours ago</span>In Deparse, use $feature::hint_mask directly, instead of copying its value.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/149758b3fc289aa2e2cbf92de18c3cee9475fe83">commit</a> | <a href="/perl.git/commitdiff/149758b3fc289aa2e2cbf92de18c3cee9475fe83">commitdiff</a> | <a href="/perl.git/tree/149758b3fc289aa2e2cbf92de18c3cee9475fe83">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 10:11:02 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;Deparse,&nbsp;use&nbsp;$feature::hint_mask&nbsp;directly,&nbsp;instead&nbsp;of&nbsp;copying&nbsp;its&nbsp;value.<br/>
+  <br/>
+  Also,&nbsp;require&nbsp;feature&nbsp;unconditionally.<br/>
+  <br/>
+  Deparse&nbsp;already&nbsp;directly&nbsp;uses&nbsp;data&nbsp;from&nbsp;feature,&nbsp;switch&nbsp;and&nbsp;warnings,&nbsp;so<br/>
+  this&nbsp;isn't&nbsp;a&nbsp;new&nbsp;trend&nbsp;in&nbsp;encapsulation&nbsp;breakage.&nbsp;Previously&nbsp;Deparse&nbsp;copied<br/>
+  the&nbsp;value&nbsp;of&nbsp;$feature::hint_mask,&nbsp;and&nbsp;lazily&nbsp;loaded&nbsp;require&nbsp;in&nbsp;4&nbsp;places.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21"><span class="age">23 hours ago</span>In B::Deparse, refactor common code into _features_from_bundle().</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">commit</a> | <a href="/perl.git/commitdiff/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">commitdiff</a> | <a href="/perl.git/tree/95c04cdeb56d45fc9abbac71ca13bfc750bc0a21">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 22:09:02 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;B::Deparse,&nbsp;refactor&nbsp;common&nbsp;code&nbsp;into&nbsp;_features_from_bundle().<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c63c25b23f61fe3136dbeb1c42bcfda18736c094"><span class="age">23 hours ago</span>In B::Deparse, refactor the two places that feature::current_bundle()</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c63c25b23f61fe3136dbeb1c42bcfda18736c094">commit</a> | <a href="/perl.git/commitdiff/c63c25b23f61fe3136dbeb1c42bcfda18736c094">commitdiff</a> | <a href="/perl.git/tree/c63c25b23f61fe3136dbeb1c42bcfda18736c094">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 21:57:31 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;B::Deparse,&nbsp;refactor&nbsp;the&nbsp;two&nbsp;places&nbsp;that&nbsp;feature::current_bundle()<br/>
+  <br/>
+  Converge&nbsp;the&nbsp;code,&nbsp;so&nbsp;that&nbsp;it's&nbsp;easy&nbsp;to&nbsp;extract&nbsp;out&nbsp;into&nbsp;a&nbsp;subroutine.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c"><span class="age">23 hours ago</span>Fix regression in deparsing say (etc) under use 5.10.0</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">commit</a> | <a href="/perl.git/commitdiff/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">commitdiff</a> | <a href="/perl.git/tree/9c56cdbdb331493eb1f11fc04da8bd6a069aa77c">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 16:32:08 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Fix&nbsp;regression&nbsp;in&nbsp;deparsing&nbsp;say&nbsp;(etc)&nbsp;under&nbsp;use&nbsp;5.10.0<br/>
+  <br/>
+  Commit&nbsp;<a class="text" href="/perl.git/object/6634bb9d0ed117be">6634bb9d0ed117be</a>&nbsp;introduced&nbsp;a&nbsp;regression,&nbsp;causing&nbsp;this<br/>
+  <br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;use&nbsp;5.10.0;<br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;say&nbsp;&quot;Perl&nbsp;rules&quot;;<br/>
+  <br/>
+  to&nbsp;be&nbsp;deparsed&nbsp;as&nbsp;C&lt;CORE::say&gt;,&nbsp;not&nbsp;C&lt;say&gt;,&nbsp;etc.&nbsp;It&nbsp;wasn't&nbsp;actually&nbsp;possible<br/>
+  to&nbsp;write&nbsp;tests&nbsp;for&nbsp;this&nbsp;within&nbsp;the&nbsp;t/deparse.t&nbsp;framework&nbsp;until&nbsp;the&nbsp;recent<br/>
+  refactoring.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/8f57bb34632c3884eb14455ddf9dcb86975886af"><span class="age">23 hours ago</span>Add tests for deparsing C&lt;say&gt; under various combinations of pragmas.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/8f57bb34632c3884eb14455ddf9dcb86975886af">commit</a> | <a href="/perl.git/commitdiff/8f57bb34632c3884eb14455ddf9dcb86975886af">commitdiff</a> | <a href="/perl.git/tree/8f57bb34632c3884eb14455ddf9dcb86975886af">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 15:44:51 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;tests&nbsp;for&nbsp;deparsing&nbsp;C&lt;say&gt;&nbsp;under&nbsp;various&nbsp;combinations&nbsp;of&nbsp;pragmas.<br/>
+  <br/>
+  These&nbsp;mostly&nbsp;codify&nbsp;the&nbsp;current&nbsp;output&nbsp;of&nbsp;B::Deparse,&nbsp;which&nbsp;is&nbsp;not&nbsp;invalid,<br/>
+  but&nbsp;might&nbsp;not&nbsp;be&nbsp;considered&nbsp;to&nbsp;be&nbsp;the&nbsp;optimal&nbsp;output.&nbsp;(It's&nbsp;defensive,&nbsp;in<br/>
+  that&nbsp;it&nbsp;uses&nbsp;C&lt;no&nbsp;feature;&gt;&nbsp;which&nbsp;will&nbsp;ensure&nbsp;consistent&nbsp;behaviour&nbsp;whatever<br/>
+  pragma&nbsp;context&nbsp;the&nbsp;output&nbsp;is&nbsp;evaluated&nbsp;in.)<br/>
+  <br/>
+  Some&nbsp;are&nbsp;TODO&nbsp;for&nbsp;the&nbsp;cases&nbsp;where&nbsp;B::Deparse&nbsp;is&nbsp;wrongly&nbsp;outputting<br/>
+  C&lt;CORE::say&gt;&nbsp;instead&nbsp;of&nbsp;plain&nbsp;C&lt;say&gt;&nbsp;and&nbsp;C&lt;CORE::__SUB__&gt;&nbsp;instead&nbsp;of&nbsp;plain<br/>
+  C&lt;__SUB__&gt;.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/205fef8800760e59c00e57b4e56a9851113e96cb"><span class="age">23 hours ago</span>Avoid deparse.t testing everything under use feature ':5.10'</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/205fef8800760e59c00e57b4e56a9851113e96cb">commit</a> | <a href="/perl.git/commitdiff/205fef8800760e59c00e57b4e56a9851113e96cb">commitdiff</a> | <a href="/perl.git/tree/205fef8800760e59c00e57b4e56a9851113e96cb">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 13:00:56 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Avoid&nbsp;deparse.t&nbsp;testing&nbsp;everything&nbsp;under&nbsp;use&nbsp;feature&nbsp;':5.10'<br/>
+  <br/>
+  Only&nbsp;use&nbsp;feature&nbsp;':5.10'&nbsp;in&nbsp;those&nbsp;tests&nbsp;that&nbsp;actually&nbsp;need&nbsp;it.&nbsp;This&nbsp;will&nbsp;let<br/>
+  us&nbsp;add&nbsp;tests&nbsp;for&nbsp;deparsing&nbsp;without&nbsp;any&nbsp;features&nbsp;enabled.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/a6087f241d4f8df274ed95db66813909e8eba7cc"><span class="age">23 hours ago</span>Add a 'context' feature to deparse.t, to better test ambient pragmas.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/a6087f241d4f8df274ed95db66813909e8eba7cc">commit</a> | <a href="/perl.git/commitdiff/a6087f241d4f8df274ed95db66813909e8eba7cc">commitdiff</a> | <a href="/perl.git/tree/a6087f241d4f8df274ed95db66813909e8eba7cc">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 12:49:18 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;a&nbsp;'context'&nbsp;feature&nbsp;to&nbsp;deparse.t,&nbsp;to&nbsp;better&nbsp;test&nbsp;ambient&nbsp;pragmas.<br/>
+  <br/>
+  Call&nbsp;ambient_pragmas()&nbsp;before&nbsp;each&nbsp;deparse&nbsp;test.&nbsp;This&nbsp;will&nbsp;allow&nbsp;use&nbsp;to&nbsp;remove<br/>
+  the&nbsp;constraints&nbsp;of&nbsp;the&nbsp;current&nbsp;default,&nbsp;which&nbsp;is&nbsp;to&nbsp;always&nbsp;run&nbsp;under<br/>
+  use&nbsp;feature&nbsp;&quot;:5.10&quot;;<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/c4a350e6709d60f02654f36bb02d403e6763ecc1"><span class="age">23 hours ago</span>In deparse.t, rename %reason to %meta.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/c4a350e6709d60f02654f36bb02d403e6763ecc1">commit</a> | <a href="/perl.git/commitdiff/c4a350e6709d60f02654f36bb02d403e6763ecc1">commitdiff</a> | <a href="/perl.git/tree/c4a350e6709d60f02654f36bb02d403e6763ecc1">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Tue, 28 Feb 2012 11:43:02 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;deparse.t,&nbsp;rename&nbsp;%reason&nbsp;to&nbsp;%meta.<br/>
+  <br/>
+  Whilst&nbsp;skip&nbsp;and&nbsp;todo&nbsp;both&nbsp;have&nbsp;&quot;reason&quot;s,&nbsp;subsequent&nbsp;refactoring&nbsp;will&nbsp;use&nbsp;it<br/>
+  for&nbsp;other&nbsp;purposes.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/d333a65555483b42982abcf933ffae2cf0b8a6a9"><span class="age">23 hours ago</span>Note in perldelta that C&lt;no feature;&gt; now means reset to default.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/d333a65555483b42982abcf933ffae2cf0b8a6a9">commit</a> | <a href="/perl.git/commitdiff/d333a65555483b42982abcf933ffae2cf0b8a6a9">commitdiff</a> | <a href="/perl.git/tree/d333a65555483b42982abcf933ffae2cf0b8a6a9">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Mon, 19 Mar 2012 09:20:42 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Note&nbsp;in&nbsp;perldelta&nbsp;that&nbsp;C&lt;no&nbsp;feature;&gt;&nbsp;now&nbsp;means&nbsp;reset&nbsp;to&nbsp;default.<br/>
+  <br/>
+  The&nbsp;behaviour&nbsp;was&nbsp;changed&nbsp;with&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/39ec54a59ce332fc">39ec54a59ce332fc</a>.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1"><span class="age">30 hours ago</span>Retry first shot at perldelta.pod.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">commit</a> | <a href="/perl.git/commitdiff/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">commitdiff</a> | <a href="/perl.git/tree/d5dc70019fa9d6f8c265e0493cfe7dea6cec45a1">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Mon, 19 Mar 2012 02:20:09 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Retry&nbsp;first&nbsp;shot&nbsp;at&nbsp;perldelta.pod.<br/>
+  <br/>
+  Documents&nbsp;the&nbsp;differences&nbsp;between&nbsp;5.15.8&nbsp;and&nbsp;5.15.9.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/a6b91202136a6ce25cd5212bf1f2e81489688050"><span class="age">32 hours ago</span>Update Pod::Perldoc to version 3.17</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/a6b91202136a6ce25cd5212bf1f2e81489688050">commit</a> | <a href="/perl.git/commitdiff/a6b91202136a6ce25cd5212bf1f2e81489688050">commitdiff</a> | <a href="/perl.git/tree/a6b91202136a6ce25cd5212bf1f2e81489688050">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 23:53:14 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Update&nbsp;Pod::Perldoc&nbsp;to&nbsp;version&nbsp;3.17<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413"><span class="age">32 hours ago</span>Add a --tarball option</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">commit</a> | <a href="/perl.git/commitdiff/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">commitdiff</a> | <a href="/perl.git/tree/4d18e0a2ec168500b5e99b512dd7cd7bbbce4413">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 23:51:14 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;a&nbsp;--tarball&nbsp;option<br/>
+  <br/>
+  This&nbsp;allows&nbsp;to&nbsp;do&nbsp;the&nbsp;cpan/&nbsp;upgrade&nbsp;without&nbsp;having&nbsp;to&nbsp;contact&nbsp;CPAN.<br/>
+  For&nbsp;instance,&nbsp;from&nbsp;dromedary,&nbsp;it&nbsp;seems&nbsp;to&nbsp;be&nbsp;impossible&nbsp;to&nbsp;fetch<br/>
+  files&nbsp;from&nbsp;CPAN.&nbsp;With&nbsp;the&nbsp;--tarball&nbsp;option,&nbsp;you&nbsp;can&nbsp;pass&nbsp;the&nbsp;location<br/>
+  of&nbsp;the&nbsp;tarball,&nbsp;and&nbsp;this&nbsp;will&nbsp;used&nbsp;instead&nbsp;of&nbsp;fetching&nbsp;it&nbsp;automatically<br/>
+  from&nbsp;CPAN.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/350bd8f1230fca459d025043f2a9a9f23b0c3537"><span class="age">33 hours ago</span>Some backslashes turn out not to be always there.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/350bd8f1230fca459d025043f2a9a9f23b0c3537">commit</a> | <a href="/perl.git/commitdiff/350bd8f1230fca459d025043f2a9a9f23b0c3537">commitdiff</a> | <a href="/perl.git/tree/350bd8f1230fca459d025043f2a9a9f23b0c3537">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 22:36:42 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Some&nbsp;backslashes&nbsp;turn&nbsp;out&nbsp;not&nbsp;to&nbsp;be&nbsp;always&nbsp;there.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/e529a3872c59db57c97daa13c04fb14035b7fd66"><span class="age">33 hours ago</span>Fix a cut-and-paste error</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/e529a3872c59db57c97daa13c04fb14035b7fd66">commit</a> | <a href="/perl.git/commitdiff/e529a3872c59db57c97daa13c04fb14035b7fd66">commitdiff</a> | <a href="/perl.git/tree/e529a3872c59db57c97daa13c04fb14035b7fd66">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 22:36:03 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Fix&nbsp;a&nbsp;cut-and-paste&nbsp;error<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/534c8e032e0b46d72b78272d2daa69c3a0a22267"><span class="age">33 hours ago</span>Revert &quot;First shot at perl5159delta.pod&quot;</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/534c8e032e0b46d72b78272d2daa69c3a0a22267">commit</a> | <a href="/perl.git/commitdiff/534c8e032e0b46d72b78272d2daa69c3a0a22267">commitdiff</a> | <a href="/perl.git/tree/534c8e032e0b46d72b78272d2daa69c3a0a22267">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 22:32:17 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Revert&nbsp;&quot;First&nbsp;shot&nbsp;at&nbsp;perl5159delta.pod&quot;<br/>
+  <br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/21ffc8459b739cc13a32f22a2edb7be485a062e0">21ffc8459b739cc13a32f22a2edb7be485a062e0</a>.<br/>
+  <br/>
+  Until&nbsp;I&nbsp;can&nbsp;figure&nbsp;out&nbsp;how&nbsp;to&nbsp;add&nbsp;a&nbsp;new&nbsp;perldelta&nbsp;and&nbsp;make&nbsp;all&nbsp;tests&nbsp;pass.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/2a0c0f7e189bc00ac45b3dbbe586401632124954"><span class="age">33 hours ago</span>Revert &quot;Paste in the output of Porting/acknowledgements.pl in pod/perl5159delta.pod&quot;</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/2a0c0f7e189bc00ac45b3dbbe586401632124954">commit</a> | <a href="/perl.git/commitdiff/2a0c0f7e189bc00ac45b3dbbe586401632124954">commitdiff</a> | <a href="/perl.git/tree/2a0c0f7e189bc00ac45b3dbbe586401632124954">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 22:31:28 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Revert&nbsp;&quot;Paste&nbsp;in&nbsp;the&nbsp;output&nbsp;of&nbsp;Porting/acknowledgements.pl&nbsp;in&nbsp;pod/perl5159delta.pod&quot;<br/>
+  <br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/98f0737d71a92167bf1aace8a8d8411b985e3200">98f0737d71a92167bf1aace8a8d8411b985e3200</a>.<br/>
+  <br/>
+  Until&nbsp;I&nbsp;can&nbsp;figure&nbsp;out&nbsp;how&nbsp;to&nbsp;add&nbsp;a&nbsp;new&nbsp;perldelta&nbsp;and&nbsp;make&nbsp;all&nbsp;tests&nbsp;pass.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/98f0737d71a92167bf1aace8a8d8411b985e3200"><span class="age">38 hours ago</span>Paste in the output of Porting/acknowledgements.pl in pod/perl5159delta.pod</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/98f0737d71a92167bf1aace8a8d8411b985e3200">commit</a> | <a href="/perl.git/commitdiff/98f0737d71a92167bf1aace8a8d8411b985e3200">commitdiff</a> | <a href="/perl.git/tree/98f0737d71a92167bf1aace8a8d8411b985e3200">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 17:26:59 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Paste&nbsp;in&nbsp;the&nbsp;output&nbsp;of&nbsp;Porting/acknowledgements.pl&nbsp;in&nbsp;pod/perl5159delta.pod<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/08dc3bc803c7923db799f27c4e5183decbebc2f4"><span class="age">39 hours ago</span>Attempt to find an author if (s)he comes via RT.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/08dc3bc803c7923db799f27c4e5183decbebc2f4">commit</a> | <a href="/perl.git/commitdiff/08dc3bc803c7923db799f27c4e5183decbebc2f4">commitdiff</a> | <a href="/perl.git/tree/08dc3bc803c7923db799f27c4e5183decbebc2f4">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 17:24:23 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Attempt&nbsp;to&nbsp;find&nbsp;an&nbsp;author&nbsp;if&nbsp;(s)he&nbsp;comes&nbsp;via&nbsp;RT.<br/>
+  <br/>
+  In&nbsp;the&nbsp;case&nbsp;of&nbsp;commits,&nbsp;it&nbsp;maybe&nbsp;that&nbsp;the&nbsp;reporter&nbsp;used&nbsp;RT,&nbsp;which&nbsp;results<br/>
+  in&nbsp;a&nbsp;generic&nbsp;RT&nbsp;email&nbsp;address.&nbsp;Instead&nbsp;of&nbsp;just&nbsp;reporting&nbsp;the&nbsp;author&nbsp;as&nbsp;'!',<br/>
+  we'll&nbsp;do&nbsp;an&nbsp;attempt&nbsp;to&nbsp;see&nbsp;whether&nbsp;he's&nbsp;named&nbsp;in&nbsp;the&nbsp;AUTHORS&nbsp;file.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/21ffc8459b739cc13a32f22a2edb7be485a062e0"><span class="age">40 hours ago</span>First shot at perl5159delta.pod</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/21ffc8459b739cc13a32f22a2edb7be485a062e0">commit</a> | <a href="/perl.git/commitdiff/21ffc8459b739cc13a32f22a2edb7be485a062e0">commitdiff</a> | <a href="/perl.git/tree/21ffc8459b739cc13a32f22a2edb7be485a062e0">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Sun, 18 Mar 2012 16:20:03 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  First&nbsp;shot&nbsp;at&nbsp;perl5159delta.pod<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/7ab791555672f50a01181f675c399d278879e60e"><span class="age">2 days ago</span>Update CPANPLUS to CPAN version 0.9121</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/7ab791555672f50a01181f675c399d278879e60e">commit</a> | <a href="/perl.git/commitdiff/7ab791555672f50a01181f675c399d278879e60e">commitdiff</a> | <a href="/perl.git/tree/7ab791555672f50a01181f675c399d278879e60e">tree</a><br/>
+  </div>
+  <span class="author_date">Chris 'BinGOs' Williams [Sat, 17 Mar 2012 23:50:17 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Update&nbsp;CPANPLUS&nbsp;to&nbsp;CPAN&nbsp;version&nbsp;0.9121<br/>
+  <br/>
+  This&nbsp;resolves&nbsp;a&nbsp;regression&nbsp;introduced&nbsp;with&nbsp;v0.9109<br/>
+  which&nbsp;was&nbsp;included&nbsp;with&nbsp;perl&nbsp;version&nbsp;v5.15.2&nbsp;and&nbsp;is<br/>
+  therefore&nbsp;a&nbsp;regression&nbsp;since&nbsp;v5.14.x<br/>
+  <br/>
+  &nbsp;&nbsp;[DELTA]<br/>
+  <br/>
+  &nbsp;&nbsp;Changes&nbsp;for&nbsp;0.9121&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sat&nbsp;Mar&nbsp;17&nbsp;23:23:42&nbsp;2012<br/>
+  &nbsp;&nbsp;================================================<br/>
+  &nbsp;&nbsp;*&nbsp;Resolved&nbsp;a&nbsp;regression&nbsp;with&nbsp;dev&nbsp;'_'&nbsp;version<br/>
+  &nbsp;&nbsp;&nbsp;&nbsp;numbers&nbsp;since&nbsp;0.9109<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/95670bde8957add23fdad6b1c9da76ef317f788f"><span class="age">2 days ago</span>In S_parse_body(), don't &quot;leak&quot; linestr_sv until global destruction.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/95670bde8957add23fdad6b1c9da76ef317f788f">commit</a> | <a href="/perl.git/commitdiff/95670bde8957add23fdad6b1c9da76ef317f788f">commitdiff</a> | <a href="/perl.git/tree/95670bde8957add23fdad6b1c9da76ef317f788f">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Sat, 25 Feb 2012 23:22:41 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;S_parse_body(),&nbsp;don't&nbsp;&quot;leak&quot;&nbsp;linestr_sv&nbsp;until&nbsp;global&nbsp;destruction.<br/>
+  <br/>
+  This&nbsp;commit&nbsp;ensures&nbsp;that&nbsp;linestr_sv&nbsp;is&nbsp;properly&nbsp;cleaned&nbsp;up,&nbsp;if&nbsp;allocated.<br/>
+  <br/>
+  The&nbsp;local&nbsp;variable&nbsp;linestr_sv&nbsp;was&nbsp;added&nbsp;by&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/009d90df4e17a415">009d90df4e17a415</a>&nbsp;in&nbsp;2007,<br/>
+  to&nbsp;replace&nbsp;use&nbsp;of&nbsp;PL_linestr&nbsp;in&nbsp;S_parse_body().&nbsp;However,&nbsp;that&nbsp;commit&nbsp;didn't<br/>
+  add&nbsp;any&nbsp;code&nbsp;to&nbsp;free&nbsp;linestr_sv&nbsp;at&nbsp;the&nbsp;end&nbsp;of&nbsp;S_parse_body(),&nbsp;meaning&nbsp;that<br/>
+  the&nbsp;SV&nbsp;sticks&nbsp;around&nbsp;until&nbsp;global&nbsp;destruction.<br/>
+  <br/>
+  Subsequent&nbsp;code&nbsp;simplification&nbsp;possible&nbsp;by&nbsp;the&nbsp;removal&nbsp;of&nbsp;suidperl&nbsp;reveals<br/>
+  that&nbsp;linestr_sv&nbsp;is&nbsp;only&nbsp;needed&nbsp;for&nbsp;the&nbsp;'-x'&nbsp;option,&nbsp;so&nbsp;it's&nbsp;safe&nbsp;to&nbsp;avoid<br/>
+  allocating&nbsp;it&nbsp;up&nbsp;front.&nbsp;Additionally,&nbsp;during&nbsp;'-x'&nbsp;processing,&nbsp;Perl_sv_gets()<br/>
+  will&nbsp;upgrade&nbsp;the&nbsp;target&nbsp;SV&nbsp;to&nbsp;SVt_PV&nbsp;and&nbsp;allocate&nbsp;the&nbsp;string&nbsp;buffer&nbsp;as&nbsp;needed,<br/>
+  so&nbsp;there's&nbsp;no&nbsp;need&nbsp;to&nbsp;pre-upgrade&nbsp;or&nbsp;pre-allocate&nbsp;the&nbsp;SV&nbsp;in&nbsp;S_parse_body().<br/>
+  This&nbsp;slightly&nbsp;reduces&nbsp;the&nbsp;amount&nbsp;of&nbsp;code.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/b24bc0958ea575493f4672819334c2b884f1e90d"><span class="age">2 days ago</span>Remove all the never used parameters from the macro validate_suid()</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/b24bc0958ea575493f4672819334c2b884f1e90d">commit</a> | <a href="/perl.git/commitdiff/b24bc0958ea575493f4672819334c2b884f1e90d">commitdiff</a> | <a href="/perl.git/tree/b24bc0958ea575493f4672819334c2b884f1e90d">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Sat, 25 Feb 2012 22:50:49 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Remove&nbsp;all&nbsp;the&nbsp;never&nbsp;used&nbsp;parameters&nbsp;from&nbsp;the&nbsp;macro&nbsp;validate_suid()<br/>
+  <br/>
+  Several&nbsp;parameters&nbsp;are&nbsp;unused&nbsp;in&nbsp;either&nbsp;remaining&nbsp;variant&nbsp;of&nbsp;the<br/>
+  validate_suid()&nbsp;macro.&nbsp;The&nbsp;two&nbsp;variants&nbsp;which&nbsp;used&nbsp;the&nbsp;extra&nbsp;parameters<br/>
+  were&nbsp;removed&nbsp;with&nbsp;suidperl&nbsp;by&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/cc69b689ee7c2745">cc69b689ee7c2745</a>&nbsp;in&nbsp;Jan&nbsp;2009.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/17d155413b0e201ca149c3701d53539001559d4d"><span class="age">2 days ago</span>In perlfunc, don't have functions in &quot;Misc&quot; and a second category.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/17d155413b0e201ca149c3701d53539001559d4d">commit</a> | <a href="/perl.git/commitdiff/17d155413b0e201ca149c3701d53539001559d4d">commitdiff</a> | <a href="/perl.git/tree/17d155413b0e201ca149c3701d53539001559d4d">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Wed, 22 Feb 2012 13:00:41 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;perlfunc,&nbsp;don't&nbsp;have&nbsp;functions&nbsp;in&nbsp;&quot;Misc&quot;&nbsp;and&nbsp;a&nbsp;second&nbsp;category.<br/>
+  <br/>
+  dump,&nbsp;eval,&nbsp;evalbytes&nbsp;and&nbsp;wantarray&nbsp;are&nbsp;now&nbsp;only&nbsp;in&nbsp;&quot;flow&nbsp;control&quot;.<br/>
+  local,&nbsp;my,&nbsp;our&nbsp;and&nbsp;state&nbsp;are&nbsp;only&nbsp;in&nbsp;&quot;scoping&quot;.<br/>
+  prototype&nbsp;is&nbsp;now&nbsp;only&nbsp;in&nbsp;&quot;misc&quot;.&nbsp;Whilst&nbsp;*prototypes*&nbsp;affect&nbsp;parsing,&nbsp;and<br/>
+  hence&nbsp;indirectly&nbsp;flow&nbsp;control,&nbsp;the&nbsp;prototype&nbsp;function&nbsp;is&nbsp;for&nbsp;introspecting<br/>
+  prototypes.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2"><span class="age">2 days ago</span>De-emphasise switch-related keywords in perlfunc.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">commit</a> | <a href="/perl.git/commitdiff/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">commitdiff</a> | <a href="/perl.git/tree/dba7b06570fc6c08715b9cb0ae9b7662e7e6fee2">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Sun, 19 Feb 2012 18:54:38 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  De-emphasise&nbsp;switch-related&nbsp;keywords&nbsp;in&nbsp;perlfunc.<br/>
+  <br/>
+  Move&nbsp;the&nbsp;3&nbsp;non-function&nbsp;keywords&nbsp;into&nbsp;the&nbsp;summary&nbsp;cross&nbsp;reference&nbsp;section<br/>
+  at&nbsp;the&nbsp;end&nbsp;of&nbsp;perlfunc.&nbsp;Eliminate&nbsp;the&nbsp;examples&nbsp;which&nbsp;duplicate&nbsp;examples&nbsp;in<br/>
+  perlsyn.&nbsp;Merge&nbsp;the&nbsp;remaining&nbsp;2&nbsp;keywords&nbsp;into&nbsp;the&nbsp;&quot;control&nbsp;flow&quot;&nbsp;group.<br/>
+  Note&nbsp;that&nbsp;the&nbsp;switch&nbsp;feature&nbsp;is&nbsp;considered&nbsp;experimental.<br/>
+  <br/>
+  With&nbsp;these&nbsp;changes,&nbsp;`perldoc&nbsp;-f&nbsp;default`,&nbsp;`perldoc&nbsp;-f&nbsp;given`&nbsp;and<br/>
+  `perldoc&nbsp;-f&nbsp;when`&nbsp;will&nbsp;still&nbsp;return&nbsp;a&nbsp;helpful&nbsp;result,&nbsp;and&nbsp;as&nbsp;before&nbsp;will<br/>
+  refer&nbsp;the&nbsp;reader&nbsp;to&nbsp;perlsyn&nbsp;for&nbsp;full&nbsp;information.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f"><span class="age">2 days ago</span>In the perlfunc cross-reference sections, link to the section within a page.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">commit</a> | <a href="/perl.git/commitdiff/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">commitdiff</a> | <a href="/perl.git/tree/de9ddc2658f2fe67a3d6a86e14eb6634e2fb7e6f">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Sun, 19 Feb 2012 17:33:22 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  In&nbsp;the&nbsp;perlfunc&nbsp;cross-reference&nbsp;sections,&nbsp;link&nbsp;to&nbsp;the&nbsp;section&nbsp;within&nbsp;a&nbsp;page.<br/>
+  <br/>
+  perlfunc&nbsp;now&nbsp;has&nbsp;a&nbsp;section&nbsp;cross&nbsp;referencing&nbsp;keywords&nbsp;documented&nbsp;elsewhere.<br/>
+  Keywords&nbsp;are&nbsp;grouped&nbsp;by&nbsp;man&nbsp;page,&nbsp;and&nbsp;for&nbsp;most&nbsp;manpages,&nbsp;all&nbsp;the<br/>
+  cross-referenced&nbsp;keywords&nbsp;are&nbsp;in&nbsp;the&nbsp;same&nbsp;section.&nbsp;Hence&nbsp;make&nbsp;the&nbsp;L&lt;&gt;&nbsp;links<br/>
+  more&nbsp;specific&nbsp;by&nbsp;including&nbsp;the&nbsp;section.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/081753c830d198a217b6d919d68090aab769b724"><span class="age">2 days ago</span>DESTROY is documented in perlobj - correct the cross-reference in perlfunc.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/081753c830d198a217b6d919d68090aab769b724">commit</a> | <a href="/perl.git/commitdiff/081753c830d198a217b6d919d68090aab769b724">commitdiff</a> | <a href="/perl.git/tree/081753c830d198a217b6d919d68090aab769b724">tree</a><br/>
+  </div>
+  <span class="author_date">Nicholas Clark [Sun, 19 Feb 2012 15:49:44 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  DESTROY&nbsp;is&nbsp;documented&nbsp;in&nbsp;perlobj&nbsp;-&nbsp;correct&nbsp;the&nbsp;cross-reference&nbsp;in&nbsp;perlfunc.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/0b721e491b9f3684d24ec056752af46db8ebb87c"><span class="age">3 days ago</span>ignore new build result from splitting docs for Module::CoreList</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/0b721e491b9f3684d24ec056752af46db8ebb87c">commit</a> | <a href="/perl.git/commitdiff/0b721e491b9f3684d24ec056752af46db8ebb87c">commitdiff</a> | <a href="/perl.git/tree/0b721e491b9f3684d24ec056752af46db8ebb87c">tree</a><br/>
+  </div>
+  <span class="author_date">Tony Cook [Sat, 17 Mar 2012 02:39:04 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  ignore&nbsp;new&nbsp;build&nbsp;result&nbsp;from&nbsp;splitting&nbsp;docs&nbsp;for&nbsp;Module::CoreList<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6329003cd882963712174461f03a3f11db150a50"><span class="age">3 days ago</span>Unicode::UCD: pod clarifications, corrections</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6329003cd882963712174461f03a3f11db150a50">commit</a> | <a href="/perl.git/commitdiff/6329003cd882963712174461f03a3f11db150a50">commitdiff</a> | <a href="/perl.git/tree/6329003cd882963712174461f03a3f11db150a50">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Sun, 11 Mar 2012 19:32:04 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Unicode::UCD:&nbsp;pod&nbsp;clarifications,&nbsp;corrections<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/34ea573bc5236fc856e9ef46efe729e09da2b167"><span class="age">3 days ago</span>charnames.t: Attempt to fix probable timing issue</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/34ea573bc5236fc856e9ef46efe729e09da2b167">commit</a> | <a href="/perl.git/commitdiff/34ea573bc5236fc856e9ef46efe729e09da2b167">commitdiff</a> | <a href="/perl.git/tree/34ea573bc5236fc856e9ef46efe729e09da2b167">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Fri, 16 Mar 2012 16:14:05 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  charnames.t:&nbsp;Attempt&nbsp;to&nbsp;fix&nbsp;probable&nbsp;timing&nbsp;issue<br/>
+  <br/>
+  charnames.t&nbsp;sometimes&nbsp;fails&nbsp;on&nbsp;a&nbsp;test&nbsp;that&nbsp;is&nbsp;expecting&nbsp;a&nbsp;file&nbsp;to&nbsp;be<br/>
+  non-existent.&nbsp;&nbsp;However,&nbsp;other&nbsp;tests&nbsp;in&nbsp;it&nbsp;briefly&nbsp;create&nbsp;a&nbsp;file&nbsp;by&nbsp;that<br/>
+  name.&nbsp;&nbsp;When&nbsp;two&nbsp;instances&nbsp;of&nbsp;the&nbsp;.t&nbsp;are&nbsp;run&nbsp;in&nbsp;parallel,&nbsp;as&nbsp;happens&nbsp;in<br/>
+  some&nbsp;smokes,&nbsp;it&nbsp;could&nbsp;be&nbsp;that&nbsp;the&nbsp;file&nbsp;exists&nbsp;at&nbsp;the&nbsp;time&nbsp;it&nbsp;is&nbsp;expected<br/>
+  not&nbsp;to.&nbsp;&nbsp;The&nbsp;result&nbsp;is&nbsp;a&nbsp;non-reproducible&nbsp;failure.&nbsp;&nbsp;Anyway,&nbsp;that&nbsp;is&nbsp;my<br/>
+  theory.&nbsp;&nbsp;And&nbsp;so&nbsp;this&nbsp;commit&nbsp;changes&nbsp;to&nbsp;use&nbsp;a&nbsp;filename&nbsp;that&nbsp;is&nbsp;used&nbsp;just<br/>
+  by&nbsp;the&nbsp;test&nbsp;for&nbsp;what&nbsp;happens&nbsp;when&nbsp;a&nbsp;file&nbsp;is&nbsp;non-existent,&nbsp;and&nbsp;hence<br/>
+  doesn't&nbsp;ever&nbsp;exist&nbsp;even&nbsp;transiently.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84"><span class="age">3 days ago</span>cherrymaint: Beef up --help option</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">commit</a> | <a href="/perl.git/commitdiff/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">commitdiff</a> | <a href="/perl.git/tree/cbba5ad3171ce71ed2a33c4e53a23bd58c747b84">tree</a><br/>
+  </div>
+  <span class="author_date">Karl Williamson [Sun, 11 Mar 2012 16:44:19 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  cherrymaint:&nbsp;Beef&nbsp;up&nbsp;--help&nbsp;option<br/>
+  <br/>
+  I&nbsp;can&nbsp;never&nbsp;remember&nbsp;how&nbsp;to&nbsp;set&nbsp;the&nbsp;tunnel&nbsp;up&nbsp;for&nbsp;using&nbsp;this,&nbsp;so<br/>
+  add&nbsp;it&nbsp;to&nbsp;the&nbsp;help&nbsp;output<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1"><span class="age">4 days ago</span>Run podtidy on perlsource.pod</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">commit</a> | <a href="/perl.git/commitdiff/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">commitdiff</a> | <a href="/perl.git/tree/d0a3d6d981209bcd0d361ffd9b151631c4acbfa1">tree</a><br/>
+  </div>
+  <span class="author_date">Dave Rolsky [Tue, 13 Mar 2012 16:37:33 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Run&nbsp;podtidy&nbsp;on&nbsp;perlsource.pod<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/dde1c085b98418e83ca77e219ed1f77f858c5f34"><span class="age">4 days ago</span>Add a missing word to perlsource.pod</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/dde1c085b98418e83ca77e219ed1f77f858c5f34">commit</a> | <a href="/perl.git/commitdiff/dde1c085b98418e83ca77e219ed1f77f858c5f34">commitdiff</a> | <a href="/perl.git/tree/dde1c085b98418e83ca77e219ed1f77f858c5f34">tree</a><br/>
+  </div>
+  <span class="author_date">Dave Rolsky [Tue, 13 Mar 2012 16:37:18 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Add&nbsp;a&nbsp;missing&nbsp;word&nbsp;to&nbsp;perlsource.pod<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1"><span class="age">4 days ago</span>Fix POD issues</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">commit</a> | <a href="/perl.git/commitdiff/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">commitdiff</a> | <a href="/perl.git/tree/02cbdfef7144c28c70b7a7dd188e1cd8912b19a1">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Thu, 15 Mar 2012 21:58:34 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Fix&nbsp;POD&nbsp;issues<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/9c39c5366bcf770efa7af1f634be0a019c74bf8f"><span class="age">4 days ago</span>Document upgrading a module in cpan/</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/9c39c5366bcf770efa7af1f634be0a019c74bf8f">commit</a> | <a href="/perl.git/commitdiff/9c39c5366bcf770efa7af1f634be0a019c74bf8f">commitdiff</a> | <a href="/perl.git/tree/9c39c5366bcf770efa7af1f634be0a019c74bf8f">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Thu, 15 Mar 2012 21:35:10 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Document&nbsp;upgrading&nbsp;a&nbsp;module&nbsp;in&nbsp;cpan/<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/036935f1993182e7c6f159b90e0e79e791177741"><span class="age">4 days ago</span>Clearify this is for even numbered (BLEAD-FINAL) releases.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/036935f1993182e7c6f159b90e0e79e791177741">commit</a> | <a href="/perl.git/commitdiff/036935f1993182e7c6f159b90e0e79e791177741">commitdiff</a> | <a href="/perl.git/tree/036935f1993182e7c6f159b90e0e79e791177741">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Thu, 15 Mar 2012 21:05:50 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Clearify&nbsp;this&nbsp;is&nbsp;for&nbsp;even&nbsp;numbered&nbsp;(BLEAD-FINAL)&nbsp;releases.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61"><span class="age">4 days ago</span>correct argument handling in Term::ReadLine</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">commit</a> | <a href="/perl.git/commitdiff/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">commitdiff</a> | <a href="/perl.git/tree/9705c32bcafe06aff1b40d0cb1bb0820ba56bc61">tree</a><br/>
+  </div>
+  <span class="author_date">Ricardo Signes [Wed, 14 Mar 2012 20:46:21 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  correct&nbsp;argument&nbsp;handling&nbsp;in&nbsp;Term::ReadLine<br/>
+  <br/>
+  https://rt.perl.org/rt3/Ticket/Display.html?id=111758<br/>
+  <br/>
+  patch&nbsp;by&nbsp;Darin&nbsp;McBride<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/dd4d388c3449c7b39c81d0a9714e4d966b5b845c"><span class="age">4 days ago</span>Separate the POD from the corelist data in Module::CoreList</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">commit</a> | <a href="/perl.git/commitdiff/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">commitdiff</a> | <a href="/perl.git/tree/dd4d388c3449c7b39c81d0a9714e4d966b5b845c">tree</a><br/>
+  </div>
+  <span class="author_date">Chris 'BinGOs' Williams [Sun, 4 Mar 2012 20:55:48 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Separate&nbsp;the&nbsp;POD&nbsp;from&nbsp;the&nbsp;corelist&nbsp;data&nbsp;in&nbsp;Module::CoreList<br/>
+  <br/>
+  See&nbsp;https://github.com/CPAN-API/metacpan-web/issues/485<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/30a7372d99391a59ada56a6bf8e6b9955e828bec"><span class="age">6 days ago</span>Revert &quot;Upgrade IO-Compress to 2.049&quot;</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/30a7372d99391a59ada56a6bf8e6b9955e828bec">commit</a> | <a href="/perl.git/commitdiff/30a7372d99391a59ada56a6bf8e6b9955e828bec">commitdiff</a> | <a href="/perl.git/tree/30a7372d99391a59ada56a6bf8e6b9955e828bec">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 01:47:46 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Revert&nbsp;&quot;Upgrade&nbsp;IO-Compress&nbsp;to&nbsp;2.049&quot;<br/>
+  <br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/1d4b9cf3270c936605a07ecd7414f808755d3184">1d4b9cf3270c936605a07ecd7414f808755d3184</a>.<br/>
+  <br/>
+  This&nbsp;depends&nbsp;on&nbsp;the&nbsp;module&nbsp;that&nbsp;was&nbsp;reverted&nbsp;by&nbsp;Ricardo&nbsp;at&nbsp;the&nbsp;same&nbsp;time.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/1d4b9cf3270c936605a07ecd7414f808755d3184"><span class="age">6 days ago</span>Upgrade IO-Compress to 2.049</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/1d4b9cf3270c936605a07ecd7414f808755d3184">commit</a> | <a href="/perl.git/commitdiff/1d4b9cf3270c936605a07ecd7414f808755d3184">commitdiff</a> | <a href="/perl.git/tree/1d4b9cf3270c936605a07ecd7414f808755d3184">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 01:39:16 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;IO-Compress&nbsp;to&nbsp;2.049<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/5b73aae5f11067a2f45e856ae2113f569949cf8f"><span class="age">6 days ago</span>Allow passing the name of the CPAN module</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/5b73aae5f11067a2f45e856ae2113f569949cf8f">commit</a> | <a href="/perl.git/commitdiff/5b73aae5f11067a2f45e856ae2113f569949cf8f">commitdiff</a> | <a href="/perl.git/tree/5b73aae5f11067a2f45e856ae2113f569949cf8f">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 00:59:48 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Allow&nbsp;passing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;CPAN&nbsp;module<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/233d887d0c6b144420b64ec4ba0b3b4838c76490"><span class="age">6 days ago</span>Upgrade CPANPLUS to 0.9120</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/233d887d0c6b144420b64ec4ba0b3b4838c76490">commit</a> | <a href="/perl.git/commitdiff/233d887d0c6b144420b64ec4ba0b3b4838c76490">commitdiff</a> | <a href="/perl.git/tree/233d887d0c6b144420b64ec4ba0b3b4838c76490">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 00:43:58 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;CPANPLUS&nbsp;to&nbsp;0.9120<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/9c259538f794249b4c29c8a9c858250e7c749d92"><span class="age">6 days ago</span>Deal with files in the CUSTOMIZED sections.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/9c259538f794249b4c29c8a9c858250e7c749d92">commit</a> | <a href="/perl.git/commitdiff/9c259538f794249b4c29c8a9c858250e7c749d92">commitdiff</a> | <a href="/perl.git/tree/9c259538f794249b4c29c8a9c858250e7c749d92">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 00:40:23 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Deal&nbsp;with&nbsp;files&nbsp;in&nbsp;the&nbsp;CUSTOMIZED&nbsp;sections.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/eabcd9c8d7e00e51ae2636e566e70bb210289338"><span class="age">6 days ago</span>Upgrade Socket to 2.000</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/eabcd9c8d7e00e51ae2636e566e70bb210289338">commit</a> | <a href="/perl.git/commitdiff/eabcd9c8d7e00e51ae2636e566e70bb210289338">commitdiff</a> | <a href="/perl.git/tree/eabcd9c8d7e00e51ae2636e566e70bb210289338">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 00:31:45 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;Socket&nbsp;to&nbsp;2.000<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/a56b274156c02a5cd8c3a59e6714f42705281f39"><span class="age">6 days ago</span>Upgrade Socket to version 2,000</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/a56b274156c02a5cd8c3a59e6714f42705281f39">commit</a> | <a href="/perl.git/commitdiff/a56b274156c02a5cd8c3a59e6714f42705281f39">commitdiff</a> | <a href="/perl.git/tree/a56b274156c02a5cd8c3a59e6714f42705281f39">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 00:19:42 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;Socket&nbsp;to&nbsp;version&nbsp;2,000<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/a812178126ae9e8787bcd14b429624d02297260d"><span class="age">6 days ago</span>Fix the fixing of MANIFEST</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/a812178126ae9e8787bcd14b429624d02297260d">commit</a> | <a href="/perl.git/commitdiff/a812178126ae9e8787bcd14b429624d02297260d">commitdiff</a> | <a href="/perl.git/tree/a812178126ae9e8787bcd14b429624d02297260d">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Wed, 14 Mar 2012 00:19:06 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Fix&nbsp;the&nbsp;fixing&nbsp;of&nbsp;MANIFEST<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/b7657688a7a906fc8146026c4cac58976ed20856"><span class="age">6 days ago</span>Upgrade Unicode::Normalize to 1.14.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/b7657688a7a906fc8146026c4cac58976ed20856">commit</a> | <a href="/perl.git/commitdiff/b7657688a7a906fc8146026c4cac58976ed20856">commitdiff</a> | <a href="/perl.git/tree/b7657688a7a906fc8146026c4cac58976ed20856">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 13 Mar 2012 23:56:07 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;Unicode::Normalize&nbsp;to&nbsp;1.14.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd"><span class="age">6 days ago</span>Revert changes to compression libraries <span class="refs"> <span class="head" title="heads/rjbs/revert-compress"><a href="/perl.git/log/refs/heads/rjbs/revert-compress">rjbs/revert-compress</a></span></span></a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">commit</a> | <a href="/perl.git/commitdiff/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">commitdiff</a> | <a href="/perl.git/tree/30faa5652ea0cfe6248ed70f321dcfdf9cea7bcd">tree</a><br/>
+  </div>
+  <span class="author_date">Ricardo Signes [Wed, 14 Mar 2012 01:01:00 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Revert&nbsp;changes&nbsp;to&nbsp;compression&nbsp;libraries<br/>
+  <br/>
+  Revert&nbsp;&quot;Ran&nbsp;zlib2ansi&nbsp;script&nbsp;against&nbsp;zlib-src/&nbsp;to&nbsp;fix&nbsp;K&amp;R-isms&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/a7026383bc5a2ca5f518f670ee6d74d55cd994aa">a7026383bc5a2ca5f518f670ee6d74d55cd994aa</a>.<br/>
+  <br/>
+  Revert&nbsp;&quot;Some&nbsp;files&nbsp;in&nbsp;cpan/Compress-Raw-Zlib&nbsp;have&nbsp;the&nbsp;x&nbsp;bit&nbsp;set.&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/adace0595a25c5339a4c1fff6b4704945abf8814">adace0595a25c5339a4c1fff6b4704945abf8814</a>.<br/>
+  <br/>
+  Revert&nbsp;&quot;Fixes&nbsp;type&nbsp;in&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/14c554185">14c554185</a>&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/d588a46d9335dc093e4046b68ae0e2c7925ef095">d588a46d9335dc093e4046b68ae0e2c7925ef095</a>.<br/>
+  <br/>
+  Revert&nbsp;&quot;Upgrade&nbsp;Compress::Raw::Zlib&nbsp;to&nbsp;2.051.&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/14c554185b51c8646198cbf62fe6e94e9890b3a5">14c554185b51c8646198cbf62fe6e94e9890b3a5</a>.<br/>
+  <br/>
+  Revert&nbsp;&quot;Upgrade&nbsp;Compress-Raw-Bzip2&nbsp;to&nbsp;version&nbsp;2.049.&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/616f340ab90cf805b145b81fd31c2017a4e7783f">616f340ab90cf805b145b81fd31c2017a4e7783f</a>.<br/>
+  <br/>
+  Revert&nbsp;&quot;Upgrade&nbsp;cpan/Archive-Tar&nbsp;to&nbsp;1.84&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/c06ee8c824f270b42cb440453df0e44858492aed">c06ee8c824f270b42cb440453df0e44858492aed</a>.<br/>
+  <br/>
+  Revert&nbsp;&quot;Upgrade&nbsp;Archive-Extract&nbsp;to&nbsp;0.60&quot;<br/>
+  This&nbsp;reverts&nbsp;commit&nbsp;<a class="text" href="/perl.git/object/dc16b9e468c516c95140dc2b6eac778872c79239">dc16b9e468c516c95140dc2b6eac778872c79239</a>.<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/cba8842c354197460eeef36ed34e9e904fc9836b"><span class="age">6 days ago</span>Upgrade Unicode-Collate to 0.89</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/cba8842c354197460eeef36ed34e9e904fc9836b">commit</a> | <a href="/perl.git/commitdiff/cba8842c354197460eeef36ed34e9e904fc9836b">commitdiff</a> | <a href="/perl.git/tree/cba8842c354197460eeef36ed34e9e904fc9836b">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 13 Mar 2012 18:57:38 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;Unicode-Collate&nbsp;to&nbsp;0.89<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/6f865444a9d214a69e0a53f941d29037e5aca6b2"><span class="age">6 days ago</span>List one more TODO</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/6f865444a9d214a69e0a53f941d29037e5aca6b2">commit</a> | <a href="/perl.git/commitdiff/6f865444a9d214a69e0a53f941d29037e5aca6b2">commitdiff</a> | <a href="/perl.git/tree/6f865444a9d214a69e0a53f941d29037e5aca6b2">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 13 Mar 2012 18:53:02 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  List&nbsp;one&nbsp;more&nbsp;TODO<br/>
+  <br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/9dd45029de8b01334e1d5eab97881b9cb0fa1e08"><span class="age">6 days ago</span>Upgrade Digest-SHA to 5.71.</a>
+  </div>
+  <div class="title_text">
+  <div class="log_link">
+  <a href="/perl.git/commit/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">commit</a> | <a href="/perl.git/commitdiff/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">commitdiff</a> | <a href="/perl.git/tree/9dd45029de8b01334e1d5eab97881b9cb0fa1e08">tree</a><br/>
+  </div>
+  <span class="author_date">Abigail [Tue, 13 Mar 2012 18:46:56 +0000]</span>
+  <br/>
+  </div>
+  <div class="log_body">
+  Upgrade&nbsp;Digest-SHA&nbsp;to&nbsp;5.71.<br/>
+  <br/>
+  </div>
+  <div class="page_nav">
+  <a title="Alt-n" accesskey="n" href="/perl.git/log/f6067adc61108c3398de698bb0294d95f09b55ef?pg=1">next</a></div>
+  <div class="page_footer">
+  <div class="page_footer_text">Perl5 Master Repository</div>
+  <a class="rss_logo" title="log RSS feed" href="/perl.git/rss">RSS</a>
+  <a class="rss_logo" title="log Atom feed" href="/perl.git/atom">Atom</a>
+  </div>

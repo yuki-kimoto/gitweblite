@@ -1,0 +1,131 @@
+% layout 'common';
+  <div class="page_header">
+  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commitdiff
+  </div>
+  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
+  <div class="search">
+  <input name="a" type="hidden" value="search" />
+  <input name="h" type="hidden" value="f6067adc61108c3398de698bb0294d95f09b55ef" />
+  <select name="st" >
+  <option selected="selected" value="free">free</option>
+  <option value="commit">commit</option>
+  <option value="grep">grep</option>
+  <option value="author">author</option>
+  <option value="committer">committer</option>
+  <option value="pickaxe">pickaxe</option>
+  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
+  <input type="text" name="s"  />
+  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+  </form>
+  <div class="page_nav">
+  <a href="/perl.git">summary</a> | <a href="/perl.git/shortlog/f6067adc61108c3398de698bb0294d95f09b55ef">shortlog</a> | <a href="/perl.git/log/f6067adc61108c3398de698bb0294d95f09b55ef">log</a> | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | commitdiff | <a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a><br/>
+  <a href="/perl.git/commitdiff_plain/f6067adc61108c3398de698bb0294d95f09b55ef">raw</a> | <a href="/perl.git/patch/f6067adc61108c3398de698bb0294d95f09b55ef">patch</a> (parent: <a href="/perl.git/commitdiff/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675</a>)<br/>
+  </div>
+  <div class="header">
+  <a class="title" href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">charnames: Clarify viacode pod <span class="refs"> <span class="head" title="heads/blead"><a href="/perl.git/shortlog/refs/heads/blead">blead</a></span></span></a>
+  </div>
+  <div class="title_text">
+  <table class="object_header">
+  <tr><td>author</td><td>Karl Williamson &lt;public@khwilliamson.com&gt;</td><td rowspan="2"></td></tr>
+  <tr><td></td><td> Tue, 20 Mar 2012 05:15:07 +0000 (23:15 -0600)</td></tr>
+  <tr><td>committer</td><td>Karl Williamson &lt;public@khwilliamson.com&gt;</td><td rowspan="2"></td></tr>
+  <tr><td></td><td> Tue, 20 Mar 2012 05:34:25 +0000 (23:34 -0600)</td></tr>
+  </table></div>
+  <div class="page_body">
+  <div class="log">
+  This&nbsp;mentions&nbsp;that&nbsp;viacode's&nbsp;return&nbsp;can&nbsp;change&nbsp;as&nbsp;a&nbsp;result&nbsp;of<br/>
+  corrections&nbsp;to&nbsp;the&nbsp;Unicode&nbsp;standard.<br/>
+  <br/>
+  </div>
+  <div class="list_head">
+  </div>
+  <table class="diff_tree">
+  <tr class="dark">
+  <td><a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">lib/charnames.pm</a></td>
+  <td></td>
+  <td class="link"><a href="#patch1">patch</a> | <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blob</a> | <a href="/perl.git/blame/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blame</a> | <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">history</a></td>
+  </tr>
+  </table>
+  <br/>
+  <a name="patchset" /><div class="patchset">
+  <div class="patch" id="patch1">
+  <div class="diff header">diff --git <a class="path" href="/perl.git/blob/2d02944cf14ba2383f125bff12c20abfc513dd4c?f=lib/charnames.pm">a/lib/charnames.pm</a> <a class="path" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">b/lib/charnames.pm</a></div>
+  <div class="diff extended_header">
+  index <a class="hash" href="/perl.git/blob/2d02944cf14ba2383f125bff12c20abfc513dd4c?f=lib/charnames.pm">2d02944</a>..<a class="hash" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">495c303</a> 100644<span class="info"> (file)</span><br/>
+  </div>
+  <div class="diff from_file">--- a/<a class="path" href="/perl.git/blob/2d02944cf14ba2383f125bff12c20abfc513dd4c?f=lib/charnames.pm">lib/charnames.pm</a></div>
+  <div class="diff to_file">+++ b/<a class="path" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">lib/charnames.pm</a></div>
+  <div class="diff chunk_header"><span class="chunk_info">@@ <a class="list" href="/perl.git/blob/2d02944cf14ba2383f125bff12c20abfc513dd4c?f=lib/charnames.pm#l369">-369,15</a> <a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm#l369">+369,11</a> @@</span><span class="section">&nbsp;For&nbsp;example,</span></div>
+  <div class="diff">&nbsp;</div>
+  <div class="diff">&nbsp;prints&nbsp;&quot;FOUR&nbsp;TEARDROP-SPOKED&nbsp;ASTERISK&quot;.</div>
+  <div class="diff">&nbsp;</div>
+  <div class="diff rem">-The&nbsp;name&nbsp;returned&nbsp;is&nbsp;the&nbsp;official&nbsp;name&nbsp;for&nbsp;the&nbsp;code&nbsp;point,&nbsp;if</div>
+  <div class="diff add">+The&nbsp;name&nbsp;returned&nbsp;is&nbsp;the&nbsp;&quot;best&quot;&nbsp;(defined&nbsp;below)&nbsp;official&nbsp;name&nbsp;or&nbsp;alias</div>
+  <div class="diff add">+for&nbsp;the&nbsp;code&nbsp;point,&nbsp;if</div>
+  <div class="diff">&nbsp;available;&nbsp;otherwise&nbsp;your&nbsp;custom&nbsp;alias&nbsp;for&nbsp;it,&nbsp;if&nbsp;defined;&nbsp;otherwise&nbsp;C&lt;undef&gt;.</div>
+  <div class="diff">&nbsp;This&nbsp;means&nbsp;that&nbsp;your&nbsp;alias&nbsp;will&nbsp;only&nbsp;be&nbsp;returned&nbsp;for&nbsp;code&nbsp;points&nbsp;that&nbsp;don't</div>
+  <div class="diff">&nbsp;have&nbsp;an&nbsp;official&nbsp;Unicode&nbsp;name&nbsp;(nor&nbsp;alias)&nbsp;such&nbsp;as&nbsp;private&nbsp;use&nbsp;code&nbsp;points.</div>
+  <div class="diff rem">-Until&nbsp;Unicode&nbsp;6.1,&nbsp;the&nbsp;4&nbsp;control&nbsp;characters&nbsp;U+0080,&nbsp;U+0081,&nbsp;U+0084,&nbsp;and&nbsp;U+0099</div>
+  <div class="diff rem">-did&nbsp;not&nbsp;have&nbsp;names&nbsp;(actually,&nbsp;to&nbsp;be&nbsp;precise&nbsp;they&nbsp;still&nbsp;don't,&nbsp;but&nbsp;they&nbsp;do&nbsp;have</div>
+  <div class="diff rem">-aliases,&nbsp;which&nbsp;for&nbsp;most&nbsp;purposes&nbsp;are&nbsp;indistiunguishable&nbsp;from&nbsp;true&nbsp;names).</div>
+  <div class="diff rem">-To&nbsp;preserve&nbsp;backwards&nbsp;compatibility,&nbsp;any&nbsp;alias&nbsp;you&nbsp;define&nbsp;for&nbsp;these&nbsp;code</div>
+  <div class="diff rem">-points&nbsp;will&nbsp;be&nbsp;returned&nbsp;by&nbsp;this&nbsp;function,&nbsp;in&nbsp;preference&nbsp;to&nbsp;the&nbsp;official&nbsp;alias.</div>
+  <div class="diff">&nbsp;</div>
+  <div class="diff">&nbsp;If&nbsp;you&nbsp;define&nbsp;more&nbsp;than&nbsp;one&nbsp;name&nbsp;for&nbsp;the&nbsp;code&nbsp;point,&nbsp;it&nbsp;is&nbsp;indeterminate</div>
+  <div class="diff">&nbsp;which&nbsp;one&nbsp;will&nbsp;be&nbsp;returned.</div>
+  <div class="diff chunk_header"><span class="chunk_info">@@ <a class="list" href="/perl.git/blob/2d02944cf14ba2383f125bff12c20abfc513dd4c?f=lib/charnames.pm#l394">-394,8</a> <a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm#l390">+390,45</a> @@</span><span class="section">&nbsp;hexadecimal&nbsp;integer.&nbsp;&nbsp;A&nbsp;literal&nbsp;numeric&nbsp;constant&nbsp;must&nbsp;be&nbsp;unsigned;&nbsp;it</span></div>
+  <div class="diff">&nbsp;will&nbsp;be&nbsp;interpreted&nbsp;as&nbsp;hex&nbsp;if&nbsp;it&nbsp;has&nbsp;a&nbsp;leading&nbsp;zero&nbsp;or&nbsp;contains</div>
+  <div class="diff">&nbsp;non-decimal&nbsp;hex&nbsp;digits;&nbsp;otherwise&nbsp;it&nbsp;will&nbsp;be&nbsp;interpreted&nbsp;as&nbsp;decimal.</div>
+  <div class="diff">&nbsp;</div>
+  <div class="diff rem">-Notice&nbsp;that&nbsp;the&nbsp;name&nbsp;returned&nbsp;for&nbsp;U+FEFF&nbsp;is&nbsp;&quot;ZERO&nbsp;WIDTH&nbsp;NO-BREAK</div>
+  <div class="diff rem">-SPACE&quot;,&nbsp;not&nbsp;&quot;BYTE&nbsp;ORDER&nbsp;MARK&quot;.</div>
+  <div class="diff add">+As&nbsp;mentioned&nbsp;above&nbsp;under&nbsp;L&lt;/ALIASES&gt;,&nbsp;Unicode&nbsp;6.1&nbsp;defines&nbsp;extra&nbsp;names</div>
+  <div class="diff add">+(synonyms&nbsp;or&nbsp;aliases)&nbsp;for&nbsp;some&nbsp;code&nbsp;points,&nbsp;most&nbsp;of&nbsp;which&nbsp;were&nbsp;already</div>
+  <div class="diff add">+available&nbsp;as&nbsp;Perl&nbsp;extensions.&nbsp;&nbsp;All&nbsp;these&nbsp;are&nbsp;accepted&nbsp;by&nbsp;C&lt;\N{...}&gt;&nbsp;and&nbsp;the</div>
+  <div class="diff add">+other&nbsp;functions&nbsp;in&nbsp;this&nbsp;module,&nbsp;but&nbsp;C&lt;viacode&gt;&nbsp;has&nbsp;to&nbsp;choose&nbsp;which&nbsp;one</div>
+  <div class="diff add">+name&nbsp;to&nbsp;return&nbsp;for&nbsp;a&nbsp;given&nbsp;input&nbsp;code&nbsp;point,&nbsp;so&nbsp;it&nbsp;returns&nbsp;the&nbsp;&quot;best&quot;&nbsp;name.</div>
+  <div class="diff add">+To&nbsp;understand&nbsp;how&nbsp;this&nbsp;works,&nbsp;it&nbsp;is&nbsp;helpful&nbsp;to&nbsp;know&nbsp;more&nbsp;about&nbsp;the&nbsp;Unicode</div>
+  <div class="diff add">+name&nbsp;properties.&nbsp;&nbsp;All&nbsp;code&nbsp;points&nbsp;actually&nbsp;have&nbsp;only&nbsp;a&nbsp;single&nbsp;name,&nbsp;which</div>
+  <div class="diff add">+(starting&nbsp;in&nbsp;Unicode&nbsp;2.0)&nbsp;can&nbsp;never&nbsp;change&nbsp;once&nbsp;a&nbsp;character&nbsp;has&nbsp;been&nbsp;assigned</div>
+  <div class="diff add">+to&nbsp;the&nbsp;code&nbsp;point.&nbsp;&nbsp;But&nbsp;mistakes&nbsp;have&nbsp;been&nbsp;made&nbsp;in&nbsp;assigning&nbsp;names,&nbsp;for</div>
+  <div class="diff add">+example&nbsp;sometimes&nbsp;a&nbsp;clerical&nbsp;error&nbsp;was&nbsp;made&nbsp;during&nbsp;the&nbsp;publishing&nbsp;of&nbsp;the</div>
+  <div class="diff add">+Standard&nbsp;which&nbsp;caused&nbsp;words&nbsp;to&nbsp;be&nbsp;misspelled,&nbsp;and&nbsp;there&nbsp;was&nbsp;no&nbsp;way&nbsp;to&nbsp;correct</div>
+  <div class="diff add">+those.&nbsp;&nbsp;The&nbsp;Name_Alias&nbsp;property&nbsp;was&nbsp;eventually&nbsp;created&nbsp;to&nbsp;handle&nbsp;these</div>
+  <div class="diff add">+situations.&nbsp;&nbsp;If&nbsp;a&nbsp;name&nbsp;was&nbsp;wrong,&nbsp;a&nbsp;corrected&nbsp;synonym&nbsp;would&nbsp;be&nbsp;published&nbsp;for</div>
+  <div class="diff add">+it,&nbsp;using&nbsp;Name_Alias.&nbsp;&nbsp;C&lt;viacode&gt;&nbsp;will&nbsp;return&nbsp;that&nbsp;corrected&nbsp;synonym&nbsp;as&nbsp;the</div>
+  <div class="diff add">+&quot;best&quot;&nbsp;name&nbsp;for&nbsp;a&nbsp;code&nbsp;point.&nbsp;&nbsp;(It&nbsp;is&nbsp;even&nbsp;possible,&nbsp;though&nbsp;it&nbsp;hasn't&nbsp;happened</div>
+  <div class="diff add">+yet,&nbsp;that&nbsp;the&nbsp;correction&nbsp;itself&nbsp;will&nbsp;need&nbsp;to&nbsp;be&nbsp;corrected,&nbsp;and&nbsp;so&nbsp;another</div>
+  <div class="diff add">+Name_Alias&nbsp;can&nbsp;be&nbsp;created&nbsp;for&nbsp;that&nbsp;code&nbsp;point;&nbsp;C&lt;viacode&gt;&nbsp;will&nbsp;return&nbsp;the</div>
+  <div class="diff add">+most&nbsp;recent&nbsp;correction.)</div>
+  <div class="diff add">+</div>
+  <div class="diff add">+The&nbsp;Unicode&nbsp;name&nbsp;for&nbsp;each&nbsp;of&nbsp;the&nbsp;control&nbsp;characters&nbsp;(such&nbsp;as&nbsp;LINE&nbsp;FEED)&nbsp;is&nbsp;the</div>
+  <div class="diff add">+empty&nbsp;string.&nbsp;&nbsp;However&nbsp;almost&nbsp;all&nbsp;had&nbsp;names&nbsp;assigned&nbsp;by&nbsp;other&nbsp;standards,&nbsp;such</div>
+  <div class="diff add">+as&nbsp;the&nbsp;ASCII&nbsp;Standard,&nbsp;or&nbsp;were&nbsp;in&nbsp;common&nbsp;use.&nbsp;&nbsp;C&lt;viacode&gt;&nbsp;returns&nbsp;these&nbsp;names</div>
+  <div class="diff add">+as&nbsp;the&nbsp;&quot;best&quot;&nbsp;ones&nbsp;available.&nbsp;&nbsp;Unicode&nbsp;6.1&nbsp;has&nbsp;created&nbsp;Name_Aliases&nbsp;for&nbsp;each</div>
+  <div class="diff add">+of&nbsp;them,&nbsp;including&nbsp;alternate&nbsp;names,&nbsp;like&nbsp;NEW&nbsp;LINE.&nbsp;&nbsp;C&lt;viacode&gt;&nbsp;uses&nbsp;the</div>
+  <div class="diff add">+original&nbsp;name,&nbsp;&quot;LINE&nbsp;FEED&quot;&nbsp;in&nbsp;preference&nbsp;to&nbsp;the&nbsp;alternate.&nbsp;&nbsp;Similarly&nbsp;the</div>
+  <div class="diff add">+name&nbsp;returned&nbsp;for&nbsp;U+FEFF&nbsp;is&nbsp;&quot;ZERO&nbsp;WIDTH&nbsp;NO-BREAK&nbsp;SPACE&quot;,&nbsp;not&nbsp;&quot;BYTE&nbsp;ORDER</div>
+  <div class="diff add">+MARK&quot;.</div>
+  <div class="diff add">+</div>
+  <div class="diff add">+Until&nbsp;Unicode&nbsp;6.1,&nbsp;the&nbsp;4&nbsp;control&nbsp;characters&nbsp;U+0080,&nbsp;U+0081,&nbsp;U+0084,&nbsp;and&nbsp;U+0099</div>
+  <div class="diff add">+did&nbsp;not&nbsp;have&nbsp;names&nbsp;nor&nbsp;aliases.</div>
+  <div class="diff add">+To&nbsp;preserve&nbsp;backwards&nbsp;compatibility,&nbsp;any&nbsp;alias&nbsp;you&nbsp;define&nbsp;for&nbsp;these&nbsp;code</div>
+  <div class="diff add">+points&nbsp;will&nbsp;be&nbsp;returned&nbsp;by&nbsp;this&nbsp;function,&nbsp;in&nbsp;preference&nbsp;to&nbsp;the&nbsp;official&nbsp;name.</div>
+  <div class="diff add">+</div>
+  <div class="diff add">+Some&nbsp;code&nbsp;points&nbsp;also&nbsp;have&nbsp;abbreviated&nbsp;names,&nbsp;such&nbsp;as&nbsp;&quot;LF&quot;&nbsp;or&nbsp;&quot;NL&quot;.</div>
+  <div class="diff add">+C&lt;viacode&gt;&nbsp;never&nbsp;returns&nbsp;these.</div>
+  <div class="diff add">+</div>
+  <div class="diff add">+Because&nbsp;a&nbsp;name&nbsp;correction&nbsp;may&nbsp;be&nbsp;added&nbsp;in&nbsp;future&nbsp;Unicode&nbsp;releases,&nbsp;the&nbsp;name</div>
+  <div class="diff add">+that&nbsp;C&lt;viacode&gt;&nbsp;returns&nbsp;may&nbsp;change&nbsp;as&nbsp;a&nbsp;result.&nbsp;&nbsp;This&nbsp;is&nbsp;a&nbsp;rare&nbsp;event,&nbsp;but&nbsp;it</div>
+  <div class="diff add">+does&nbsp;happen.</div>
+  <div class="diff">&nbsp;</div>
+  <div class="diff">&nbsp;=head1&nbsp;CUSTOM&nbsp;TRANSLATORS</div>
+  <div class="diff">&nbsp;</div>
+  </div>
+  </div>
+  </div>
+  <div class="page_footer">
+  <div class="page_footer_text">Perl5 Master Repository</div>
+  <a class="rss_logo" title="log RSS feed" href="/perl.git/rss">RSS</a>
+  <a class="rss_logo" title="log Atom feed" href="/perl.git/atom">Atom</a>
+  </div>

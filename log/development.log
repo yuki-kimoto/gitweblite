@@ -459,3 +459,137 @@
 [Tue Mar 20 17:23:25 2012] [debug] Dispatching callback.
 [Tue Mar 20 17:23:25 2012] [debug] Rendering template "shortlog.html.ep".
 [Tue Mar 20 17:23:25 2012] [debug] 200 OK (0.021978s, 45.500/s).
+[Tue Mar 20 17:24:30 2012] [info] Listening at "http://*:3000".
+[Tue Mar 20 17:24:55 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:24:55 2012] [debug] GET /perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:24:55 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:24:55 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:24:55 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:24:55 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:24:55 2012] [debug] 404 Not Found (0.019239s, 51.978/s).
+[Tue Mar 20 17:24:59 2012] [debug] GET /perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:24:59 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:24:59 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:24:59 2012] [debug] 404 Not Found (0.009360s, 106.838/s).
+[Tue Mar 20 17:25:05 2012] [debug] GET /perl.git/tree (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:25:05 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:25:05 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:25:05 2012] [debug] 404 Not Found (0.009498s, 105.285/s).
+[Tue Mar 20 17:26:10 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:26:10 2012] [debug] GET /perl.git/log (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:26:10 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:26:10 2012] [debug] Template "log.html.ep" not found.
+[Tue Mar 20 17:26:10 2012] [debug] Template "log.html.ep" not found.
+[Tue Mar 20 17:26:10 2012] [debug] Nothing has been rendered, assuming delayed response.
+[Tue Mar 20 17:26:25 2012] [error] Inactivity timeout.
+[Tue Mar 20 17:27:34 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:27:34 2012] [debug] GET /perl.git/log (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:27:34 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:27:34 2012] [debug] Rendering template "log.html.ep".
+[Tue Mar 20 17:27:34 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:27:34 2012] [debug] 200 OK (0.057445s, 17.408/s).
+[Tue Mar 20 17:27:41 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:27:41 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:27:41 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:27:41 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:27:41 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:27:41 2012] [debug] 404 Not Found (0.020849s, 47.964/s).
+[Tue Mar 20 17:30:17 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:30:17 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:30:17 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:30:17 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:30:17 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:30:17 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:30:17 2012] [debug] 404 Not Found (0.034081s, 29.342/s).
+[Tue Mar 20 17:30:38 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:30:38 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:30:38 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:30:38 2012] [debug] 404 Not Found (0.017769s, 56.278/s).
+[Tue Mar 20 17:30:55 2012] [debug] GET /robots.txt (Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)).
+[Tue Mar 20 17:30:55 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:30:55 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:30:55 2012] [debug] 404 Not Found (0.007955s, 125.707/s).
+[Tue Mar 20 17:30:55 2012] [debug] GET / (Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)).
+[Tue Mar 20 17:30:55 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:30:55 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:30:55 2012] [debug] 200 OK (0.007256s, 137.817/s).
+[Tue Mar 20 17:31:12 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:31:13 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:31:13 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:31:13 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:31:13 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:31:13 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:31:13 2012] [debug] 404 Not Found (0.021539s, 46.427/s).
+[Tue Mar 20 17:31:36 2012] [debug] GET / (Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.51 (KHTML, like Gecko; Google Web Preview) Chrome/12.0.742 Safari/534.51).
+[Tue Mar 20 17:31:36 2012] [debug] Rendering template "projects.html.ep".
+[Tue Mar 20 17:31:36 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:31:36 2012] [debug] 200 OK (0.008357s, 119.660/s).
+[Tue Mar 20 17:31:47 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:31:47 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:31:47 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:31:47 2012] [debug] 404 Not Found (0.010641s, 93.976/s).
+[Tue Mar 20 17:31:48 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:31:48 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:31:48 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:31:48 2012] [debug] Template "commit.html.ep" not found.
+[Tue Mar 20 17:31:48 2012] [debug] Template "commit.html.ep" not found.
+[Tue Mar 20 17:31:48 2012] [debug] Nothing has been rendered, assuming delayed response.
+[Tue Mar 20 17:32:03 2012] [error] Inactivity timeout.
+[Tue Mar 20 17:32:10 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:32:10 2012] [debug] GET /perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:32:10 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:32:10 2012] [debug] Rendering template "commit.html.ep".
+[Tue Mar 20 17:32:10 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:32:10 2012] [debug] 200 OK (0.012729s, 78.561/s).
+[Tue Mar 20 17:32:15 2012] [debug] GET /perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:32:15 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:32:15 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:32:15 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:32:15 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:32:15 2012] [debug] 404 Not Found (0.024478s, 40.853/s).
+[Tue Mar 20 17:33:33 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:33:33 2012] [debug] GET /perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:33:33 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:33:33 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:33:33 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:33:33 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:33:33 2012] [debug] 404 Not Found (0.045587s, 21.936/s).
+[Tue Mar 20 17:33:54 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:33:54 2012] [debug] GET /perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:33:54 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:33:54 2012] [debug] Rendering template "commit.html.ep".
+[Tue Mar 20 17:33:54 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:33:54 2012] [debug] 200 OK (0.012374s, 80.815/s).
+[Tue Mar 20 17:34:01 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:34:01 2012] [debug] GET /perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:34:01 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:34:01 2012] [debug] Rendering template "commitdiff.html.ep".
+[Tue Mar 20 17:34:01 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:34:01 2012] [debug] 200 OK (0.024004s, 41.660/s).
+[Tue Mar 20 17:35:27 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:35:27 2012] [debug] GET /perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:35:27 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:35:27 2012] [debug] Rendering template "tree.html.ep".
+[Tue Mar 20 17:35:27 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:35:27 2012] [debug] 200 OK (0.069193s, 14.452/s).
+[Tue Mar 20 17:35:27 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:35:27 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:35:27 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:35:27 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:35:27 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:35:27 2012] [debug] 404 Not Found (0.052793s, 18.942/s).
+[Tue Mar 20 17:37:24 2012] [debug] Your secret passphrase needs to be changed!!!
+[Tue Mar 20 17:37:24 2012] [debug] GET /perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:37:24 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:37:24 2012] [debug] Rendering template "tree.html.ep".
+[Tue Mar 20 17:37:24 2012] [debug] Rendering template "layouts/common.html.ep".
+[Tue Mar 20 17:37:24 2012] [debug] 200 OK (0.052031s, 19.219/s).
+[Tue Mar 20 17:37:24 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:37:24 2012] [debug] Template "not_found.development.html.ep" not found.
+[Tue Mar 20 17:37:24 2012] [debug] Template "not_found.html.ep" not found.
+[Tue Mar 20 17:37:24 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:37:24 2012] [debug] Rendering inline template.
+[Tue Mar 20 17:37:24 2012] [debug] 404 Not Found (0.019621s, 50.966/s).
+[Tue Mar 20 17:37:26 2012] [debug] GET /perl.git/snapshot/f6067adc61108c3398de698bb0294d95f09b55ef.tar.gz (Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Tue Mar 20 17:37:26 2012] [debug] Dispatching callback.
+[Tue Mar 20 17:37:26 2012] [debug] 200 OK (0.001001s, 999.001/s).

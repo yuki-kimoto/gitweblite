@@ -20,6 +20,26 @@ get '/(:name).git/shortlog' => sub {
   shift->render;
 } => 'shortlog';
 
+get '/(:name).git/log' => sub {
+  shift->render;
+} => 'log';
+
+get '/(:name).git/commit/:commit' => sub {
+  shift->render;
+} => 'commit';
+
+get '/(:name).git/commitdiff/:commit' => sub {
+  shift->render;
+} => 'commitdiff';
+
+get '/(:name).git/tree/:commit' => sub {
+  shift->render;
+} => 'tree';
+
+get '/(:name).git/snapshot/:commit' => sub {
+  shift->render(text => 'snapshot');
+} => 'snapshot';
+
 app->start;
 
 __DATA__
