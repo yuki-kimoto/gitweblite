@@ -96,22 +96,39 @@
     </table>
   </div>
   <div class="page_body">
-      charnames:&nbsp;Clarify&nbsp;viacode&nbsp;pod<br/>
-      <br/>
-      This&nbsp;mentions&nbsp;that&nbsp;viacode's&nbsp;return&nbsp;can&nbsp;change&nbsp;as&nbsp;a&nbsp;result&nbsp;of<br/>
-      corrections&nbsp;to&nbsp;the&nbsp;Unicode&nbsp;standard.<br/>
-      </div>
-      <div class="list_head">
-      </div>
-      <table class="diff_tree">
-      <tr class="dark">
-      <td><a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">lib/charnames.pm</a></td>
-      <td></td>
-      <td class="link"><a href="/perl.git/blobdiff/ffec675822f6354e94f29a96daa07ef9465a43bc..f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">diff</a> | <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blob</a> | <a href="/perl.git/blame/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blame</a> | <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">history</a></td>
-      </tr>
-    </table>
-    <div class="page_footer">
-    <div class="page_footer_text">Perl5 Master Repository</div>
-    <a class="rss_logo" title="log RSS feed" href="/perl.git/rss">RSS</a>
-    <a class="rss_logo" title="log Atom feed" href="/perl.git/atom">Atom</a>
+    <%= $commit->{title} %><br/>
+    <br/>
+    % for (my $i = 1; $i < @{$commit->{comment}}; $i++) {
+      &nbsp;<%= $commit->{comment}->[$i] %>
+      <br>
+    % }
   </div>
+  <div class="list_head">
+  </div>
+  <table class="diff_tree">
+    <tr class="dark">
+      <td>
+        <a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
+          lib/charnames.pm
+        </a>
+      </td>
+      <td></td>
+      <td class="link">
+        <a href="/perl.git/blobdiff/ffec675822f6354e94f29a96daa07ef9465a43bc..f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
+          diff
+        </a>
+        |
+        <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
+          blob
+        </a>
+        |
+        <a href="/perl.git/blame/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
+          blame
+        </a>
+        |
+        <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
+          history
+        </a>
+      </td>
+    </tr>
+  </table>
