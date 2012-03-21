@@ -2,7 +2,7 @@
   <div class="page_header">
     <a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commit
   </div>
-  %= include '/include/page_navi', current => 'commit', head_id => $head_id;
+  %= include '/include/page_navi', current => 'commit', head_id => $head_id, root => $root, project => $project;
   
   <div class="page_nav">
     (parent: <a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675</a>) |

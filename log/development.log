@@ -9175,3 +9175,278 @@ Global symbol "$project" requires explicit package name at template "shortlog.ht
 [Wed Mar 21 17:05:17 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
 [Wed Mar 21 17:05:17 2012] [debug] Dispatching callback.
 [Wed Mar 21 17:05:17 2012] [debug] 200 OK (0.040176s, 24.890/s).
+[Wed Mar 21 17:05:59 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:05:59 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:05:59 2012] [debug] Rendering template "log.html.ep".
+[Wed Mar 21 17:05:59 2012] [debug] Rendering template "/include/page_navi2.html.ep".
+[Wed Mar 21 17:05:59 2012] [debug] 200 OK (0.156892s, 6.374/s).
+[Wed Mar 21 17:06:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:06:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:06:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:06:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:06:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:06:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:07:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:07:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:07:30 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 17:07:30 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:30 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:30 2012] [debug] Rendering template "log.html.ep".
+[Wed Mar 21 17:07:30 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:07:30 2012] [debug] Rendering template "/include/page_navi2.html.ep".
+[Wed Mar 21 17:07:30 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:07:30 2012] [debug] 200 OK (0.123794s, 8.078/s).
+[Wed Mar 21 17:07:32 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:32 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:32 2012] [debug] 200 OK (0.086222s, 11.598/s).
+[Wed Mar 21 17:07:37 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:37 2012] [debug] Rendering template "commit.html.ep".
+[Wed Mar 21 17:07:37 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:07:37 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:07:37 2012] [debug] 200 OK (0.036352s, 27.509/s).
+[Wed Mar 21 17:07:40 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:40 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:40 2012] [debug] 200 OK (0.041043s, 24.365/s).
+[Wed Mar 21 17:07:43 2012] [debug] GET /commitdiff (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:43 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:43 2012] [debug] Rendering template "commitdiff.html.ep".
+[Wed Mar 21 17:07:43 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:07:43 2012] [debug] 200 OK (0.014113s, 70.857/s).
+[Wed Mar 21 17:07:46 2012] [debug] GET /tree (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:46 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:46 2012] [debug] Rendering template "tree.html.ep".
+[Wed Mar 21 17:07:46 2012] [debug] 200 OK (0.053738s, 18.609/s).
+[Wed Mar 21 17:07:47 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:47 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 17:07:47 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 17:07:47 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:07:47 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:07:47 2012] [debug] 404 Not Found (0.024535s, 40.758/s).
+[Wed Mar 21 17:07:53 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:07:53 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:07:53 2012] [error] Died at gitweb.pl line 365.
+
+[Wed Mar 21 17:07:53 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:07:53 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:07:53 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:07:53 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:07:53 2012] [debug] 500 Internal Server Error (0.036217s, 27.611/s).
+[Wed Mar 21 17:08:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:08:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:08:55 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:08:55 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:09:07 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:09:07 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:09:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:09:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:09:21 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:09:21 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:09:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:09:45 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:10:04 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:10:04 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:10:07 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 17:10:07 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:10:07 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:10:07 2012] [debug] Rendering template "log.html.ep".
+[Wed Mar 21 17:10:07 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:10:07 2012] [debug] Rendering template "/include/page_navi2.html.ep".
+[Wed Mar 21 17:10:07 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:10:07 2012] [debug] 200 OK (0.225085s, 4.443/s).
+[Wed Mar 21 17:10:14 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:10:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:10:14 2012] [debug] Rendering template "commit.html.ep".
+[Wed Mar 21 17:10:14 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:10:14 2012] [error] Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+18:   % }
+19:   |
+20:   % if ($current eq 'commit') {
+21:     Commit
+22:   % } else {
+23:     <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $head_id}) %>">Commit</a>
+24:   % }
+25:   |
+26:   % if ($current eq 'commitdiff') {
+27:     Commitdiff
+28:   % } else {
+
+[Wed Mar 21 17:10:14 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:10:14 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:10:14 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:10:14 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:10:14 2012] [debug] 500 Internal Server Error (0.076270s, 13.111/s).
+[Wed Mar 21 17:10:14 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:10:18 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:10:18 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:10:18 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:10:19 2012] [error] Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+18:   % }
+19:   |
+20:   % if ($current eq 'commit') {
+21:     Commit
+22:   % } else {
+23:     <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $head_id}) %>">Commit</a>
+24:   % }
+25:   |
+26:   % if ($current eq 'commitdiff') {
+27:     Commitdiff
+28:   % } else {
+
+[Wed Mar 21 17:10:19 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:10:19 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:10:19 2012] [debug] 500 Internal Server Error (0.052247s, 19.140/s).
+[Wed Mar 21 17:10:28 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:10:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:10:28 2012] [debug] 200 OK (0.102747s, 9.733/s).
+[Wed Mar 21 17:11:28 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:11:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:11:28 2012] [debug] 200 OK (0.075676s, 13.214/s).
+[Wed Mar 21 17:11:34 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:11:34 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:11:35 2012] [debug] 200 OK (0.061198s, 16.340/s).
+[Wed Mar 21 17:11:37 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:11:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:11:37 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:11:37 2012] [error] Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+18:   % }
+19:   |
+20:   % if ($current eq 'commit') {
+21:     Commit
+22:   % } else {
+23:     <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $head_id}) %>">Commit</a>
+24:   % }
+25:   |
+26:   % if ($current eq 'commitdiff') {
+27:     Commitdiff
+28:   % } else {
+
+[Wed Mar 21 17:11:37 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:11:37 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:11:37 2012] [debug] 500 Internal Server Error (0.061124s, 16.360/s).
+[Wed Mar 21 17:12:31 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:31 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:31 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:12:31 2012] [error] Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 23, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 29, near "  % }".
+Global symbol "$root" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+Global symbol "$project" requires explicit package name at template "/include/page_navi.html.ep" line 35, near "  % }".
+18:   % }
+19:   |
+20:   % if ($current eq 'commit') {
+21:     Commit
+22:   % } else {
+23:     <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $head_id}) %>">Commit</a>
+24:   % }
+25:   |
+26:   % if ($current eq 'commitdiff') {
+27:     Commitdiff
+28:   % } else {
+
+[Wed Mar 21 17:12:31 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:12:31 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:12:31 2012] [debug] 500 Internal Server Error (0.077014s, 12.985/s).
+[Wed Mar 21 17:12:31 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:12:31 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:12:31 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 17:12:33 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:33 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:33 2012] [debug] Rendering template "commit.html.ep".
+[Wed Mar 21 17:12:33 2012] [error] Global symbol "$root" requires explicit package name at template "commit.html.ep" line 5, near "  ".
+Global symbol "$project" requires explicit package name at template "commit.html.ep" line 5, near "  ".
+1: % layout 'common';
+2:   <div class="page_header">
+3:     <a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commit
+4:   </div>
+5:   %= include '/include/page_navi', current => 'commit', head_id => $head_id, root => $root, project => $project;
+6:   
+7:   <div class="page_nav">
+8:     (parent: <a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675</a>) |
+9:     <a href="/perl.git/patch/f6067adc61108c3398de698bb0294d95f09b55ef">patch</a><br/>
+10:   </div>
+
+[Wed Mar 21 17:12:33 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:12:33 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:12:33 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:12:33 2012] [debug] Rendering inline template.
+[Wed Mar 21 17:12:33 2012] [debug] 500 Internal Server Error (0.083319s, 12.002/s).
+[Wed Mar 21 17:12:36 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:36 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:36 2012] [debug] Rendering template "commit.html.ep".
+[Wed Mar 21 17:12:36 2012] [error] Global symbol "$root" requires explicit package name at template "commit.html.ep" line 5, near "  ".
+Global symbol "$project" requires explicit package name at template "commit.html.ep" line 5, near "  ".
+1: % layout 'common';
+2:   <div class="page_header">
+3:     <a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commit
+4:   </div>
+5:   %= include '/include/page_navi', current => 'commit', head_id => $head_id, root => $root, project => $project;
+6:   
+7:   <div class="page_nav">
+8:     (parent: <a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675</a>) |
+9:     <a href="/perl.git/patch/f6067adc61108c3398de698bb0294d95f09b55ef">patch</a><br/>
+10:   </div>
+
+[Wed Mar 21 17:12:36 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:12:36 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:12:36 2012] [debug] 500 Internal Server Error (0.066855s, 14.958/s).
+[Wed Mar 21 17:12:40 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:40 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:40 2012] [debug] Rendering template "log.html.ep".
+[Wed Mar 21 17:12:40 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:12:40 2012] [debug] Rendering template "/include/page_navi2.html.ep".
+[Wed Mar 21 17:12:40 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:12:40 2012] [debug] 200 OK (0.112548s, 8.885/s).
+[Wed Mar 21 17:12:42 2012] [debug] GET /shortlog (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:42 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:42 2012] [debug] Rendering template "shortlog.html.ep".
+[Wed Mar 21 17:12:42 2012] [debug] 200 OK (0.139489s, 7.169/s).
+[Wed Mar 21 17:12:46 2012] [debug] GET /log (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:46 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:46 2012] [debug] 200 OK (0.079672s, 12.551/s).
+[Wed Mar 21 17:12:47 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:12:47 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:12:47 2012] [debug] Rendering template "commit.html.ep".
+[Wed Mar 21 17:12:47 2012] [error] Global symbol "$root" requires explicit package name at template "commit.html.ep" line 5, near "  ".
+Global symbol "$project" requires explicit package name at template "commit.html.ep" line 5, near "  ".
+1: % layout 'common';
+2:   <div class="page_header">
+3:     <a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commit
+4:   </div>
+5:   %= include '/include/page_navi', current => 'commit', head_id => $head_id, root => $root, project => $project;
+6:   
+7:   <div class="page_nav">
+8:     (parent: <a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675</a>) |
+9:     <a href="/perl.git/patch/f6067adc61108c3398de698bb0294d95f09b55ef">patch</a><br/>
+10:   </div>
+
+[Wed Mar 21 17:12:47 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 17:12:47 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 17:12:47 2012] [debug] 500 Internal Server Error (0.055474s, 18.026/s).
+[Wed Mar 21 17:13:14 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:13:14 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 17:13:14 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 17:13:14 2012] [debug] GET /commit (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 17:13:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 17:13:14 2012] [debug] Rendering template "commit.html.ep".
+[Wed Mar 21 17:13:14 2012] [debug] Rendering template "/include/page_navi.html.ep".
+[Wed Mar 21 17:13:14 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 17:13:14 2012] [debug] 200 OK (0.060354s, 16.569/s).
+[Wed Mar 21 17:13:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 17:13:15 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".

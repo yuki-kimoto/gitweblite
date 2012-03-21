@@ -7,7 +7,7 @@
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
     Log
   </div>
-  %= include '/include/page_navi', current => 'log', head_id => $head_id;
+  %= include '/include/page_navi', current => 'log', head_id => $head_id, root => $root, project => $project;
   <%= include '/include/page_navi2', current => 'log', base_id => $base_id,
         page => $page, page_count => $page_count, commits => $commits;
   %>
@@ -15,7 +15,7 @@
   
   % for my $commit (@$commits) {
     <div class="header">
-      <a class="title" href="<%= url_for('/commit')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">        <span class="age">
+      <a class="title" href="<%= url_for('/commit')->query({root => $root, project => $project, id => $commit->{id}}) %>">        <span class="age">
           <%= $commit->{age_string} %>
         </span>
         &nbsp;
@@ -24,9 +24,8 @@
     </div>
     <div class="title_text">
       <div class="log_link">
-        <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">commit</a> |
-        <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">commitdiff</a> |
-        <a href="<%= url_for('/tree')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">tree</a><br/>
+        <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $commit->{id}}) %>">commit</a> |
+        <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project, id => $commit->{id}}) %>">commitdiff</a> |        <a href="<%= url_for('/tree')->query({root => $root, project => $project, id => $commit->{id}}) %>">tree</a><br/>
       </div>
       <span class="author_date"><%= $commit->{author_name} %> [<%= $commit->{last_change} %>]</span>
       <br/>

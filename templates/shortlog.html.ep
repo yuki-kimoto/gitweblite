@@ -7,7 +7,7 @@
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
     Short Log
   </div>
-  %= include '/include/page_navi', current => 'shortlog', head_id => $head_id;
+  %= include '/include/page_navi', current => 'shortlog', head_id => $head_id, root => $root, project => $project;
   <%= include '/include/page_navi2', current => 'shortlog', base_id => $base_id,
         page => $page, page_count => $page_count,commits => $commits;
   %>

@@ -342,6 +342,8 @@ get '/log' => sub {
   
   
   $self->render(
+    root => $root,
+    project => $project,
     commits => $commits,
     head_id => $head_id,
     ref_names => $ref_names,
@@ -404,6 +406,8 @@ get '/commit' => sub {
   
   
   $self->render(
+    root => $root,
+    project => $project,
     commits => $commits,
     head_id => $head_id,
     ref_names => $ref_names,
