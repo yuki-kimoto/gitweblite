@@ -84,6 +84,7 @@ i {
 
 td, th {
   padding: 5px;
+  vertical-align: middle;
 }
 
 .page_nav br {

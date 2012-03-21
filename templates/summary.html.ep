@@ -1,24 +1,24 @@
 % layout 'common';
   <div class="page_header">
     <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
-    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">projects</a> /
+    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
-    summary
+    Summary
   </div>
   % my $commit = 'f6067adc61108c3398de698bb0294d95f09b55ef';
   <div class="page_nav">
-    summary |
-    <a href="<%= url_for('/shortlog')->query($self->req->params->clone) %>">shortlog</a> |
-    <a href="<%= url_for('/log')->query($self->req->params->clone) %>">log</a> |
-    <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit]) %>">commit</a> |
-    <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([commit => $commit]) %>">commitdiff</a> |
-    <a href="<%= url_for('/tree')->query($self->req->params->clone) %>">tree</a><br/>
+    ummary |
+    <a href="<%= url_for('/shortlog')->query($self->req->params->clone) %>">Shortlog</a> |
+    <a href="<%= url_for('/log')->query($self->req->params->clone) %>">Log</a> |
+    <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit]) %>">Commit</a> |
+    <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([commit => $commit]) %>">Commitdiff</a> |
+    <a href="<%= url_for('/tree')->query($self->req->params->clone) %>">Tree</a><br/>
     <br/>
   </div>
   <table class="projects_list">
-  <tr id="metadata_desc"><td>description</td><td>Perl5 Master Repository</td></tr>
-  <tr id="metadata_owner"><td>owner</td><td>perl5-porters@perl.org</td></tr>
-  <tr id="metadata_lchange"><td>last change</td><td>Tue, 20 Mar 2012 05:34:25 +0000</td></tr>
+  <tr id="metadata_desc"><td>Description</td><td><%= $project_description %></td></tr>
+  <tr id="metadata_owner"><td>Owner</td><td><%= $project_owner %></td></tr>
+  <tr id="metadata_lchange"><td>Last change</td><td>Tue, 20 Mar 2012 05:34:25 +0000</td></tr>
   <tr class="metadata_url"><td>URL</td><td>git:///perl.git<br /> http:///perl.git (slow, use only if you have trouble accessing the git port)</td></tr>
   </table>
   <div class="header">
