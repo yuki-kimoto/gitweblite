@@ -421,6 +421,22 @@ get '/patch' => sub {
   shift->render(text => 'patch');
 };
 
+get '/blob' => sub {
+  shift->render(text => 'blob');
+};
+
+get '/blobdiff' => sub {
+  shift->render(text => 'blobdiff');
+};
+
+get '/history' => sub {
+  shift->render(text => 'history');
+};
+
+get '/blame' => sub {
+  shift->render(text => 'blame');
+};
+
 sub get_projects {
   my ($root, %opt) = @_;
   my $filter = $opt{filter};
