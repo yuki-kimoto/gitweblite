@@ -173,42 +173,46 @@ get '/summary' => sub {
   # Project information
   my $project_description = get_project_description($root, $project);
   my $project_owner = get_project_owner($root, $project);
-
   my %co = parse_commit($root, $project, "HEAD");
   my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
   my $last_change = format_timestamp_html(\%cd);
   my $head = $co{'id'};
-
   my $remote_heads = gitweb_check_feature('remote_heads');
   my $refs = get_references($root, $project);
-  my @tags  = get_tags($root, $project, 16);
-  my @heads = get_heads($root, $project, 16);
+  my $tags  = get_tags($root, $project, 16);
+  my $heads = get_heads($root, $project, 16);
   my %remotedata = $remote_heads ? get_remotes($root, $project) : ();
-  my @forklist;
+  my @forks;
   my $check_forks = gitweb_check_feature('forks');
-  
-  # URLs
   my $urls = get_project_urls($root, $project);
   warn $self->dumper($urls);
   $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
-
+  
   # Tag cloud
   my $show_ctags = gitweb_check_feature('ctags');
-
+  
+  # Forks
   if ($check_forks) {
-    # find forks of a project
-    @forklist = git_get_projects_list($project);
-    
-    # filter out forks of forks
-    @forklist = filter_forks_from_projects_list(\@forklist)
-      if (@forklist);
+    @forks = get_projects($root, filter => $project);
+    @forks = filter_forks_from_projects_list(\@forks) if @forks;
   }
+  
+  # Commits
+  my $commits = $head ? parse_commits_new($root, $project, $head, 17) : ();
+  
+  warn $self->dumper($tags);
   
   $self->render(
     project_description => $project_description,
     project_owner => $project_owner,
     last_change => $last_change,
     urls => $urls,
+    commits => $commits,
+    tags => $tags,
+    head => $head,
+    heads => $heads,
+    remotedata => \%remotedata,
+    forks => \@forks
   );
 };
 
@@ -241,7 +245,8 @@ get '/tag' => sub {
 };
 
 sub get_projects {
-  my $root = shift;
+  my ($root, %opt) = @_;
+  my $filter = $opt{filter};
   
   opendir my $dh, e$root
     or croak qq/Can't open directory $root: $!/;
@@ -250,6 +255,7 @@ sub get_projects {
   while (my $project = readdir $dh) {
     next unless $project =~ /\.git$/;
     next unless check_export_ok("$root/$project");
+    next if defined $filter && $project !~ /\Q$filter\E/;
     push @projects, { path => $project };
   }
 
@@ -1911,6 +1917,34 @@ sub parse_commits {
   return wantarray ? @cos : \@cos;
 }
 
+sub parse_commits_new {
+  my ($root, $project, $commit_id, $maxcount, $skip, $filename, @args) = @_;
+  my @cos;
+
+  $maxcount ||= 1;
+  $skip ||= 0;
+
+  local $/ = "\0";
+
+  open my $fd, "-|", git($root, $project), "rev-list",
+    "--header",
+    @args,
+    ("--max-count=" . $maxcount),
+    ("--skip=" . $skip),
+    @extra_options,
+    $commit_id,
+    "--",
+    ($filename ? ($filename) : ())
+    or die_error(500, "Open git-rev-list failed");
+  while (my $line = <$fd>) {
+    my %co = parse_commit_text($line);
+    push @cos, \%co;
+  }
+  close $fd;
+
+  return \@cos;
+}
+
 # parse line of git-diff-tree "raw" output
 sub parse_difftree_raw_line {
   my $line = shift;
@@ -2120,7 +2154,7 @@ sub get_heads {
   }
   close $fd;
 
-  return wantarray ? @headslist : \@headslist;
+  return \@headslist;
 }
 
 sub git_get_tags_list {
@@ -2218,7 +2252,7 @@ sub get_tags {
   }
   close $fd;
 
-  return wantarray ? @tagslist : \@tagslist;
+  return \@tagslist;
 }
 
 # assume that file exists
@@ -6313,6 +6347,64 @@ sub _params {
   my $c = shift;
   my $params = {map { $_ => scalar $c->param($_) } $c->param};
   return $params;
+}
+
+sub filter_forks_from_projects_list {
+	my $projects = shift;
+
+	my %trie; # prefix tree of directories (path components)
+	# generate trie out of those directories that might contain forks
+	foreach my $pr (@$projects) {
+		my $path = $pr->{'path'};
+		$path =~ s/\.git$//;      # forks of 'repo.git' are in 'repo/' directory
+		next if ($path =~ m!/$!); # skip non-bare repositories, e.g. 'repo/.git'
+		next unless ($path);      # skip '.git' repository: tests, git-instaweb
+		next unless (-d "$projectroot/$path"); # containing directory exists
+		$pr->{'forks'} = [];      # there can be 0 or more forks of project
+
+		# add to trie
+		my @dirs = split('/', $path);
+		# walk the trie, until either runs out of components or out of trie
+		my $ref = \%trie;
+		while (scalar @dirs &&
+		       exists($ref->{$dirs[0]})) {
+			$ref = $ref->{shift @dirs};
+		}
+		# create rest of trie structure from rest of components
+		foreach my $dir (@dirs) {
+			$ref = $ref->{$dir} = {};
+		}
+		# create end marker, store $pr as a data
+		$ref->{''} = $pr if (!exists $ref->{''});
+	}
+
+	# filter out forks, by finding shortest prefix match for paths
+	my @filtered;
+ PROJECT:
+	foreach my $pr (@$projects) {
+		# trie lookup
+		my $ref = \%trie;
+	DIR:
+		foreach my $dir (split('/', $pr->{'path'})) {
+			if (exists $ref->{''}) {
+				# found [shortest] prefix, is a fork - skip it
+				push @{$ref->{''}{'forks'}}, $pr;
+				next PROJECT;
+			}
+			if (!exists $ref->{$dir}) {
+				# not in trie, cannot have prefix, not a fork
+				push @filtered, $pr;
+				next PROJECT;
+			}
+			# If the dir is there, we just walk one step down the trie.
+			$ref = $ref->{$dir};
+		}
+		# we ran out of trie
+		# (shouldn't happen: it's either no match, or end marker)
+		push @filtered, $pr;
+	}
+
+	return @filtered;
 }
 
 app->start;
