@@ -180,32 +180,21 @@ get '/summary' => sub {
   # Project information
   my $project_description = get_project_description($root, $project);
   my $project_owner = get_project_owner($root, $project);
-  my %co = parse_commit($root, $project, "HEAD");
-  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
-  my $last_change = format_timestamp_html(\%cd);
-  my $head_id = $co{'id'};
-  my $remote_heads = gitweb_check_feature('remote_heads');
+  my %commit = parse_commit($root, $project, "HEAD");
+  my %committer_date = %commit
+    ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'})
+    : ();
+  my $last_change = format_timestamp_html(\%committer_date);
+  my $head_id = $commit{'id'};
   my $refs = get_references($root, $project);
   my $tags  = get_tags($root, $project, 16);
   my $heads = get_heads($root, $project, 16);
-  my %remotedata = $remote_heads ? get_remotes($root, $project) : ();
-  my @forks;
-  my $check_forks = gitweb_check_feature('forks');
   my $urls = get_project_urls($root, $project);
-  warn $self->dumper($urls);
   $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
   
-  # Tag cloud
-  my $show_ctags = gitweb_check_feature('ctags');
-  
-  # Forks
-  if ($check_forks) {
-    @forks = get_projects($root, filter => $project);
-    @forks = filter_forks_from_projects_list(\@forks) if @forks;
-  }
-  
   # Commits
-  my $commits = $head_id ? parse_commits_new($root, $project, $head_id, 17) : ();
+  my $page_count = 50;
+  my $commits = $head_id ? parse_commits_new($root, $project, $head_id, 20) : ();
   
   # Ref names
   my $ref_names = {};
@@ -214,8 +203,11 @@ get '/summary' => sub {
   }
   for my $head (@$heads) {
     $ref_names->{head}{$head->{id}} = $head->{name};
-  }  
+  }
   
+  warn $self->dumper($commits);
+  
+  # Render
   $self->render(
     root => $root,
     project => $project,
@@ -227,8 +219,6 @@ get '/summary' => sub {
     tags => $tags,
     head_id => $head_id,
     heads => $heads,
-    remotedata => \%remotedata,
-    forks => \@forks,
     ref_names => $ref_names
   );
 };
@@ -446,10 +436,6 @@ get '/commit' => sub {
 
     push @$diffs, $diff;
   }
-
-  # my $ref = format_ref_marker($refs, $commit{'id'});
-  
-  warn $self->dumper($diffs);
   
   $self->render(
     root => $root,

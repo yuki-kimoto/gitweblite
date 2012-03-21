@@ -27,21 +27,16 @@
   </div>
   <table class="shortlog">
     
-    % for my $commit (@$commits) {
-      <tr>
-        <td title="2012-03-20"><i><%= $commit->{age_string} %></i></td>
+    % for (my $i = 0; $i < @$commits; $i++) {
+      % my $commit = $commits->[$i];
+      <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
+        <td title="<%= $commit->{age_string_date} %>"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
             "<%= url_for('/commit')->query($self->req->params->clone)->query([id => $commit->{id}]) %>"
           >
-            % for (my $i = 0; $i <@{$commit->{comment}}; $i++) {
-              % my $comment = $commit->{comment}->[$i];
-              %= $comment;
-              % unless ($i == @{$commit->{comment}} - 1) {
-                <br>
-              % }
-            % }
+            %= $commit->{title_short};
           </a>
           % for my $type (qw/head tag/) {
             % if (my $name = $ref_names->{$type}{$commit->{id}}) {
@@ -81,8 +76,9 @@
     <a class="title" href="<%= url_for('/tags')->query($self->req->params->clone) %>">Tags</a>
   </div>
   <table class="tags">
-    % for my $tag (@$tags) {
-      <tr>
+    % for (my $i = 0; $i < @$tags; $i++) {
+      % my $tag = $tags->[$i];
+      <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td><i><%= $tag->{age} %></i></td>
         <td>
           <a class="list name" href=
@@ -119,8 +115,9 @@
     <a class="title" href="<%= url_for('/heads')->query($self->req->params->clone) %>">Heads</a>
   </div>
   <table class="heads">
-    % for my $head (@$heads) {
-      <tr>
+    % for (my $i = 0; $i < @$heads; $i++) {
+      % my $head = $heads->[$i];
+      <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td><i><%= $head->{age} %></i></td>
         <td class="current_head">
           <a class="list name" href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $head->{name}]) %>"><%= $head->{name} %></a>

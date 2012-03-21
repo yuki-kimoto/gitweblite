@@ -16,8 +16,9 @@
     <a class="title" href="<%= url_for('/shortlog')->query($self->req->params->clone) %>"><%= param('project') %></a>
   </div>
   <table class="shortlog">
-    % for my $commit (@$commits) {
-      <tr>
+    % for (my $i = 0; $i < @$commits; $i++) {
+      % my $commit = $commits->[$i];
+      <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td title="2012-03-20"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
