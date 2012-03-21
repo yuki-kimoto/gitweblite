@@ -111,17 +111,18 @@
     % for my $diff (@$diffs) {
       % my $to_id = $diff->{to_id};
       % my $to_file = $diff->{to_file};
+      % my $to_mode_str = $diff->{to_mode_str};
       % my $from_id = $diff->{from_id};
       % my $status = $diff->{status};
       <tr>
         <td>
-          <a class="list" href="<%= url_for('/blog')->query({root => $root, project => $project,
+          <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
             id => $to_id, file => $to_file}) %>"
           >
             % if ($status eq 'D') {
               <%= $to_file %>
             % } else {
-              <a class="list" href="<%= url_for('/blog')->query({root => $root, project => $project,
+              <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
                 id => $to_id, file => $to_file}) %>"
               >
                 <%= $to_file %>
@@ -129,10 +130,22 @@
             % }
           </a>
         </td>
-        <td></td>
+        <td>
+        % if ($status eq 'A') {
+    			<span class="file_status new">
+    			  [ new <%= $diff->{to_file_type} %>
+    			  % if ($to_mode_str) {
+    			     with mode: <%= $to_mode_str %>
+    			  % }
+    			  ]
+    			</span>";
+        % } elsif ($status eq 'D') {
+          <span class="file_status deleted">[deleted <%= $diff->{from_file_type} %>]</span>
+        % }
+        </td>
         <td class="link">
           % if ($status ne 'A') {
-            <a href="<%= url_for('/blogdiff')->query({root => $root, project => $project,
+            <a href="<%= url_for('/blobdiff')->query({root => $root, project => $project,
               from_id => $from_id, to_id => $to_id, file => $to_file}) %>"
             >
               diff
@@ -140,7 +153,7 @@
             |
           % }
           % if ($status ne 'D') {
-            <a href="<%= url_for('/blog')->query({root => $root, project => $project,
+            <a href="<%= url_for('/blob')->query({root => $root, project => $project,
               id => $to_id, file => $to_file}) %>"
             >
               blob
