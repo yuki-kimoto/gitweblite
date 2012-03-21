@@ -5,7 +5,6 @@ use Fcntl ':mode';
 use File::Find 'find';
 use File::Basename 'basename';
 use Time::HiRes qw/gettimeofday tv_interval/;
-binmode STDOUT, ':utf8';
 use Carp 'croak';
 use utf8;
 use Validator::Custom;
@@ -37,6 +36,8 @@ our $project_list_default_category = "";
 our $projects_list_group_categories = 0;
 our $project_maxdepth = 1;
 our $cgi;
+our @git_base_url_list = grep { $_ ne '' } ("");
+
 
 our %feature = (
   'blame' => {
@@ -151,552 +152,6 @@ get '/projects' => sub {
   $self->render(projects => \@projects);
 } => 'projects';
 
-sub parse_date {
-  my $epoch = shift;
-  my $tz = shift || "-0000";
-
-  my %date;
-  my @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-  my @days = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($epoch);
-  $date{'hour'} = $hour;
-  $date{'minute'} = $min;
-  $date{'mday'} = $mday;
-  $date{'day'} = $days[$wday];
-  $date{'month'} = $months[$mon];
-  $date{'rfc2822'}   = sprintf "%s, %d %s %4d %02d:%02d:%02d +0000",
-                       $days[$wday], $mday, $months[$mon], 1900+$year, $hour ,$min, $sec;
-  $date{'mday-time'} = sprintf "%d %s %02d:%02d",
-                       $mday, $months[$mon], $hour ,$min;
-  $date{'iso-8601'}  = sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ",
-                       1900+$year, 1+$mon, $mday, $hour ,$min, $sec;
-
-  my ($tz_sign, $tz_hour, $tz_min) =
-    ($tz =~ m/^([-+])(\d\d)(\d\d)$/);
-  $tz_sign = ($tz_sign eq '-' ? -1 : +1);
-  my $local = $epoch + $tz_sign*((($tz_hour*60) + $tz_min)*60);
-  ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($local);
-  $date{'hour_local'} = $hour;
-  $date{'minute_local'} = $min;
-  $date{'tz_local'} = $tz;
-  $date{'iso-tz'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d %s",
-                            1900+$year, $mon+1, $mday,
-                            $hour, $min, $sec, $tz);
-  return %date;
-}
-
-sub git_get_references {
-  my $type = shift || "";
-  my %refs;
-  # 5dc01c595e6c6ec9ccda4f6f69c131c0dd945f8c refs/tags/v2.6.11
-  # c39ae07f393806ccf406ef966e9a15afc43cc36a refs/tags/v2.6.11^{}
-  open my $fd, "-|", git_cmd(), "show-ref", "--dereference",
-    ($type ? ("--", "refs/$type") : ()) # use -- <pattern> if $type
-    or return;
-
-  while (my $line = <$fd>) {
-    chomp $line;
-    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
-      if (defined $refs{$1}) {
-        push @{$refs{$1}}, $2;
-      } else {
-        $refs{$1} = [ $2 ];
-      }
-    }
-  }
-  close $fd or return;
-  return \%refs;
-}
-
-sub parse_commit {
-  my ($root, $project, $commit_id) = @_;
-  my %co;
-
-  local $/ = "\0";
-  
-  my @git_command = (
-    git($root, $project),
-    "rev-list",
-    "--parents",
-    "--header",
-    "--max-count=1",
-    $commit_id,
-    "--"
-  );
-  
-  open my $fd, "-|", @git_command
-    or die "Open git-rev-list failed";
-  %co = parse_commit_text(<$fd>, 1);
-  close $fd;
-
-  return %co;
-}
-
-sub parse_commit_text {
-  my ($commit_text, $withparents) = @_;
-  my @commit_lines = split '\n', $commit_text;
-  my %co;
-
-  pop @commit_lines; # Remove '\0'
-
-  if (! @commit_lines) {
-    return;
-  }
-
-  my $header = shift @commit_lines;
-  if ($header !~ m/^[0-9a-fA-F]{40}/) {
-    return;
-  }
-  ($co{'id'}, my @parents) = split ' ', $header;
-  while (my $line = shift @commit_lines) {
-    last if $line eq "\n";
-    if ($line =~ m/^tree ([0-9a-fA-F]{40})$/) {
-      $co{'tree'} = $1;
-    } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
-      push @parents, $1;
-    } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
-      $co{'author'} = to_utf8($1);
-      $co{'author_epoch'} = $2;
-      $co{'author_tz'} = $3;
-      if ($co{'author'} =~ m/^([^<]+) <([^>]*)>/) {
-        $co{'author_name'}  = $1;
-        $co{'author_email'} = $2;
-      } else {
-        $co{'author_name'} = $co{'author'};
-      }
-    } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
-      $co{'committer'} = to_utf8($1);
-      $co{'committer_epoch'} = $2;
-      $co{'committer_tz'} = $3;
-      if ($co{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
-        $co{'committer_name'}  = $1;
-        $co{'committer_email'} = $2;
-      } else {
-        $co{'committer_name'} = $co{'committer'};
-      }
-    }
-  }
-  if (!defined $co{'tree'}) {
-    return;
-  };
-  $co{'parents'} = \@parents;
-  $co{'parent'} = $parents[0];
-
-  foreach my $title (@commit_lines) {
-    $title =~ s/^    //;
-    if ($title ne "") {
-      $co{'title'} = _chop_str($title, 80, 5);
-      # remove leading stuff of merges to make the interesting part visible
-      if (length($title) > 50) {
-        $title =~ s/^Automatic //;
-        $title =~ s/^merge (of|with) /Merge ... /i;
-        if (length($title) > 50) {
-          $title =~ s/(http|rsync):\/\///;
-        }
-        if (length($title) > 50) {
-          $title =~ s/(master|www|rsync)\.//;
-        }
-        if (length($title) > 50) {
-          $title =~ s/kernel.org:?//;
-        }
-        if (length($title) > 50) {
-          $title =~ s/\/pub\/scm//;
-        }
-      }
-      $co{'title_short'} = _chop_str($title, 50, 5);
-      last;
-    }
-  }
-  if (! defined $co{'title'} || $co{'title'} eq "") {
-    $co{'title'} = $co{'title_short'} = '(no commit message)';
-  }
-  # remove added spaces
-  foreach my $line (@commit_lines) {
-    $line =~ s/^    //;
-  }
-  $co{'comment'} = \@commit_lines;
-
-  my $age = time - $co{'committer_epoch'};
-  $co{'age'} = $age;
-  $co{'age_string'} = age_string($age);
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($co{'committer_epoch'});
-  if ($age > 60*60*24*7*2) {
-    $co{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
-    $co{'age_string_age'} = $co{'age_string'};
-  } else {
-    $co{'age_string_date'} = $co{'age_string'};
-    $co{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
-  }
-  return %co;
-}
-
-sub age_string {
-  my $age = shift;
-  my $age_str;
-
-  if ($age > 60*60*24*365*2) {
-    $age_str = (int $age/60/60/24/365);
-    $age_str .= " years ago";
-  } elsif ($age > 60*60*24*(365/12)*2) {
-    $age_str = int $age/60/60/24/(365/12);
-    $age_str .= " months ago";
-  } elsif ($age > 60*60*24*7*2) {
-    $age_str = int $age/60/60/24/7;
-    $age_str .= " weeks ago";
-  } elsif ($age > 60*60*24*2) {
-    $age_str = int $age/60/60/24;
-    $age_str .= " days ago";
-  } elsif ($age > 60*60*2) {
-    $age_str = int $age/60/60;
-    $age_str .= " hours ago";
-  } elsif ($age > 60*2) {
-    $age_str = int $age/60;
-    $age_str .= " min ago";
-  } elsif ($age > 2) {
-    $age_str = int $age;
-    $age_str .= " sec ago";
-  } else {
-    $age_str .= " right now";
-  }
-  return $age_str;
-}
-
-sub get_last_activity {
-  my ($root, $project) = @_;
-
-  my $fd;
-  my @git_command = (
-    git($root, $project),
-    'for-each-ref',
-    '--format=%(committer)',
-    '--sort=-committerdate',
-    '--count=1',
-    'refs/heads'  
-  );
-  open($fd, "-|", @git_command) or return;
-  my $most_recent = <$fd>;
-  close $fd or return;
-  if (defined $most_recent &&
-      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
-    my $timestamp = $1;
-    my $age = time - $timestamp;
-    return ($age, age_string($age));
-  }
-  return (undef, undef);
-}
-
-sub git_get_last_activity {
-  my ($path) = @_;
-  my $fd;
-
-  $git_dir = "$projectroot/$path";
-  open($fd, "-|", git_cmd(), 'for-each-ref',
-       '--format=%(committer)',
-       '--sort=-committerdate',
-       '--count=1',
-       'refs/heads') or return;
-  my $most_recent = <$fd>;
-  close $fd or return;
-  if (defined $most_recent &&
-      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
-    my $timestamp = $1;
-    my $age = time - $timestamp;
-    return ($age, age_string($age));
-  }
-  return (undef, undef);
-}
-
-sub gitweb_get_feature {
-  my ($name) = @_;
-  return unless exists $feature{$name};
-  my ($sub, $override, @defaults) = (
-    $feature{$name}{'sub'},
-    $feature{$name}{'override'},
-    @{$feature{$name}{'default'}});
-  # project specific override is possible only if we have project
-  our $git_dir; # global variable, declared later
-  if (!$override || !defined $git_dir) {
-    return @defaults;
-  }
-  if (!defined $sub) {
-    warn "feature $name is not overridable";
-    return @defaults;
-  }
-  return $sub->(@defaults);
-}
-
-sub gitweb_check_feature {
-  return (gitweb_get_feature(@_))[0];
-}
-
-sub _chop_str {
-  my $str = shift;
-  my $len = shift;
-  my $add_len = shift || 10;
-  my $where = shift || 'right'; # 'left' | 'center' | 'right'
-
-  # Make sure perl knows it is utf8 encoded so we don't
-  # cut in the middle of a utf8 multibyte char.
-  $str = to_utf8($str);
-
-  # allow only $len chars, but don't cut a word if it would fit in $add_len
-  # if it doesn't fit, cut it if it's still longer than the dots we would add
-  # remove chopped character entities entirely
-
-  # when chopping in the middle, distribute $len into left and right part
-  # return early if chopping wouldn't make string shorter
-  if ($where eq 'center') {
-    return $str if ($len + 5 >= length($str)); # filler is length 5
-    $len = int($len/2);
-  } else {
-    return $str if ($len + 4 >= length($str)); # filler is length 4
-  }
-
-  # regexps: ending and beginning with word part up to $add_len
-  my $endre = qr/.{$len}\w{0,$add_len}/;
-  my $begre = qr/\w{0,$add_len}.{$len}/;
-
-  if ($where eq 'left') {
-    $str =~ m/^(.*?)($begre)$/;
-    my ($lead, $body) = ($1, $2);
-    if (length($lead) > 4) {
-      $lead = " ...";
-    }
-    return "$lead$body";
-
-  } elsif ($where eq 'center') {
-    $str =~ m/^($endre)(.*)$/;
-    my ($left, $str)  = ($1, $2);
-    $str =~ m/^(.*?)($begre)$/;
-    my ($mid, $right) = ($1, $2);
-    if (length($mid) > 5) {
-      $mid = " ... ";
-    }
-    return "$left$mid$right";
-
-  } else {
-    $str =~ m/^($endre)(.*)$/;
-    my $body = $1;
-    my $tail = $2;
-    if (length($tail) > 4) {
-      $tail = "... ";
-    }
-    return "$body$tail";
-  }
-}
-
-sub get_project_owner {
-  my ($root, $project) = @_;
-
-  return unless defined $root && defined $project;
-  my $git_dir = "$root/$project";
-
-  my $owner;
-
-  if (!defined $gitweb_project_owner) {
-    git_get_project_list_from_file();
-  }
-
-  if (exists $gitweb_project_owner->{$project}) {
-    $owner = $gitweb_project_owner->{$project};
-  }
-  if (!defined $owner){
-    $owner = git_get_project_config('owner');
-  }
-  if (!defined $owner) {
-    $owner = get_file_owner("$git_dir");
-  }
-
-  return $owner;
-}
-
-sub git_get_project_owner {
-  my $project = shift;
-  my $owner;
-
-  return undef unless $project;
-  $git_dir = "$projectroot/$project";
-
-  if (!defined $gitweb_project_owner) {
-    git_get_project_list_from_file();
-  }
-
-  if (exists $gitweb_project_owner->{$project}) {
-    $owner = $gitweb_project_owner->{$project};
-  }
-  if (!defined $owner){
-    $owner = git_get_project_config('owner');
-  }
-  if (!defined $owner) {
-    $owner = get_file_owner("$git_dir");
-  }
-
-  return $owner;
-}
-
-sub git_get_project_list_from_file {
-
-  return if (defined $gitweb_project_owner);
-
-  $gitweb_project_owner = {};
-  if (-f $projects_list) {
-    open(my $fd, '<', $projects_list);
-    while (my $line = <$fd>) {
-      chomp $line;
-      my ($pr, $ow) = split ' ', $line;
-      $pr = unescape($pr);
-      $ow = unescape($ow);
-      $gitweb_project_owner->{$pr} = to_utf8($ow);
-    }
-    close $fd;
-  }
-}
-
-sub git_get_project_config {
-  my ($key, $type) = @_;
-
-  return unless defined $git_dir;
-
-  # key sanity check
-  return unless ($key);
-  # only subsection, if exists, is case sensitive,
-  # and not lowercased by 'git config -z -l'
-  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
-    $key = join(".", lc($hi), $mi, lc($lo));
-  } else {
-    $key = lc($key);
-  }
-  $key =~ s/^gitweb\.//;
-  return if ($key =~ m/\W/);
-
-  # type sanity check
-  if (defined $type) {
-    $type =~ s/^--//;
-    $type = undef
-      unless ($type eq 'bool' || $type eq 'int');
-  }
-
-  # get config
-  if (!defined $config_file ||
-      $config_file ne "$git_dir/config") {
-    %config = git_parse_project_config('gitweb');
-    $config_file = "$git_dir/config";
-  }
-
-  # check if config variable (key) exists
-  return unless exists $config{"gitweb.$key"};
-
-  # ensure given type
-  if (!defined $type) {
-    return $config{"gitweb.$key"};
-  } elsif ($type eq 'bool') {
-    # backward compatibility: 'git config --bool' returns true/false
-    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
-  } elsif ($type eq 'int') {
-    return config_to_int($config{"gitweb.$key"});
-  }
-  return $config{"gitweb.$key"};
-}
-
-sub git_parse_project_config {
-  my $section_regexp = shift;
-  my %config;
-
-  local $/ = "\0";
-
-  open my $fh, "-|", git_cmd(), "config", '-z', '-l',
-    or return;
-
-  while (my $keyval = <$fh>) {
-    chomp $keyval;
-    my ($key, $value) = split(/\n/, $keyval, 2);
-
-    hash_set_multi(\%config, $key, $value)
-      if (!defined $section_regexp || $key =~ /^(?:$section_regexp)\./o);
-  }
-  close $fh;
-
-  return %config;
-}
-
-sub git_cmd {
-  $number_of_git_cmds++;
-  return $GIT, '--git-dir='.$git_dir;
-}
-
-sub git {
-  my ($root, $project) = @_;
-  my $git_dir = "$root/$project";
-  
-  return ($GIT, "--git-dir=$git_dir");
-}
-
-sub get_file_owner {
-  my $path = shift;
-
-  my ($dev, $ino, $mode, $nlink, $st_uid, $st_gid, $rdev, $size) = stat($path);
-  my ($name, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell) = getpwuid($st_uid);
-  if (!defined $gcos) {
-    return undef;
-  }
-  my $owner = $gcos;
-  $owner =~ s/[,;].*$//;
-  return to_utf8($owner);
-}
-
-sub to_utf8 {
-  my $str = shift;
-  return undef unless defined $str;
-
-  if (utf8::is_utf8($str) || utf8::decode($str)) {
-    return $str;
-  } else {
-    return decode($fallback_encoding, $str, Encode::FB_DEFAULT);
-  }
-}
-
-sub fill_project_list_info {
-  my $projlist = shift;
-  my @projects;
-
-  my $show_ctags = gitweb_check_feature('ctags');
- PROJECT:
-  foreach my $pr (@$projlist) {
-    my (@activity) = git_get_last_activity($pr->{'path'});
-    unless (@activity) {
-      next PROJECT;
-    }
-    ($pr->{'age'}, $pr->{'age_string'}) = @activity;
-    if (!defined $pr->{'descr'}) {
-      my $descr = git_get_project_description($pr->{'path'}) || "";
-      $descr = to_utf8($descr);
-      $pr->{'descr_long'} = $descr;
-      $pr->{'descr'} = _chop_str($descr, $projects_list_description_width, 5);
-    }
-    if (!defined $pr->{'owner'}) {
-      $pr->{'owner'} = git_get_project_owner("$pr->{'path'}") || "";
-    }
-    if ($show_ctags) {
-      $pr->{'ctags'} = git_get_project_ctags($pr->{'path'});
-    }
-    if ($projects_list_group_categories && !defined $pr->{'category'}) {
-      my $cat = git_get_project_category($pr->{'path'}) ||
-                                         $project_list_default_category;
-      $pr->{'category'} = to_utf8($cat);
-    }
-
-    push @projects, $pr;
-  }
-
-  return @projects;
-}
-
-sub _params {
-  my $c = shift;
-  my $params = {map { $_ => scalar $c->param($_) } $c->param};
-  return $params;
-}
-
 get '/summary' => sub {
   my $self = shift;
   
@@ -715,38 +170,41 @@ get '/summary' => sub {
   # Project information
   my $project_description = get_project_description($root, $project);
   my $project_owner = get_project_owner($root, $project);
-  my $last_activity = get_last_activity($root, $project);
 
   my %co = parse_commit($root, $project, "HEAD");
   my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
+  my $last_change = format_timestamp_html(\%cd);
   my $head = $co{'id'};
-  my $remote_heads = gitweb_check_feature('remote_heads');
 
-  my $refs = git_get_references();
-  # These get_*_list functions return one more to allow us to see if
-  # there are more ...
-  my @taglist  = git_get_tags_list(16);
-  my @headlist = git_get_heads_list(16);
-  my %remotedata = $remote_heads ? git_get_remotes_list() : ();
+  my $remote_heads = gitweb_check_feature('remote_heads');
+  my $refs = get_references($root, $project);
+  my @tags  = get_tags($root, $project, 16);
+  my @heads = get_heads($root, $project, 16);
+  my %remotedata = $remote_heads ? get_remotes($root, $project) : ();
   my @forklist;
   my $check_forks = gitweb_check_feature('forks');
+  
+  # URLs
+  my @urls = get_project_urls($root, $project);
+  @urls = map { "$_/$project" } @git_base_url_list unless @urls;
+
+  # Tag cloud
+  my $show_ctags = gitweb_check_feature('ctags');
 
   if ($check_forks) {
     # find forks of a project
     @forklist = git_get_projects_list($project);
+    
     # filter out forks of forks
     @forklist = filter_forks_from_projects_list(\@forklist)
       if (@forklist);
   }
-
-
-
-
   
   $self->render(
     project_description => $project_description,
     project_owner => $project_owner,
-    last_activity => $last_activity,
+    last_change => $last_change,
+    urls => \@urls,
   );
 };
 
@@ -809,7 +267,7 @@ sub get_file_or_project_config {
 
   $git_dir = "$root/$project";
   open my $fd, '<', "$git_dir/$name"
-    or return git_get_project_config($name);
+    or return get_project_config($root, $project, $name);
   my $conf = <$fd>;
   close $fd;
   if (defined $conf) {
@@ -905,10 +363,6 @@ our $default_projects_order = "project";
 
 # only allow viewing of repositories also shown on the overview page
 our $strict_export = "";
-
-# list of git base URLs used for URL to where fetch project from,
-# i.e. full URL is "$git_base_url/$project"
-our @git_base_url_list = grep { $_ ne '' } ("");
 
 # default blob_plain mimetype and default charset for text/plain blob
 our $default_blob_plain_mimetype = 'text/plain';
@@ -2347,6 +1801,20 @@ sub git_get_project_url_list {
   return wantarray ? @git_project_url_list : \@git_project_url_list;
 }
 
+sub get_project_urls {
+  my ($root, $project) = @_;
+
+  $git_dir = "$root/$project";
+  open my $fd, '<', "$git_dir/cloneurl"
+    or return wantarray ?
+    @{ config_to_multi(git_get_project_config('url')) } :
+       config_to_multi(git_get_project_config('url'));
+  my @git_project_urls = map { chomp; $_ } <$fd>;
+  close $fd;
+
+  return wantarray ? @git_project_urls : \@git_project_urls;
+}
+
 sub fill_remote_heads {
   my $remotes = shift;
   my @heads = map { "remotes/$_" } keys %$remotes;
@@ -2577,9 +2045,6 @@ sub parse_from_to_diffinfo {
   }
 }
 
-## ......................................................................
-## parse to array of hashes functions
-
 sub git_get_heads_list {
   my ($limit, @classes) = @_;
   @classes = ('heads') unless @classes;
@@ -2619,11 +2084,99 @@ sub git_get_heads_list {
   return wantarray ? @headslist : \@headslist;
 }
 
+sub get_heads {
+  my ($root, $project, $limit, @classes) = @_;
+  @classes = ('heads') unless @classes;
+  my @patterns = map { "refs/$_" } @classes;
+  my @headslist;
+
+  open my $fd, '-|', git($root, $project), 'for-each-ref',
+    ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
+    '--format=%(objectname) %(refname) %(subject)%00%(committer)',
+    @patterns
+    or return;
+  while (my $line = <$fd>) {
+    my %ref_item;
+
+    chomp $line;
+    my ($refinfo, $committerinfo) = split(/\0/, $line);
+    my ($hash, $name, $title) = split(' ', $refinfo, 3);
+    my ($committer, $epoch, $tz) =
+      ($committerinfo =~ /^(.*) ([0-9]+) (.*)$/);
+    $ref_item{'fullname'}  = $name;
+    $name =~ s!^refs/(?:head|remote)s/!!;
+
+    $ref_item{'name'}  = $name;
+    $ref_item{'id'}    = $hash;
+    $ref_item{'title'} = $title || '(no commit message)';
+    $ref_item{'epoch'} = $epoch;
+    if ($epoch) {
+      $ref_item{'age'} = age_string(time - $ref_item{'epoch'});
+    } else {
+      $ref_item{'age'} = "unknown";
+    }
+
+    push @headslist, \%ref_item;
+  }
+  close $fd;
+
+  return wantarray ? @headslist : \@headslist;
+}
+
 sub git_get_tags_list {
   my $limit = shift;
   my @tagslist;
 
   open my $fd, '-|', git_cmd(), 'for-each-ref',
+    ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
+    '--format=%(objectname) %(objecttype) %(refname) '.
+    '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
+    'refs/tags'
+    or return;
+  while (my $line = <$fd>) {
+    my %ref_item;
+
+    chomp $line;
+    my ($refinfo, $creatorinfo) = split(/\0/, $line);
+    my ($id, $type, $name, $refid, $reftype, $title) = split(' ', $refinfo, 6);
+    my ($creator, $epoch, $tz) =
+      ($creatorinfo =~ /^(.*) ([0-9]+) (.*)$/);
+    $ref_item{'fullname'} = $name;
+    $name =~ s!^refs/tags/!!;
+
+    $ref_item{'type'} = $type;
+    $ref_item{'id'} = $id;
+    $ref_item{'name'} = $name;
+    if ($type eq "tag") {
+      $ref_item{'subject'} = $title;
+      $ref_item{'reftype'} = $reftype;
+      $ref_item{'refid'}   = $refid;
+    } else {
+      $ref_item{'reftype'} = $type;
+      $ref_item{'refid'}   = $id;
+    }
+
+    if ($type eq "tag" || $type eq "commit") {
+      $ref_item{'epoch'} = $epoch;
+      if ($epoch) {
+        $ref_item{'age'} = age_string(time - $ref_item{'epoch'});
+      } else {
+        $ref_item{'age'} = "unknown";
+      }
+    }
+
+    push @tagslist, \%ref_item;
+  }
+  close $fd;
+
+  return wantarray ? @tagslist : \@tagslist;
+}
+
+sub get_tags {
+  my ($root, $project, $limit) = shift;
+  my @tagslist;
+
+  open my $fd, '-|', git($root, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
@@ -4969,6 +4522,44 @@ sub git_heads {
   git_footer_html();
 }
 
+sub git_get_remotes_list {
+	my $wanted = shift;
+	my %remotes = ();
+
+	open my $fd, '-|' , git_cmd(), 'remote', '-v';
+	return unless $fd;
+	while (my $remote = <$fd>) {
+		chomp $remote;
+		$remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
+		next if $wanted and not $remote eq $wanted;
+		my ($url, $key) = ($1, $2);
+
+		$remotes{$remote} ||= { 'heads' => () };
+		$remotes{$remote}{$key} = $url;
+	}
+	close $fd or return;
+	return wantarray ? %remotes : \%remotes;
+}
+
+sub get_remotes {
+	my ($root, $project, $wanted) = @_;
+	my %remotes = ();
+
+	open my $fd, '-|' , git($root, $project), 'remote', '-v';
+	return unless $fd;
+	while (my $remote = <$fd>) {
+		chomp $remote;
+		$remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
+		next if $wanted and not $remote eq $wanted;
+		my ($url, $key) = ($1, $2);
+
+		$remotes{$remote} ||= { 'heads' => () };
+		$remotes{$remote}{$key} = $url;
+	}
+	close $fd or return;
+	return wantarray ? %remotes : \%remotes;
+}
+
 # used both for single remote view and for list of all the remotes
 sub git_remotes {
   gitweb_check_feature('remote_heads')
@@ -6107,6 +5698,621 @@ sub read_config_file {
     return 1;
   }
   return;
+}
+
+sub parse_date {
+  my $epoch = shift;
+  my $tz = shift || "-0000";
+
+  my %date;
+  my @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+  my @days = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($epoch);
+  $date{'hour'} = $hour;
+  $date{'minute'} = $min;
+  $date{'mday'} = $mday;
+  $date{'day'} = $days[$wday];
+  $date{'month'} = $months[$mon];
+  $date{'rfc2822'}   = sprintf "%s, %d %s %4d %02d:%02d:%02d +0000",
+                       $days[$wday], $mday, $months[$mon], 1900+$year, $hour ,$min, $sec;
+  $date{'mday-time'} = sprintf "%d %s %02d:%02d",
+                       $mday, $months[$mon], $hour ,$min;
+  $date{'iso-8601'}  = sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ",
+                       1900+$year, 1+$mon, $mday, $hour ,$min, $sec;
+
+  my ($tz_sign, $tz_hour, $tz_min) =
+    ($tz =~ m/^([-+])(\d\d)(\d\d)$/);
+  $tz_sign = ($tz_sign eq '-' ? -1 : +1);
+  my $local = $epoch + $tz_sign*((($tz_hour*60) + $tz_min)*60);
+  ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($local);
+  $date{'hour_local'} = $hour;
+  $date{'minute_local'} = $min;
+  $date{'tz_local'} = $tz;
+  $date{'iso-tz'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d %s",
+                            1900+$year, $mon+1, $mday,
+                            $hour, $min, $sec, $tz);
+  return %date;
+}
+
+sub git_get_references {
+  my $type = shift || "";
+  my %refs;
+  open my $fd, "-|", git_cmd(), "show-ref", "--dereference",
+    ($type ? ("--", "refs/$type") : ()) # use -- <pattern> if $type
+    or return;
+
+  while (my $line = <$fd>) {
+    chomp $line;
+    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
+      if (defined $refs{$1}) {
+        push @{$refs{$1}}, $2;
+      } else {
+        $refs{$1} = [ $2 ];
+      }
+    }
+  }
+  close $fd or return;
+  return \%refs;
+}
+
+sub get_references {
+  my ($root, $project, $type) = @_;
+  $type ||= "";
+  
+  my %refs;
+  open my $fd, "-|", git($root, $project), "show-ref", "--dereference",
+    ($type ? ("--", "refs/$type") : ()) # use -- <pattern> if $type
+    or return;
+
+  while (my $line = <$fd>) {
+    chomp $line;
+    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
+      if (defined $refs{$1}) {
+        push @{$refs{$1}}, $2;
+      } else {
+        $refs{$1} = [ $2 ];
+      }
+    }
+  }
+  close $fd or return;
+  return \%refs;
+}
+
+sub parse_commit {
+  my ($root, $project, $commit_id) = @_;
+  my %co;
+
+  local $/ = "\0";
+  
+  my @git_command = (
+    git($root, $project),
+    "rev-list",
+    "--parents",
+    "--header",
+    "--max-count=1",
+    $commit_id,
+    "--"
+  );
+  
+  open my $fd, "-|", @git_command
+    or die "Open git-rev-list failed";
+  %co = parse_commit_text(<$fd>, 1);
+  close $fd;
+
+  return %co;
+}
+
+sub parse_commit_text {
+  my ($commit_text, $withparents) = @_;
+  my @commit_lines = split '\n', $commit_text;
+  my %co;
+
+  pop @commit_lines; # Remove '\0'
+
+  if (! @commit_lines) {
+    return;
+  }
+
+  my $header = shift @commit_lines;
+  if ($header !~ m/^[0-9a-fA-F]{40}/) {
+    return;
+  }
+  ($co{'id'}, my @parents) = split ' ', $header;
+  while (my $line = shift @commit_lines) {
+    last if $line eq "\n";
+    if ($line =~ m/^tree ([0-9a-fA-F]{40})$/) {
+      $co{'tree'} = $1;
+    } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
+      push @parents, $1;
+    } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
+      $co{'author'} = to_utf8($1);
+      $co{'author_epoch'} = $2;
+      $co{'author_tz'} = $3;
+      if ($co{'author'} =~ m/^([^<]+) <([^>]*)>/) {
+        $co{'author_name'}  = $1;
+        $co{'author_email'} = $2;
+      } else {
+        $co{'author_name'} = $co{'author'};
+      }
+    } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
+      $co{'committer'} = to_utf8($1);
+      $co{'committer_epoch'} = $2;
+      $co{'committer_tz'} = $3;
+      if ($co{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
+        $co{'committer_name'}  = $1;
+        $co{'committer_email'} = $2;
+      } else {
+        $co{'committer_name'} = $co{'committer'};
+      }
+    }
+  }
+  if (!defined $co{'tree'}) {
+    return;
+  };
+  $co{'parents'} = \@parents;
+  $co{'parent'} = $parents[0];
+
+  foreach my $title (@commit_lines) {
+    $title =~ s/^    //;
+    if ($title ne "") {
+      $co{'title'} = _chop_str($title, 80, 5);
+      # remove leading stuff of merges to make the interesting part visible
+      if (length($title) > 50) {
+        $title =~ s/^Automatic //;
+        $title =~ s/^merge (of|with) /Merge ... /i;
+        if (length($title) > 50) {
+          $title =~ s/(http|rsync):\/\///;
+        }
+        if (length($title) > 50) {
+          $title =~ s/(master|www|rsync)\.//;
+        }
+        if (length($title) > 50) {
+          $title =~ s/kernel.org:?//;
+        }
+        if (length($title) > 50) {
+          $title =~ s/\/pub\/scm//;
+        }
+      }
+      $co{'title_short'} = _chop_str($title, 50, 5);
+      last;
+    }
+  }
+  if (! defined $co{'title'} || $co{'title'} eq "") {
+    $co{'title'} = $co{'title_short'} = '(no commit message)';
+  }
+  # remove added spaces
+  foreach my $line (@commit_lines) {
+    $line =~ s/^    //;
+  }
+  $co{'comment'} = \@commit_lines;
+
+  my $age = time - $co{'committer_epoch'};
+  $co{'age'} = $age;
+  $co{'age_string'} = age_string($age);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($co{'committer_epoch'});
+  if ($age > 60*60*24*7*2) {
+    $co{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $co{'age_string_age'} = $co{'age_string'};
+  } else {
+    $co{'age_string_date'} = $co{'age_string'};
+    $co{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+  }
+  return %co;
+}
+
+sub age_string {
+  my $age = shift;
+  my $age_str;
+
+  if ($age > 60*60*24*365*2) {
+    $age_str = (int $age/60/60/24/365);
+    $age_str .= " years ago";
+  } elsif ($age > 60*60*24*(365/12)*2) {
+    $age_str = int $age/60/60/24/(365/12);
+    $age_str .= " months ago";
+  } elsif ($age > 60*60*24*7*2) {
+    $age_str = int $age/60/60/24/7;
+    $age_str .= " weeks ago";
+  } elsif ($age > 60*60*24*2) {
+    $age_str = int $age/60/60/24;
+    $age_str .= " days ago";
+  } elsif ($age > 60*60*2) {
+    $age_str = int $age/60/60;
+    $age_str .= " hours ago";
+  } elsif ($age > 60*2) {
+    $age_str = int $age/60;
+    $age_str .= " min ago";
+  } elsif ($age > 2) {
+    $age_str = int $age;
+    $age_str .= " sec ago";
+  } else {
+    $age_str .= " right now";
+  }
+  return $age_str;
+}
+
+sub get_last_activity {
+  my ($root, $project) = @_;
+
+  my $fd;
+  my @git_command = (
+    git($root, $project),
+    'for-each-ref',
+    '--format=%(committer)',
+    '--sort=-committerdate',
+    '--count=1',
+    'refs/heads'  
+  );
+  open($fd, "-|", @git_command) or return;
+  my $most_recent = <$fd>;
+  close $fd or return;
+  if (defined $most_recent &&
+      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
+    my $timestamp = $1;
+    my $age = time - $timestamp;
+    return ($age, age_string($age));
+  }
+  return (undef, undef);
+}
+
+sub git_get_last_activity {
+  my ($path) = @_;
+  my $fd;
+
+  $git_dir = "$projectroot/$path";
+  open($fd, "-|", git_cmd(), 'for-each-ref',
+       '--format=%(committer)',
+       '--sort=-committerdate',
+       '--count=1',
+       'refs/heads') or return;
+  my $most_recent = <$fd>;
+  close $fd or return;
+  if (defined $most_recent &&
+      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
+    my $timestamp = $1;
+    my $age = time - $timestamp;
+    return ($age, age_string($age));
+  }
+  return (undef, undef);
+}
+
+sub gitweb_get_feature {
+  my ($name) = @_;
+  return unless exists $feature{$name};
+  my ($sub, $override, @defaults) = (
+    $feature{$name}{'sub'},
+    $feature{$name}{'override'},
+    @{$feature{$name}{'default'}});
+  # project specific override is possible only if we have project
+  our $git_dir; # global variable, declared later
+  if (!$override || !defined $git_dir) {
+    return @defaults;
+  }
+  if (!defined $sub) {
+    warn "feature $name is not overridable";
+    return @defaults;
+  }
+  return $sub->(@defaults);
+}
+
+sub gitweb_check_feature {
+  return (gitweb_get_feature(@_))[0];
+}
+
+sub _chop_str {
+  my $str = shift;
+  my $len = shift;
+  my $add_len = shift || 10;
+  my $where = shift || 'right'; # 'left' | 'center' | 'right'
+
+  # Make sure perl knows it is utf8 encoded so we don't
+  # cut in the middle of a utf8 multibyte char.
+  $str = to_utf8($str);
+
+  # allow only $len chars, but don't cut a word if it would fit in $add_len
+  # if it doesn't fit, cut it if it's still longer than the dots we would add
+  # remove chopped character entities entirely
+
+  # when chopping in the middle, distribute $len into left and right part
+  # return early if chopping wouldn't make string shorter
+  if ($where eq 'center') {
+    return $str if ($len + 5 >= length($str)); # filler is length 5
+    $len = int($len/2);
+  } else {
+    return $str if ($len + 4 >= length($str)); # filler is length 4
+  }
+
+  # regexps: ending and beginning with word part up to $add_len
+  my $endre = qr/.{$len}\w{0,$add_len}/;
+  my $begre = qr/\w{0,$add_len}.{$len}/;
+
+  if ($where eq 'left') {
+    $str =~ m/^(.*?)($begre)$/;
+    my ($lead, $body) = ($1, $2);
+    if (length($lead) > 4) {
+      $lead = " ...";
+    }
+    return "$lead$body";
+
+  } elsif ($where eq 'center') {
+    $str =~ m/^($endre)(.*)$/;
+    my ($left, $str)  = ($1, $2);
+    $str =~ m/^(.*?)($begre)$/;
+    my ($mid, $right) = ($1, $2);
+    if (length($mid) > 5) {
+      $mid = " ... ";
+    }
+    return "$left$mid$right";
+
+  } else {
+    $str =~ m/^($endre)(.*)$/;
+    my $body = $1;
+    my $tail = $2;
+    if (length($tail) > 4) {
+      $tail = "... ";
+    }
+    return "$body$tail";
+  }
+}
+
+sub get_project_owner {
+  my ($root, $project) = @_;
+
+  return unless defined $root && defined $project;
+  my $git_dir = "$root/$project";
+
+  my $owner;
+
+  if (!defined $gitweb_project_owner) {
+    git_get_project_list_from_file();
+  }
+
+  if (exists $gitweb_project_owner->{$project}) {
+    $owner = $gitweb_project_owner->{$project};
+  }
+  if (!defined $owner){
+    $owner = git_get_project_config('owner');
+  }
+  if (!defined $owner) {
+    $owner = get_file_owner("$git_dir");
+  }
+
+  return $owner;
+}
+
+sub git_get_project_owner {
+  my $project = shift;
+  my $owner;
+
+  return undef unless $project;
+  $git_dir = "$projectroot/$project";
+
+  if (!defined $gitweb_project_owner) {
+    git_get_project_list_from_file();
+  }
+
+  if (exists $gitweb_project_owner->{$project}) {
+    $owner = $gitweb_project_owner->{$project};
+  }
+  if (!defined $owner){
+    $owner = git_get_project_config('owner');
+  }
+  if (!defined $owner) {
+    $owner = get_file_owner("$git_dir");
+  }
+
+  return $owner;
+}
+
+sub git_get_project_list_from_file {
+
+  return if (defined $gitweb_project_owner);
+
+  $gitweb_project_owner = {};
+  if (-f $projects_list) {
+    open(my $fd, '<', $projects_list);
+    while (my $line = <$fd>) {
+      chomp $line;
+      my ($pr, $ow) = split ' ', $line;
+      $pr = unescape($pr);
+      $ow = unescape($ow);
+      $gitweb_project_owner->{$pr} = to_utf8($ow);
+    }
+    close $fd;
+  }
+}
+
+sub get_project_config {
+  my ($root, $project, $key, $type) = @_;
+  
+  my $git_dir = "$root/$project";
+
+  return unless defined $git_dir;
+
+  # key sanity check
+  return unless ($key);
+  # only subsection, if exists, is case sensitive,
+  # and not lowercased by 'git config -z -l'
+  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
+    $key = join(".", lc($hi), $mi, lc($lo));
+  } else {
+    $key = lc($key);
+  }
+  $key =~ s/^gitweb\.//;
+  return if ($key =~ m/\W/);
+
+  # type sanity check
+  if (defined $type) {
+    $type =~ s/^--//;
+    $type = undef
+      unless ($type eq 'bool' || $type eq 'int');
+  }
+
+  # get config
+  if (!defined $config_file ||
+      $config_file ne "$git_dir/config") {
+    %config = git_parse_project_config('gitweb');
+    $config_file = "$git_dir/config";
+  }
+
+  # check if config variable (key) exists
+  return unless exists $config{"gitweb.$key"};
+
+  # ensure given type
+  if (!defined $type) {
+    return $config{"gitweb.$key"};
+  } elsif ($type eq 'bool') {
+    # backward compatibility: 'git config --bool' returns true/false
+    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
+  } elsif ($type eq 'int') {
+    return config_to_int($config{"gitweb.$key"});
+  }
+  return $config{"gitweb.$key"};
+}
+
+sub git_get_project_config {
+  my ($key, $type) = @_;
+
+  return unless defined $git_dir;
+
+  # key sanity check
+  return unless ($key);
+  # only subsection, if exists, is case sensitive,
+  # and not lowercased by 'git config -z -l'
+  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
+    $key = join(".", lc($hi), $mi, lc($lo));
+  } else {
+    $key = lc($key);
+  }
+  $key =~ s/^gitweb\.//;
+  return if ($key =~ m/\W/);
+
+  # type sanity check
+  if (defined $type) {
+    $type =~ s/^--//;
+    $type = undef
+      unless ($type eq 'bool' || $type eq 'int');
+  }
+
+  # get config
+  if (!defined $config_file ||
+      $config_file ne "$git_dir/config") {
+    %config = git_parse_project_config('gitweb');
+    $config_file = "$git_dir/config";
+  }
+
+  # check if config variable (key) exists
+  return unless exists $config{"gitweb.$key"};
+
+  # ensure given type
+  if (!defined $type) {
+    return $config{"gitweb.$key"};
+  } elsif ($type eq 'bool') {
+    # backward compatibility: 'git config --bool' returns true/false
+    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
+  } elsif ($type eq 'int') {
+    return config_to_int($config{"gitweb.$key"});
+  }
+  return $config{"gitweb.$key"};
+}
+
+sub git_parse_project_config {
+  my $section_regexp = shift;
+  my %config;
+
+  local $/ = "\0";
+
+  open my $fh, "-|", git_cmd(), "config", '-z', '-l',
+    or return;
+
+  while (my $keyval = <$fh>) {
+    chomp $keyval;
+    my ($key, $value) = split(/\n/, $keyval, 2);
+
+    hash_set_multi(\%config, $key, $value)
+      if (!defined $section_regexp || $key =~ /^(?:$section_regexp)\./o);
+  }
+  close $fh;
+
+  return %config;
+}
+
+sub git_cmd {
+  $number_of_git_cmds++;
+  return $GIT, '--git-dir='.$git_dir;
+}
+
+sub git {
+  my ($root, $project) = @_;
+  my $git_dir = "$root/$project";
+  
+  return ($GIT, "--git-dir=$git_dir");
+}
+
+sub get_file_owner {
+  my $path = shift;
+
+  my ($dev, $ino, $mode, $nlink, $st_uid, $st_gid, $rdev, $size) = stat($path);
+  my ($name, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell) = getpwuid($st_uid);
+  if (!defined $gcos) {
+    return undef;
+  }
+  my $owner = $gcos;
+  $owner =~ s/[,;].*$//;
+  return to_utf8($owner);
+}
+
+sub to_utf8 {
+  my $str = shift;
+  return undef unless defined $str;
+
+  if (utf8::is_utf8($str) || utf8::decode($str)) {
+    return $str;
+  } else {
+    return decode($fallback_encoding, $str, Encode::FB_DEFAULT);
+  }
+}
+
+sub fill_project_list_info {
+  my $projlist = shift;
+  my @projects;
+
+  my $show_ctags = gitweb_check_feature('ctags');
+ PROJECT:
+  foreach my $pr (@$projlist) {
+    my (@activity) = git_get_last_activity($pr->{'path'});
+    unless (@activity) {
+      next PROJECT;
+    }
+    ($pr->{'age'}, $pr->{'age_string'}) = @activity;
+    if (!defined $pr->{'descr'}) {
+      my $descr = git_get_project_description($pr->{'path'}) || "";
+      $descr = to_utf8($descr);
+      $pr->{'descr_long'} = $descr;
+      $pr->{'descr'} = _chop_str($descr, $projects_list_description_width, 5);
+    }
+    if (!defined $pr->{'owner'}) {
+      $pr->{'owner'} = git_get_project_owner("$pr->{'path'}") || "";
+    }
+    if ($show_ctags) {
+      $pr->{'ctags'} = git_get_project_ctags($pr->{'path'});
+    }
+    if ($projects_list_group_categories && !defined $pr->{'category'}) {
+      my $cat = git_get_project_category($pr->{'path'}) ||
+                                         $project_list_default_category;
+      $pr->{'category'} = to_utf8($cat);
+    }
+
+    push @projects, $pr;
+  }
+
+  return @projects;
+}
+
+sub _params {
+  my $c = shift;
+  my $params = {map { $_ => scalar $c->param($_) } $c->param};
+  return $params;
 }
 
 app->start;

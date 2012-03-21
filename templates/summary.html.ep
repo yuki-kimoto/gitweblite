@@ -18,7 +18,7 @@
   <table class="projects_list">
   <tr id="metadata_desc"><td>Description</td><td><%= $project_description %></td></tr>
   <tr id="metadata_owner"><td>Owner</td><td><%= $project_owner %></td></tr>
-  <tr id="metadata_lchange"><td>Last change</td><td>Tue, 20 Mar 2012 05:34:25 +0000</td></tr>
+  <tr id="metadata_lchange"><td>Last change</td><td><%= b($last_change) %></td></tr>
   <tr class="metadata_url"><td>URL</td><td>git:///perl.git<br /> http:///perl.git (slow, use only if you have trouble accessing the git port)</td></tr>
   </table>
   <div class="header">
