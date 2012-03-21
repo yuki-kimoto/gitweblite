@@ -1,7 +1,7 @@
 % layout 'common';
   <div class="page_header">
     <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
-    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /
+    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /<br>
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
     Summary
   </div>

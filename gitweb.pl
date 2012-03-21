@@ -214,7 +214,6 @@ get '/summary' => sub {
   for my $head (@$heads) {
     $ref_names->{head}{$head->{id}} = $head->{name};
   }  
-  warn $self->dumper($heads);
   
   $self->render(
     project_description => $project_description,
@@ -332,7 +331,6 @@ get '/log' => sub {
   # Commits
   my $page_count = 20;
   my $commits = parse_commits_new($root, $project, $base_id, $page_count, $page_count * $page);
-  warn $self->dumper($commits);
 
   for my $commit (@$commits) {
     
@@ -4106,7 +4104,7 @@ sub git_search_changes {
   }
   close $fd;
 
-  # finish last commit (warning: repetition!)
+  # finish last commit
   if (%co) {
     print "</td>\n" .
           "<td class=\"link\">" .

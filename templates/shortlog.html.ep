@@ -3,9 +3,9 @@
   % my $page = param('page');
   <div class="page_header">
     <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
-    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /
+    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /<br>
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
-    Shortlog
+    Short Log
   </div>
   %= include '/include/page_navi', current => 'shortlog', head_id => $head_id;
   <%= include '/include/page_navi2', current => 'shortlog', base_id => $base_id,
