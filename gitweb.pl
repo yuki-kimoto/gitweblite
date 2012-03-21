@@ -362,7 +362,7 @@ get '/commit' => sub {
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
-    id => => ['hex']
+    id => ['hex']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
@@ -482,7 +482,47 @@ get '/patch' => sub {
 };
 
 get '/blob' => sub {
-  shift->render(text => 'blob');
+  my $self = shift;
+
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    id => ['any'],
+    file => ['any']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $id = $params->{id};
+  my $file = $params->{file};
+
+  # Blob
+  open my $fd, "-|", git($root, $project), "cat-file", "blob", $id
+    or die "Couldn't cat $file, $id";
+  my $mimetype = blob_mimetype($fd, $file);
+
+  # Redirect to blob plane
+  if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
+    close $fd;
+    my $url = $self->url_for('/blob_plain')->query([root => $root, project => $project,
+      id => $id, file => $file]);
+    return $self->refirect_to($url);
+  }
+  
+  # Commit
+  my $commit = parse_commit($root, $project, $id);
+  
+  $self->render(
+    root => $root,
+    project => $project,
+    id => $id,
+    file => $file,
+    commit => $commit,
+  );
 };
 
 get '/blob_plain' => sub {
@@ -540,7 +580,7 @@ get '/blob_plain' => sub {
   my $content_disposition = $sandbox ? 'attachment' : 'inline';
   $content_disposition .= "; filename=$save_as";
   $self->res->headers->content_disposition($content_disposition);
-  $self->res->content_type($type);
+  $self->res->headers->content_type($type);
   $self->render_data($content);
 };
 
