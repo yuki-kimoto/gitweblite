@@ -1,0 +1,37 @@
+<div class="page_nav">
+  % if ($current eq 'summary') {
+    Summary
+  % } else {
+    <a href="<%= url_for('/summary')->query($self->req->params->clone) %>">Summary</a>
+  % }
+  |
+  % if ($current eq 'shortlog') {
+    Shortlog
+  % } else {
+    <a href="<%= url_for('/shortlog')->query($self->req->params->clone) %>">Shortlog</a>
+  % }
+  |
+  % if ($current eq 'log') {
+    Log
+  % } else {
+    <a href="<%= url_for('/log')->query($self->req->params->clone) %>">Log</a>
+  % }
+  |
+  % if ($current eq 'commit') {
+    Commit
+  % } else {
+    <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $head_id]) %>">Commit</a>
+  % }
+  |
+  % if ($current eq 'commitdiff') {
+    Commitdiff
+  % } else {
+    <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([commit => $head_id]) %>">Commitdiff</a>
+  % }
+  |
+  % if ($current eq 'tree') {
+    Tree
+  % } else {
+    <a href="<%= url_for('/tree')->query($self->req->params->clone) %>">Tree</a>
+  % }
+</div>
