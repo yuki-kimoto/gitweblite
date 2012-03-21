@@ -4382,3 +4382,973 @@ Global symbol "$project_root" requires explicit package name at template "projec
 [Wed Mar 21 10:26:42 2012] [debug] Template "not_found.development.html.ep" not found.
 [Wed Mar 21 10:26:42 2012] [debug] Template "not_found.html.ep" not found.
 [Wed Mar 21 10:26:42 2012] [debug] 404 Not Found (0.011263s, 88.786/s).
+[Wed Mar 21 10:27:46 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:27:46 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:27:46 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 10:27:46 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:27:46 2012] [debug] 200 OK (0.008190s, 122.100/s).
+[Wed Mar 21 10:27:48 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:27:48 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:27:48 2012] [error] Can't call method "e" without a package or object reference at gitweb.pl line 243.
+
+[Wed Mar 21 10:27:48 2012] [debug] Template "exception.development.html.ep" not found.
+[Wed Mar 21 10:27:48 2012] [debug] Template "exception.html.ep" not found.
+[Wed Mar 21 10:27:48 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:27:48 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:27:48 2012] [debug] 500 Internal Server Error (0.044468s, 22.488/s).
+[Wed Mar 21 10:28:20 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:28:20 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:28:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:28:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:28:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:28:30 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:28:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:28:35 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:28:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:28:36 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:28:36 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:28:36 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:28:36 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:28:36 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 10:28:36 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:28:36 2012] [debug] 200 OK (0.022966s, 43.543/s).
+[Wed Mar 21 10:28:38 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:28:38 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:28:38 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:28:38 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:28:38 2012] [debug] 200 OK (0.035087s, 28.501/s).
+[Wed Mar 21 10:28:38 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:28:38 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:28:38 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:28:38 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:28:38 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:28:38 2012] [debug] 404 Not Found (0.026513s, 37.717/s).
+[Wed Mar 21 10:28:45 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:28:45 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:28:45 2012] [debug] 200 OK (0.021100s, 47.393/s).
+[Wed Mar 21 10:28:46 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:28:46 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:28:46 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:28:46 2012] [debug] 404 Not Found (0.011961s, 83.605/s).
+[Wed Mar 21 10:29:02 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:02 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:29:02 2012] [debug] 200 OK (0.024141s, 41.423/s).
+[Wed Mar 21 10:29:02 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:02 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:29:02 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:29:02 2012] [debug] 404 Not Found (0.010364s, 96.488/s).
+[Wed Mar 21 10:29:04 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:04 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:29:04 2012] [debug] 200 OK (0.035842s, 27.900/s).
+[Wed Mar 21 10:29:05 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:05 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:29:05 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:29:05 2012] [debug] 404 Not Found (0.010628s, 94.091/s).
+[Wed Mar 21 10:29:12 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:12 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:29:12 2012] [debug] 200 OK (0.038618s, 25.895/s).
+[Wed Mar 21 10:29:12 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:12 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:29:12 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:29:12 2012] [debug] 404 Not Found (0.011848s, 84.402/s).
+[Wed Mar 21 10:29:14 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:29:14 2012] [debug] 200 OK (0.025336s, 39.470/s).
+[Wed Mar 21 10:29:15 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:15 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:29:15 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:29:15 2012] [debug] 404 Not Found (0.010146s, 98.561/s).
+[Wed Mar 21 10:29:21 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:21 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:29:21 2012] [debug] 200 OK (0.024162s, 41.387/s).
+[Wed Mar 21 10:29:21 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:29:21 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:29:21 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:29:21 2012] [debug] 404 Not Found (0.008186s, 122.160/s).
+[Wed Mar 21 10:30:37 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:30:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:30:37 2012] [debug] 200 OK (0.034581s, 28.918/s).
+[Wed Mar 21 10:30:37 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:30:37 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:30:37 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:30:37 2012] [debug] 404 Not Found (0.008452s, 118.315/s).
+[Wed Mar 21 10:30:44 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:30:44 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:30:44 2012] [debug] 200 OK (0.029987s, 33.348/s).
+[Wed Mar 21 10:30:45 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:30:45 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:30:45 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:30:45 2012] [debug] 404 Not Found (0.013025s, 76.775/s).
+[Wed Mar 21 10:30:57 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:30:57 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:30:57 2012] [debug] 200 OK (0.021278s, 46.997/s).
+[Wed Mar 21 10:30:57 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:30:57 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:30:57 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:30:57 2012] [debug] 404 Not Found (0.010273s, 97.343/s).
+[Wed Mar 21 10:31:05 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:31:05 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:31:05 2012] [debug] 200 OK (0.031641s, 31.605/s).
+[Wed Mar 21 10:31:05 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:31:05 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:31:05 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:31:05 2012] [debug] 404 Not Found (0.010377s, 96.367/s).
+[Wed Mar 21 10:31:21 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:31:21 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:31:21 2012] [debug] 200 OK (0.044617s, 22.413/s).
+[Wed Mar 21 10:31:21 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:31:21 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:31:21 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:31:21 2012] [debug] 404 Not Found (0.011870s, 84.246/s).
+[Wed Mar 21 10:31:42 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:31:42 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:31:42 2012] [debug] 200 OK (0.024015s, 41.641/s).
+[Wed Mar 21 10:31:42 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:31:42 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:31:42 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:31:42 2012] [debug] 404 Not Found (0.009550s, 104.712/s).
+[Wed Mar 21 10:32:46 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:32:46 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:32:53 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:32:53 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:33:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:33:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:36:15 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:36:15 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:36:15 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:36:15 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:36:15 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:36:15 2012] [debug] 200 OK (0.048013s, 20.828/s).
+[Wed Mar 21 10:36:16 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:36:16 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:36:16 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:36:16 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:36:16 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:36:16 2012] [debug] 404 Not Found (0.021945s, 45.568/s).
+[Wed Mar 21 10:38:49 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:38:49 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:38:49 2012] [debug] 200 OK (0.022489s, 44.466/s).
+[Wed Mar 21 10:38:50 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:38:50 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:38:50 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:38:50 2012] [debug] 404 Not Found (0.011241s, 88.960/s).
+[Wed Mar 21 10:39:14 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:39:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:39:14 2012] [debug] 200 OK (0.028691s, 34.854/s).
+[Wed Mar 21 10:39:15 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:39:15 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:39:15 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:39:15 2012] [debug] 404 Not Found (0.010001s, 99.990/s).
+[Wed Mar 21 10:39:49 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:39:49 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:39:49 2012] [debug] 200 OK (0.021969s, 45.519/s).
+[Wed Mar 21 10:39:49 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:39:49 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:39:49 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:39:49 2012] [debug] 404 Not Found (0.017553s, 56.970/s).
+[Wed Mar 21 10:40:29 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:40:29 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:40:29 2012] [debug] 200 OK (0.021963s, 45.531/s).
+[Wed Mar 21 10:40:29 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:40:29 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:40:29 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:40:29 2012] [debug] 404 Not Found (0.020640s, 48.450/s).
+[Wed Mar 21 10:40:59 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:40:59 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:40:59 2012] [debug] 200 OK (0.025934s, 38.559/s).
+[Wed Mar 21 10:40:59 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:40:59 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:40:59 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:40:59 2012] [debug] 404 Not Found (0.016584s, 60.299/s).
+[Wed Mar 21 10:41:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:41:51 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:41:52 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:41:52 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:41:52 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:41:52 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:41:52 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:41:52 2012] [debug] 200 OK (0.066899s, 14.948/s).
+[Wed Mar 21 10:41:52 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:41:52 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:41:52 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:41:52 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:41:52 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:41:52 2012] [debug] 404 Not Found (0.037099s, 26.955/s).
+[Wed Mar 21 10:42:08 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:42:08 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:42:08 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 10:42:08 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:42:08 2012] [debug] 200 OK (0.010571s, 94.598/s).
+[Wed Mar 21 10:43:01 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:01 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:43:01 2012] [debug] 200 OK (0.002538s, 394.011/s).
+[Wed Mar 21 10:43:03 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:03 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:43:03 2012] [debug] 200 OK (0.003393s, 294.724/s).
+[Wed Mar 21 10:43:05 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:05 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:43:05 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 10:43:05 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:43:05 2012] [debug] 200 OK (0.018565s, 53.865/s).
+[Wed Mar 21 10:43:07 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:07 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:43:07 2012] [debug] 200 OK (0.021985s, 45.486/s).
+[Wed Mar 21 10:43:07 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:07 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:43:07 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:43:07 2012] [debug] 404 Not Found (0.014680s, 68.120/s).
+[Wed Mar 21 10:43:41 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:41 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:43:41 2012] [debug] 200 OK (0.026474s, 37.773/s).
+[Wed Mar 21 10:43:42 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:43:42 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:43:42 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:43:42 2012] [debug] 404 Not Found (0.009795s, 102.093/s).
+[Wed Mar 21 10:44:00 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:44:00 2012] [debug] 200 OK (0.026581s, 37.621/s).
+[Wed Mar 21 10:44:00 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:00 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:44:00 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:44:00 2012] [debug] 404 Not Found (0.011847s, 84.410/s).
+[Wed Mar 21 10:44:06 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:06 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:44:06 2012] [debug] 200 OK (0.044644s, 22.399/s).
+[Wed Mar 21 10:44:06 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:06 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:44:06 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:44:06 2012] [debug] 404 Not Found (0.026089s, 38.330/s).
+[Wed Mar 21 10:44:39 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:39 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:44:39 2012] [debug] 200 OK (0.027819s, 35.947/s).
+[Wed Mar 21 10:44:40 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:40 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:44:40 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:44:40 2012] [debug] 404 Not Found (0.019970s, 50.075/s).
+[Wed Mar 21 10:44:40 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:44:40 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:44:41 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:44:41 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:41 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:44:41 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:44:41 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:44:41 2012] [debug] 200 OK (0.052696s, 18.977/s).
+[Wed Mar 21 10:44:42 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:42 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:44:42 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:44:42 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:44:42 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:44:42 2012] [debug] 404 Not Found (0.025506s, 39.206/s).
+[Wed Mar 21 10:44:53 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:44:53 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:44:54 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:44:54 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:54 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:44:54 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:44:54 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:44:54 2012] [debug] 200 OK (0.051995s, 19.233/s).
+[Wed Mar 21 10:44:55 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:44:55 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:44:55 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:44:55 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:44:55 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:44:55 2012] [debug] 404 Not Found (0.024413s, 40.962/s).
+[Wed Mar 21 10:45:42 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:45:42 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:45:42 2012] [debug] 200 OK (0.024840s, 40.258/s).
+[Wed Mar 21 10:45:43 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:45:43 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:45:43 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:45:43 2012] [debug] 404 Not Found (0.009631s, 103.831/s).
+[Wed Mar 21 10:45:51 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:45:51 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:45:51 2012] [debug] 200 OK (0.022342s, 44.759/s).
+[Wed Mar 21 10:45:51 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:45:51 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:45:51 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:45:51 2012] [debug] 404 Not Found (0.015819s, 63.215/s).
+[Wed Mar 21 10:46:21 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:46:21 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:46:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:46:37 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:46:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:46:48 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:46:48 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:46:48 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:46:48 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:46:48 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:46:48 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:46:48 2012] [debug] 200 OK (0.046249s, 21.622/s).
+[Wed Mar 21 10:46:49 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:46:49 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:46:49 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:46:49 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:46:49 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:46:49 2012] [debug] 404 Not Found (0.023623s, 42.332/s).
+[Wed Mar 21 10:47:18 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:47:18 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:47:19 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:47:19 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:47:19 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:47:19 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:47:19 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:47:19 2012] [debug] 200 OK (0.037501s, 26.666/s).
+[Wed Mar 21 10:47:19 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:47:19 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:47:19 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:47:19 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:47:19 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:47:19 2012] [debug] 404 Not Found (0.040814s, 24.501/s).
+[Wed Mar 21 10:48:01 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:01 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:48:01 2012] [debug] 200 OK (0.025638s, 39.005/s).
+[Wed Mar 21 10:48:02 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:48:02 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:48:02 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:48:02 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:02 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:48:02 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:48:02 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:48:02 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:48:02 2012] [debug] 404 Not Found (0.028147s, 35.528/s).
+[Wed Mar 21 10:48:04 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:04 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:48:04 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:48:04 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:48:04 2012] [debug] 200 OK (0.071351s, 14.015/s).
+[Wed Mar 21 10:48:04 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:04 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:48:04 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:48:04 2012] [debug] 404 Not Found (0.019779s, 50.559/s).
+[Wed Mar 21 10:48:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.conf".
+[Wed Mar 21 10:48:29 2012] [debug] Reading config file "/home/kimoto/labo/Mojolicious-Plugin-Gitweb/gitweb.development.conf".
+[Wed Mar 21 10:48:30 2012] [debug] Your secret passphrase needs to be changed!!!
+[Wed Mar 21 10:48:30 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:30 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:48:30 2012] [debug] Rendering template "summary.html.ep".
+[Wed Mar 21 10:48:30 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 10:48:30 2012] [debug] 200 OK (0.055971s, 17.866/s).
+[Wed Mar 21 10:48:30 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:30 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:48:30 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:48:30 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:48:30 2012] [debug] Rendering inline template.
+[Wed Mar 21 10:48:30 2012] [debug] 404 Not Found (0.036456s, 27.430/s).
+[Wed Mar 21 10:48:32 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:32 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:48:32 2012] [debug] 200 OK (0.031125s, 32.129/s).
+[Wed Mar 21 10:48:32 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:48:32 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:48:32 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:48:33 2012] [debug] 404 Not Found (0.011105s, 90.050/s).
+[Wed Mar 21 10:50:14 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:50:14 2012] [debug] 200 OK (0.022043s, 45.366/s).
+[Wed Mar 21 10:50:15 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:15 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:50:15 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:50:15 2012] [debug] 404 Not Found (0.010811s, 92.498/s).
+[Wed Mar 21 10:50:16 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:16 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:50:16 2012] [debug] 200 OK (0.021978s, 45.500/s).
+[Wed Mar 21 10:50:16 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:16 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:50:16 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:50:16 2012] [debug] 404 Not Found (0.010600s, 94.340/s).
+[Wed Mar 21 10:50:28 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:50:28 2012] [debug] 200 OK (0.022747s, 43.962/s).
+[Wed Mar 21 10:50:29 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:29 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:50:29 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:50:29 2012] [debug] 404 Not Found (0.011191s, 89.358/s).
+[Wed Mar 21 10:50:36 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:36 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:50:36 2012] [debug] 200 OK (0.040136s, 24.915/s).
+[Wed Mar 21 10:50:36 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:36 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:50:36 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:50:36 2012] [debug] 404 Not Found (0.016859s, 59.315/s).
+[Wed Mar 21 10:50:45 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:45 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:50:45 2012] [debug] 200 OK (0.028160s, 35.511/s).
+[Wed Mar 21 10:50:45 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:45 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:50:45 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:50:45 2012] [debug] 404 Not Found (0.012051s, 82.981/s).
+[Wed Mar 21 10:50:50 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:50 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:50:50 2012] [debug] 200 OK (0.025004s, 39.994/s).
+[Wed Mar 21 10:50:50 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:50:50 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:50:50 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:50:50 2012] [debug] 404 Not Found (0.009751s, 102.554/s).
+[Wed Mar 21 10:51:24 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:51:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:51:24 2012] [debug] 200 OK (0.028046s, 35.656/s).
+[Wed Mar 21 10:51:24 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:51:24 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:51:24 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:51:24 2012] [debug] 404 Not Found (0.009381s, 106.598/s).
+[Wed Mar 21 10:52:06 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:06 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:52:06 2012] [debug] 200 OK (0.021002s, 47.615/s).
+[Wed Mar 21 10:52:06 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:06 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:52:06 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:52:06 2012] [debug] 404 Not Found (0.009946s, 100.543/s).
+[Wed Mar 21 10:52:19 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:19 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:52:19 2012] [debug] 200 OK (0.022507s, 44.431/s).
+[Wed Mar 21 10:52:19 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:19 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:52:19 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:52:19 2012] [debug] 404 Not Found (0.011317s, 88.363/s).
+[Wed Mar 21 10:52:27 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:27 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:52:27 2012] [debug] 200 OK (0.021492s, 46.529/s).
+[Wed Mar 21 10:52:28 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:28 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:52:28 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:52:28 2012] [debug] 404 Not Found (0.010838s, 92.268/s).
+[Wed Mar 21 10:52:38 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:38 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:52:38 2012] [debug] 200 OK (0.022383s, 44.677/s).
+[Wed Mar 21 10:52:39 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:52:39 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:52:39 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:52:39 2012] [debug] 404 Not Found (0.010676s, 93.668/s).
+[Wed Mar 21 10:53:00 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:53:00 2012] [debug] 200 OK (0.033516s, 29.836/s).
+[Wed Mar 21 10:53:00 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:00 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:53:00 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:53:00 2012] [debug] 404 Not Found (0.009746s, 102.606/s).
+[Wed Mar 21 10:53:13 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:13 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:53:13 2012] [debug] 200 OK (0.027950s, 35.778/s).
+[Wed Mar 21 10:53:14 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:14 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:53:14 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:53:14 2012] [debug] 404 Not Found (0.024345s, 41.076/s).
+[Wed Mar 21 10:53:19 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:19 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:53:19 2012] [debug] 200 OK (0.024115s, 41.468/s).
+[Wed Mar 21 10:53:19 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:19 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:53:19 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:53:20 2012] [debug] 404 Not Found (0.010045s, 99.552/s).
+[Wed Mar 21 10:53:24 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:53:24 2012] [debug] 200 OK (0.026509s, 37.723/s).
+[Wed Mar 21 10:53:25 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:25 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:53:25 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:53:25 2012] [debug] 404 Not Found (0.010443s, 95.758/s).
+[Wed Mar 21 10:53:27 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:27 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:53:27 2012] [debug] 200 OK (0.020648s, 48.431/s).
+[Wed Mar 21 10:53:27 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:27 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:53:27 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:53:27 2012] [debug] 404 Not Found (0.011982s, 83.459/s).
+[Wed Mar 21 10:53:32 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:32 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:53:32 2012] [debug] 200 OK (0.021271s, 47.012/s).
+[Wed Mar 21 10:53:33 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:53:33 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:53:33 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:53:33 2012] [debug] 404 Not Found (0.008646s, 115.660/s).
+[Wed Mar 21 10:55:00 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:55:00 2012] [debug] 200 OK (0.029198s, 34.249/s).
+[Wed Mar 21 10:55:01 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:01 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:55:01 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:55:01 2012] [debug] 404 Not Found (0.009197s, 108.731/s).
+[Wed Mar 21 10:55:10 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:10 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:55:10 2012] [debug] 200 OK (0.023647s, 42.289/s).
+[Wed Mar 21 10:55:10 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:10 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:55:10 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:55:11 2012] [debug] 404 Not Found (0.024976s, 40.038/s).
+[Wed Mar 21 10:55:20 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:20 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:55:20 2012] [debug] 200 OK (0.024957s, 40.069/s).
+[Wed Mar 21 10:55:20 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:20 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:55:20 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:55:20 2012] [debug] 404 Not Found (0.010961s, 91.233/s).
+[Wed Mar 21 10:55:28 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:55:28 2012] [debug] 200 OK (0.032072s, 31.180/s).
+[Wed Mar 21 10:55:29 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:29 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:55:29 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:55:29 2012] [debug] 404 Not Found (0.010813s, 92.481/s).
+[Wed Mar 21 10:55:31 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:31 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:55:31 2012] [debug] 200 OK (0.047545s, 21.033/s).
+[Wed Mar 21 10:55:31 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:55:31 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:55:31 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:55:31 2012] [debug] 404 Not Found (0.010614s, 94.215/s).
+[Wed Mar 21 10:56:09 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:09 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:56:09 2012] [debug] 200 OK (0.025933s, 38.561/s).
+[Wed Mar 21 10:56:09 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:09 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:56:09 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:56:09 2012] [debug] 404 Not Found (0.011286s, 88.605/s).
+[Wed Mar 21 10:56:16 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:16 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:56:16 2012] [debug] 200 OK (0.026637s, 37.542/s).
+[Wed Mar 21 10:56:16 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:16 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:56:16 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:56:16 2012] [debug] 404 Not Found (0.009906s, 100.949/s).
+[Wed Mar 21 10:56:24 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:56:24 2012] [debug] 200 OK (0.033254s, 30.072/s).
+[Wed Mar 21 10:56:24 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:24 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:56:24 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:56:24 2012] [debug] 404 Not Found (0.010110s, 98.912/s).
+[Wed Mar 21 10:56:44 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:44 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:56:44 2012] [debug] 200 OK (0.029602s, 33.782/s).
+[Wed Mar 21 10:56:45 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:45 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:56:45 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:56:45 2012] [debug] 404 Not Found (0.018203s, 54.936/s).
+[Wed Mar 21 10:56:56 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:56 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:56:56 2012] [debug] 200 OK (0.028901s, 34.601/s).
+[Wed Mar 21 10:56:56 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:56:56 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:56:56 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:56:56 2012] [debug] 404 Not Found (0.010566s, 94.643/s).
+[Wed Mar 21 10:57:06 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:57:06 2012] [debug] Dispatching callback.
+[Wed Mar 21 10:57:06 2012] [debug] 200 OK (0.025449s, 39.294/s).
+[Wed Mar 21 10:57:06 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 10:57:06 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 10:57:06 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 10:57:06 2012] [debug] 404 Not Found (0.024324s, 41.112/s).
+[Wed Mar 21 11:00:20 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:00:20 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:00:20 2012] [debug] 200 OK (0.023654s, 42.276/s).
+[Wed Mar 21 11:00:21 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:00:21 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:00:21 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:00:21 2012] [debug] 404 Not Found (0.021943s, 45.573/s).
+[Wed Mar 21 11:00:41 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:00:41 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:00:41 2012] [debug] 200 OK (0.043327s, 23.080/s).
+[Wed Mar 21 11:00:41 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:00:41 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:00:41 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:00:41 2012] [debug] 404 Not Found (0.010496s, 95.274/s).
+[Wed Mar 21 11:00:48 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:00:48 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:00:48 2012] [debug] 200 OK (0.029710s, 33.659/s).
+[Wed Mar 21 11:00:49 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:00:49 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:00:49 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:00:49 2012] [debug] 404 Not Found (0.021063s, 47.477/s).
+[Wed Mar 21 11:01:01 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:01:01 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:01:01 2012] [debug] 200 OK (0.026974s, 37.073/s).
+[Wed Mar 21 11:01:01 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:01:01 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:01:01 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:01:01 2012] [debug] 404 Not Found (0.011210s, 89.206/s).
+[Wed Mar 21 11:01:40 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:01:40 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:01:40 2012] [debug] 200 OK (0.026314s, 38.003/s).
+[Wed Mar 21 11:01:41 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:01:41 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:01:41 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:01:41 2012] [debug] 404 Not Found (0.021524s, 46.460/s).
+[Wed Mar 21 11:01:55 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:01:55 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:01:55 2012] [debug] 200 OK (0.027862s, 35.891/s).
+[Wed Mar 21 11:01:55 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:01:55 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:01:55 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:01:55 2012] [debug] 404 Not Found (0.010238s, 97.675/s).
+[Wed Mar 21 11:02:46 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:02:46 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:02:46 2012] [debug] 200 OK (0.025713s, 38.891/s).
+[Wed Mar 21 11:02:47 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:02:47 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:02:47 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:02:47 2012] [debug] 404 Not Found (0.009676s, 103.348/s).
+[Wed Mar 21 11:03:26 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:03:26 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:03:26 2012] [debug] 200 OK (0.028087s, 35.604/s).
+[Wed Mar 21 11:03:26 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:03:26 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:03:26 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:03:26 2012] [debug] 404 Not Found (0.009504s, 105.219/s).
+[Wed Mar 21 11:03:29 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:03:29 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:03:29 2012] [debug] 200 OK (0.020806s, 48.063/s).
+[Wed Mar 21 11:03:29 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:03:29 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:03:29 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:03:29 2012] [debug] 404 Not Found (0.020008s, 49.980/s).
+[Wed Mar 21 11:04:07 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:04:07 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:04:07 2012] [debug] 200 OK (0.021813s, 45.844/s).
+[Wed Mar 21 11:04:08 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:04:08 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:04:08 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:04:08 2012] [debug] 404 Not Found (0.011104s, 90.058/s).
+[Wed Mar 21 11:04:54 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:04:54 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:04:54 2012] [debug] 200 OK (0.027879s, 35.869/s).
+[Wed Mar 21 11:04:55 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:04:55 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:04:55 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:04:55 2012] [debug] 404 Not Found (0.010132s, 98.697/s).
+[Wed Mar 21 11:05:05 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:05:05 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:05:05 2012] [debug] 200 OK (0.031624s, 31.622/s).
+[Wed Mar 21 11:05:06 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:05:06 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:05:06 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:05:06 2012] [debug] 404 Not Found (0.014146s, 70.691/s).
+[Wed Mar 21 11:05:28 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:05:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:05:28 2012] [debug] 200 OK (0.029854s, 33.496/s).
+[Wed Mar 21 11:05:28 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:05:28 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:05:28 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:05:28 2012] [debug] 404 Not Found (0.009690s, 103.199/s).
+[Wed Mar 21 11:05:41 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:05:41 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:05:41 2012] [debug] 200 OK (0.057207s, 17.480/s).
+[Wed Mar 21 11:05:41 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:05:41 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:05:41 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:05:41 2012] [debug] 404 Not Found (0.011949s, 83.689/s).
+[Wed Mar 21 11:06:07 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:06:07 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:06:07 2012] [debug] 200 OK (0.030982s, 32.277/s).
+[Wed Mar 21 11:06:08 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:06:08 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:06:08 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:06:08 2012] [debug] 404 Not Found (0.009985s, 100.150/s).
+[Wed Mar 21 11:06:56 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:06:56 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:06:56 2012] [debug] 200 OK (0.027420s, 36.470/s).
+[Wed Mar 21 11:06:56 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:06:56 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:06:56 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:06:56 2012] [debug] 404 Not Found (0.015615s, 64.041/s).
+[Wed Mar 21 11:06:58 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:06:58 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:06:58 2012] [debug] 200 OK (0.024660s, 40.552/s).
+[Wed Mar 21 11:06:58 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:06:58 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:06:58 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:06:58 2012] [debug] 404 Not Found (0.010745s, 93.067/s).
+[Wed Mar 21 11:07:00 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:00 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:07:00 2012] [debug] 200 OK (0.026268s, 38.069/s).
+[Wed Mar 21 11:07:01 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:01 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:07:01 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:07:01 2012] [debug] 404 Not Found (0.010363s, 96.497/s).
+[Wed Mar 21 11:07:14 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:07:14 2012] [debug] 200 OK (0.027449s, 36.431/s).
+[Wed Mar 21 11:07:14 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:14 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:07:14 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:07:14 2012] [debug] 404 Not Found (0.009719s, 102.891/s).
+[Wed Mar 21 11:07:26 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:26 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:07:26 2012] [debug] 200 OK (0.022542s, 44.362/s).
+[Wed Mar 21 11:07:27 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:27 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:07:27 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:07:27 2012] [debug] 404 Not Found (0.010960s, 91.241/s).
+[Wed Mar 21 11:07:37 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:37 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:07:37 2012] [debug] 200 OK (0.021755s, 45.966/s).
+[Wed Mar 21 11:07:38 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:38 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:07:38 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:07:38 2012] [debug] 404 Not Found (0.010441s, 95.776/s).
+[Wed Mar 21 11:07:55 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:07:55 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:07:55 2012] [debug] Rendering template "projectroots.html.ep".
+[Wed Mar 21 11:07:55 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 11:07:55 2012] [debug] 200 OK (0.014693s, 68.060/s).
+[Wed Mar 21 11:08:01 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:01 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:08:01 2012] [debug] 200 OK (0.002973s, 336.361/s).
+[Wed Mar 21 11:08:03 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:03 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:08:03 2012] [debug] Rendering template "projects.html.ep".
+[Wed Mar 21 11:08:03 2012] [debug] Rendering template "layouts/common.html.ep".
+[Wed Mar 21 11:08:03 2012] [debug] 200 OK (0.023436s, 42.669/s).
+[Wed Mar 21 11:08:23 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:23 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:08:23 2012] [debug] 200 OK (0.034368s, 29.097/s).
+[Wed Mar 21 11:08:39 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:39 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:08:39 2012] [debug] 200 OK (0.022824s, 43.814/s).
+[Wed Mar 21 11:08:40 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:40 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:08:40 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:08:40 2012] [debug] 404 Not Found (0.008514s, 117.454/s).
+[Wed Mar 21 11:08:45 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:45 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:08:45 2012] [debug] 200 OK (0.025647s, 38.991/s).
+[Wed Mar 21 11:08:46 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:08:46 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:08:46 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:08:46 2012] [debug] 404 Not Found (0.008509s, 117.523/s).
+[Wed Mar 21 11:09:03 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:09:03 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:09:03 2012] [debug] 200 OK (0.028833s, 34.682/s).
+[Wed Mar 21 11:09:04 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:09:04 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:09:04 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:09:04 2012] [debug] 404 Not Found (0.012052s, 82.974/s).
+[Wed Mar 21 11:09:06 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:09:06 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:09:06 2012] [debug] 200 OK (0.006587s, 151.814/s).
+[Wed Mar 21 11:09:15 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:09:15 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:09:15 2012] [debug] 200 OK (0.012384s, 80.749/s).
+[Wed Mar 21 11:09:17 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:09:17 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:09:17 2012] [debug] 200 OK (0.029417s, 33.994/s).
+[Wed Mar 21 11:09:17 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:09:17 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:09:17 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:09:17 2012] [debug] 404 Not Found (0.010549s, 94.796/s).
+[Wed Mar 21 11:10:06 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:10:06 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:10:06 2012] [debug] 200 OK (0.036066s, 27.727/s).
+[Wed Mar 21 11:10:07 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:10:07 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:10:07 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:10:07 2012] [debug] 404 Not Found (0.011306s, 88.449/s).
+[Wed Mar 21 11:10:15 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:10:15 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:10:15 2012] [debug] 200 OK (0.024311s, 41.134/s).
+[Wed Mar 21 11:10:16 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:10:16 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:10:16 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:10:16 2012] [debug] 404 Not Found (0.012900s, 77.519/s).
+[Wed Mar 21 11:10:59 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:10:59 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:10:59 2012] [debug] 200 OK (0.031661s, 31.585/s).
+[Wed Mar 21 11:11:00 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:11:00 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:11:00 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:11:00 2012] [debug] 404 Not Found (0.020778s, 48.128/s).
+[Wed Mar 21 11:11:05 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:11:05 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:11:05 2012] [debug] 200 OK (0.027636s, 36.185/s).
+[Wed Mar 21 11:11:06 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:11:06 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:11:06 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:11:06 2012] [debug] 404 Not Found (0.010342s, 96.693/s).
+[Wed Mar 21 11:11:11 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:11:11 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:11:11 2012] [debug] 200 OK (0.030202s, 33.110/s).
+[Wed Mar 21 11:11:11 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:11:11 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:11:11 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:11:11 2012] [debug] 404 Not Found (0.017321s, 57.733/s).
+[Wed Mar 21 11:12:35 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:12:35 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:12:35 2012] [debug] 200 OK (0.010361s, 96.516/s).
+[Wed Mar 21 11:12:38 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:12:38 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:12:38 2012] [debug] 200 OK (0.010840s, 92.251/s).
+[Wed Mar 21 11:13:44 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:13:44 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:13:44 2012] [debug] 200 OK (0.025524s, 39.179/s).
+[Wed Mar 21 11:13:52 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:13:52 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:13:52 2012] [debug] 200 OK (0.027159s, 36.820/s).
+[Wed Mar 21 11:13:53 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:13:53 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:13:53 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:13:53 2012] [debug] 404 Not Found (0.012382s, 80.762/s).
+[Wed Mar 21 11:14:14 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:14 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:14:14 2012] [debug] 200 OK (0.064526s, 15.498/s).
+[Wed Mar 21 11:14:14 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:14 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:14:14 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:14:14 2012] [debug] 404 Not Found (0.008432s, 118.596/s).
+[Wed Mar 21 11:14:23 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:23 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:14:23 2012] [debug] 200 OK (0.029807s, 33.549/s).
+[Wed Mar 21 11:14:23 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:23 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:14:23 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:14:23 2012] [debug] 404 Not Found (0.008780s, 113.895/s).
+[Wed Mar 21 11:14:36 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:36 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:14:36 2012] [debug] 200 OK (0.023052s, 43.380/s).
+[Wed Mar 21 11:14:37 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:37 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:14:37 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:14:37 2012] [debug] 404 Not Found (0.009457s, 105.742/s).
+[Wed Mar 21 11:14:41 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:41 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:14:41 2012] [debug] 200 OK (0.028065s, 35.632/s).
+[Wed Mar 21 11:14:42 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:42 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:14:42 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:14:42 2012] [debug] 404 Not Found (0.011666s, 85.719/s).
+[Wed Mar 21 11:14:47 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:47 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:14:47 2012] [debug] 200 OK (0.030622s, 32.656/s).
+[Wed Mar 21 11:14:48 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:48 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:14:48 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:14:48 2012] [debug] 404 Not Found (0.011059s, 90.424/s).
+[Wed Mar 21 11:14:54 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:54 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:14:54 2012] [debug] 200 OK (0.037337s, 26.783/s).
+[Wed Mar 21 11:14:54 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:14:54 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:14:54 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:14:54 2012] [debug] 404 Not Found (0.011385s, 87.835/s).
+[Wed Mar 21 11:15:12 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:12 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:13 2012] [debug] 200 OK (0.045798s, 21.835/s).
+[Wed Mar 21 11:15:13 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:13 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:15:13 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:15:13 2012] [debug] 404 Not Found (0.010616s, 94.197/s).
+[Wed Mar 21 11:15:15 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:15 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:15 2012] [debug] 200 OK (0.026683s, 37.477/s).
+[Wed Mar 21 11:15:15 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:15 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:15:15 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:15:15 2012] [debug] 404 Not Found (0.011369s, 87.958/s).
+[Wed Mar 21 11:15:26 2012] [debug] GET /shortlog (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:26 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:26 2012] [debug] Rendering template "shortlog.html.ep".
+[Wed Mar 21 11:15:26 2012] [debug] 200 OK (0.021267s, 47.021/s).
+[Wed Mar 21 11:15:27 2012] [debug] GET /perl.git/commit/41c3b428c4a3ce29a0f80c7f63eda133089137de (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:27 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:15:27 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:15:27 2012] [debug] 404 Not Found (0.017611s, 56.783/s).
+[Wed Mar 21 11:15:40 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:40 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:40 2012] [debug] 200 OK (0.004489s, 222.767/s).
+[Wed Mar 21 11:15:42 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:42 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:42 2012] [debug] 200 OK (0.010209s, 97.953/s).
+[Wed Mar 21 11:15:47 2012] [debug] GET / (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:47 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:47 2012] [debug] 200 OK (0.002504s, 399.361/s).
+[Wed Mar 21 11:15:49 2012] [debug] GET /projects (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:49 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:49 2012] [debug] 200 OK (0.009418s, 106.180/s).
+[Wed Mar 21 11:15:54 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:54 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:15:54 2012] [debug] 200 OK (0.041193s, 24.276/s).
+[Wed Mar 21 11:15:54 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:15:54 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:15:54 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:15:54 2012] [debug] 404 Not Found (0.007967s, 125.518/s).
+[Wed Mar 21 11:17:51 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:17:51 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:17:51 2012] [debug] 200 OK (0.030935s, 32.326/s).
+[Wed Mar 21 11:17:52 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:17:52 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:17:52 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:17:52 2012] [debug] 404 Not Found (0.010496s, 95.274/s).
+[Wed Mar 21 11:18:24 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:18:24 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:18:24 2012] [debug] 200 OK (0.052701s, 18.975/s).
+[Wed Mar 21 11:18:25 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:18:25 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:18:25 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:18:25 2012] [debug] 404 Not Found (0.010335s, 96.759/s).
+[Wed Mar 21 11:19:15 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:19:15 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:19:15 2012] [debug] 200 OK (0.027676s, 36.132/s).
+[Wed Mar 21 11:19:16 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:19:16 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:19:16 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:19:16 2012] [debug] 404 Not Found (0.011974s, 83.514/s).
+[Wed Mar 21 11:19:30 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:19:30 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:19:30 2012] [debug] 200 OK (0.023490s, 42.571/s).
+[Wed Mar 21 11:19:30 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:19:30 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:19:30 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:19:30 2012] [debug] 404 Not Found (0.011570s, 86.430/s).
+[Wed Mar 21 11:20:46 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:20:46 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:20:46 2012] [debug] 200 OK (0.030212s, 33.099/s).
+[Wed Mar 21 11:20:46 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:20:46 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:20:46 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:20:46 2012] [debug] 404 Not Found (0.009616s, 103.993/s).
+[Wed Mar 21 11:20:52 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:20:52 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:20:52 2012] [debug] 200 OK (0.028420s, 35.186/s).
+[Wed Mar 21 11:20:53 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:20:53 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:20:53 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:20:53 2012] [debug] 404 Not Found (0.006840s, 146.199/s).
+[Wed Mar 21 11:21:28 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:21:28 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:21:28 2012] [debug] 200 OK (0.030579s, 32.702/s).
+[Wed Mar 21 11:21:28 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:21:28 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:21:28 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:21:28 2012] [debug] 404 Not Found (0.016311s, 61.308/s).
+[Wed Mar 21 11:21:41 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:21:41 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:21:41 2012] [debug] 200 OK (0.025168s, 39.733/s).
+[Wed Mar 21 11:21:42 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:21:42 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:21:42 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:21:42 2012] [debug] 404 Not Found (0.010505s, 95.193/s).
+[Wed Mar 21 11:23:26 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:23:26 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:23:26 2012] [debug] 200 OK (0.029107s, 34.356/s).
+[Wed Mar 21 11:23:26 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:23:26 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:23:26 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:23:26 2012] [debug] 404 Not Found (0.008884s, 112.562/s).
+[Wed Mar 21 11:24:16 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:24:16 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:24:16 2012] [debug] 200 OK (0.033858s, 29.535/s).
+[Wed Mar 21 11:24:17 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:24:17 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:24:17 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:24:17 2012] [debug] 404 Not Found (0.015901s, 62.889/s).
+[Wed Mar 21 11:25:35 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:25:35 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:25:35 2012] [debug] 200 OK (0.023752s, 42.102/s).
+[Wed Mar 21 11:25:35 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:25:35 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:25:35 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:25:35 2012] [debug] 404 Not Found (0.010162s, 98.406/s).
+[Wed Mar 21 11:25:45 2012] [debug] GET /summary (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:25:45 2012] [debug] Dispatching callback.
+[Wed Mar 21 11:25:45 2012] [debug] 200 OK (0.030491s, 32.797/s).
+[Wed Mar 21 11:25:46 2012] [debug] GET /booking.gif (Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11).
+[Wed Mar 21 11:25:46 2012] [debug] Template "not_found.development.html.ep" not found.
+[Wed Mar 21 11:25:46 2012] [debug] Template "not_found.html.ep" not found.
+[Wed Mar 21 11:25:46 2012] [debug] 404 Not Found (0.010672s, 93.703/s).

@@ -1,6 +1,5 @@
 use 5.010001;
 use Mojolicious::Lite;
-use Encode qw/encode decode/;
 use Fcntl ':mode';
 use File::Find 'find';
 use File::Basename 'basename';
@@ -8,6 +7,10 @@ use Time::HiRes qw/gettimeofday tv_interval/;
 use Carp 'croak';
 use utf8;
 use Validator::Custom;
+
+use Encode qw/encode decode/;
+sub e($) { encode('UTF-8', shift) }
+
 
 my $validator = Validator::Custom->new;
 
@@ -290,8 +293,6 @@ sub git_get_file_or_project_config {
   }
   return $conf;
 }
-
-sub e($) { encode('UTF-8', shift) }
 
 sub git_get_projects_list {
   my $filter = shift || '';
