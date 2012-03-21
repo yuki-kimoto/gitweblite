@@ -46,7 +46,7 @@ our $projects_list_group_categories = 0;
 our $project_maxdepth = 1;
 our $cgi;
 our @git_base_url_list = grep { $_ ne '' } ("");
-
+our @diff_opts = ('-M');
 
 our %feature = (
   'blame' => {
@@ -216,6 +216,8 @@ get '/summary' => sub {
   }  
   
   $self->render(
+    root => $root,
+    project => $project,
     project_description => $project_description,
     project_owner => $project_owner,
     last_change => $last_change,
@@ -390,14 +392,69 @@ get '/commit' => sub {
     $ref_names->{head}{$head->{id}} = $head->{name};
   }  
   
-  warn $self->dumper(\%commit);
+  my $parent = $commit{parent};
+  my $parents = $commit{parents};
+  if (!defined $parent) {
+    $parent = "--root";
+  }
+  
+  my @command = (
+    git($root, $project),
+    "diff-tree", '-r',
+    "--no-commit-id",
+    @diff_opts,
+    (@$parents <= 1 ? $parent : '-c'),
+    $id,
+    "--"
+  );
+  
+  open my $fd, "-|", @command
+    or die "Open git-diff-tree failed";
+  
+  my @difftree = map { chomp; $_ } <$fd>;
+  close $fd or die "Reading git-diff-tree failed";
+  
+  my $diffs = [];
+  my @parents = @$parents;
+  for my $line (@difftree) {
+    my $diff = parsed_difftree_line($line);
 
+    my ($to_mode_oct, $to_mode_str, $to_file_type);
+    my ($from_mode_oct, $from_mode_str, $from_file_type);
+    if ($diff->{'to_mode'} ne ('0' x 6)) {
+      $to_mode_oct = oct $diff->{'to_mode'};
+      if (S_ISREG($to_mode_oct)) { # only for regular file
+        $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
+      }
+      $to_file_type = file_type($diff->{'to_mode'});
+    }
+    if ($diff->{'from_mode'} ne ('0' x 6)) {
+      $from_mode_oct = oct $diff->{'from_mode'};
+      if (S_ISREG($from_mode_oct)) { # only for regular file
+        $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
+      }
+      $from_file_type = file_type($diff->{'from_mode'});
+    }
+    
+    $diff->{to_mode_str} = $to_mode_str;
+    $diff->{to_mode_oct} = $to_mode_oct;
+    $diff->{to_file_type} = $to_file_type;
+    $diff->{from_mode_str} = $from_mode_str;
+    $diff->{from_mode_oct} = $from_mode_oct;
+    $diff->{from_file_type} = $from_file_type;
+
+    push @$diffs, $diff;
+  }
+
+  # my $ref = format_ref_marker($refs, $commit{'id'});
+  
   $self->render(
     root => $root,
     project => $project,
     id => $id,
     commit => \%commit,
-    ref_names => $ref_names
+    ref_names => $ref_names,
+    diffs => $diffs
   );
 };
 
@@ -431,10 +488,6 @@ get '/blobdiff' => sub {
 
 get '/history' => sub {
   shift->render(text => 'history');
-};
-
-get '/blame' => sub {
-  shift->render(text => 'blame');
 };
 
 sub get_projects {
@@ -572,17 +625,6 @@ our $default_text_plain_charset  = undef;
 # file to use for guessing MIME types before trying /etc/mime.types
 # (relative to the current git repository)
 our $mimetypes_file = undef;
-
-
-# rename detection options for git-diff and git-diff-tree
-# - default is '-M', with the cost proportional to
-#   (number of removed files) * (number of new files).
-# - more costly is '-C' (which implies '-M'), with the cost proportional to
-#   (number of changed files + number of removed files) * (number of new files)
-# - even more costly is '-C', '--find-copies-harder' with cost
-#   (number of files in the original tree) * (number of new files)
-# - one might want to include '-B' option, e.g. '-B', '-M'
-our @diff_opts = ('-M'); # taken from git_commit
 
 # Disables features that would allow repository owners to inject script into
 # the gitweb domain.
@@ -881,157 +923,6 @@ our %actions = (
 our %allowed_options = (
   "--no-merges" => [ qw(rss atom log shortlog history) ],
 );
-
-# now read PATH_INFO and update the parameter list for missing parameters
-sub evaluate_path_info {
-  return if defined $input_params{'project'};
-  return if !$path_info;
-  $path_info =~ s,^/+,,;
-  return if !$path_info;
-
-  # find which part of PATH_INFO is project
-  my $project = $path_info;
-  $project =~ s,/+$,,;
-  while ($project && !check_head_link("$projectroot/$project")) {
-    $project =~ s,/*[^/]*$,,;
-  }
-  return unless $project;
-  $input_params{'project'} = $project;
-
-  # do not change any parameters if an action is given using the query string
-  return if $input_params{'action'};
-  $path_info =~ s,^\Q$project\E/*,,;
-
-  # next, check if we have an action
-  my $action = $path_info;
-  $action =~ s,/.*$,,;
-  if (exists $actions{$action}) {
-    $path_info =~ s,^$action/*,,;
-    $input_params{'action'} = $action;
-  }
-
-  # list of actions that want hash_base instead of hash, but can have no
-  # pathname (f) parameter
-  my @wants_base = (
-    'tree',
-    'history',
-  );
-
-  # we want to catch, among others
-  # [$hash_parent_base[:$file_parent]..]$hash_parent[:$file_name]
-  my ($parentrefname, $parentpathname, $refname, $pathname) =
-    ($path_info =~ /^(?:(.+?)(?::(.+))?\.\.)?([^:]+?)?(?::(.+))?$/);
-
-  # first, analyze the 'current' part
-  if (defined $pathname) {
-    # we got "branch:filename" or "branch:dir/"
-    # we could use git_get_type(branch:pathname), but:
-    # - it needs $git_dir
-    # - it does a git() call
-    # - the convention of terminating directories with a slash
-    #   makes it superfluous
-    # - embedding the action in the PATH_INFO would make it even
-    #   more superfluous
-    $pathname =~ s,^/+,,;
-    if (!$pathname || substr($pathname, -1) eq "/") {
-      $input_params{'action'} ||= "tree";
-      $pathname =~ s,/$,,;
-    } else {
-      # the default action depends on whether we had parent info
-      # or not
-      if ($parentrefname) {
-        $input_params{'action'} ||= "blobdiff_plain";
-      } else {
-        $input_params{'action'} ||= "blob_plain";
-      }
-    }
-    $input_params{'hash_base'} ||= $refname;
-    $input_params{'file_name'} ||= $pathname;
-  } elsif (defined $refname) {
-    # we got "branch". In this case we have to choose if we have to
-    # set hash or hash_base.
-    #
-    # Most of the actions without a pathname only want hash to be
-    # set, except for the ones specified in @wants_base that want
-    # hash_base instead. It should also be noted that hand-crafted
-    # links having 'history' as an action and no pathname or hash
-    # set will fail, but that happens regardless of PATH_INFO.
-    if (defined $parentrefname) {
-      # if there is parent let the default be 'shortlog' action
-      # (for http://git.example.com/repo.git/A..B links); if there
-      # is no parent, dispatch will detect type of object and set
-      # action appropriately if required (if action is not set)
-      $input_params{'action'} ||= "shortlog";
-    }
-    if ($input_params{'action'} &&
-        grep { $_ eq $input_params{'action'} } @wants_base) {
-      $input_params{'hash_base'} ||= $refname;
-    } else {
-      $input_params{'hash'} ||= $refname;
-    }
-  }
-
-  # next, handle the 'parent' part, if present
-  if (defined $parentrefname) {
-    # a missing pathspec defaults to the 'current' filename, allowing e.g.
-    # someproject/blobdiff/oldrev..newrev:/filename
-    if ($parentpathname) {
-      $parentpathname =~ s,^/+,,;
-      $parentpathname =~ s,/$,,;
-      $input_params{'file_parent'} ||= $parentpathname;
-    } else {
-      $input_params{'file_parent'} ||= $input_params{'file_name'};
-    }
-    # we assume that hash_parent_base is wanted if a path was specified,
-    # or if the action wants hash_base instead of hash
-    if (defined $input_params{'file_parent'} ||
-      grep { $_ eq $input_params{'action'} } @wants_base) {
-      $input_params{'hash_parent_base'} ||= $parentrefname;
-    } else {
-      $input_params{'hash_parent'} ||= $parentrefname;
-    }
-  }
-
-  # for the snapshot action, we allow URLs in the form
-  # $project/snapshot/$hash.ext
-  # where .ext determines the snapshot and gets removed from the
-  # passed $refname to provide the $hash.
-  #
-  # To be able to tell that $refname includes the format extension, we
-  # require the following two conditions to be satisfied:
-  # - the hash input parameter MUST have been set from the $refname part
-  #   of the URL (i.e. they must be equal)
-  # - the snapshot format MUST NOT have been defined already (e.g. from
-  #   CGI parameter sf)
-  # It's also useless to try any matching unless $refname has a dot,
-  # so we check for that too
-  if (defined $input_params{'action'} &&
-    $input_params{'action'} eq 'snapshot' &&
-    defined $refname && index($refname, '.') != -1 &&
-    $refname eq $input_params{'hash'} &&
-    !defined $input_params{'snapshot_format'}) {
-    # We loop over the known snapshot formats, checking for
-    # extensions. Allowed extensions are both the defined suffix
-    # (which includes the initial dot already) and the snapshot
-    # format key itself, with a prepended dot
-    while (my ($fmt, $opt) = each %known_snapshot_formats) {
-      my $hash = $refname;
-      unless ($hash =~ s/(\Q$opt->{'suffix'}\E|\Q.$fmt\E)$//) {
-        next;
-      }
-      my $sfx = $1;
-      # a valid suffix was found, so set the snapshot format
-      # and reset the hash parameter
-      $input_params{'snapshot_format'} = $fmt;
-      $input_params{'hash'} = $hash;
-      # we also set the format suffix to the one requested
-      # in the URL: this way a request for e.g. .tgz returns
-      # a .tgz instead of a .tar.gz
-      $known_snapshot_formats{$fmt}{'suffix'} = $sfx;
-      last;
-    }
-  }
-}
 
 our ($action, $project, $file_name, $file_parent, $hash, $hash_parent, $hash_base,
      $hash_parent_base, @extra_options, $page, $searchtype, $search_use_regexp,
@@ -3011,7 +2902,7 @@ sub git_print_tree_entry {
 sub fill_from_file_info {
   my ($diff, @parents) = @_;
 
-  $diff->{'from_file'} = [ ];
+  $diff->{'from_file'} = [];
   $diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
   for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
     if ($diff->{'status'}[$i] eq 'R' ||
@@ -3040,315 +2931,6 @@ sub is_patch_split {
 
   return defined $diffinfo && defined $patchinfo
     && $diffinfo->{'to_file'} eq $patchinfo->{'to_file'};
-}
-
-
-sub git_difftree_body {
-  my ($difftree, $hash, @parents) = @_;
-  my ($parent) = $parents[0];
-  my $have_blame = gitweb_check_feature('blame');
-  print "<div class=\"list_head\">\n";
-  if ($#{$difftree} > 10) {
-    print(($#{$difftree} + 1) . " files changed:\n");
-  }
-  print "</div>\n";
-
-  print "<table class=\"" .
-        (@parents > 1 ? "combined " : "") .
-        "diff_tree\">\n";
-
-  # header only for combined diff in 'commitdiff' view
-  my $has_header = @$difftree && @parents > 1 && $action eq 'commitdiff';
-  if ($has_header) {
-    # table header
-    print "<thead><tr>\n" .
-           "<th></th><th></th>\n"; # filename, patchN link
-    for (my $i = 0; $i < @parents; $i++) {
-      my $par = $parents[$i];
-      print "<th>" .
-            $cgi->a({-href => href(action=>"commitdiff",
-                                   hash=>$hash, hash_parent=>$par),
-                     -title => 'commitdiff to parent number ' .
-                                ($i+1) . ': ' . substr($par,0,7)},
-                    $i+1) .
-            "&nbsp;</th>\n";
-    }
-    print "</tr></thead>\n<tbody>\n";
-  }
-
-  my $alternate = 1;
-  my $patchno = 0;
-  foreach my $line (@{$difftree}) {
-    my $diff = parsed_difftree_line($line);
-
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-
-    if (exists $diff->{'nparents'}) { # combined diff
-
-      fill_from_file_info($diff, @parents)
-        unless exists $diff->{'from_file'};
-
-      if (!is_deleted($diff)) {
-        # file exists in the result (child) commit
-        print "<td>" .
-              $cgi->a({-href => href(action=>"blob", hash=>$diff->{'to_id'},
-                                     file_name=>$diff->{'to_file'},
-                                     hash_base=>$hash),
-                      -class => "list"}, esc_path($diff->{'to_file'})) .
-              "</td>\n";
-      } else {
-        print "<td>" .
-              esc_path($diff->{'to_file'}) .
-              "</td>\n";
-      }
-
-      if ($action eq 'commitdiff') {
-        # link to patch
-        $patchno++;
-        print "<td class=\"link\">" .
-              $cgi->a({-href => href(-anchor=>"patch$patchno")},
-                      "patch") .
-              " | " .
-              "</td>\n";
-      }
-
-      my $has_history = 0;
-      my $not_deleted = 0;
-      for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
-        my $hash_parent = $parents[$i];
-        my $from_hash = $diff->{'from_id'}[$i];
-        my $from_path = $diff->{'from_file'}[$i];
-        my $status = $diff->{'status'}[$i];
-
-        $has_history ||= ($status ne 'A');
-        $not_deleted ||= ($status ne 'D');
-
-        if ($status eq 'A') {
-          print "<td  class=\"link\" align=\"right\"> | </td>\n";
-        } elsif ($status eq 'D') {
-          print "<td class=\"link\">" .
-                $cgi->a({-href => href(action=>"blob",
-                                       hash_base=>$hash,
-                                       hash=>$from_hash,
-                                       file_name=>$from_path)},
-                        "blob" . ($i+1)) .
-                " | </td>\n";
-        } else {
-          if ($diff->{'to_id'} eq $from_hash) {
-            print "<td class=\"link nochange\">";
-          } else {
-            print "<td class=\"link\">";
-          }
-          print $cgi->a({-href => href(action=>"blobdiff",
-                                       hash=>$diff->{'to_id'},
-                                       hash_parent=>$from_hash,
-                                       hash_base=>$hash,
-                                       hash_parent_base=>$hash_parent,
-                                       file_name=>$diff->{'to_file'},
-                                       file_parent=>$from_path)},
-                        "diff" . ($i+1)) .
-                " | </td>\n";
-        }
-      }
-
-      print "<td class=\"link\">";
-      if ($not_deleted) {
-        print $cgi->a({-href => href(action=>"blob",
-                                     hash=>$diff->{'to_id'},
-                                     file_name=>$diff->{'to_file'},
-                                     hash_base=>$hash)},
-                      "blob");
-        print " | " if ($has_history);
-      }
-      if ($has_history) {
-        print $cgi->a({-href => href(action=>"history",
-                                     file_name=>$diff->{'to_file'},
-                                     hash_base=>$hash)},
-                      "history");
-      }
-      print "</td>\n";
-
-      print "</tr>\n";
-      next; # instead of 'else' clause, to avoid extra indent
-    }
-    # else ordinary diff
-
-    my ($to_mode_oct, $to_mode_str, $to_file_type);
-    my ($from_mode_oct, $from_mode_str, $from_file_type);
-    if ($diff->{'to_mode'} ne ('0' x 6)) {
-      $to_mode_oct = oct $diff->{'to_mode'};
-      if (S_ISREG($to_mode_oct)) { # only for regular file
-        $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
-      }
-      $to_file_type = file_type($diff->{'to_mode'});
-    }
-    if ($diff->{'from_mode'} ne ('0' x 6)) {
-      $from_mode_oct = oct $diff->{'from_mode'};
-      if (S_ISREG($from_mode_oct)) { # only for regular file
-        $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
-      }
-      $from_file_type = file_type($diff->{'from_mode'});
-    }
-
-    if ($diff->{'status'} eq "A") { # created
-      my $mode_chng = "<span class=\"file_status new\">[new $to_file_type";
-      $mode_chng   .= " with mode: $to_mode_str" if $to_mode_str;
-      $mode_chng   .= "]</span>";
-      print "<td>";
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'to_id'},
-                                   hash_base=>$hash, file_name=>$diff->{'file'}),
-                    -class => "list"}, esc_path($diff->{'file'}));
-      print "</td>\n";
-      print "<td>$mode_chng</td>\n";
-      print "<td class=\"link\">";
-      if ($action eq 'commitdiff') {
-        # link to patch
-        $patchno++;
-        print $cgi->a({-href => href(-anchor=>"patch$patchno")},
-                      "patch") .
-              " | ";
-      }
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'to_id'},
-                                   hash_base=>$hash, file_name=>$diff->{'file'})},
-                    "blob");
-      print "</td>\n";
-
-    } elsif ($diff->{'status'} eq "D") { # deleted
-      my $mode_chng = "<span class=\"file_status deleted\">[deleted $from_file_type]</span>";
-      print "<td>";
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'from_id'},
-                                   hash_base=>$parent, file_name=>$diff->{'file'}),
-                     -class => "list"}, esc_path($diff->{'file'}));
-      print "</td>\n";
-      print "<td>$mode_chng</td>\n";
-      print "<td class=\"link\">";
-      if ($action eq 'commitdiff') {
-        # link to patch
-        $patchno++;
-        print $cgi->a({-href => href(-anchor=>"patch$patchno")},
-                      "patch") .
-              " | ";
-      }
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'from_id'},
-                                   hash_base=>$parent, file_name=>$diff->{'file'})},
-                    "blob") . " | ";
-      if ($have_blame) {
-        print $cgi->a({-href => href(action=>"blame", hash_base=>$parent,
-                                     file_name=>$diff->{'file'})},
-                      "blame") . " | ";
-      }
-      print $cgi->a({-href => href(action=>"history", hash_base=>$parent,
-                                   file_name=>$diff->{'file'})},
-                    "history");
-      print "</td>\n";
-
-    } elsif ($diff->{'status'} eq "M" || $diff->{'status'} eq "T") { # modified, or type changed
-      my $mode_chnge = "";
-      if ($diff->{'from_mode'} != $diff->{'to_mode'}) {
-        $mode_chnge = "<span class=\"file_status mode_chnge\">[changed";
-        if ($from_file_type ne $to_file_type) {
-          $mode_chnge .= " from $from_file_type to $to_file_type";
-        }
-        if (($from_mode_oct & 0777) != ($to_mode_oct & 0777)) {
-          if ($from_mode_str && $to_mode_str) {
-            $mode_chnge .= " mode: $from_mode_str->$to_mode_str";
-          } elsif ($to_mode_str) {
-            $mode_chnge .= " mode: $to_mode_str";
-          }
-        }
-        $mode_chnge .= "]</span>\n";
-      }
-      print "<td>";
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'to_id'},
-                                   hash_base=>$hash, file_name=>$diff->{'file'}),
-                    -class => "list"}, esc_path($diff->{'file'}));
-      print "</td>\n";
-      print "<td>$mode_chnge</td>\n";
-      print "<td class=\"link\">";
-      if ($action eq 'commitdiff') {
-        # link to patch
-        $patchno++;
-        print $cgi->a({-href => href(-anchor=>"patch$patchno")},
-                      "patch") .
-              " | ";
-      } elsif ($diff->{'to_id'} ne $diff->{'from_id'}) {
-        # "commit" view and modified file (not onlu mode changed)
-        print $cgi->a({-href => href(action=>"blobdiff",
-                                     hash=>$diff->{'to_id'}, hash_parent=>$diff->{'from_id'},
-                                     hash_base=>$hash, hash_parent_base=>$parent,
-                                     file_name=>$diff->{'file'})},
-                      "diff") .
-              " | ";
-      }
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'to_id'},
-                                   hash_base=>$hash, file_name=>$diff->{'file'})},
-                     "blob") . " | ";
-      if ($have_blame) {
-        print $cgi->a({-href => href(action=>"blame", hash_base=>$hash,
-                                     file_name=>$diff->{'file'})},
-                      "blame") . " | ";
-      }
-      print $cgi->a({-href => href(action=>"history", hash_base=>$hash,
-                                   file_name=>$diff->{'file'})},
-                    "history");
-      print "</td>\n";
-
-    } elsif ($diff->{'status'} eq "R" || $diff->{'status'} eq "C") { # renamed or copied
-      my %status_name = ('R' => 'moved', 'C' => 'copied');
-      my $nstatus = $status_name{$diff->{'status'}};
-      my $mode_chng = "";
-      if ($diff->{'from_mode'} != $diff->{'to_mode'}) {
-        # mode also for directories, so we cannot use $to_mode_str
-        $mode_chng = sprintf(", mode: %04o", $to_mode_oct & 0777);
-      }
-      print "<td>" .
-            $cgi->a({-href => href(action=>"blob", hash_base=>$hash,
-                                   hash=>$diff->{'to_id'}, file_name=>$diff->{'to_file'}),
-                    -class => "list"}, esc_path($diff->{'to_file'})) . "</td>\n" .
-            "<td><span class=\"file_status $nstatus\">[$nstatus from " .
-            $cgi->a({-href => href(action=>"blob", hash_base=>$parent,
-                                   hash=>$diff->{'from_id'}, file_name=>$diff->{'from_file'}),
-                    -class => "list"}, esc_path($diff->{'from_file'})) .
-            " with " . (int $diff->{'similarity'}) . "% similarity$mode_chng]</span></td>\n" .
-            "<td class=\"link\">";
-      if ($action eq 'commitdiff') {
-        # link to patch
-        $patchno++;
-        print $cgi->a({-href => href(-anchor=>"patch$patchno")},
-                      "patch") .
-              " | ";
-      } elsif ($diff->{'to_id'} ne $diff->{'from_id'}) {
-        # "commit" view and modified file (not only pure rename or copy)
-        print $cgi->a({-href => href(action=>"blobdiff",
-                                     hash=>$diff->{'to_id'}, hash_parent=>$diff->{'from_id'},
-                                     hash_base=>$hash, hash_parent_base=>$parent,
-                                     file_name=>$diff->{'to_file'}, file_parent=>$diff->{'from_file'})},
-                      "diff") .
-              " | ";
-      }
-      print $cgi->a({-href => href(action=>"blob", hash=>$diff->{'to_id'},
-                                   hash_base=>$parent, file_name=>$diff->{'to_file'})},
-                    "blob") . " | ";
-      if ($have_blame) {
-        print $cgi->a({-href => href(action=>"blame", hash_base=>$hash,
-                                     file_name=>$diff->{'to_file'})},
-                      "blame") . " | ";
-      }
-      print $cgi->a({-href => href(action=>"history", hash_base=>$hash,
-                                  file_name=>$diff->{'to_file'})},
-                    "history");
-      print "</td>\n";
-
-    } # we should not encounter Unmerged (U) or Unknown (X) status
-    print "</tr>\n";
-  }
-  print "</tbody>" if $has_header;
-  print "</table>\n";
 }
 
 sub print_sidebyside_diff_chunk {
@@ -3609,6 +3191,174 @@ sub git_patchset_body {
   }
 
   print "</div>\n"; # class="patchset"
+}
+
+sub href {
+	my %params = @_;
+	# default is to use -absolute url() i.e. $my_uri
+	my $href = $params{-full} ? $my_url : $my_uri;
+
+	# implicit -replay, must be first of implicit params
+	$params{-replay} = 1 if (keys %params == 1 && $params{-anchor});
+
+	$params{'project'} = $project unless exists $params{'project'};
+
+	if ($params{-replay}) {
+		while (my ($name, $symbol) = each %cgi_param_mapping) {
+			if (!exists $params{$name}) {
+				$params{$name} = $input_params{$name};
+			}
+		}
+	}
+
+	my $use_pathinfo = gitweb_check_feature('pathinfo');
+	if (defined $params{'project'} &&
+	    (exists $params{-path_info} ? $params{-path_info} : $use_pathinfo)) {
+		# try to put as many parameters as possible in PATH_INFO:
+		#   - project name
+		#   - action
+		#   - hash_parent or hash_parent_base:/file_parent
+		#   - hash or hash_base:/filename
+		#   - the snapshot_format as an appropriate suffix
+
+		# When the script is the root DirectoryIndex for the domain,
+		# $href here would be something like http://gitweb.example.com/
+		# Thus, we strip any trailing / from $href, to spare us double
+		# slashes in the final URL
+		$href =~ s,/$,,;
+
+		# Then add the project name, if present
+		$href .= "/".esc_path_info($params{'project'});
+		delete $params{'project'};
+
+		# since we destructively absorb parameters, we keep this
+		# boolean that remembers if we're handling a snapshot
+		my $is_snapshot = $params{'action'} eq 'snapshot';
+
+		# Summary just uses the project path URL, any other action is
+		# added to the URL
+		if (defined $params{'action'}) {
+			$href .= "/".esc_path_info($params{'action'})
+				unless $params{'action'} eq 'summary';
+			delete $params{'action'};
+		}
+
+		# Next, we put hash_parent_base:/file_parent..hash_base:/file_name,
+		# stripping nonexistent or useless pieces
+		$href .= "/" if ($params{'hash_base'} || $params{'hash_parent_base'}
+			|| $params{'hash_parent'} || $params{'hash'});
+		if (defined $params{'hash_base'}) {
+			if (defined $params{'hash_parent_base'}) {
+				$href .= esc_path_info($params{'hash_parent_base'});
+				# skip the file_parent if it's the same as the file_name
+				if (defined $params{'file_parent'}) {
+					if (defined $params{'file_name'} && $params{'file_parent'} eq $params{'file_name'}) {
+						delete $params{'file_parent'};
+					} elsif ($params{'file_parent'} !~ /\.\./) {
+						$href .= ":/".esc_path_info($params{'file_parent'});
+						delete $params{'file_parent'};
+					}
+				}
+				$href .= "..";
+				delete $params{'hash_parent'};
+				delete $params{'hash_parent_base'};
+			} elsif (defined $params{'hash_parent'}) {
+				$href .= esc_path_info($params{'hash_parent'}). "..";
+				delete $params{'hash_parent'};
+			}
+
+			$href .= esc_path_info($params{'hash_base'});
+			if (defined $params{'file_name'} && $params{'file_name'} !~ /\.\./) {
+				$href .= ":/".esc_path_info($params{'file_name'});
+				delete $params{'file_name'};
+			}
+			delete $params{'hash'};
+			delete $params{'hash_base'};
+		} elsif (defined $params{'hash'}) {
+			$href .= esc_path_info($params{'hash'});
+			delete $params{'hash'};
+		}
+
+		# If the action was a snapshot, we can absorb the
+		# snapshot_format parameter too
+		if ($is_snapshot) {
+			my $fmt = $params{'snapshot_format'};
+			# snapshot_format should always be defined when href()
+			# is called, but just in case some code forgets, we
+			# fall back to the default
+			$fmt ||= $snapshot_fmts[0];
+			$href .= $known_snapshot_formats{$fmt}{'suffix'};
+			delete $params{'snapshot_format'};
+		}
+	}
+
+	# now encode the parameters explicitly
+	my @result = ();
+	for (my $i = 0; $i < @cgi_param_mapping; $i += 2) {
+		my ($name, $symbol) = ($cgi_param_mapping[$i], $cgi_param_mapping[$i+1]);
+		if (defined $params{$name}) {
+			if (ref($params{$name}) eq "ARRAY") {
+				foreach my $par (@{$params{$name}}) {
+					push @result, $symbol . "=" . esc_param($par);
+				}
+			} else {
+				push @result, $symbol . "=" . esc_param($params{$name});
+			}
+		}
+	}
+	$href .= "?" . join(';', @result) if scalar @result;
+
+	# final transformation: trailing spaces must be escaped (URI-encoded)
+	$href =~ s/(\s+)$/CGI::escape($1)/e;
+
+	if ($params{-anchor}) {
+		$href .= "#".esc_param($params{-anchor});
+	}
+
+	return $href;
+}
+
+sub esc_param {
+	my $str = shift;
+	return undef unless defined $str;
+	$str =~ s/([^A-Za-z0-9\-_.~()\/:@ ]+)/CGI::escape($1)/eg;
+	$str =~ s/ /\+/g;
+	return $str;
+}
+
+sub unquote {
+	my $str = shift;
+
+	sub unq {
+		my $seq = shift;
+		my %es = ( # character escape codes, aka escape sequences
+			't' => "\t",   # tab            (HT, TAB)
+			'n' => "\n",   # newline        (NL)
+			'r' => "\r",   # return         (CR)
+			'f' => "\f",   # form feed      (FF)
+			'b' => "\b",   # backspace      (BS)
+			'a' => "\a",   # alarm (bell)   (BEL)
+			'e' => "\e",   # escape         (ESC)
+			'v' => "\013", # vertical tab   (VT)
+		);
+
+		if ($seq =~ m/^[0-7]{1,3}$/) {
+			# octal char sequence
+			return chr(oct($seq));
+		} elsif (exists $es{$seq}) {
+			# C escape sequence, aka character escape code
+			return $es{$seq};
+		}
+		# quoted ordinary character
+		return $seq;
+	}
+
+	if ($str =~ m/^"(.*)"$/) {
+		# needs unquoting
+		$str = $1;
+		$str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
+	}
+	return $str;
 }
 
 sub sort_projects_list {

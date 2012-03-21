@@ -105,8 +105,14 @@
   </div>
   <div class="list_head">
   </div>
-  <table class="diff_tree">
-    <tr class="dark">
+  % my $parents = $commit->{parents};
+  <table class="<%= @$parents > 1 ? 'combined' : 'diff_tree' %>"">
+    
+    % for my $diff (@$diffs) {
+      
+    % }
+    
+    <tr>
       <td>
         <a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
           lib/charnames.pm
@@ -120,10 +126,6 @@
         |
         <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
           blob
-        </a>
-        |
-        <a href="/perl.git/blame/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
-          blame
         </a>
         |
         <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
