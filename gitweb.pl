@@ -200,7 +200,15 @@ get '/summary' => sub {
   # Commits
   my $commits = $head ? parse_commits_new($root, $project, $head, 17) : ();
   
-  warn $self->dumper($tags);
+  # Ref names
+  my $ref_names = {};
+  for my $tag (@$tags) {
+    $ref_names->{tag}{$tag->{id}} = $tag->{name};
+  }
+  for my $head (@$heads) {
+    $ref_names->{head}{$head->{id}} = $head->{name};
+  }  
+  warn $self->dumper($heads);
   
   $self->render(
     project_description => $project_description,
@@ -212,7 +220,8 @@ get '/summary' => sub {
     head => $head,
     heads => $heads,
     remotedata => \%remotedata,
-    forks => \@forks
+    forks => \@forks,
+    ref_names => $ref_names
   );
 };
 

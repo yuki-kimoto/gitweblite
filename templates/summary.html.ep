@@ -27,10 +27,12 @@
       </td>
     </tr>
   </table>
+  
   <div class="header">
     <a class="title" href="<%= url_for('/shortlog')->query($self->req->params->clone) %>">Shortlog</a>
   </div>
   <table class="shortlog">
+    
     % for my $commit (@$commits) {
       <tr>
         <td title="2012-03-20"><i><%= $commit->{age_string} %></i></td>
@@ -47,6 +49,17 @@
               % }
             % }
           </a>
+          % for my $type (qw/head tag/) {
+            % if (my $name = $ref_names->{$type}{$commit->{id}}) {
+              <span class="refs">
+                <span class="<%= $type %>" title="<%= $type %>s/<%= $name %>">
+                  <a href="<%= url_for('/shortlog')->query($self->req->params->clone)->query([$type => $name]) %>">
+                    <%= $name %>
+                  </a>
+                </span>
+              </span>
+            % }
+          % }
         </td>
         <td class="link">
           <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>">commit</a>
@@ -70,7 +83,7 @@
   </table>
   
   <div class="header">
-    <a class="title" href="<%= url_for('/tag')->query($self->req->params->clone) %>">Tags</a>
+    <a class="title" href="<%= url_for('/tags')->query($self->req->params->clone) %>">Tags</a>
   </div>
   <table class="tags">
     % for my $tag (@$tags) {
@@ -107,74 +120,16 @@
   </table>
   
   <div class="header">
-    <a class="title" href="/perl.git/heads">Heads</a>
+    <a class="title" href="<%= url_for('/heads')->query($self->req->params->clone) %>">Heads</a>
   </div>
   <table class="heads">
-  <tr class="dark">
-  <td><i>2 hours ago</i></td>
-  <td class="current_head"><a class="list name" href="/perl.git/shortlog/refs/heads/blead">blead</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/blead">shortlog</a> | <a href="/perl.git/log/refs/heads/blead">log</a> | <a href="/perl.git/tree/blead">tree</a></td>
-  </tr><tr class="light">
-  <td><i>6 hours ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/trie_absorb">smoke-me/trie_absorb</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/trie_absorb">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/trie_absorb">log</a> | <a href="/perl.git/tree/smoke-me/trie_absorb">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>7 hours ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/rt_111842">smoke-me/rt_111842</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/rt_111842">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/rt_111842">log</a> | <a href="/perl.git/tree/smoke-me/rt_111842">tree</a></td>
-  </tr><tr class="light">
-  <td><i>9 hours ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-smoke">smoke-me/khw-smoke</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-smoke">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-smoke">log</a> | <a href="/perl.git/tree/smoke-me/khw-smoke">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>2 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed-doc">tonyc/readline-fixed-doc</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed-doc">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/readline-fixed-doc">log</a> | <a href="/perl.git/tree/tonyc/readline-fixed-doc">tree</a></td>
-  </tr><tr class="light">
-  <td><i>3 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed">tonyc/readline-fixed</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/readline-fixed">log</a> | <a href="/perl.git/tree/tonyc/readline-fixed">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>4 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-fixed_record">smoke-me/khw-fixed_record</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-fixed_record">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-fixed_record">log</a> | <a href="/perl.git/tree/smoke-me/khw-fixed_record">tree</a></td>
-  </tr><tr class="light">
-  <td><i>6 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/rjbs/revert-compress">rjbs/revert-compress</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/rjbs/revert-compress">shortlog</a> | <a href="/perl.git/log/refs/heads/rjbs/revert-compress">log</a> | <a href="/perl.git/tree/rjbs/revert-compress">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>6 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/kick-FAKE_BIT_BUCKET">smoke-me/kick-FAKE_BIT_BUCKET</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/kick-FAKE_BIT_BUCKET">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/kick-FAKE_BIT_BUCKET">log</a> | <a href="/perl.git/tree/smoke-me/kick-FAKE_BIT_BUCKET">tree</a></td>
-  </tr><tr class="light">
-  <td><i>6 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/compression-modules">smoke-me/compression-modules</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/compression-modules">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/compression-modules">log</a> | <a href="/perl.git/tree/smoke-me/compression-modules">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>6 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/fix-raw-zlib">tonyc/fix-raw-zlib</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/fix-raw-zlib">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/fix-raw-zlib">log</a> | <a href="/perl.git/tree/tonyc/fix-raw-zlib">tree</a></td>
-  </tr><tr class="light">
-  <td><i>9 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/list-util">smoke-me/list-util</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/list-util">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/list-util">log</a> | <a href="/perl.git/tree/smoke-me/list-util">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>11 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/rjbs/unicook">rjbs/unicook</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/rjbs/unicook">shortlog</a> | <a href="/perl.git/log/refs/heads/rjbs/unicook">log</a> | <a href="/perl.git/tree/rjbs/unicook">tree</a></td>
-  </tr><tr class="light">
-  <td><i>13 days ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-mac">smoke-me/khw-mac</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-mac">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-mac">log</a> | <a href="/perl.git/tree/smoke-me/khw-mac">tree</a></td>
-  </tr><tr class="dark">
-  <td><i>2 weeks ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-charnames">smoke-me/khw-charnames</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-charnames">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-charnames">log</a> | <a href="/perl.git/tree/smoke-me/khw-charnames">tree</a></td>
-  </tr><tr class="light">
-  <td><i>2 weeks ago</i></td>
-  <td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-regex">smoke-me/khw-regex</a></td>
-  <td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-regex">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-regex">log</a> | <a href="/perl.git/tree/smoke-me/khw-regex">tree</a></td>
-  </tr><tr>
-  <td colspan="3"><a href="/perl.git/heads">...</a></td>
-  </tr>
+    % for my $h (@$heads) {
+      <tr>
+        <td><i><%= $h->{age} %></i></td>
+        <td class="current_head">
+          <a class="list name" href="/perl.git/shortlog/refs/heads/blead">blead</a>
+        </td>
+        <td class="link"><a href="/perl.git/shortlog/refs/heads/blead">shortlog</a> | <a href="/perl.git/log/refs/heads/blead">log</a> | <a href="/perl.git/tree/blead">tree</a></td>
+      </tr>
+    % }
   </table>
