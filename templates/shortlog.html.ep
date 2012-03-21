@@ -5,40 +5,12 @@
     <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
     <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
-    Summary
+    Shortlog
   </div>
   %= include '/include/page_navi', current => 'shortlog', head_id => $head_id;
-  <div class="page_nav">
-    % if ($page != 0) {
-      <a title="Alt-n" accesskey="n" href=
-        "<%= url_for('/shortlog')->query($self->req->params->clone)->query([base_id => $base_id, page => 0]) %>"
-      >
-        HEAD
-      </a>
-    % } else {
-      HEAD
-    % }
-    &sdot;
-    % if ($page != 0) {
-      <a title="Alt-n" accesskey="n" href=
-        "<%= url_for('/shortlog')->query($self->req->params->clone)->query([base_id => $base_id, page => $page - 1]) %>"
-      >
-        Prev
-      </a>
-    % } else {
-      Prev
-    % }
-    &sdot;
-    % if (@$commits == 50) {
-      <a title="Alt-n" accesskey="n" href=
-        "<%= url_for('/shortlog')->query($self->req->params->clone)->query([base_id => $base_id, page => $page + 1]) %>"
-      >
-        Next
-      </a>
-    % } else {
-      Next
-    % }
-  </div>
+  <%= include '/include/page_navi2', current => 'shortlog', base_id => $base_id,
+        page => $page, page_count => $page_count,commits => $commits;
+  %>
 
   <div class="header">
     <a class="title" href="<%= url_for('/shortlog')->query($self->req->params->clone) %>"><%= param('project') %></a>
@@ -52,13 +24,7 @@
           <a class="list subject" href=
             "<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>"
           >
-            % for (my $i = 0; $i <@{$commit->{comment}}; $i++) {
-              % my $comment = $commit->{comment}->[$i];
-              %= $comment;
-              % unless ($i == @{$commit->{comment}} - 1) {
-                <br>
-              % }
-            % }
+            <%= $commit->{title_short} %>
           </a>
           % for my $type (qw/head tag/) {
             % if (my $name = $ref_names->{$type}{$commit->{id}}) {
@@ -94,7 +60,7 @@
     <tr>
       <td colspan="4">
         % warn scalar @$commits;
-        % if (@$commits == 50) {
+        % if (@$commits == $page_count) {
           <a title="Alt-n" accesskey="n" href=
             "<%= url_for('/shortlog')->query($self->req->params->clone)->query([base_id => $base_id, page => $page + 1]) %>"
           >

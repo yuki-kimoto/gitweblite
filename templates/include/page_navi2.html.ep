@@ -1,0 +1,31 @@
+<div class="page_nav">
+  % if ($page != 0) {
+    <a title="Alt-n" accesskey="n" href=
+      "<%= url_for("/$current")->query($self->req->params->clone)->query([base_id => $base_id, page => 0]) %>"
+    >
+      HEAD
+    </a>
+  % } else {
+    HEAD
+  % }
+  &sdot;
+  % if ($page != 0) {
+    <a title="Alt-n" accesskey="n" href=
+      "<%= url_for("/$current")->query($self->req->params->clone)->query([base_id => $base_id, page => $page - 1]) %>"
+    >
+      Prev
+    </a>
+  % } else {
+    Prev
+  % }
+  &sdot;
+  % if (@$commits == $page_count) {
+    <a title="Alt-n" accesskey="n" href=
+      "<%= url_for("/$current")->query($self->req->params->clone)->query([base_id => $base_id, page => $page + 1]) %>"
+    >
+      Next
+    </a>
+  % } else {
+    Next
+  % }
+</div>
