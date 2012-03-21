@@ -514,14 +514,16 @@ get '/blob' => sub {
   }
   
   # Commit
-  my $commit = parse_commit($root, $project, $id);
-  
+  my %commit = parse_commit($root, $project, $id);
+
+  warn $self->dumper(\%commit);
+    
   $self->render(
     root => $root,
     project => $project,
     id => $id,
     file => $file,
-    commit => $commit,
+    commit => \%commit
   );
 };
 

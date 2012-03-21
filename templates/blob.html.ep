@@ -21,7 +21,11 @@
     <br/>
   </div>
   <div class="header">
-  <a class="title" href="/perl.git/commit/2630d42bb94232640db98e1de206d235e3f280fa">Create a perldelta for 5.15.9</a>
+  <a class="title" href=
+    "<%= url_for('/commit')->query({root => $root, project => $project, id => $id}) %>"
+  >
+    <%= $commit->{title} %>
+  </a>
   </div>
   <div class="page_path"><a title="tree root" href="/perl.git/tree/2630d42bb94232640db98e1de206d235e3f280fa">[perl.git]</a> / <a title="pod" href="/perl.git/tree/2630d42bb94232640db98e1de206d235e3f280fa:/pod">pod</a> / <a title="pod/.gitignore" href="/perl.git/blob_plain/2630d42bb94232640db98e1de206d235e3f280fa:/pod/.gitignore">.gitignore</a><br/></div>
   <div class="page_body">

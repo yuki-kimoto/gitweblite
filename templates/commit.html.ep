@@ -118,13 +118,13 @@
       <tr>
         <td>
           <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
-            id => $to_id, file => $to_file}) %>"
+            id => $id, file => $to_file}) %>"
           >
             % if ($status eq 'D') {
               <%= $to_file %>
             % } else {
               <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
-                id => $to_id, file => $to_file}) %>"
+                id => $id, file => $to_file}) %>"
               >
                 <%= $to_file %>
               </a>
@@ -155,7 +155,7 @@
           % }
           % if ($status ne 'D') {
             <a href="<%= url_for('/blob')->query({root => $root, project => $project,
-              id => $to_id, file => $to_file}) %>"
+              id => $id, file => $to_file}) %>"
             >
               blob
             </a>
