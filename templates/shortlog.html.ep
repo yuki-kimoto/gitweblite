@@ -22,7 +22,7 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>"
+            "<%= url_for('/commit')->query({root => $root, project => $project, id => $commit->{id}}) %>"
           >
             <%= $commit->{title_short} %>
           </a>
@@ -39,18 +39,18 @@
           % }
         </td>
         <td class="link">
-          <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>">commit</a>
+          <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $commit->{id}}) %>">commit</a>
           |
-          <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>">
+          <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project, id => $commit->{id}}) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('/commitdifftree')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>">
+          <a href="<%= url_for('/tree')->query({root => $root, project => $project, id => $commit->{id}}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('/snapshot')->query($self->req->params->clone)->query([commit => $commit->{id}]) %>
+            <%= url_for('/snapshot')->query({root => $root, project => $project, id => $commit->{id}}) %>
           >
             snapshot
           </a>

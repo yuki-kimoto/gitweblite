@@ -278,6 +278,8 @@ get '/shortlog' => sub {
   my $commits = parse_commits_new($root, $project, $base_id, $page_count, $page_count * $page);
 
   $self->render(
+    root => $root,
+    project => $project,
     commits => $commits,
     head_id => $head_id,
     ref_names => $ref_names,
@@ -348,7 +350,65 @@ get '/log' => sub {
 };
 
 get '/commit' => sub {
-  shift->render;
+  my $self = shift;
+
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    id => => ['hex']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $id = $params->{id};
+  my $page = $params->{page} // 0;
+  $page = 0 if $page < 0;
+  $self->param(page => $page);
+
+  # Project information
+  my $project_description = get_project_description($root, $project);
+  my $project_owner = get_project_owner($root, $project);
+  my %co = parse_commit($root, $project, "HEAD");
+  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
+  my $last_change = format_timestamp_html(\%cd);
+  my $head_id = $co{'id'};
+  my $base_id //= $head_id;
+  $self->param(base_id => $base_id);
+  my $remote_heads = gitweb_check_feature('remote_heads');
+  my $refs = get_references($root, $project);
+  my $tags  = get_tags($root, $project);
+  my $heads = get_heads($root, $project);
+  
+  # Ref names
+  my $ref_names = {};
+  for my $tag (@$tags) {
+    $ref_names->{tag}{$tag->{id}} = $tag->{name};
+  }
+  for my $head (@$heads) {
+    $ref_names->{head}{$head->{id}} = $head->{name};
+  }  
+
+  # Commits
+  my $page_count = 20;
+  my $commits = parse_commits_new($root, $project, $base_id, $page_count, $page_count * $page);
+
+  for my $commit (@$commits) {
+    
+    my %ad = parse_date($commit->{author_epoch}, $commit->{author_tz});
+    $commit->{last_change} = format_timestamp_html(\%ad);
+  }
+  
+  
+  $self->render(
+    commits => $commits,
+    head_id => $head_id,
+    ref_names => $ref_names,
+    page_count => $page_count
+  );
 };
 
 get '/commitdiff' => sub {
