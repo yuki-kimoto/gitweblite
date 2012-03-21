@@ -1,0 +1,33 @@
+Gitweb Lite
+
+  (Beta release)
+  gitweb.cgi clone. Serve git repository.
+
+Features
+
+  This is gitweb.cgi clone, and has the more following features.
+
+  - gitweblite is written by Perl and Mojolicious
+  - You can run "gitweblite.pl" very easily,
+    even if "apache" is not installed
+  - You can set Multiple project roots
+
+Operation
+
+  Start
+  
+    hypnotoad script/gitweblite
+  
+  Stop
+  
+    hypnotoad  --stop
+
+NOTE
+
+  I will make gitweblite a application which has no dependency,
+  but in beta relase, you need the following module to run gitweblite
+  
+    Mojolicious
+    Validator::Custom
+
+  And now some feature is lacked.
