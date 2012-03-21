@@ -16,7 +16,7 @@ Operation
 
   Start
   
-    hypnotoad script/gitweblite
+    hypnotoad gitweblite
   
   Stop
   
