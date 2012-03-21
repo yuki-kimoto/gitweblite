@@ -13,6 +13,12 @@ sub e($) { encode('UTF-8', shift) }
 
 
 my $validator = Validator::Custom->new;
+$validator->register_constraint(hex => sub {
+  my $value = shift;
+  return 0 unless defined $value;
+  $value =~ /^[0-9a-fA-F]+$/ ? 1 : 0;
+});
+
 
 our $version = '0.01';
 
@@ -232,13 +238,18 @@ get '/shortlog' => sub {
   my $raw_params = _params($self);
   my $rule = [
     root => ['not_blank'],
-    project => ['not_blank']
+    project => ['not_blank'],
+    page => {require => 0} => ['int'],
+    base_id => {require => 0} => ['hex']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
+  my $page = $params->{page} // 0;
+  $page = 0 if $page < 0;
+  $self->param(page => $page);
 
   # Project information
   my $project_description = get_project_description($root, $project);
@@ -247,28 +258,12 @@ get '/shortlog' => sub {
   my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
   my $last_change = format_timestamp_html(\%cd);
   my $head_id = $co{'id'};
+  my $base_id //= $head_id;
+  $self->param(base_id => $base_id);
   my $remote_heads = gitweb_check_feature('remote_heads');
   my $refs = get_references($root, $project);
-  my $tags  = get_tags($root, $project, 16);
-  my $heads = get_heads($root, $project, 16);
-  my %remotedata = $remote_heads ? get_remotes($root, $project) : ();
-  my @forks;
-  my $check_forks = gitweb_check_feature('forks');
-  my $urls = get_project_urls($root, $project);
-  warn $self->dumper($urls);
-  $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
-  
-  # Tag cloud
-  my $show_ctags = gitweb_check_feature('ctags');
-  
-  # Forks
-  if ($check_forks) {
-    @forks = get_projects($root, filter => $project);
-    @forks = filter_forks_from_projects_list(\@forks) if @forks;
-  }
-  
-  # Commits
-  my $commits = $head_id ? parse_commits_new($root, $project, $head_id, 17) : ();
+  my $tags  = get_tags($root, $project);
+  my $heads = get_heads($root, $project);
   
   # Ref names
   my $ref_names = {};
@@ -278,19 +273,13 @@ get '/shortlog' => sub {
   for my $head (@$heads) {
     $ref_names->{head}{$head->{id}} = $head->{name};
   }  
-  warn $self->dumper($heads);
-  
+
+  # Commits
+  my $commits = parse_commits_new($root, $project, $base_id, 50, 50 * $page);
+
   $self->render(
-    project_description => $project_description,
-    project_owner => $project_owner,
-    last_change => $last_change,
-    urls => $urls,
     commits => $commits,
-    tags => $tags,
     head_id => $head_id,
-    heads => $heads,
-    remotedata => \%remotedata,
-    forks => \@forks,
     ref_names => $ref_names
   );
 };
@@ -1598,10 +1587,29 @@ sub quote_command {
     map { my $a = $_; $a =~ s/(['!])/'\\$1'/g; "'$a'" } @_ );
 }
 
-# get HEAD ref of given project as hash
 sub git_get_head_hash {
   return git_get_full_hash(shift, 'HEAD');
 }
+
+sub get_head_id {
+  my ($root, $project) = (shift, shift);
+  return get_id($root, $project, 'HEAD', @_);
+};
+
+sub get_id {
+  my ($root, $project, $ref, @options) = @_;
+  
+  my $id;
+  my $git_dir = "$root/$project";
+  if (open my $fd, '-|', git($root, $project), 'rev-parse',
+      '--verify', '-q', @options, $ref) {
+    $id = <$fd>;
+    chomp $id if defined $id;
+    close $fd;
+  }
+  return $id;
+}
+
 
 sub git_get_full_hash {
   return git_get_hash(@_);
@@ -4222,8 +4230,7 @@ sub git_summary {
   my $owner = git_get_project_owner($project);
 
   my $refs = git_get_references();
-  # These get_*_list functions return one more to allow us to see if
-  # there are more ...
+
   my @taglist  = git_get_tags_list(16);
   my @headlist = git_get_heads_list(16);
   my %remotedata = $remote_heads ? git_get_remotes_list() : ();
@@ -5050,6 +5057,75 @@ sub git_snapshot {
   print <$fd>;
   binmode STDOUT, ':utf8'; # as set at the beginning of gitweb.cgi
   close $fd;
+}
+
+sub get_log_general {
+  my ($root, $project, $fmt_name, $body_subr, $base, $parent, $file_name, $file_hash) = @_;
+
+  my $head_id = get_head_id($root, $project);
+
+  my $refs = get_references($root, $project);
+
+  my $commit_hash = $base;
+  if (defined $parent) {
+    $commit_hash = "$parent..$base";
+  }
+  my @commitlist =
+    parse_commits($commit_hash, 101, (100 * $page),
+                  defined $file_name ? ($file_name, "--full-history") : ());
+
+  my $ftype;
+  if (!defined $file_hash && defined $file_name) {
+    # some commits could have deleted file in question,
+    # and not have it in tree, but one of them has to have it
+    for (my $i = 0; $i < @commitlist; $i++) {
+      $file_hash = git_get_hash_by_path($commitlist[$i]{'id'}, $file_name);
+      last if defined $file_hash;
+    }
+  }
+  if (defined $file_hash) {
+    $ftype = git_get_type($file_hash);
+  }
+  if (defined $file_name && !defined $ftype) {
+    die_error(500, "Unknown type of object");
+  }
+  my %co;
+  if (defined $file_name) {
+    %co = parse_commit($base)
+      or die_error(404, "Unknown commit object");
+  }
+
+
+  my $paging_nav = format_paging_nav($fmt_name, $page, $#commitlist >= 100);
+  my $next_link = '';
+  if ($#commitlist >= 100) {
+    $next_link =
+      $cgi->a({-href => href(-replay=>1, page=>$page+1),
+               -accesskey => "n", -title => "Alt-n"}, "next");
+  }
+  my $patch_max = gitweb_get_feature('patches');
+  if ($patch_max && !defined $file_name) {
+    if ($patch_max < 0 || @commitlist <= $patch_max) {
+      $paging_nav .= " &sdot; " .
+        $cgi->a({-href => href(action=>"patches", -replay=>1)},
+          "patches");
+    }
+  }
+
+  git_header_html();
+  git_print_page_nav($fmt_name,'', $hash,$hash,$hash, $paging_nav);
+  if (defined $file_name) {
+    git_print_header_div('commit', esc_html($co{'title'}), $base);
+  } else {
+    git_print_header_div('summary', $project)
+  }
+  git_print_page_path($file_name, $ftype, $hash_base)
+    if (defined $file_name);
+
+  $body_subr->(\@commitlist, 0, 99, $refs, $next_link,
+               $file_name, $file_hash, $ftype);
+
+  git_footer_html();
 }
 
 sub git_log_generic {
