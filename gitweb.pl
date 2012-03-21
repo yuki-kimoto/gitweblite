@@ -176,7 +176,7 @@ get '/summary' => sub {
   my %co = parse_commit($root, $project, "HEAD");
   my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
   my $last_change = format_timestamp_html(\%cd);
-  my $head = $co{'id'};
+  my $head_id = $co{'id'};
   my $remote_heads = gitweb_check_feature('remote_heads');
   my $refs = get_references($root, $project);
   my $tags  = get_tags($root, $project, 16);
@@ -198,7 +198,7 @@ get '/summary' => sub {
   }
   
   # Commits
-  my $commits = $head ? parse_commits_new($root, $project, $head, 17) : ();
+  my $commits = $head_id ? parse_commits_new($root, $project, $head_id, 17) : ();
   
   # Ref names
   my $ref_names = {};
@@ -217,7 +217,7 @@ get '/summary' => sub {
     urls => $urls,
     commits => $commits,
     tags => $tags,
-    head => $head,
+    head_id => $head_id,
     heads => $heads,
     remotedata => \%remotedata,
     forks => \@forks,
@@ -226,7 +226,73 @@ get '/summary' => sub {
 };
 
 get '/shortlog' => sub {
-  shift->render;
+  my $self = shift;
+
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+
+  # Project information
+  my $project_description = get_project_description($root, $project);
+  my $project_owner = get_project_owner($root, $project);
+  my %co = parse_commit($root, $project, "HEAD");
+  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
+  my $last_change = format_timestamp_html(\%cd);
+  my $head_id = $co{'id'};
+  my $remote_heads = gitweb_check_feature('remote_heads');
+  my $refs = get_references($root, $project);
+  my $tags  = get_tags($root, $project, 16);
+  my $heads = get_heads($root, $project, 16);
+  my %remotedata = $remote_heads ? get_remotes($root, $project) : ();
+  my @forks;
+  my $check_forks = gitweb_check_feature('forks');
+  my $urls = get_project_urls($root, $project);
+  warn $self->dumper($urls);
+  $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
+  
+  # Tag cloud
+  my $show_ctags = gitweb_check_feature('ctags');
+  
+  # Forks
+  if ($check_forks) {
+    @forks = get_projects($root, filter => $project);
+    @forks = filter_forks_from_projects_list(\@forks) if @forks;
+  }
+  
+  # Commits
+  my $commits = $head_id ? parse_commits_new($root, $project, $head_id, 17) : ();
+  
+  # Ref names
+  my $ref_names = {};
+  for my $tag (@$tags) {
+    $ref_names->{tag}{$tag->{id}} = $tag->{name};
+  }
+  for my $head (@$heads) {
+    $ref_names->{head}{$head->{id}} = $head->{name};
+  }  
+  warn $self->dumper($heads);
+  
+  $self->render(
+    project_description => $project_description,
+    project_owner => $project_owner,
+    last_change => $last_change,
+    urls => $urls,
+    commits => $commits,
+    tags => $tags,
+    head_id => $head_id,
+    heads => $heads,
+    remotedata => \%remotedata,
+    forks => \@forks,
+    ref_names => $ref_names
+  );
 };
 
 get '/log' => sub {

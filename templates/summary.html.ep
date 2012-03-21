@@ -5,7 +5,7 @@
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
     Summary
   </div>
-  %= include '/include/page_navi', current => 'summary', head_id => $head;
+  %= include '/include/page_navi', current => 'summary', head_id => $head_id;
   <table class="projects_list">
     <tr id="metadata_desc"><td><b>Description:</b></td><td><%= $project_description %></td></tr>
     <tr id="metadata_owner"><td><b>Owner:</b></td><td><%= $project_owner %></td></tr>
@@ -21,6 +21,7 @@
     </tr>
   </table>
   
+  <!-- Shortlog -->
   <div class="header">
     <a class="title" href="<%= url_for('/shortlog')->query($self->req->params->clone) %>">Shortlog</a>
   </div>
@@ -75,6 +76,7 @@
     % }
   </table>
   
+  <!-- Tags -->
   <div class="header">
     <a class="title" href="<%= url_for('/tags')->query($self->req->params->clone) %>">Tags</a>
   </div>
@@ -112,19 +114,20 @@
     % }
   </table>
   
+  <!-- Heads -->
   <div class="header">
     <a class="title" href="<%= url_for('/heads')->query($self->req->params->clone) %>">Heads</a>
   </div>
   <table class="heads">
-    % for my $h (@$heads) {
+    % for my $head (@$heads) {
       <tr>
-        <td><i><%= $h->{age} %></i></td>
+        <td><i><%= $head->{age} %></i></td>
         <td class="current_head">
-          <a class="list name" href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $h->{name}]) %>"><%= $h->{name} %></a>
+          <a class="list name" href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $head->{name}]) %>"><%= $head->{name} %></a>
         </td>
-        <td class="link"><a href="<%= url_for('/shortlog')->query($self->req->params->clone)->query([head => $h->{name}]) %>">shortlog</a> |
-        <a href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $h->{name}]) %>">log</a> |
-        <a href="<%= url_for('/tree')->query($self->req->params->clone)->query([head => $h->{name}]) %>">tree</a></td>
+        <td class="link"><a href="<%= url_for('/shortlog')->query($self->req->params->clone)->query([head => $head->{name}]) %>">shortlog</a> |
+        <a href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $head->{name}]) %>">log</a> |
+        <a href="<%= url_for('/tree')->query($self->req->params->clone)->query([head => $head->{name}]) %>">tree</a></td>
       </tr>
     % }
   </table>
