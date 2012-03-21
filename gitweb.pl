@@ -367,19 +367,15 @@ get '/commit' => sub {
   my $root = $params->{root};
   my $project = $params->{project};
   my $id = $params->{id};
-  my $page = $params->{page} // 0;
-  $page = 0 if $page < 0;
-  $self->param(page => $page);
 
   # Project information
   my $project_description = get_project_description($root, $project);
   my $project_owner = get_project_owner($root, $project);
-  my %co = parse_commit($root, $project, "HEAD");
-  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
-  my $last_change = format_timestamp_html(\%cd);
-  my $head_id = $co{'id'};
-  my $base_id //= $head_id;
-  $self->param(base_id => $base_id);
+  my %commit = parse_commit($root, $project, $id);
+  my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
+  my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
+  $commit{author_date} = format_timestamp_html(\%author_date);
+  $commit{committer_date} = format_timestamp_html(\%committer_date);
   my $remote_heads = gitweb_check_feature('remote_heads');
   my $refs = get_references($root, $project);
   my $tags  = get_tags($root, $project);
@@ -393,25 +389,15 @@ get '/commit' => sub {
   for my $head (@$heads) {
     $ref_names->{head}{$head->{id}} = $head->{name};
   }  
-
-  # Commits
-  my $page_count = 20;
-  my $commits = parse_commits_new($root, $project, $base_id, $page_count, $page_count * $page);
-
-  for my $commit (@$commits) {
-    
-    my %ad = parse_date($commit->{author_epoch}, $commit->{author_tz});
-    $commit->{last_change} = format_timestamp_html(\%ad);
-  }
   
-  
+  warn $self->dumper(\%commit);
+
   $self->render(
     root => $root,
     project => $project,
-    commits => $commits,
-    head_id => $head_id,
-    ref_names => $ref_names,
-    page_count => $page_count
+    id => $id,
+    commit => \%commit,
+    ref_names => $ref_names
   );
 };
 
@@ -429,6 +415,10 @@ get '/snapshot' => sub {
 
 get '/tag' => sub {
   shift->render;
+};
+
+get '/patch' => sub {
+  shift->render(text => 'patch');
 };
 
 sub get_projects {
@@ -6087,7 +6077,7 @@ sub get_references {
 }
 
 sub parse_commit {
-  my ($root, $project, $commit_id) = @_;
+  my ($root, $project, $id) = @_;
   my %co;
 
   local $/ = "\0";
@@ -6098,7 +6088,7 @@ sub parse_commit {
     "--parents",
     "--header",
     "--max-count=1",
-    $commit_id,
+    $id,
     "--"
   );
   

@@ -19,7 +19,7 @@
           <%= $commit->{age_string} %>
         </span>
         &nbsp;
-        <%= $commit->{title_short} %>
+        <%= $commit->{title} %>
       </a>
     </div>
     <div class="title_text">

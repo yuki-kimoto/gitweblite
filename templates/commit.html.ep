@@ -2,40 +2,113 @@
   <div class="page_header">
     <a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commit
   </div>
-  %= include '/include/page_navi', current => 'commit', head_id => $head_id, root => $root, project => $project;
+  %= include '/include/page_navi', current => 'commit', head_id => $id, root => $root, project => $project;
   
   <div class="page_nav">
-    (parent: <a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675</a>) |
-    <a href="/perl.git/patch/f6067adc61108c3398de698bb0294d95f09b55ef">patch</a><br/>
+    % my $parent_id = $commit->{parent};
+    (
+      parent:
+      <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $parent_id}) %>">
+        <%= substr($parent_id, 0, 7) %>
+      </a>
+    ) |
+    <a href="<%= url_for('/patch')->query({root => $root, project => $project, id => $id}) %>">patch</a><br/>
   </div>
   
   <div class="header">
-    <a class="title" href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">charnames: Clarify viacode pod <span class="refs"> <span class="head" title="heads/blead"><a href="/perl.git/shortlog/refs/heads/blead">blead</a></span></span></a>
-    </div>
-    <div class="title_text">
+    <a class="title" href="<%= url_for('/commitdiff')->query({root => $root, project => $project, id => $id}) %>">
+      <%= $commit->{title} %>
+    </a>
+  </div>
+  <div class="title_text">
+    <span class="refs">
+      <span class="head" title="heads/blead">
+        <a href="/perl.git/shortlog/refs/heads/blead">
+          blead
+        </a>
+      </span>
+    </span>
     <table class="object_header">
-    <tr><td>author</td><td>Karl Williamson &lt;public@khwilliamson.com&gt;</td><td rowspan="2"></td></tr>
-    <tr><td></td><td> Tue, 20 Mar 2012 05:15:07 +0000 (23:15 -0600)</td></tr>
-    <tr><td>committer</td><td>Karl Williamson &lt;public@khwilliamson.com&gt;</td><td rowspan="2"></td></tr>
-    <tr><td></td><td> Tue, 20 Mar 2012 05:34:25 +0000 (23:34 -0600)</td></tr>
-    <tr><td>commit</td><td class="sha1">f6067adc61108c3398de698bb0294d95f09b55ef</td></tr>
-    <tr><td>tree</td><td class="sha1"><a class="list" href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">e43eadd82ddf438acc2c6e66438ff9e31d4dbb61</a></td><td class="link"><a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a> | <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/f6067adc61108c3398de698bb0294d95f09b55ef.tar.gz">snapshot</a></td></tr>
-    <tr><td>parent</td><td class="sha1"><a class="list" href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">ffec675822f6354e94f29a96daa07ef9465a43bc</a></td><td class="link"><a href="/perl.git/commit/ffec675822f6354e94f29a96daa07ef9465a43bc">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef?hp=ffec675822f6354e94f29a96daa07ef9465a43bc">diff</a></td></tr>
-    </table></div>
-    <div class="page_body">
-    charnames:&nbsp;Clarify&nbsp;viacode&nbsp;pod<br/>
-    <br/>
-    This&nbsp;mentions&nbsp;that&nbsp;viacode's&nbsp;return&nbsp;can&nbsp;change&nbsp;as&nbsp;a&nbsp;result&nbsp;of<br/>
-    corrections&nbsp;to&nbsp;the&nbsp;Unicode&nbsp;standard.<br/>
-    </div>
-    <div class="list_head">
-    </div>
-    <table class="diff_tree">
-    <tr class="dark">
-    <td><a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">lib/charnames.pm</a></td>
-    <td></td>
-    <td class="link"><a href="/perl.git/blobdiff/ffec675822f6354e94f29a96daa07ef9465a43bc..f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">diff</a> | <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blob</a> | <a href="/perl.git/blame/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blame</a> | <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">history</a></td>
-    </tr>
+      <tr>
+        <td>author</td>
+        <td><%= $commit->{author} %></td>
+        <td rowspan="2"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><%= b($commit->{author_date}) %></td>
+      </tr>
+      <tr>
+        <td>committer</td>
+        <td><%= $commit->{committer} %></td>
+        <td rowspan="2"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><%= b($commit->{committer_date}) %></td>
+      </tr>
+      <tr>
+        <td>commit</td>
+        <td class="sha1"><%= $commit->{id} %></td>
+      </tr>
+      <tr>
+        <td>tree</td>
+        <td class="sha1">
+          <a class="list" href="<%= url_for('/tree')->query({root => $root, project => $project, id => $id}) %>">
+            <%= $commit->{id} %>
+          </a>
+        </td>
+        <td class="link">
+          <a href="<%= url_for('/tree')->query({root => $root, project => $project, id => $id}) %>">
+            tree
+          </a>
+          |
+          <a title="in format: tar.gz" rel="nofollow"
+            href="<%= url_for('/snapshot')->query({root => $root, project => $project, id => $id}) %>"
+          >
+            snapshot
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          parent
+        </td>
+        <td class="sha1">
+          <a class="list"
+            href="<%= url_for('/commit')->query({root => $root, project => $project, id => $parent_id}) %>"
+          >
+            <%= $parent_id %>
+          </a>
+        </td>
+        <td class="link">
+          <a href="<%= url_for('/commit')->query({root => $root, project => $project, id => $parent_id}) %>">
+            commit
+          </a>
+          |
+          <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project,
+            id => $commit->{id}, before_id => $parent_id}) %>"
+          >
+            diff
+          </a>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="page_body">
+      charnames:&nbsp;Clarify&nbsp;viacode&nbsp;pod<br/>
+      <br/>
+      This&nbsp;mentions&nbsp;that&nbsp;viacode's&nbsp;return&nbsp;can&nbsp;change&nbsp;as&nbsp;a&nbsp;result&nbsp;of<br/>
+      corrections&nbsp;to&nbsp;the&nbsp;Unicode&nbsp;standard.<br/>
+      </div>
+      <div class="list_head">
+      </div>
+      <table class="diff_tree">
+      <tr class="dark">
+      <td><a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">lib/charnames.pm</a></td>
+      <td></td>
+      <td class="link"><a href="/perl.git/blobdiff/ffec675822f6354e94f29a96daa07ef9465a43bc..f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">diff</a> | <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blob</a> | <a href="/perl.git/blame/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">blame</a> | <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">history</a></td>
+      </tr>
     </table>
     <div class="page_footer">
     <div class="page_footer_text">Perl5 Master Repository</div>
