@@ -501,8 +501,6 @@ get '/blob' => sub {
   my $file = $params->{file};
   
   # Blob id
-  warn $self->dumper([$id, $file]);
-
   my $blob_id = get_hash_by_path($root, $project, $id, $file, "blob")
 		or die "Cannot find file";
 	
@@ -556,7 +554,7 @@ get '/blob_plain' => sub {
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
-    id => ['hex'],
+    id => ['any'],
     file => ['any']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
@@ -567,7 +565,10 @@ get '/blob_plain' => sub {
   my $id = $params->{id};
   my $file = $params->{file};
 
-  open my $fd, "-|", git($root, $project), "cat-file", "blob", $id
+  # Blob id
+  my $blob_id = get_hash_by_path($root, $project, $id, $file, "blob")
+		or die "Cannot find file";
+  open my $fd, "-|", git($root, $project), "cat-file", "blob", $blob_id
     or die "Open git-cat-file blob '$id' failed";
 
   # content-type (can include charset)
