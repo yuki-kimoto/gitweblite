@@ -1,6 +1,7 @@
 % layout 'common';
   <div class="page_header">
-    <a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commit
+    <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
+    <a href="/">Projects</a> /<br> <a href="/perl.git"><%= $project %></a> / Commit
   </div>
   %= include '/include/page_navi', current => 'commit', head_id => $id, root => $root, project => $project;
   

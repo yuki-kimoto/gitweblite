@@ -47,6 +47,7 @@ our $project_maxdepth = 1;
 our $cgi;
 our @git_base_url_list = grep { $_ ne '' } ("");
 our @diff_opts = ('-M');
+our $prevent_xss = 0;
 
 our %feature = (
   'blame' => {
@@ -484,6 +485,65 @@ get '/blob' => sub {
   shift->render(text => 'blob');
 };
 
+get '/blob_plain' => sub {
+  my $self = shift;
+
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    id => ['hex'],
+    file => ['any']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $id = $params->{id};
+  my $file = $params->{file};
+
+  open my $fd, "-|", git($root, $project), "cat-file", "blob", $id
+    or die "Open git-cat-file blob '$id' failed";
+
+  # content-type (can include charset)
+  my $type = blob_contenttype($fd, $file);
+
+  # "save as" filename, even when no $file is given
+  my $save_as = "$id";
+  if (defined $file) {
+    $save_as = $file;
+  } elsif ($type =~ m/^text\//) {
+    $save_as .= '.txt';
+  }
+
+  # With XSS prevention on, blobs of all types except a few known safe
+  # ones are served with "Content-Disposition: attachment" to make sure
+  # they don't run in our security domain.  For certain image types,
+  # blob view writes an <img> tag referring to blob_plain view, and we
+  # want to be sure not to break that by serving the image as an
+  # attachment (though Firefox 3 doesn't seem to care).
+  my $sandbox = $prevent_xss &&
+    $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
+
+  # serve text/* as text/plain
+  if ($prevent_xss &&
+      ($type =~ m!^text/[a-z]+\b(.*)$! ||
+       ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fd))) {
+    my $rest = $1;
+    $rest = defined $rest ? $rest : '';
+    $type = "text/plain$rest";
+  }
+  
+  my $content = do { local $/ = undef; <$fd> };
+  my $content_disposition = $sandbox ? 'attachment' : 'inline';
+  $content_disposition .= "; filename=$save_as";
+  $self->res->headers->content_disposition($content_disposition);
+  $self->res->content_type($type);
+  $self->render_data($content);
+};
+
 get '/blobdiff' => sub {
   shift->render(text => 'blobdiff');
 };
@@ -627,10 +687,6 @@ our $default_text_plain_charset  = undef;
 # file to use for guessing MIME types before trying /etc/mime.types
 # (relative to the current git repository)
 our $mimetypes_file = undef;
-
-# Disables features that would allow repository owners to inject script into
-# the gitweb domain.
-our $prevent_xss = 0;
 
 # Path to the highlight executable to use (must be the one from
 # http://www.andre-simon.de due to assumptions about parameters and output).
@@ -4645,6 +4701,7 @@ sub git_blob_plain {
     -content_disposition =>
       ($sandbox ? 'attachment' : 'inline')
       . '; filename="' . $save_as . '"');
+  
   local $/ = undef;
   binmode STDOUT, ':raw';
   print <$fd>;
