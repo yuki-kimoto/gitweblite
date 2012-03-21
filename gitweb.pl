@@ -499,10 +499,23 @@ get '/blob' => sub {
   my $project = $params->{project};
   my $id = $params->{id};
   my $file = $params->{file};
+  
+  # Blob id
+  warn $self->dumper([$id, $file]);
 
+  my $blob_id = get_hash_by_path($root, $project, $id, $file, "blob")
+		or die "Cannot find file";
+	
   # Blob
-  open my $fd, "-|", git($root, $project), "cat-file", "blob", $id
+  my @command = (
+    git($root, $project),
+    "cat-file",
+    "blob",
+    $blob_id
+  );
+  open my $fd, "-|", @command
     or die "Couldn't cat $file, $id";
+    
   my $mimetype = blob_mimetype($fd, $file);
 
   # Redirect to blob plane
@@ -516,14 +529,22 @@ get '/blob' => sub {
   # Commit
   my %commit = parse_commit($root, $project, $id);
 
-  warn $self->dumper(\%commit);
-    
+  my @lines;
+  while (my $line = <$fd>) {
+    chomp $line;
+		$line = untabify($line);
+    push @lines, $line;
+  }
+  
+  
   $self->render(
     root => $root,
     project => $project,
     id => $id,
+    blob_id => $blob_id,
     file => $file,
-    commit => \%commit
+    commit => \%commit,
+    lines => \@lines
   );
 };
 
@@ -1845,6 +1866,29 @@ sub git_get_hash_by_path {
   }
 
   #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa  panic.c'
+  $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/;
+  if (defined $type && $type ne $2) {
+    # type doesn't match
+    return undef;
+  }
+  return $3;
+}
+
+sub get_hash_by_path {
+  my ($root, $project, $id, $path, $type) = @_;
+
+  $path =~ s,/+$,,;
+
+  open my $fd, "-|", git($root, $project), "ls-tree", $id, "--", $path
+    or die "Open git-ls-tree failed";
+  my $line = <$fd>;
+  close $fd or return undef;
+
+  if (!defined $line) {
+    # there is no tree or hash given by $path at $base
+    return undef;
+  }
+
   $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/;
   if (defined $type && $type ne $2) {
     # type doesn't match
@@ -4041,6 +4085,19 @@ sub git_search_changes {
   print "</table>\n";
 
   git_footer_html();
+}
+
+sub untabify {
+	my $line = shift;
+
+	while ((my $pos = index($line, "\t")) != -1) {
+		if (my $count = (8 - ($pos % 8))) {
+			my $spaces = ' ' x $count;
+			$line =~ s/\t/$spaces/;
+		}
+	}
+
+	return $line;
 }
 
 sub git_search_files {
