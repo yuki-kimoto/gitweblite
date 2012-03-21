@@ -185,8 +185,9 @@ get '/summary' => sub {
   my $check_forks = gitweb_check_feature('forks');
   
   # URLs
-  my @urls = get_project_urls($root, $project);
-  @urls = map { "$_/$project" } @git_base_url_list unless @urls;
+  my $urls = get_project_urls($root, $project);
+  warn $self->dumper($urls);
+  $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
 
   # Tag cloud
   my $show_ctags = gitweb_check_feature('ctags');
@@ -204,7 +205,7 @@ get '/summary' => sub {
     project_description => $project_description,
     project_owner => $project_owner,
     last_change => $last_change,
-    urls => \@urls,
+    urls => $urls,
   );
 };
 
@@ -1804,15 +1805,13 @@ sub git_get_project_url_list {
 sub get_project_urls {
   my ($root, $project) = @_;
 
-  $git_dir = "$root/$project";
+  my $git_dir = "$root/$project";
   open my $fd, '<', "$git_dir/cloneurl"
-    or return wantarray ?
-    @{ config_to_multi(git_get_project_config('url')) } :
-       config_to_multi(git_get_project_config('url'));
-  my @git_project_urls = map { chomp; $_ } <$fd>;
+    or return config_to_multi(get_project_config($root, $project, 'url'));
+  my @urls = map { chomp; $_ } <$fd>;
   close $fd;
 
-  return wantarray ? @git_project_urls : \@git_project_urls;
+  return \@urls;
 }
 
 sub fill_remote_heads {
@@ -2173,7 +2172,7 @@ sub git_get_tags_list {
 }
 
 sub get_tags {
-  my ($root, $project, $limit) = shift;
+  my ($root, $project, $limit) = @_;
   my @tagslist;
 
   open my $fd, '-|', git($root, $project), 'for-each-ref',
