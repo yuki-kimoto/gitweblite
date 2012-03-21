@@ -127,9 +127,11 @@
       <tr>
         <td><i><%= $h->{age} %></i></td>
         <td class="current_head">
-          <a class="list name" href="/perl.git/shortlog/refs/heads/blead">blead</a>
+          <a class="list name" href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $h->{name}]) %>"><%= $h->{name} %></a>
         </td>
-        <td class="link"><a href="/perl.git/shortlog/refs/heads/blead">shortlog</a> | <a href="/perl.git/log/refs/heads/blead">log</a> | <a href="/perl.git/tree/blead">tree</a></td>
+        <td class="link"><a href="<%= url_for('/shortlog')->query($self->req->params->clone)->query([head => $h->{name}]) %>">shortlog</a> |
+        <a href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $h->{name}]) %>">log</a> |
+        <a href="<%= url_for('/tree')->query($self->req->params->clone)->query([head => $h->{name}]) %>">tree</a></td>
       </tr>
     % }
   </table>
