@@ -109,28 +109,45 @@
   <table class="<%= @$parents > 1 ? 'combined' : 'diff_tree' %>"">
     
     % for my $diff (@$diffs) {
+      % my $to_id = $diff->{to_id};
+      % my $to_file = $diff->{to_file};
+      % my $from_id = $diff->{from_id};
+      % my $status = $diff->{status};
+      <tr>
+        <td>
+          <a class="list" href="<%= url_for('/blog')->query({root => $root, project => $project,
+            id => $to_id, file => $to_file}) %>"
+          >
+            % if ($status eq 'D') {
+              <%= $to_file %>
+            % } else {
+              <a class="list" href="<%= url_for('/blog')->query({root => $root, project => $project,
+                id => $to_id, file => $to_file}) %>"
+              >
+                <%= $to_file %>
+              </a>
+            % }
+          </a>
+        </td>
+        <td></td>
+        <td class="link">
+          % if ($status ne 'A') {
+            <a href="<%= url_for('/blogdiff')->query({root => $root, project => $project,
+              from_id => $from_id, to_id => $to_id, file => $to_file}) %>"
+            >
+              diff
+            </a>
+            |
+          % }
+          % if ($status ne 'D') {
+            <a href="<%= url_for('/blog')->query({root => $root, project => $project,
+              id => $to_id, file => $to_file}) %>"
+            >
+              blob
+            </a>
+          % }
+        </td>
+      </tr>
       
     % }
-    
-    <tr>
-      <td>
-        <a class="list" href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
-          lib/charnames.pm
-        </a>
-      </td>
-      <td></td>
-      <td class="link">
-        <a href="/perl.git/blobdiff/ffec675822f6354e94f29a96daa07ef9465a43bc..f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
-          diff
-        </a>
-        |
-        <a href="/perl.git/blob/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
-          blob
-        </a>
-        |
-        <a href="/perl.git/history/f6067adc61108c3398de698bb0294d95f09b55ef:/lib/charnames.pm">
-          history
-        </a>
-      </td>
-    </tr>
   </table>

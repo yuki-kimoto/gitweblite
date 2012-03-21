@@ -448,6 +448,8 @@ get '/commit' => sub {
 
   # my $ref = format_ref_marker($refs, $commit{'id'});
   
+  warn $self->dumper($diffs);
+  
   $self->render(
     root => $root,
     project => $project,
