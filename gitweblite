@@ -431,73 +431,82 @@ get '/commitdiff' => sub {
 get '/tree' => sub {
   my $self = shift;
 
-  if (!defined $base_cid) {
-    $base_cid = "HEAD";
-  }
-  if (!defined $cid) {
-    if (defined $file) {
-      $cid = git_get_hash_by_path($base_cid, $file, "tree");
-    } else {
-      $cid = $base_cid;
-    }
-  }
-  die_error(404, "No such tree") unless defined($cid);
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    cid => {require => 0 } => ['not_blank'],
+    dir => {require => 0 } => ['not_blank']
+    tid => {require => 0 } => ['not_blank'],
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $cid = $params->{cid};
+  $cid = "HEAD" unless defined $cid;
+  my $dir = $params->{dir};
+  my $tid = $params->{tid};
 
-  my $show_sizes = gitweb_check_feature('show-sizes');
-  my $have_blame = gitweb_check_feature('blame');
+  if (!defined $tid && defined $dir) {
+    $tid = get_hash_by_path($root, $project, $cid, $dir, "tree");
+  }
+  die 404, "No such tree" unless defined $tid;
 
   my @entries = ();
+  my $show_sizes = 0;
   {
     local $/ = "\0";
-    open my $fd, "-|", git_cmd(), "ls-tree", '-z',
+    open my $fd, "-|", git($root, $project), "ls-tree", '-z',
       ($show_sizes ? '-l' : ()), @extra_options, $cid
-      or die_error(500, "Open git-ls-tree failed");
+      or die 500, "Open git-ls-tree failed";
     @entries = map { chomp; $_ } <$fd>;
     close $fd
-      or die_error(404, "Reading tree failed");
+      or die 404, "Reading tree failed";
   }
 
   my $refs = git_get_references();
-  my $ref = format_ref_marker($refs, $base_cid);
-  git_header_html();
+  my $ref = format_ref_marker($refs, $cid);
   my $basedir = '';
-  if (defined $base_cid && (my %co = parse_commit($base_cid))) {
+  if (defined $cid && (my %commit = parse_commit($cid))) {
     my @views_nav = ();
-    if (defined $file) {
+    if (defined $dir) {
       push @views_nav,
         $cgi->a({-href => href(action=>"history", -replay=>1)},
                 "history"),
         $cgi->a({-href => href(action=>"tree",
-                               hash_base=>"HEAD", file_name=>$file)},
+                               hash_base=>"HEAD", dir_name=>$dir)},
                 "HEAD"),
     }
-    my $snapshot_links = format_snapshot_links($cid);
+    my $snapshot_links = format_snapshot_links($tid);
     if (defined $snapshot_links) {
       # FIXME: Should be available when we have no hash base as well.
       push @views_nav, $snapshot_links;
     }
-    git_print_page_nav('tree','', $base_cid, undef, undef,
+    git_print_page_nav('tree','', $cid, undef, undef,
                        join(' | ', @views_nav));
-    git_print_header_div('commit', esc_html($co{'title'}) . $ref, $base_cid);
+    git_print_header_div('commit', esc_html($commit{'title'}) . $ref, $cid);
   } else {
-    undef $base_cid;
+    undef $cid;
     print "<div class=\"page_nav\">\n";
     print "<br/><br/></div>\n";
-    print "<div class=\"title\">".esc_html($cid)."</div>\n";
+    print "<div class=\"title\">".esc_html($tid)."</div>\n";
   }
-  if (defined $file) {
-    $basedir = $file;
+  if (defined $dir) {
+    $basedir = $dir;
     if ($basedir ne '' && substr($basedir, -1) ne '/') {
       $basedir .= '/';
     }
-    git_print_page_path($file, 'tree', $base_cid);
+    git_print_page_path($dir, 'tree', $cid);
   }
   print "<div class=\"page_body\">\n";
   print "<table class=\"tree\">\n";
   my $alternate = 1;
   # '..' (top directory) link if possible
-  if (defined $base_cid &&
-      defined $file && $file =~ m![^/]+$!) {
+  if (defined $cid &&
+      defined $dir && $dir =~ m![^/]+$!) {
     if ($alternate) {
       print "<tr class=\"dark\">\n";
     } else {
@@ -505,7 +514,7 @@ get '/tree' => sub {
     }
     $alternate ^= 1;
 
-    my $up = $file;
+    my $up = $dir;
     $up =~ s!/?[^/]+$!!;
     undef $up unless $up;
     # based on git_print_tree_entry
@@ -513,8 +522,8 @@ get '/tree' => sub {
     print '<td class="size">&nbsp;</td>'."\n" if $show_sizes;
     print '<td class="list">';
     print $cgi->a({-href => href(action=>"tree",
-                                 hash_base=>$base_cid,
-                                 file_name=>$up)},
+                                 hash_base=>$cid,
+                                 dir_name=>$up)},
                   "..");
     print "</td>\n";
     print "<td class=\"link\"></td>\n";
@@ -531,7 +540,7 @@ get '/tree' => sub {
     }
     $alternate ^= 1;
 
-    git_print_tree_entry(\%t, $basedir, $base_cid, $have_blame);
+    git_print_tree_entry(\%t, $basedir, $cid, $have_blame);
 
     print "</tr>\n";
   }
@@ -543,6 +552,8 @@ get '/tree' => sub {
     root => $root,
     project => $project,
     cid => $cid,
+    tid => $tid,
+    file => $file,
     commit => \%commit,
     ref_names => $ref_names,
     diffs => $diffs
@@ -550,6 +561,7 @@ get '/tree' => sub {
 };
 
 =cut
+
 
 get '/snapshot' => sub {
   shift->render(text => 'snapshot');
@@ -2482,8 +2494,8 @@ sub parse_commits {
   local $/ = "\0";
   my @commits;
   while (my $line = <$fd>) {
-    my %co = parse_commit_text($line);
-    push @commits, \%co;
+    my %commit = parse_commit_text($line);
+    push @commits, \%commit;
   }
   close $fd;
 
@@ -3750,13 +3762,13 @@ sub git_log_body {
   $to = $#{$commitlist} if (!defined $to || $#{$commitlist} < $to);
 
   for (my $i = 0; $i <= $to; $i++) {
-    my %co = %{$commitlist->[$i]};
-    next if !%co;
-    my $commit = $co{'id'};
+    my %commit = %{$commitlist->[$i]};
+    next if !%commit;
+    my $commit = $commit{'id'};
     my $ref = format_ref_marker($refs, $commit);
     git_print_header_div('commit',
-                   "<span class=\"age\">$co{'age_string'}</span>" .
-                   esc_html($co{'title'}) . $ref,
+                   "<span class=\"age\">$commit{'age_string'}</span>" .
+                   esc_html($commit{'title'}) . $ref,
                    $commit);
     print "<div class=\"title_text\">\n" .
           "<div class=\"log_link\">\n" .
@@ -3767,11 +3779,11 @@ sub git_log_body {
           $cgi->a({-href => href(action=>"tree", hash=>$commit, hash_base=>$commit)}, "tree") .
           "<br/>\n" .
           "</div>\n";
-          git_print_authorship(\%co, -tag => 'span');
+          git_print_authorship(\%commit, -tag => 'span');
           print "<br/>\n</div>\n";
 
     print "<div class=\"log_body\">\n";
-    git_print_log($co{'comment'}, -final_empty_line=> 1);
+    git_print_log($commit{'comment'}, -final_empty_line=> 1);
     print "</div>\n";
   }
   if ($extra) {
@@ -3791,8 +3803,8 @@ sub git_shortlog_body {
   print "<table class=\"shortlog\">\n";
   my $alternate = 1;
   for (my $i = $from; $i <= $to; $i++) {
-    my %co = %{$commitlist->[$i]};
-    my $commit = $co{'id'};
+    my %commit = %{$commitlist->[$i]};
+    my $commit = $commit{'id'};
     my $ref = format_ref_marker($refs, $commit);
     if ($alternate) {
       print "<tr class=\"dark\">\n";
@@ -3800,10 +3812,10 @@ sub git_shortlog_body {
       print "<tr class=\"light\">\n";
     }
     $alternate ^= 1;
-    # git_summary() used print "<td><i>$co{'age_string'}</i></td>\n" .
-    print "<td title=\"$co{'age_string_age'}\"><i>$co{'age_string_date'}</i></td>\n" .
-          format_author_html('td', \%co, 10) . "<td>";
-    print format_subject_html($co{'title'}, $co{'title_short'},
+    # git_summary() used print "<td><i>$commit{'age_string'}</i></td>\n" .
+    print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
+          format_author_html('td', \%commit, 10) . "<td>";
+    print format_subject_html($commit{'title'}, $commit{'title_short'},
                               href(action=>"commit", hash=>$commit), $ref);
     print "</td>\n" .
           "<td class=\"link\">" .
@@ -3836,11 +3848,11 @@ sub git_history_body {
   print "<table class=\"history\">\n";
   my $alternate = 1;
   for (my $i = $from; $i <= $to; $i++) {
-    my %co = %{$commitlist->[$i]};
-    if (!%co) {
+    my %commit = %{$commitlist->[$i]};
+    if (!%commit) {
       next;
     }
-    my $commit = $co{'id'};
+    my $commit = $commit{'id'};
 
     my $ref = format_ref_marker($refs, $commit);
 
@@ -3850,11 +3862,11 @@ sub git_history_body {
       print "<tr class=\"light\">\n";
     }
     $alternate ^= 1;
-    print "<td title=\"$co{'age_string_age'}\"><i>$co{'age_string_date'}</i></td>\n" .
-  # shortlog:   format_author_html('td', \%co, 10)
-          format_author_html('td', \%co, 15, 3) . "<td>";
-    # originally git_history used _chop_str($co{'title'}, 50)
-    print format_subject_html($co{'title'}, $co{'title_short'},
+    print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
+  # shortlog:   format_author_html('td', \%commit, 10)
+          format_author_html('td', \%commit, 15, 3) . "<td>";
+    # originally git_history used _chop_str($commit{'title'}, 50)
+    print format_subject_html($commit{'title'}, $commit{'title_short'},
                               href(action=>"commit", hash=>$commit), $ref);
     print "</td>\n" .
           "<td class=\"link\">" .
@@ -4082,7 +4094,7 @@ sub git_remotes_body {
 }
 
 sub git_search_message {
-  my %co = @_;
+  my %commit = @_;
 
   my $greptype;
   if ($searchtype eq 'commit') {
@@ -4120,8 +4132,8 @@ sub git_search_message {
 
   git_header_html();
 
-  git_print_page_nav('','', $cid,$co{'tree'},$cid, $paging_nav);
-  git_print_header_div('commit', esc_html($co{'title'}), $cid);
+  git_print_page_nav('','', $cid,$commit{'tree'},$cid, $paging_nav);
+  git_print_header_div('commit', esc_html($commit{'title'}), $cid);
   if ($page == 0 && !@commitlist) {
     print "<p>No match.</p>\n";
   } else {
@@ -4132,7 +4144,7 @@ sub git_search_message {
 }
 
 sub git_search_changes {
-  my %co = @_;
+  my %commit = @_;
 
   local $/ = "\n";
   open my $fd, '-|', git_cmd(), '--no-pager', 'log', @diff_opts,
@@ -4142,12 +4154,12 @@ sub git_search_changes {
 
   git_header_html();
 
-  git_print_page_nav('','', $cid,$co{'tree'},$cid);
-  git_print_header_div('commit', esc_html($co{'title'}), $cid);
+  git_print_page_nav('','', $cid,$commit{'tree'},$cid);
+  git_print_header_div('commit', esc_html($commit{'title'}), $cid);
 
   print "<table class=\"pickaxe search\">\n";
   my $alternate = 1;
-  undef %co;
+  undef %commit;
   my @files;
   while (my $line = <$fd>) {
     chomp $line;
@@ -4156,14 +4168,14 @@ sub git_search_changes {
     my %set = parse_difftree_raw_line($line);
     if (defined $set{'commit'}) {
       # finish previous commit
-      if (%co) {
+      if (%commit) {
         print "</td>\n" .
               "<td class=\"link\">" .
-              $cgi->a({-href => href(action=>"commit", hash=>$co{'id'})},
+              $cgi->a({-href => href(action=>"commit", hash=>$commit{'id'})},
                       "commit") .
               " | " .
-              $cgi->a({-href => href(action=>"tree", hash=>$co{'tree'},
-                                     hash_base=>$co{'id'})},
+              $cgi->a({-href => href(action=>"tree", hash=>$commit{'tree'},
+                                     hash_base=>$commit{'id'})},
                       "tree") .
               "</td>\n" .
               "</tr>\n";
@@ -4175,18 +4187,18 @@ sub git_search_changes {
         print "<tr class=\"light\">\n";
       }
       $alternate ^= 1;
-      %co = parse_commit($set{'commit'});
-      my $author = chop_and_escape_str($co{'author_name'}, 15, 5);
-      print "<td title=\"$co{'age_string_age'}\"><i>$co{'age_string_date'}</i></td>\n" .
+      %commit = parse_commit($set{'commit'});
+      my $author = chop_and_escape_str($commit{'author_name'}, 15, 5);
+      print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
             "<td><i>$author</i></td>\n" .
             "<td>" .
-            $cgi->a({-href => href(action=>"commit", hash=>$co{'id'}),
+            $cgi->a({-href => href(action=>"commit", hash=>$commit{'id'}),
                     -class => "list subject"},
-                    chop_and_escape_str($co{'title'}, 50) . "<br/>");
+                    chop_and_escape_str($commit{'title'}, 50) . "<br/>");
     } elsif (defined $set{'to_id'}) {
       next if ($set{'to_id'} =~ m/^0{40}$/);
 
-      print $cgi->a({-href => href(action=>"blob", hash_base=>$co{'id'},
+      print $cgi->a({-href => href(action=>"blob", hash_base=>$commit{'id'},
                                    hash=>$set{'to_id'}, file_name=>$set{'to_file'}),
                     -class => "list"},
                     "<span class=\"match\">" . esc_path($set{'file'}) . "</span>") .
@@ -4196,14 +4208,14 @@ sub git_search_changes {
   close $fd;
 
   # finish last commit
-  if (%co) {
+  if (%commit) {
     print "</td>\n" .
           "<td class=\"link\">" .
-          $cgi->a({-href => href(action=>"commit", hash=>$co{'id'})},
+          $cgi->a({-href => href(action=>"commit", hash=>$commit{'id'})},
                   "commit") .
           " | " .
-          $cgi->a({-href => href(action=>"tree", hash=>$co{'tree'},
-                                 hash_base=>$co{'id'})},
+          $cgi->a({-href => href(action=>"tree", hash=>$commit{'tree'},
+                                 hash_base=>$commit{'id'})},
                   "tree") .
           "</td>\n" .
           "</tr>\n";
@@ -4228,18 +4240,18 @@ sub untabify {
 }
 
 sub git_search_files {
-  my %co = @_;
+  my %commit = @_;
 
   local $/ = "\n";
   open my $fd, "-|", git_cmd(), 'grep', '-n', '-z',
     $search_use_regexp ? ('-E', '-i') : '-F',
-    $searchtext, $co{'tree'}
+    $searchtext, $commit{'tree'}
       or die_error(500, "Open git-grep failed");
 
   git_header_html();
 
-  git_print_page_nav('','', $cid,$co{'tree'},$cid);
-  git_print_header_div('commit', esc_html($co{'title'}), $cid);
+  git_print_page_nav('','', $cid,$commit{'tree'},$cid);
+  git_print_header_div('commit', esc_html($commit{'title'}), $cid);
 
   print "<table class=\"grep_search\">\n";
   my $alternate = 1;
@@ -4255,7 +4267,7 @@ sub git_search_files {
       $binary = 1;
     } else {
       ($file, $lno, $ltext) = split(/\0/, $line, 3);
-      $file =~ s/^$co{'tree'}://;
+      $file =~ s/^$commit{'tree'}://;
     }
     if ($file ne $lastfile) {
       $lastfile and print "</td></tr>\n";
@@ -4264,7 +4276,7 @@ sub git_search_files {
       } else {
         print "<tr class=\"light\">\n";
       }
-      $file_href = href(action=>"blob", hash_base=>$co{'id'},
+      $file_href = href(action=>"blob", hash_base=>$commit{'id'},
                         file_name=>$file);
       print "<td class=\"list\">".
         $cgi->a({-href => $file_href, -class => "list"}, esc_path($file));
@@ -4313,24 +4325,24 @@ sub git_search_grep_body {
   print "<table class=\"commit_search\">\n";
   my $alternate = 1;
   for (my $i = $from; $i <= $to; $i++) {
-    my %co = %{$commitlist->[$i]};
-    if (!%co) {
+    my %commit = %{$commitlist->[$i]};
+    if (!%commit) {
       next;
     }
-    my $commit = $co{'id'};
+    my $commit = $commit{'id'};
     if ($alternate) {
       print "<tr class=\"dark\">\n";
     } else {
       print "<tr class=\"light\">\n";
     }
     $alternate ^= 1;
-    print "<td title=\"$co{'age_string_age'}\"><i>$co{'age_string_date'}</i></td>\n" .
-          format_author_html('td', \%co, 15, 5) .
+    print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
+          format_author_html('td', \%commit, 15, 5) .
           "<td>" .
-          $cgi->a({-href => href(action=>"commit", hash=>$co{'id'}),
+          $cgi->a({-href => href(action=>"commit", hash=>$commit{'id'}),
                    -class => "list subject"},
-                  chop_and_escape_str($co{'title'}, 50) . "<br/>");
-    my $comment = $co{'comment'};
+                  chop_and_escape_str($commit{'title'}, 50) . "<br/>");
+    my $comment = $commit{'comment'};
     foreach my $line (@$comment) {
       if ($line =~ m/^(.*?)($search_regexp)(.*)$/i) {
         my ($lead, $match, $trail) = ($1, $2, $3);
@@ -4349,11 +4361,11 @@ sub git_search_grep_body {
     }
     print "</td>\n" .
           "<td class=\"link\">" .
-          $cgi->a({-href => href(action=>"commit", hash=>$co{'id'})}, "commit") .
+          $cgi->a({-href => href(action=>"commit", hash=>$commit{'id'})}, "commit") .
           " | " .
-          $cgi->a({-href => href(action=>"commitdiff", hash=>$co{'id'})}, "commitdiff") .
+          $cgi->a({-href => href(action=>"commitdiff", hash=>$commit{'id'})}, "commitdiff") .
           " | " .
-          $cgi->a({-href => href(action=>"tree", hash=>$co{'tree'}, hash_base=>$co{'id'})}, "tree");
+          $cgi->a({-href => href(action=>"tree", hash=>$commit{'tree'}, hash_base=>$commit{'id'})}, "tree");
     print "</td>\n" .
           "</tr>\n";
   }
@@ -4385,9 +4397,9 @@ sub git_forks {
 
 sub git_summary {
   my $descr = git_get_project_description($project) || "none";
-  my %co = parse_commit("HEAD");
-  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
-  my $head = $co{'id'};
+  my %commit = parse_commit("HEAD");
+  my %cd = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
+  my $head = $commit{'id'};
   my $remote_heads = gitweb_check_feature('remote_heads');
 
   my $owner = git_get_project_owner($project);
@@ -4546,7 +4558,7 @@ sub git_blame_common {
   die_error(400, "No file name given") unless $file;
   $base_cid ||= git_get_head_hash($project);
   die_error(404, "Couldn't find base commit") unless $base_cid;
-  my %co = parse_commit($base_cid)
+  my %commit = parse_commit($base_cid)
     or die_error(404, "Commit not found");
   my $ftype = "blob";
   if (!defined $cid) {
@@ -4621,8 +4633,8 @@ sub git_blame_common {
     " | " .
     $cgi->a({-href => href(action=>$action, file_name=>$file)},
             "HEAD");
-  git_print_page_nav('','', $base_cid,$co{'tree'},$base_cid, $formats_nav);
-  git_print_header_div('commit', esc_html($co{'title'}), $base_cid);
+  git_print_page_nav('','', $base_cid,$commit{'tree'},$base_cid, $formats_nav);
+  git_print_header_div('commit', esc_html($commit{'title'}), $base_cid);
   git_print_page_path($file, $ftype, $base_cid);
 
   # page body
@@ -4970,7 +4982,7 @@ sub git_blob {
 
   git_header_html(undef, $expires);
   my $formats_nav = '';
-  if (defined $base_cid && (my %co = parse_commit($base_cid))) {
+  if (defined $base_cid && (my %commit = parse_commit($base_cid))) {
     if (defined $file) {
       if ($have_blame) {
         $formats_nav .=
@@ -4993,8 +5005,8 @@ sub git_blob {
         $cgi->a({-href => href(action=>"blob_plain", -replay=>1)},
                 "raw");
     }
-    git_print_page_nav('','', $base_cid,$co{'tree'},$base_cid, $formats_nav);
-    git_print_header_div('commit', esc_html($co{'title'}), $base_cid);
+    git_print_page_nav('','', $base_cid,$commit{'tree'},$base_cid, $formats_nav);
+    git_print_header_div('commit', esc_html($commit{'title'}), $base_cid);
   } else {
     print "<div class=\"page_nav\">\n" .
           "<br/><br/></div>\n" .
@@ -5059,7 +5071,7 @@ sub git_tree {
   my $ref = format_ref_marker($refs, $base_cid);
   git_header_html();
   my $basedir = '';
-  if (defined $base_cid && (my %co = parse_commit($base_cid))) {
+  if (defined $base_cid && (my %commit = parse_commit($base_cid))) {
     my @views_nav = ();
     if (defined $file) {
       push @views_nav,
@@ -5076,7 +5088,7 @@ sub git_tree {
     }
     git_print_page_nav('tree','', $base_cid, undef, undef,
                        join(' | ', @views_nav));
-    git_print_header_div('commit', esc_html($co{'title'}) . $ref, $base_cid);
+    git_print_header_div('commit', esc_html($commit{'title'}) . $ref, $base_cid);
   } else {
     undef $base_cid;
     print "<div class=\"page_nav\">\n";
@@ -5253,9 +5265,9 @@ sub get_log_general {
   if (defined $file && !defined $ftype) {
     die_error(500, "Unknown type of object");
   }
-  my %co;
+  my %commit;
   if (defined $file) {
-    %co = parse_commit($base)
+    %commit = parse_commit($base)
       or die_error(404, "Unknown commit object");
   }
 
@@ -5279,7 +5291,7 @@ sub get_log_general {
   git_header_html();
   git_print_page_nav($fmt_name,'', $cid,$cid,$cid, $paging_nav);
   if (defined $file) {
-    git_print_header_div('commit', esc_html($co{'title'}), $base);
+    git_print_header_div('commit', esc_html($commit{'title'}), $base);
   } else {
     git_print_header_div('summary', $project)
   }
@@ -5327,9 +5339,9 @@ sub git_log_generic {
   if (defined $file && !defined $ftype) {
     die_error(500, "Unknown type of object");
   }
-  my %co;
+  my %commit;
   if (defined $file) {
-    %co = parse_commit($base)
+    %commit = parse_commit($base)
       or die_error(404, "Unknown commit object");
   }
 
@@ -5353,7 +5365,7 @@ sub git_log_generic {
   git_header_html();
   git_print_page_nav($fmt_name,'', $cid,$cid,$cid, $paging_nav);
   if (defined $file) {
-    git_print_header_div('commit', esc_html($co{'title'}), $base);
+    git_print_header_div('commit', esc_html($commit{'title'}), $base);
   } else {
     git_print_header_div('summary', $project)
   }
@@ -5373,11 +5385,11 @@ sub git_log {
 
 sub git_commit {
   $cid ||= $base_cid || "HEAD";
-  my %co = parse_commit($cid)
+  my %commit = parse_commit($cid)
       or die_error(404, "Unknown commit object");
 
-  my $parent  = $co{'parent'};
-  my $parents = $co{'parents'}; # listref
+  my $parent  = $commit{'parent'};
+  my $parents = $commit{'parents'}; # listref
 
   # we need to prepare $formats_nav before any parameter munging
   my $formats_nav;
@@ -5427,30 +5439,30 @@ sub git_commit {
     $expires = "+1d";
   }
   my $refs = git_get_references();
-  my $ref = format_ref_marker($refs, $co{'id'});
+  my $ref = format_ref_marker($refs, $commit{'id'});
 
   git_header_html(undef, $expires);
   git_print_page_nav('commit', '',
-                     $cid, $co{'tree'}, $cid,
+                     $cid, $commit{'tree'}, $cid,
                      $formats_nav);
 
-  if (defined $co{'parent'}) {
-    git_print_header_div('commitdiff', esc_html($co{'title'}) . $ref, $cid);
+  if (defined $commit{'parent'}) {
+    git_print_header_div('commitdiff', esc_html($commit{'title'}) . $ref, $cid);
   } else {
-    git_print_header_div('tree', esc_html($co{'title'}) . $ref, $co{'tree'}, $cid);
+    git_print_header_div('tree', esc_html($commit{'title'}) . $ref, $commit{'tree'}, $cid);
   }
   print "<div class=\"title_text\">\n" .
         "<table class=\"object_header\">\n";
-  git_print_authorship_rows(\%co);
-  print "<tr><td>commit</td><td class=\"sha1\">$co{'id'}</td></tr>\n";
+  git_print_authorship_rows(\%commit);
+  print "<tr><td>commit</td><td class=\"sha1\">$commit{'id'}</td></tr>\n";
   print "<tr>" .
         "<td>tree</td>" .
         "<td class=\"sha1\">" .
-        $cgi->a({-href => href(action=>"tree", hash=>$co{'tree'}, hash_base=>$cid),
-                 class => "list"}, $co{'tree'}) .
+        $cgi->a({-href => href(action=>"tree", hash=>$commit{'tree'}, hash_base=>$cid),
+                 class => "list"}, $commit{'tree'}) .
         "</td>" .
         "<td class=\"link\">" .
-        $cgi->a({-href => href(action=>"tree", hash=>$co{'tree'}, hash_base=>$cid)},
+        $cgi->a({-href => href(action=>"tree", hash=>$commit{'tree'}, hash_base=>$cid)},
                 "tree");
   my $snapshot_links = format_snapshot_links($cid);
   if (defined $snapshot_links) {
@@ -5477,7 +5489,7 @@ sub git_commit {
         "</div>\n";
 
   print "<div class=\"page_body\">\n";
-  git_print_log($co{'comment'});
+  git_print_log($commit{'comment'});
   print "</div>\n";
 
   git_difftree_body(\@difftree, $cid, @$parents);
@@ -5615,9 +5627,9 @@ sub git_blobdiff {
               "raw");
     $formats_nav .= diff_style_nav($diff_style);
     git_header_html(undef, $expires);
-    if (defined $base_cid && (my %co = parse_commit($base_cid))) {
-      git_print_page_nav('','', $base_cid,$co{'tree'},$base_cid, $formats_nav);
-      git_print_header_div('commit', esc_html($co{'title'}), $base_cid);
+    if (defined $base_cid && (my %commit = parse_commit($base_cid))) {
+      git_print_page_nav('','', $base_cid,$commit{'tree'},$base_cid, $formats_nav);
+      git_print_header_div('commit', esc_html($commit{'title'}), $base_cid);
     } else {
       print "<div class=\"page_nav\"><br/>$formats_nav<br/></div>\n";
       print "<div class=\"title\">".esc_html("$cid vs $parent_cid")."</div>\n";
@@ -5703,11 +5715,11 @@ sub git_commitdiff {
   }
 
   $cid ||= $base_cid || "HEAD";
-  my %co = parse_commit($cid)
+  my %commit = parse_commit($cid)
       or die_error(404, "Unknown commit object");
 
   # choose format for commitdiff for merge
-  if (! defined $parent_cid && @{$co{'parents'}} > 1) {
+  if (! defined $parent_cid && @{$commit{'parents'}} > 1) {
     $parent_cid = '--cc';
   }
   # we need to prepare $formats_nav before almost any parameter munging
@@ -5716,12 +5728,12 @@ sub git_commitdiff {
     $formats_nav =
       $cgi->a({-href => href(action=>"commitdiff_plain", -replay=>1)},
               "raw");
-    if ($patch_max && @{$co{'parents'}} <= 1) {
+    if ($patch_max && @{$commit{'parents'}} <= 1) {
       $formats_nav .= " | " .
         $cgi->a({-href => href(action=>"patch", -replay=>1)},
           "patch");
     }
-    $formats_nav .= diff_style_nav($diff_style, @{$co{'parents'}} > 1);
+    $formats_nav .= diff_style_nav($diff_style, @{$commit{'parents'}} > 1);
 
     if (defined $parent_cid &&
         $parent_cid ne '-c' && $parent_cid ne '--cc') {
@@ -5732,8 +5744,8 @@ sub git_commitdiff {
       }
       $formats_nav .=
         ' (from';
-      for (my $i = 0; $i < @{$co{'parents'}}; $i++) {
-        if ($co{'parents'}[$i] eq $parent_cid) {
+      for (my $i = 0; $i < @{$commit{'parents'}}; $i++) {
+        if ($commit{'parents'}[$i] eq $parent_cid) {
           $formats_nav .= ' parent ' . ($i+1);
           last;
         }
@@ -5743,16 +5755,16 @@ sub git_commitdiff {
                                hash=>$parent_cid, hash_base=>undef)},
                 esc_html($parent_cid_short)) .
         ')';
-    } elsif (!$co{'parent'}) {
+    } elsif (!$commit{'parent'}) {
       # --root commitdiff
       $formats_nav .= ' (initial)';
-    } elsif (scalar @{$co{'parents'}} == 1) {
+    } elsif (scalar @{$commit{'parents'}} == 1) {
       # single parent commit
       $formats_nav .=
         ' (parent: ' .
         $cgi->a({-href => href(-replay=>1,
-                               hash=>$co{'parent'}, hash_base=>undef)},
-                esc_html(substr($co{'parent'}, 0, 7))) .
+                               hash=>$commit{'parent'}, hash_base=>undef)},
+                esc_html(substr($commit{'parent'}, 0, 7))) .
         ')';
     } else {
       # merge commit
@@ -5773,7 +5785,7 @@ sub git_commitdiff {
           $cgi->a({-href => href(-replay=>1,
                                  hash=>$_, hash_base=>undef)},
                   esc_html(substr($_, 0, 7)));
-        } @{$co{'parents'}} ) .
+        } @{$commit{'parents'}} ) .
         ')';
     }
   }
@@ -5782,7 +5794,7 @@ sub git_commitdiff {
   if (!defined $parent_cid_param) {
     # --cc for multiple parents, --root for parentless
     $parent_cid_param =
-      @{$co{'parents'}} > 1 ? '--cc' : $co{'parent'} || '--root';
+      @{$commit{'parents'}} > 1 ? '--cc' : $commit{'parent'} || '--root';
   }
 
   # read commitdiff
@@ -5843,20 +5855,20 @@ sub git_commitdiff {
   # write commit message
   if ($format eq 'html') {
     my $refs = git_get_references();
-    my $ref = format_ref_marker($refs, $co{'id'});
+    my $ref = format_ref_marker($refs, $commit{'id'});
 
     git_header_html(undef, $expires);
-    git_print_page_nav('commitdiff','', $cid,$co{'tree'},$cid, $formats_nav);
-    git_print_header_div('commit', esc_html($co{'title'}) . $ref, $cid);
+    git_print_page_nav('commitdiff','', $cid,$commit{'tree'},$cid, $formats_nav);
+    git_print_header_div('commit', esc_html($commit{'title'}) . $ref, $cid);
     print "<div class=\"title_text\">\n" .
           "<table class=\"object_header\">\n";
-    git_print_authorship_rows(\%co);
+    git_print_authorship_rows(\%commit);
     print "</table>".
           "</div>\n";
     print "<div class=\"page_body\">\n";
-    if (@{$co{'comment'}} > 1) {
+    if (@{$commit{'comment'}} > 1) {
       print "<div class=\"log\">\n";
-      git_print_log($co{'comment'}, -final_empty_line=> 1, -remove_title => 1);
+      git_print_log($commit{'comment'}, -final_empty_line=> 1, -remove_title => 1);
       print "</div>\n"; # class="log"
     }
 
@@ -5870,15 +5882,15 @@ sub git_commitdiff {
       -charset => 'utf-8',
       -expires => $expires,
       -content_disposition => 'inline; filename="' . "$filename" . '"');
-    my %ad = parse_date($co{'author_epoch'}, $co{'author_tz'});
-    print "From: " . to_utf8($co{'author'}) . "\n";
+    my %ad = parse_date($commit{'author_epoch'}, $commit{'author_tz'});
+    print "From: " . to_utf8($commit{'author'}) . "\n";
     print "Date: $ad{'rfc2822'} ($ad{'tz_local'})\n";
-    print "Subject: " . to_utf8($co{'title'}) . "\n";
+    print "Subject: " . to_utf8($commit{'title'}) . "\n";
 
     print "X-Git-Tag: $tagname\n" if $tagname;
     print "X-Git-Url: " . $cgi->self_url() . "\n\n";
 
-    foreach my $line (@{$co{'comment'}}) {
+    foreach my $line (@{$commit{'comment'}}) {
       print to_utf8($line) . "\n";
     }
     print "---\n\n";
@@ -5897,12 +5909,12 @@ sub git_commitdiff {
     my $use_parents = !defined $parent_cid ||
       $parent_cid eq '-c' || $parent_cid eq '--cc';
     git_difftree_body(\@difftree, $cid,
-                      $use_parents ? @{$co{'parents'}} : $parent_cid);
+                      $use_parents ? @{$commit{'parents'}} : $parent_cid);
     print "<br/>\n";
 
     git_patchset_body($fd, $diff_style,
                       \@difftree, $cid,
-                      $use_parents ? @{$co{'parents'}} : $parent_cid);
+                      $use_parents ? @{$commit{'parents'}} : $parent_cid);
     close $fd;
     print "</div>\n"; # class="page_body"
     git_footer_html();
@@ -5963,8 +5975,8 @@ sub git_search {
   if (!defined $cid) {
     $cid = git_get_head_hash($project);
   }
-  my %co = parse_commit($cid);
-  if (!%co) {
+  my %commit = parse_commit($cid);
+  if (!%commit) {
     die_error(404, "Unknown commit object");
   }
   if (!defined $page) {
@@ -5974,11 +5986,11 @@ sub git_search {
   if ($searchtype eq 'commit' ||
       $searchtype eq 'author' ||
       $searchtype eq 'committer') {
-    git_search_message(%co);
+    git_search_message(%commit);
   } elsif ($searchtype eq 'pickaxe') {
-    git_search_changes(%co);
+    git_search_changes(%commit);
   } elsif ($searchtype eq 'grep') {
-    git_search_files(%co);
+    git_search_files(%commit);
   } else {
     die_error(400, "Unknown search type");
   }
@@ -6154,7 +6166,7 @@ sub parse_commit {
 sub parse_commit_text {
   my ($commit_text, $withparents) = @_;
   my @commit_lines = split '\n', $commit_text;
-  my %co;
+  my %commit;
 
   pop @commit_lines; # Remove '\0'
 
@@ -6166,45 +6178,45 @@ sub parse_commit_text {
   if ($header !~ m/^[0-9a-fA-F]{40}/) {
     return;
   }
-  ($co{'id'}, my @parents) = split ' ', $header;
+  ($commit{'id'}, my @parents) = split ' ', $header;
   while (my $line = shift @commit_lines) {
     last if $line eq "\n";
     if ($line =~ m/^tree ([0-9a-fA-F]{40})$/) {
-      $co{'tree'} = $1;
+      $commit{'tree'} = $1;
     } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
       push @parents, $1;
     } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
-      $co{'author'} = to_utf8($1);
-      $co{'author_epoch'} = $2;
-      $co{'author_tz'} = $3;
-      if ($co{'author'} =~ m/^([^<]+) <([^>]*)>/) {
-        $co{'author_name'}  = $1;
-        $co{'author_email'} = $2;
+      $commit{'author'} = to_utf8($1);
+      $commit{'author_epoch'} = $2;
+      $commit{'author_tz'} = $3;
+      if ($commit{'author'} =~ m/^([^<]+) <([^>]*)>/) {
+        $commit{'author_name'}  = $1;
+        $commit{'author_email'} = $2;
       } else {
-        $co{'author_name'} = $co{'author'};
+        $commit{'author_name'} = $commit{'author'};
       }
     } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
-      $co{'committer'} = to_utf8($1);
-      $co{'committer_epoch'} = $2;
-      $co{'committer_tz'} = $3;
-      if ($co{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
-        $co{'committer_name'}  = $1;
-        $co{'committer_email'} = $2;
+      $commit{'committer'} = to_utf8($1);
+      $commit{'committer_epoch'} = $2;
+      $commit{'committer_tz'} = $3;
+      if ($commit{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
+        $commit{'committer_name'}  = $1;
+        $commit{'committer_email'} = $2;
       } else {
-        $co{'committer_name'} = $co{'committer'};
+        $commit{'committer_name'} = $commit{'committer'};
       }
     }
   }
-  if (!defined $co{'tree'}) {
+  if (!defined $commit{'tree'}) {
     return;
   };
-  $co{'parents'} = \@parents;
-  $co{'parent'} = $parents[0];
+  $commit{'parents'} = \@parents;
+  $commit{'parent'} = $parents[0];
 
   foreach my $title (@commit_lines) {
     $title =~ s/^    //;
     if ($title ne "") {
-      $co{'title'} = _chop_str($title, 80, 5);
+      $commit{'title'} = _chop_str($title, 80, 5);
       # remove leading stuff of merges to make the interesting part visible
       if (length($title) > 50) {
         $title =~ s/^Automatic //;
@@ -6222,31 +6234,31 @@ sub parse_commit_text {
           $title =~ s/\/pub\/scm//;
         }
       }
-      $co{'title_short'} = _chop_str($title, 50, 5);
+      $commit{'title_short'} = _chop_str($title, 50, 5);
       last;
     }
   }
-  if (! defined $co{'title'} || $co{'title'} eq "") {
-    $co{'title'} = $co{'title_short'} = '(no commit message)';
+  if (! defined $commit{'title'} || $commit{'title'} eq "") {
+    $commit{'title'} = $commit{'title_short'} = '(no commit message)';
   }
   # remove added spaces
   foreach my $line (@commit_lines) {
     $line =~ s/^    //;
   }
-  $co{'comment'} = \@commit_lines;
+  $commit{'comment'} = \@commit_lines;
 
-  my $age = time - $co{'committer_epoch'};
-  $co{'age'} = $age;
-  $co{'age_string'} = age_string($age);
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($co{'committer_epoch'});
+  my $age = time - $commit{'committer_epoch'};
+  $commit{'age'} = $age;
+  $commit{'age_string'} = age_string($age);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($commit{'committer_epoch'});
   if ($age > 60*60*24*7*2) {
-    $co{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
-    $co{'age_string_age'} = $co{'age_string'};
+    $commit{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{'age_string_age'} = $commit{'age_string'};
   } else {
-    $co{'age_string_date'} = $co{'age_string'};
-    $co{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{'age_string_date'} = $commit{'age_string'};
+    $commit{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
   }
-  return %co;
+  return %commit;
 }
 
 sub age_string {
