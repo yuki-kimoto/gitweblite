@@ -479,14 +479,12 @@ get '/tree' => sub {
       or die 404, "Reading tree failed";
   }
   
-  my @lines;
+  my @trees;
   foreach my $line (@entries) {
     my %tree = parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
     $tree{mode_str} = mode_str($tree{mode});
-    push @lines, \%tree;
+    push @trees, \%tree;
   }
-  
-  warn $self->dumper(\@lines);
 
   $self->render(
     root => $root,
@@ -495,7 +493,7 @@ get '/tree' => sub {
     tid => $tid,
     file => $file,
     commit => $commit,
-    lines => \@lines
+    trees => \@trees
   );
 };
 
