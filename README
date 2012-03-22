@@ -1,7 +1,7 @@
 Gitweb Lite
 
   (Beta release)
-  gitweb.cgi clone. Serve git repository.
+  gitweb.cgi clone. Serve git repository to see it on brower.
 
 Features
 
@@ -11,6 +11,7 @@ Features
   - You can run "gitweblite.pl" very easily,
     even if "apache" is not installed
   - You can set Multiple project roots
+  - Zero configuration(Not yet)
 
 Operation
 

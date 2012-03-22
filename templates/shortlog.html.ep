@@ -1,8 +1,8 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
-    <a href="<%= url_for('/projects')->query({root => $root, project => $project}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= param('project') %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
     Short Log
   </div>
   %= include '/include/page_navi', current => 'shortlog', head_cid => $head_cid, root => $root, project => $project;

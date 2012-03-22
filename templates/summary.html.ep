@@ -1,8 +1,8 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
-    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
     Summary
   </div>
   %= include '/include/page_navi', current => 'summary', head_cid => $head_cid;
@@ -29,20 +29,21 @@
     
     % for (my $i = 0; $i < @$commits; $i++) {
       % my $commit = $commits->[$i];
+      % my $cid = $commit->{id};
       <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td title="<%= $commit->{age_string_date} %>"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('/commit')->query($self->req->params->clone)->query([id => $commit->{id}]) %>"
+            "<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid})->query([cid => $cid]) %>"
           >
             %= $commit->{title_short};
           </a>
           % for my $type (qw/head tag/) {
-            % if (my $name = $ref_names->{$type}{$commit->{id}}) {
+            % if (my $name = $ref_names->{$type}{$cid}) {
               <span class="refs">
                 <span class="<%= $type %>" title="<%= $type %>s/<%= $name %>">
-                  <a href="<%= url_for('/shortlog')->query($self->req->params->clone)->query([$type => $name]) %>">
+                  <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
                     <%= $name %>
                   </a>
                 </span>
@@ -51,60 +52,64 @@
           % }
         </td>
         <td class="link">
-          <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">commit</a>
+          <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid}) %>">commit</a>
           |
-          <a href="<%= url_for('/commitdiff')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">
+          <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project, cid => $cid}) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('/commitdifftree')->query($self->req->params->clone)->query([id => $commit->{id}]) %>">
+          <a href="<%= url_for('/commitdifftree')->query({root => $root, project => $project, cid => $cid}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('/snapshot')->query($self->req->params->clone)->query([id => $commit->{id}]) %>
+            <%= url_for('/snapshot')->query({root => $root, project => $project, cid => $cid}) %>
           >
             snapshot
           </a>
         </td>
       </tr>
     % }
+    % if (@$commits == $commit_count) {
+      <tr><td><a href="<%= "aaa" %>">...</a></td></tr>
+    % }
   </table>
   
   <!-- Tags -->
   <div class="header">
-    <a class="title" href="<%= url_for('/tags')->query($self->req->params->clone) %>">Tags</a>
+    <a class="title" href="<%= url_for('/tags')->query({root => $root, project => $project}) %>">Tags</a>
   </div>
   <table class="tags">
     % for (my $i = 0; $i < @$tags; $i++) {
       % my $tag = $tags->[$i];
+      % my $name = $tag->{name};
       <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td><i><%= $tag->{age} %></i></td>
         <td>
           <a class="list name" href=
-            "<%= url_for('/commit')->query($self->req->params->clone)->query([id => $tag->{id}]) %>"
+            "<%= url_for('/commit')->query({root => $root, project => $project, cid => $name}) %>"
           >
             %= $tag->{name};
           </a>
         </td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('/commit')->query($self->req->params->clone)->query([id => $tag->{id}]) %>"
+            "<%= url_for('/commit')->query({root => $root, project => $project, cid => $name}) %>"
           >
-            <%= $tag->{subject} // '' %>
+            <%= $tag->{subject} || '' %>
           </a>
         </td>
         <td class="selflink">
           <a href=
-            "<%= url_for('/tag')->query($self->req->params->clone)->query([id => $tag->{id}]) %>"
+            "<%= url_for('/tag')->query({root => $root, project => $project, name => $name}) %>"
           >
             tag
           </a>
         </td>
         <td class="link"> |
-          <a href="<%= url_for('/commit')->query($self->req->params->clone)->query([id => $tag->{id}]) %>">commit</a> |
-          <a href="<%= url_for('/tag')->query($self->req->params->clone)->query([name => $tag->{name}]) %>">shortlog</a> |
-          <a href="<%= url_for('/log')->query($self->req->params->clone)->query([tag => $tag->{name}]) %>">log</a>
+          <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $name}) %>">commit</a> |
+          <a href="<%= url_for('/tag')->query({root => $root, project => $project, name => $name}) %>">shortlog</a> |
+          <a href="<%= url_for('/log')->query({root => $root, project => $project, base_cid => $name}) %>">log</a>
         </td>
       </tr>
     % }
@@ -112,19 +117,20 @@
   
   <!-- Heads -->
   <div class="header">
-    <a class="title" href="<%= url_for('/heads')->query($self->req->params->clone) %>">Heads</a>
+    <a class="title" href="<%= url_for('/heads')->query({root => $root, project => $project}) %>">Heads</a>
   </div>
   <table class="heads">
     % for (my $i = 0; $i < @$heads; $i++) {
       % my $head = $heads->[$i];
+      % my $name = $head->{name};
       <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td><i><%= $head->{age} %></i></td>
         <td class="current_head">
-          <a class="list name" href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $head->{name}]) %>"><%= $head->{name} %></a>
+          <a class="list name" href="<%= url_for('/log')->query({root => $root, project => $project, base_cid => $name}) %>"><%= $head->{name} %></a>
         </td>
-        <td class="link"><a href="<%= url_for('/shortlog')->query($self->req->params->clone)->query([head => $head->{name}]) %>">shortlog</a> |
-        <a href="<%= url_for('/log')->query($self->req->params->clone)->query([head => $head->{name}]) %>">log</a> |
-        <a href="<%= url_for('/tree')->query($self->req->params->clone)->query([head => $head->{name}]) %>">tree</a></td>
+        <td class="link"><a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">shortlog</a> |
+        <a href="<%= url_for('/log')->query({root => $root, project => $project, base_cid => $name}) %>">log</a> |
+        <a href="<%= url_for('/tree')->query({root => $root, project => $project, cid => $name}) %>">tree</a></td>
       </tr>
     % }
   </table>

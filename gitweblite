@@ -137,25 +137,26 @@ get '/' => sub {
   my $self = shift;
   
   my $projectroots = $self->app->config('projectroots');
-  my $projectroot_descriptions
-    = $self->app->config('projectroot_descriptions');
 
-  $self->render(
-    projectroots => $projectroots,
-    projectroot_descriptions => $projectroot_descriptions
-  );
+  $self->render(projectroots => $projectroots);
 } => 'projectroots';
 
 get '/projects' => sub {
   my $self = shift;
   
-  my $root = $self->param('root');
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
   
   my $projectroots = app->config->{projectroots};
+  die unless grep { $_ eq $root } @$projectroots;
   
-  die "Error" unless grep { $_ eq $root } @$projectroots;
-  
-  our $project_list = $root;
   my @projects = get_projects($root);
   @projects = fill_project_list_info(\@projects);
  
@@ -190,14 +191,16 @@ get '/summary' => sub {
   $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
   
   # Commits
-  my $page_count = 50;
-  my $commits = $head_cid ? parse_commits($root, $project, $head_cid, 20) : ();
+  my $commit_count = 20;
+  my $commits = $head_cid ? parse_commits($root, $project, $head_cid, $commit_count) : ();
   
   # Ref names
   my $ref_names = {};
-  my $tags  = get_tags($root, $project);
+  my $tag_count = 20;
+  my $tags  = get_tags($root, $project, $tag_count);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = get_heads($root, $project);
+  my $head_count = 20;
+  my $heads = get_heads($root, $project, $head_count);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   # Render
@@ -212,7 +215,10 @@ get '/summary' => sub {
     tags => $tags,
     head_cid => $head_cid,
     heads => $heads,
-    ref_names => $ref_names
+    ref_names => $ref_names,
+    commit_count => $commit_count,
+    tag_count => $tag_count,
+    head_count => $head_count
   );
 };
 
@@ -293,8 +299,8 @@ get '/log' => sub {
   my $page_count = 20;
   my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
   for my $commit (@$commits) {
-    my %ad = parse_date($commit->{author_epoch}, $commit->{author_tz});
-    $commit->{last_change} = format_timestamp_html(\%ad);
+    my %author_date = parse_date($commit->{author_epoch}, $commit->{author_tz});
+    $commit->{last_change} = format_timestamp_html(\%author_date);
   }
     
   # Ref names
@@ -325,36 +331,32 @@ get '/commit' => sub {
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
-    id => ['hex']
+    cid => ['not_blank']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
-  my $id = $params->{id};
+  my $cid = $params->{cid};
 
   # Project information
   my $project_description = get_project_description($root, $project);
   my $project_owner = get_project_owner($root, $project);
-  my %commit = parse_commit($root, $project, $id);
+  my %commit = parse_commit($root, $project, $cid);
   my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
   my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
   $commit{author_date} = format_timestamp_html(\%author_date);
   $commit{committer_date} = format_timestamp_html(\%committer_date);
   my $remote_heads = gitweb_check_feature('remote_heads');
   my $refs = get_references($root, $project);
-  my $tags  = get_tags($root, $project);
-  my $heads = get_heads($root, $project);
   
   # Ref names
   my $ref_names = {};
-  for my $tag (@$tags) {
-    $ref_names->{tag}{$tag->{id}} = $tag->{name};
-  }
-  for my $head (@$heads) {
-    $ref_names->{head}{$head->{id}} = $head->{name};
-  }  
+  my $tags  = get_tags($root, $project);
+  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
+  my $heads = get_heads($root, $project);
+  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   my $parent = $commit{parent};
   my $parents = $commit{parents};
@@ -368,7 +370,7 @@ get '/commit' => sub {
     "--no-commit-id",
     @diff_opts,
     (@$parents <= 1 ? $parent : '-c'),
-    $id,
+    $cid,
     "--"
   );
   
@@ -413,7 +415,7 @@ get '/commit' => sub {
   $self->render(
     root => $root,
     project => $project,
-    id => $id,
+    cid => $cid,
     commit => \%commit,
     ref_names => $ref_names,
     diffs => $diffs
@@ -448,43 +450,44 @@ get '/blob' => sub {
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
-    id => ['any'],
-    file => ['any']
+    cid => ['not_blank'],
+    file => ['not_blank']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
-  my $id = $params->{id};
+  my $cid = $params->{cid};
   my $file = $params->{file};
   
+  warn $self->dumper([$root, $project, $cid, $file]);
   # Blob id
-  my $blob_id = get_hash_by_path($root, $project, $id, $file, "blob")
+  my $bid = get_hash_by_path($root, $project, $cid, $file, "blob")
 		or die "Cannot find file";
 	
   # Blob
-  my @command = (
+  my @git_cat_file = (
     git($root, $project),
     "cat-file",
     "blob",
-    $blob_id
+    $bid
   );
-  open my $fd, "-|", @command
-    or die "Couldn't cat $file, $id";
-    
+  open my $fd, "-|", @git_cat_file
+    or die "Couldn't cat $file, $bid";
+  
   my $mimetype = blob_mimetype($fd, $file);
 
   # Redirect to blob plane
   if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
     close $fd;
     my $url = $self->url_for('/blob_plain')->query([root => $root, project => $project,
-      id => $id, file => $file]);
+      cid => $cid, file => $file]);
     return $self->refirect_to($url);
   }
   
   # Commit
-  my %commit = parse_commit($root, $project, $id);
+  my %commit = parse_commit($root, $project, $cid);
 
   my @lines;
   while (my $line = <$fd>) {
@@ -493,12 +496,11 @@ get '/blob' => sub {
     push @lines, $line;
   }
   
-  
   $self->render(
     root => $root,
     project => $project,
-    id => $id,
-    blob_id => $blob_id,
+    cid => $cid,
+    bid => $bid,
     file => $file,
     commit => \%commit,
     lines => \@lines
@@ -513,28 +515,28 @@ get '/blob_plain' => sub {
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
-    id => ['any'],
-    file => ['any']
+    cid => ['not_blank'],
+    file => ['not_blank']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
-  my $id = $params->{id};
+  my $cid = $params->{cid};
   my $file = $params->{file};
 
   # Blob id
-  my $blob_id = get_hash_by_path($root, $project, $id, $file, "blob")
+  my $bid = get_hash_by_path($root, $project, $cid, $file, "blob")
 		or die "Cannot find file";
-  open my $fd, "-|", git($root, $project), "cat-file", "blob", $blob_id
-    or die "Open git-cat-file blob '$id' failed";
+  open my $fd, "-|", git($root, $project), "cat-file", "blob", $bid
+    or die "Open git-cat-file blob '$bid' failed";
 
   # content-type (can include charset)
   my $type = blob_contenttype($fd, $file);
 
   # "save as" filename, even when no $file is given
-  my $save_as = "$id";
+  my $save_as = "$cid";
   if (defined $file) {
     $save_as = $file;
   } elsif ($type =~ m/^text\//) {
