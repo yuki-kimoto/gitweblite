@@ -1,22 +1,14 @@
-% layout 'common';
   <div class="page_header">
-  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / tree
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    Short Log
   </div>
-  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
-  <div class="search">
-  <input name="a" type="hidden" value="search" />
-  <input name="h" type="hidden" value="f6067adc61108c3398de698bb0294d95f09b55ef" />
-  <select name="st" >
-  <option selected="selected" value="free">free</option>
-  <option value="commit">commit</option>
-  <option value="grep">grep</option>
-  <option value="author">author</option>
-  <option value="committer">committer</option>
-  <option value="pickaxe">pickaxe</option>
-  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
-  <input type="text" name="s"  />
-  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
-  </form>
+  %= include '/include/page_navi', current => 'shortlog', head_cid => $head_cid, root => $root, project => $project;
+  <%= include '/include/page_navi2', current => 'shortlog', base_cid => $base_cid,
+    page => $page, page_count => $page_count,commits => $commits;
+  %>
+
   <div class="page_nav">
   <a href="/perl.git">summary</a> | <a href="/perl.git/shortlog/f6067adc61108c3398de698bb0294d95f09b55ef">shortlog</a> | <a href="/perl.git/log/f6067adc61108c3398de698bb0294d95f09b55ef">log</a> | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | tree<br/>
   <a title="in format: tar.gz" rel="nofollow" href="/perl.git/snapshot/f6067adc61108c3398de698bb0294d95f09b55ef.tar.gz">snapshot</a><br/>

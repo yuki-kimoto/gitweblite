@@ -423,7 +423,8 @@ get '/commit' => sub {
     cid => $cid,
     commit => \%commit,
     ref_names => $ref_names,
-    diffs => $diffs
+    diffs => $diffs,
+    ref_names => $ref_names
   );
 };
 

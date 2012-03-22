@@ -24,13 +24,25 @@
     </a>
   </div>
   <div class="title_text">
-    <span class="refs">
-      <span class="head" title="heads/blead">
-        <a href="/perl.git/shortlog/refs/heads/blead">
-          blead
-        </a>
+    % warn dumper([$cid, $commit->{id}, $ref_names]);
+    % if (my $name = $ref_names->{head}{$commit->{id}}) {
+      <span class="refs">
+        <span class="head" title="heads/<%= $name %>">
+          <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
+            <%= $name %>
+          </a>
+        </span>
       </span>
-    </span>
+    % }
+    % if (my $name = $ref_names->{tag}{$commit->{id}}) {
+      <span class="refs">
+        <span class="tag" title="tags/<%= $name %>">
+          <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
+            <%= $name %>
+          </a>
+        </span>
+      </span>
+    % }
     <table class="object_header">
       <tr>
         <td>author</td>
