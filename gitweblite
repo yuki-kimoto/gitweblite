@@ -194,7 +194,7 @@ get '/summary' => sub {
   
   # Commits
   my $page_count = 50;
-  my $commits = $head_id ? parse_commits_new($root, $project, $head_id, 20) : ();
+  my $commits = $head_id ? parse_commits($root, $project, $head_id, 20) : ();
   
   # Ref names
   my $ref_names = {};
@@ -230,45 +230,39 @@ get '/shortlog' => sub {
     root => ['not_blank'],
     project => ['not_blank'],
     page => {require => 0} => ['int'],
-    base_id => {require => 0} => ['hex']
+    base_cid => {require => 0} => ['any']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
-  my $page = $params->{page} // 0;
+  my $page = $params->{page} || 0;
   $page = 0 if $page < 0;
-  $self->param(page => $page);
 
-  # Commits
-  my %commit = parse_commit($root, $project, "HEAD");
-  my $head_id = $commit{'id'};
-  my $base_id //= $head_id;
-  $self->param(base_id => $base_id);
-  my $remote_heads = gitweb_check_feature('remote_heads');
-  my $refs = get_references($root, $project);
-  my $tags  = get_tags($root, $project);
-  my $heads = get_heads($root, $project);
+  # HEAD commit
+  my $head_commit = parse_commit($root, $project, "HEAD");
+  my $head_cid = $head_commit->{'id'};
+  my $base_cid ||= $head_cid;
   
   # Ref names
   my $ref_names = {};
-  for my $tag (@$tags) {
-    $ref_names->{tag}{$tag->{id}} = $tag->{name};
-  }
-  for my $head (@$heads) {
-    $ref_names->{head}{$head->{id}} = $head->{name};
-  }
+  my $tags  = get_tags($root, $project);
+  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
+  my $heads = get_heads($root, $project);
+  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
 
   # Commits
   my $page_count = 50;
-  my $commits = parse_commits_new($root, $project, $base_id, $page_count, $page_count * $page);
+  my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
 
   $self->render(
     root => $root,
     project => $project,
+    base_cid => $base_cid,
+    page => $page,
     commits => $commits,
-    head_id => $head_id,
+    head_cid => $head_cid,
     ref_names => $ref_names,
     page_count => $page_count
   );
@@ -319,7 +313,7 @@ get '/log' => sub {
 
   # Commits
   my $page_count = 20;
-  my $commits = parse_commits_new($root, $project, $base_id, $page_count, $page_count * $page);
+  my $commits = parse_commits($root, $project, $base_id, $page_count, $page_count * $page);
 
   for my $commit (@$commits) {
     
@@ -2260,59 +2254,32 @@ sub parse_tag {
 }
 
 sub parse_commits {
-  my ($commit_id, $maxcount, $skip, $filename, @args) = @_;
-  my @cos;
+  my ($root, $project, $cid, $maxcount, $skip, $filename, @args) = @_;
 
+  # git rev-list
   $maxcount ||= 1;
   $skip ||= 0;
-
-  local $/ = "\0";
-
-  open my $fd, "-|", git_cmd(), "rev-list",
-    "--header",
-    @args,
-    ("--max-count=" . $maxcount),
-    ("--skip=" . $skip),
-    @extra_options,
-    $commit_id,
-    "--",
-    ($filename ? ($filename) : ())
-    or die_error(500, "Open git-rev-list failed");
-  while (my $line = <$fd>) {
-    my %co = parse_commit_text($line);
-    push @cos, \%co;
-  }
-  close $fd;
-
-  return wantarray ? @cos : \@cos;
-}
-
-sub parse_commits_new {
-  my ($root, $project, $commit_id, $maxcount, $skip, $filename, @args) = @_;
-  my @cos;
-
-  $maxcount ||= 1;
-  $skip ||= 0;
-
-  local $/ = "\0";
-
   open my $fd, "-|", git($root, $project), "rev-list",
     "--header",
     @args,
     ("--max-count=" . $maxcount),
     ("--skip=" . $skip),
     @extra_options,
-    $commit_id,
+    $cid,
     "--",
     ($filename ? ($filename) : ())
     or die_error(500, "Open git-rev-list failed");
+
+  # Parse rev-list results
+  local $/ = "\0";
+  my @commits;
   while (my $line = <$fd>) {
     my %co = parse_commit_text($line);
-    push @cos, \%co;
+    push @commits, \%co;
   }
   close $fd;
 
-  return \@cos;
+  return \@commits;
 }
 
 # parse line of git-diff-tree "raw" output
@@ -6121,30 +6088,6 @@ sub get_references {
   }
   close $fd or return;
   return \%refs;
-}
-
-sub parse_commit {
-  my ($root, $project, $id) = @_;
-  my %co;
-
-  local $/ = "\0";
-  
-  my @git_command = (
-    git($root, $project),
-    "rev-list",
-    "--parents",
-    "--header",
-    "--max-count=1",
-    $id,
-    "--"
-  );
-  
-  open my $fd, "-|", @git_command
-    or die "Open git-rev-list failed";
-  %co = parse_commit_text(<$fd>, 1);
-  close $fd;
-
-  return %co;
 }
 
 sub parse_commit {
