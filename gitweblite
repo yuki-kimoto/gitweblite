@@ -205,8 +205,6 @@ get '/summary' => sub {
     $ref_names->{head}{$head->{id}} = $head->{name};
   }
   
-  warn $self->dumper($commits);
-  
   # Render
   $self->render(
     root => $root,
@@ -243,13 +241,9 @@ get '/shortlog' => sub {
   $page = 0 if $page < 0;
   $self->param(page => $page);
 
-  # Project information
-  my $project_description = get_project_description($root, $project);
-  my $project_owner = get_project_owner($root, $project);
-  my %co = parse_commit($root, $project, "HEAD");
-  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
-  my $last_change = format_timestamp_html(\%cd);
-  my $head_id = $co{'id'};
+  # Commits
+  my %commit = parse_commit($root, $project, "HEAD");
+  my $head_id = $commit{'id'};
   my $base_id //= $head_id;
   $self->param(base_id => $base_id);
   my $remote_heads = gitweb_check_feature('remote_heads');
@@ -6151,6 +6145,30 @@ sub parse_commit {
   close $fd;
 
   return %co;
+}
+
+sub parse_commit {
+  my ($root, $project, $id) = @_;
+  
+  # Git rev-list
+  my @git_rev_list = (
+    git($root, $project),
+    "rev-list",
+    "--parents",
+    "--header",
+    "--max-count=1",
+    $id,
+    "--"
+  );
+  open my $fd, "-|", @git_rev_list
+    or die "Open git-rev-list failed";
+  
+  # Parse rev-list result
+  local $/ = "\0";
+  my %commit = parse_commit_text(<$fd>, 1);
+  close $fd;
+
+  return wantarray ? %commit : \%commit;
 }
 
 sub parse_commit_text {
