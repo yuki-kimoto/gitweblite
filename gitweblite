@@ -594,8 +594,150 @@ get '/blob_plain' => sub {
   $self->render_data($content);
 };
 
+get '/blobdiff_plain' => sub {
+
+};
+
 get '/blobdiff' => sub {
-  shift->render(text => 'blobdiff');
+  my $self = shift;
+
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    id => ['any'],
+    file => ['any']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $id = $params->{id};
+  my $file = $params->{file};
+
+	my $format = 'html';
+
+	my $fd;
+	my @difftree;
+	my %diffinfo;
+	
+	my $cid;
+	my $parent_cid;
+	my $bid;
+	my $parent_bid;
+	my $parent_file;
+
+	if (defined $cid && defined $parent_cid) {
+		if (defined $file) {
+			# read raw output
+			open $fd, "-|", git_cmd(), "diff-tree", '-r', @diff_opts,
+				$parent_cid, $cid,
+				"--", (defined $parent_file ? $parent_file : ()), $file
+				or die 500, "Open git-diff-tree failed";
+			@difftree = map { chomp; $_ } <$fd>;
+			close $fd
+				or die 404, "Reading git-diff-tree failed";
+			@difftree
+				or die 404, "Blob diff not found";
+
+		} elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
+
+			# read filtered raw output
+			open $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
+				  $parent_cid, $cid, "--"
+				or die "Open git-diff-tree failed";
+			@difftree =
+				grep { /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} $bid/ }
+				map { chomp; $_ } <$fd>;
+			close $fd
+				or die("Reading git-diff-tree failed");
+			@difftree
+				or die("Blob diff not found");
+
+		} else {
+			die "Missing one of the blob diff parameters";
+		}
+
+		if (@difftree > 1) {
+			die "Ambiguous blob diff specification";
+		}
+
+		%diffinfo = parse_difftree_raw_line($difftree[0]);
+		$parent_file ||= $diffinfo{'from_file'} || $file;
+		$file   ||= $diffinfo{'to_file'};
+
+		$parent_bid ||= $diffinfo{'from_id'};
+		$bid        ||= $diffinfo{'to_id'};
+
+		# open patch output
+		open $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
+			'-p', ($format eq 'html' ? "--full-index" : ()),
+			$parent_cid, $cid,
+			"--", (defined $parent_file ? $parent_file : ()), $file
+			or die_error(500, "Open git-diff-tree failed");
+	}
+
+	if (!%diffinfo) {
+		die '404 Not Found', "Missing one of the blob diff parameters";
+	}
+
+	# header
+	if ($format eq 'html') {
+		my $formats_nav =
+			$cgi->a({-href => href(action=>"blobdiff_plain", -replay=>1)},
+			        "raw");
+		if (defined $cid && (my %co = parse_commit($cid))) {
+			git_print_page_nav('','', $cid,$co{'tree'},$cid, $formats_nav);
+			git_print_header_div('commit', esc_html($co{'title'}), $cid);
+		} else {
+			print "<div class=\"page_nav\"><br/>$formats_nav<br/></div>\n";
+			print "<div class=\"title\">".esc_html("$bid vs $parent_bid")."</div>\n";
+		}
+		if (defined $file) {
+			git_print_page_path($file, "blob", $cid);
+		} else {
+			print "<div class=\"page_path\"></div>\n";
+		}
+
+	} elsif ($format eq 'plain') {
+		print $cgi->header(
+			-type => 'text/plain',
+			-charset => 'utf-8',
+			-content_disposition => 'inline; filename="' . "$file" . '.patch"');
+
+		print "X-Git-Url: " . $cgi->self_url() . "\n\n";
+
+	} else {
+		die 400, "Unknown blobdiff format";
+	}
+
+	# patch
+	if ($format eq 'html') {
+		print "<div class=\"page_body\">\n";
+
+		git_patchset_body($fd, [ \%diffinfo ], $cid, $parent_cid);
+		close $fd;
+
+		print "</div>\n"; # class="page_body"
+		git_footer_html();
+
+	} else {
+		while (my $line = <$fd>) {
+			$line =~ s!a/($bid|$parent_bid)!'a/'.esc_path($diffinfo{'from_file'})!eg;
+			$line =~ s!b/($bid|$parent_bid)!'b/'.esc_path($diffinfo{'to_file'})!eg;
+
+			print $line;
+
+			last if $line =~ m!^\+\+\+!;
+		}
+		local $/ = undef;
+		print <$fd>;
+		close $fd;
+	}
+
+  $self->render(text => 'blobdiff');
 };
 
 get '/history' => sub {
