@@ -114,7 +114,6 @@
     % for my $diff (@$diffs) {
       % my $file = $diff->{to_file};
       % my $mode_str = $diff->{to_mode_str};
-      % my $from_cid = $diff->{from_id};
       % my $status = $diff->{status};
       <tr>
         <td>
@@ -148,7 +147,7 @@
         <td class="link">
           % if ($status ne 'A') {
             <a href="<%= url_for('/blobdiff')->query({root => $root, project => $project,
-              from_cid => $from_cid, cid => $cid, file => $file}) %>"
+              from_cid => $parent_cid, cid => $cid, file => $file}) %>"
             >
               diff
             </a>
