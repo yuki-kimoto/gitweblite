@@ -664,20 +664,41 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
   
   my $commit = parse_commit($root, $project, $cid);
 
-  warn $self->dumper(\%diffinfo);
+  if ($plain) {
+    my $content = do { local $/; <$fd> };
+    my $content_disposition .= "inline; filename=$file";
+    $self->res->headers->content_disposition($content_disposition);
+    $self->res->headers->content_type("text/plain");
+    $self->render_data($content);
+  }
+  else {
+  	# patch
+  	my @lines;
+  	while (my $line = <$fd>) {
+  	  my $class;
+  	  
+  	  if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
+  	  elsif ($line =~ /^index /) { $class = 'diff extended_header' }
+  	  elsif ($line =~ /^\+/) { $class = 'diff to_file' }
+  	  elsif ($line =~ /^\-/) { $class = 'diff from_file' }
+  	  elsif ($line =~ /^\@\@/) { $class = 'diff chunk_header' }
+  	  else { $class = 'diff' }
+  	  push @lines, {value => $line, class => $class};
+  	}
+  	close $fd;
 
-	# patch
-	git_patchset_body($fd, [ \%diffinfo ], $cid, $from_cid);
-	close $fd;
-
-  $self->render(
-    root => $root,
-    project => $project,
-    cid => $cid,
-    file => $file,
-    commit => $commit,
-    diffinfo => \%diffinfo
-  );
+    $self->render(
+      '/blobdiff',
+      root => $root,
+      project => $project,
+      cid => $cid,
+      from_cid => $from_cid,
+      file => $file,
+      commit => $commit,
+      diffinfo => \%diffinfo,
+      lines => \@lines
+    );
+  }
 };
 
 sub format_diff_line {
@@ -797,309 +818,6 @@ sub esc_path {
 	$str =~ s|([[:cntrl:]])|quot_cec($1)|eg;
 	return $str;
 }
-
-sub get_patchset {
-	my ($fd, $difftree, $hash, @hash_parents) = @_;
-	my ($hash_parent) = $hash_parents[0];
-
-	my $is_combined = (@hash_parents > 1);
-	my $patch_idx = 0;
-	my $patch_number = 0;
-	my $patch_line;
-	my $diffinfo;
-	my $to_name;
-	my (%from, %to);
-
-	print "<div class=\"patchset\">\n";
-
-	# skip to first patch
-	while ($patch_line = <$fd>) {
-		chomp $patch_line;
-
-		last if ($patch_line =~ m/^diff /);
-	}
-
- PATCH:
-	while ($patch_line) {
-
-		# parse "git diff" header line
-		if ($patch_line =~ m/^diff --git (\"(?:[^\\\"]*(?:\\.[^\\\"]*)*)\"|[^ "]*) (.*)$/) {
-			# $1 is from_name, which we do not use
-			$to_name = unquote($2);
-			$to_name =~ s!^b/!!;
-		} elsif ($patch_line =~ m/^diff --(cc|combined) ("?.*"?)$/) {
-			# $1 is 'cc' or 'combined', which we do not use
-			$to_name = unquote($2);
-		} else {
-			$to_name = undef;
-		}
-
-		# check if current patch belong to current raw line
-		# and parse raw git-diff line if needed
-		if (is_patch_split($diffinfo, { 'to_file' => $to_name })) {
-			# this is continuation of a split patch
-			print "<div class=\"patch cont\">\n";
-		} else {
-			# advance raw git-diff output if needed
-			$patch_idx++ if defined $diffinfo;
-
-			# read and prepare patch information
-			$diffinfo = parsed_difftree_line($difftree->[$patch_idx]);
-
-			# compact combined diff output can have some patches skipped
-			# find which patch (using pathname of result) we are at now;
-			if ($is_combined) {
-				while ($to_name ne $diffinfo->{'to_file'}) {
-					print "<div class=\"patch\" id=\"patch". ($patch_idx+1) ."\">\n" .
-					      format_diff_cc_simplified($diffinfo, @hash_parents) .
-					      "</div>\n";  # class="patch"
-
-					$patch_idx++;
-					$patch_number++;
-
-					last if $patch_idx > $#$difftree;
-					$diffinfo = parsed_difftree_line($difftree->[$patch_idx]);
-				}
-			}
-
-			# modifies %from, %to hashes
-			parse_from_to_diffinfo($diffinfo, \%from, \%to, @hash_parents);
-
-			# this is first patch for raw difftree line with $patch_idx index
-			# we index @$difftree array from 0, but number patches from 1
-			print "<div class=\"patch\" id=\"patch". ($patch_idx+1) ."\">\n";
-		}
-
-		# git diff header
-		#assert($patch_line =~ m/^diff /) if DEBUG;
-		#assert($patch_line !~ m!$/$!) if DEBUG; # is chomp-ed
-		$patch_number++;
-		# print "git diff" header
-		print format_git_diff_header_line($patch_line, $diffinfo,
-		                                  \%from, \%to);
-
-		# print extended diff header
-		print "<div class=\"diff extended_header\">\n";
-	EXTENDED_HEADER:
-		while ($patch_line = <$fd>) {
-			chomp $patch_line;
-
-			last EXTENDED_HEADER if ($patch_line =~ m/^--- |^diff /);
-
-			print format_extended_diff_header_line($patch_line, $diffinfo,
-			                                       \%from, \%to);
-		}
-		print "</div>\n"; # class="diff extended_header"
-
-		# from-file/to-file diff header
-		if (! $patch_line) {
-			print "</div>\n"; # class="patch"
-			last PATCH;
-		}
-		next PATCH if ($patch_line =~ m/^diff /);
-		#assert($patch_line =~ m/^---/) if DEBUG;
-
-		my $last_patch_line = $patch_line;
-		$patch_line = <$fd>;
-		chomp $patch_line;
-		#assert($patch_line =~ m/^\+\+\+/) if DEBUG;
-
-		print format_diff_from_to_header($last_patch_line, $patch_line,
-		                                 $diffinfo, \%from, \%to,
-		                                 @hash_parents);
-
-		# the patch itself
-	LINE:
-		while ($patch_line = <$fd>) {
-			chomp $patch_line;
-
-			next PATCH if ($patch_line =~ m/^diff /);
-
-			print format_diff_line($patch_line, \%from, \%to);
-		}
-
-	} continue {
-		print "</div>\n"; # class="patch"
-	}
-
-	# for compact combined (--cc) format, with chunk and patch simplification
-	# the patchset might be empty, but there might be unprocessed raw lines
-	for (++$patch_idx if $patch_number > 0;
-	     $patch_idx < @$difftree;
-	     ++$patch_idx) {
-		# read and prepare patch information
-		$diffinfo = parsed_difftree_line($difftree->[$patch_idx]);
-
-		# generate anchor for "patch" links in difftree / whatchanged part
-		print "<div class=\"patch\" id=\"patch". ($patch_idx+1) ."\">\n" .
-		      format_diff_cc_simplified($diffinfo, @hash_parents) .
-		      "</div>\n";  # class="patch"
-
-		$patch_number++;
-	}
-
-	if ($patch_number == 0) {
-		if (@hash_parents > 1) {
-			print "<div class=\"diff nodifferences\">Trivial merge</div>\n";
-		} else {
-			print "<div class=\"diff nodifferences\">No differences found</div>\n";
-		}
-	}
-
-	print "</div>\n"; # class="patchset"
-}
-
-sub git_patchset_body {
-	my ($fd, $difftree, $hash, @hash_parents) = @_;
-	my ($hash_parent) = $hash_parents[0];
-
-	my $is_combined = (@hash_parents > 1);
-	my $patch_idx = 0;
-	my $patch_number = 0;
-	my $patch_line;
-	my $diffinfo;
-	my $to_name;
-	my (%from, %to);
-
-	print "<div class=\"patchset\">\n";
-
-	# skip to first patch
-	while ($patch_line = <$fd>) {
-		chomp $patch_line;
-
-		last if ($patch_line =~ m/^diff /);
-	}
-
- PATCH:
-	while ($patch_line) {
-
-		# parse "git diff" header line
-		if ($patch_line =~ m/^diff --git (\"(?:[^\\\"]*(?:\\.[^\\\"]*)*)\"|[^ "]*) (.*)$/) {
-			# $1 is from_name, which we do not use
-			$to_name = unquote($2);
-			$to_name =~ s!^b/!!;
-		} elsif ($patch_line =~ m/^diff --(cc|combined) ("?.*"?)$/) {
-			# $1 is 'cc' or 'combined', which we do not use
-			$to_name = unquote($2);
-		} else {
-			$to_name = undef;
-		}
-
-		# check if current patch belong to current raw line
-		# and parse raw git-diff line if needed
-		if (is_patch_split($diffinfo, { 'to_file' => $to_name })) {
-			# this is continuation of a split patch
-			print "<div class=\"patch cont\">\n";
-		} else {
-			# advance raw git-diff output if needed
-			$patch_idx++ if defined $diffinfo;
-
-			# read and prepare patch information
-			$diffinfo = parsed_difftree_line($difftree->[$patch_idx]);
-
-			# compact combined diff output can have some patches skipped
-			# find which patch (using pathname of result) we are at now;
-			if ($is_combined) {
-				while ($to_name ne $diffinfo->{'to_file'}) {
-					print "<div class=\"patch\" id=\"patch". ($patch_idx+1) ."\">\n" .
-					      format_diff_cc_simplified($diffinfo, @hash_parents) .
-					      "</div>\n";  # class="patch"
-
-					$patch_idx++;
-					$patch_number++;
-
-					last if $patch_idx > $#$difftree;
-					$diffinfo = parsed_difftree_line($difftree->[$patch_idx]);
-				}
-			}
-
-			# modifies %from, %to hashes
-			parse_from_to_diffinfo($diffinfo, \%from, \%to, @hash_parents);
-
-			# this is first patch for raw difftree line with $patch_idx index
-			# we index @$difftree array from 0, but number patches from 1
-			print "<div class=\"patch\" id=\"patch". ($patch_idx+1) ."\">\n";
-		}
-
-		# git diff header
-		#assert($patch_line =~ m/^diff /) if DEBUG;
-		#assert($patch_line !~ m!$/$!) if DEBUG; # is chomp-ed
-		$patch_number++;
-		# print "git diff" header
-		print format_git_diff_header_line($patch_line, $diffinfo,
-		                                  \%from, \%to);
-
-		# print extended diff header
-		print "<div class=\"diff extended_header\">\n";
-	EXTENDED_HEADER:
-		while ($patch_line = <$fd>) {
-			chomp $patch_line;
-
-			last EXTENDED_HEADER if ($patch_line =~ m/^--- |^diff /);
-
-			print format_extended_diff_header_line($patch_line, $diffinfo,
-			                                       \%from, \%to);
-		}
-		print "</div>\n"; # class="diff extended_header"
-
-		# from-file/to-file diff header
-		if (! $patch_line) {
-			print "</div>\n"; # class="patch"
-			last PATCH;
-		}
-		next PATCH if ($patch_line =~ m/^diff /);
-		#assert($patch_line =~ m/^---/) if DEBUG;
-
-		my $last_patch_line = $patch_line;
-		$patch_line = <$fd>;
-		chomp $patch_line;
-		#assert($patch_line =~ m/^\+\+\+/) if DEBUG;
-
-		print format_diff_from_to_header($last_patch_line, $patch_line,
-		                                 $diffinfo, \%from, \%to,
-		                                 @hash_parents);
-
-		# the patch itself
-	LINE:
-		while ($patch_line = <$fd>) {
-			chomp $patch_line;
-
-			next PATCH if ($patch_line =~ m/^diff /);
-
-			print format_diff_line($patch_line, \%from, \%to);
-		}
-
-	} continue {
-		print "</div>\n"; # class="patch"
-	}
-
-	# for compact combined (--cc) format, with chunk and patch simplification
-	# the patchset might be empty, but there might be unprocessed raw lines
-	for (++$patch_idx if $patch_number > 0;
-	     $patch_idx < @$difftree;
-	     ++$patch_idx) {
-		# read and prepare patch information
-		$diffinfo = parsed_difftree_line($difftree->[$patch_idx]);
-
-		# generate anchor for "patch" links in difftree / whatchanged part
-		print "<div class=\"patch\" id=\"patch". ($patch_idx+1) ."\">\n" .
-		      format_diff_cc_simplified($diffinfo, @hash_parents) .
-		      "</div>\n";  # class="patch"
-
-		$patch_number++;
-	}
-
-	if ($patch_number == 0) {
-		if (@hash_parents > 1) {
-			print "<div class=\"diff nodifferences\">Trivial merge</div>\n";
-		} else {
-			print "<div class=\"diff nodifferences\">No differences found</div>\n";
-		}
-	}
-
-	print "</div>\n"; # class="patchset"
-}
-
 
 sub get_projects {
   my ($root, %opt) = @_;

@@ -7,8 +7,8 @@
   </div>
   %= include '/include/page_navi', current => 'blobdiff', head_cid => $cid, root => $root, project => $project;
   <div class="page_nav">
-    <a href="<%= url_for('/blob_plain')->query({root => $root,
-      project => $project, cid => $cid, file => $file}) %>"
+    <a href="<%= url_for('/blobdiff_plain')->query({root => $root,
+      project => $project, from_cid => $from_cid, cid => $cid, file => $file}) %>"
     >
       Raw
     </a>
@@ -45,5 +45,7 @@
   </div>
 
   <div class="page_body">
-    <pre><%= $patch %></pre>
+    % for my $line (@$lines) {
+      <div class="<%= $line->{class} %>"><%= $line->{value} %></div>
+    % }
   </div>
