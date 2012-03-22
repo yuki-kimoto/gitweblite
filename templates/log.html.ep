@@ -1,17 +1,14 @@
 % layout 'common';
-  % my $base_id = param('base_id');
-  % my $page = param('page');
   <div class="page_header">
     <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
     <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /<br>
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= param('project') %></a> /
     Log
   </div>
-  %= include '/include/page_navi', current => 'log', head_id => $head_id, root => $root, project => $project;
-  <%= include '/include/page_navi2', current => 'log', base_id => $base_id,
-        page => $page, page_count => $page_count, commits => $commits;
+  %= include '/include/page_navi', current => 'log', head_cid => $head_cid, root => $root, project => $project;
+  <%= include '/include/page_navi2', current => 'log', base_cid => $base_cid,
+    page => $page, page_count => $page_count, commits => $commits;
   %>
-
   
   % for my $commit (@$commits) {
     <div class="header">

@@ -177,33 +177,28 @@ get '/summary' => sub {
   my $root = $params->{root};
   my $project = $params->{project};
   
-  # Project information
+  # HEAd commit
   my $project_description = get_project_description($root, $project);
   my $project_owner = get_project_owner($root, $project);
-  my %commit = parse_commit($root, $project, "HEAD");
-  my %committer_date = %commit
-    ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'})
+  my $head_commit = parse_commit($root, $project, "HEAD");
+  my %committer_date = %$head_commit
+    ? parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
   my $last_change = format_timestamp_html(\%committer_date);
-  my $head_id = $commit{'id'};
-  my $refs = get_references($root, $project);
-  my $tags  = get_tags($root, $project, 16);
-  my $heads = get_heads($root, $project, 16);
+  my $head_cid = $head_commit->{id};
   my $urls = get_project_urls($root, $project);
   $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
   
   # Commits
   my $page_count = 50;
-  my $commits = $head_id ? parse_commits($root, $project, $head_id, 20) : ();
+  my $commits = $head_cid ? parse_commits($root, $project, $head_cid, 20) : ();
   
   # Ref names
   my $ref_names = {};
-  for my $tag (@$tags) {
-    $ref_names->{tag}{$tag->{id}} = $tag->{name};
-  }
-  for my $head (@$heads) {
-    $ref_names->{head}{$head->{id}} = $head->{name};
-  }
+  my $tags  = get_tags($root, $project);
+  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
+  my $heads = get_heads($root, $project);
+  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   # Render
   $self->render(
@@ -215,7 +210,7 @@ get '/summary' => sub {
     urls => $urls,
     commits => $commits,
     tags => $tags,
-    head_id => $head_id,
+    head_cid => $head_cid,
     heads => $heads,
     ref_names => $ref_names
   );
@@ -242,8 +237,13 @@ get '/shortlog' => sub {
 
   # HEAD commit
   my $head_commit = parse_commit($root, $project, "HEAD");
-  my $head_cid = $head_commit->{'id'};
+  my $head_cid = $head_commit->{id};
   my $base_cid ||= $head_cid;
+  
+  # Commits
+  warn $self->dumper($base_cid);
+  my $page_count = 50;
+  my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
   
   # Ref names
   my $ref_names = {};
@@ -252,18 +252,15 @@ get '/shortlog' => sub {
   my $heads = get_heads($root, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
 
-  # Commits
-  my $page_count = 50;
-  my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
-
+  # Render
   $self->render(
     root => $root,
     project => $project,
-    base_cid => $base_cid,
-    page => $page,
-    commits => $commits,
     head_cid => $head_cid,
+    base_cid => $base_cid,
+    commits => $commits,
     ref_names => $ref_names,
+    page => $page,
     page_count => $page_count
   );
 };
@@ -277,7 +274,7 @@ get '/log' => sub {
     root => ['not_blank'],
     project => ['not_blank'],
     page => {require => 0} => ['int'],
-    base_id => {require => 0} => ['hex']
+    base_cid => {require => 0} => ['hex']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
@@ -286,48 +283,36 @@ get '/log' => sub {
   my $project = $params->{project};
   my $page = $params->{page} // 0;
   $page = 0 if $page < 0;
-  $self->param(page => $page);
 
-  # Project information
-  my $project_description = get_project_description($root, $project);
-  my $project_owner = get_project_owner($root, $project);
-  my %co = parse_commit($root, $project, "HEAD");
-  my %cd = %co ? parse_date($co{'committer_epoch'}, $co{'committer_tz'}) : ();
-  my $last_change = format_timestamp_html(\%cd);
-  my $head_id = $co{'id'};
-  my $base_id //= $head_id;
-  $self->param(base_id => $base_id);
-  my $remote_heads = gitweb_check_feature('remote_heads');
-  my $refs = get_references($root, $project);
-  my $tags  = get_tags($root, $project);
-  my $heads = get_heads($root, $project);
-  
-  # Ref names
-  my $ref_names = {};
-  for my $tag (@$tags) {
-    $ref_names->{tag}{$tag->{id}} = $tag->{name};
-  }
-  for my $head (@$heads) {
-    $ref_names->{head}{$head->{id}} = $head->{name};
-  }  
+  # Head Commit
+  my $head_commit = parse_commit($root, $project, "HEAD");
+  my $head_cid = $head_commit->{id};
+  my $base_cid ||= $head_cid;
 
   # Commits
   my $page_count = 20;
-  my $commits = parse_commits($root, $project, $base_id, $page_count, $page_count * $page);
-
+  my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
   for my $commit (@$commits) {
-    
     my %ad = parse_date($commit->{author_epoch}, $commit->{author_tz});
     $commit->{last_change} = format_timestamp_html(\%ad);
   }
+    
+  # Ref names
+  my $ref_names = {};
+  my $tags  = get_tags($root, $project);
+  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
+  my $heads = get_heads($root, $project);
+  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
-  
+  # Render
   $self->render(
     root => $root,
     project => $project,
+    head_cid => $head_cid,
+    base_cid => $base_cid,
     commits => $commits,
-    head_id => $head_id,
     ref_names => $ref_names,
+    page => $page,
     page_count => $page_count
   );
 };
