@@ -134,6 +134,11 @@ our %feature = (
     'default' => [0]},
 );
 
+our ($action, $project, $file, $file_parent, $cid, $parent_cid, $base_cid,
+     $parent_base_cid, @extra_options, $page, $searchtype, $search_use_regexp,
+     $searchtext, $search_regexp);
+
+
 get '/' => sub {
   my $self = shift;
   
@@ -426,8 +431,6 @@ get '/commitdiff' => sub {
   shift->render;
 };
 
-=pod
-
 get '/tree' => sub {
   my $self = shift;
 
@@ -437,8 +440,8 @@ get '/tree' => sub {
     root => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
-    dir => {require => 0 } => ['not_blank']
-    tid => {require => 0 } => ['not_blank'],
+    dir => {require => 0 } => ['not_blank'],
+    tid => {require => 0 } => ['not_blank']
   ];
   my $vresult = $validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
@@ -450,9 +453,17 @@ get '/tree' => sub {
   my $dir = $params->{dir};
   my $tid = $params->{tid};
 
-  if (!defined $tid && defined $dir) {
-    $tid = get_hash_by_path($root, $project, $cid, $dir, "tree");
+  my $commit = parse_commit($root, $project, $cid);
+  
+  unless (defined $tid) {
+    if (defined $dir) {
+      $tid = $commit->{tree};
+    }
+    else {
+       $tid = get_hash_by_path($root, $project, $cid, $dir, "tree");
+    }
   }
+
   die 404, "No such tree" unless defined $tid;
 
   my @entries = ();
@@ -460,107 +471,31 @@ get '/tree' => sub {
   {
     local $/ = "\0";
     open my $fd, "-|", git($root, $project), "ls-tree", '-z',
-      ($show_sizes ? '-l' : ()), @extra_options, $cid
+      ($show_sizes ? '-l' : ()), @extra_options, $tid
       or die 500, "Open git-ls-tree failed";
     @entries = map { chomp; $_ } <$fd>;
     close $fd
       or die 404, "Reading tree failed";
   }
-
-  my $refs = git_get_references();
-  my $ref = format_ref_marker($refs, $cid);
-  my $basedir = '';
-  if (defined $cid && (my %commit = parse_commit($cid))) {
-    my @views_nav = ();
-    if (defined $dir) {
-      push @views_nav,
-        $cgi->a({-href => href(action=>"history", -replay=>1)},
-                "history"),
-        $cgi->a({-href => href(action=>"tree",
-                               hash_base=>"HEAD", dir_name=>$dir)},
-                "HEAD"),
-    }
-    my $snapshot_links = format_snapshot_links($tid);
-    if (defined $snapshot_links) {
-      # FIXME: Should be available when we have no hash base as well.
-      push @views_nav, $snapshot_links;
-    }
-    git_print_page_nav('tree','', $cid, undef, undef,
-                       join(' | ', @views_nav));
-    git_print_header_div('commit', esc_html($commit{'title'}) . $ref, $cid);
-  } else {
-    undef $cid;
-    print "<div class=\"page_nav\">\n";
-    print "<br/><br/></div>\n";
-    print "<div class=\"title\">".esc_html($tid)."</div>\n";
-  }
-  if (defined $dir) {
-    $basedir = $dir;
-    if ($basedir ne '' && substr($basedir, -1) ne '/') {
-      $basedir .= '/';
-    }
-    git_print_page_path($dir, 'tree', $cid);
-  }
-  print "<div class=\"page_body\">\n";
-  print "<table class=\"tree\">\n";
-  my $alternate = 1;
-  # '..' (top directory) link if possible
-  if (defined $cid &&
-      defined $dir && $dir =~ m![^/]+$!) {
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-
-    my $up = $dir;
-    $up =~ s!/?[^/]+$!!;
-    undef $up unless $up;
-    # based on git_print_tree_entry
-    print '<td class="mode">' . mode_str('040000') . "</td>\n";
-    print '<td class="size">&nbsp;</td>'."\n" if $show_sizes;
-    print '<td class="list">';
-    print $cgi->a({-href => href(action=>"tree",
-                                 hash_base=>$cid,
-                                 dir_name=>$up)},
-                  "..");
-    print "</td>\n";
-    print "<td class=\"link\"></td>\n";
-
-    print "</tr>\n";
-  }
+  
+  my @lines;
   foreach my $line (@entries) {
     my %t = parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
-
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-
-    git_print_tree_entry(\%t, $basedir, $cid, $have_blame);
-
-    print "</tr>\n";
+    push @lines, \%t;
   }
-  print "</table>\n" .
-        "</div>";
-  git_footer_html();
   
+  warn $self->dumper(\@lines);
+
   $self->render(
     root => $root,
     project => $project,
     cid => $cid,
     tid => $tid,
     file => $file,
-    commit => \%commit,
-    ref_names => $ref_names,
-    diffs => $diffs
+    commit => $commit,
+    lines => \@lines
   );
 };
-
-=cut
 
 
 get '/snapshot' => sub {
@@ -1381,10 +1316,6 @@ our %actions = (
 our %allowed_options = (
   "--no-merges" => [ qw(rss atom log shortlog history) ],
 );
-
-our ($action, $project, $file, $file_parent, $cid, $parent_cid, $base_cid,
-     $parent_base_cid, @extra_options, $page, $searchtype, $search_use_regexp,
-     $searchtext, $search_regexp);
 
 our (@snapshot_fmts, $git_avatar);
 sub configure_gitweb_features {
@@ -2215,8 +2146,14 @@ sub get_hash_by_path {
   my ($root, $project, $id, $path, $type) = @_;
 
   $path =~ s,/+$,,;
-
-  open my $fd, "-|", git($root, $project), "ls-tree", $id, "--", $path
+  
+  my @git_ls_tree = (
+    git($root, $project), "ls-tree", $id, "--", $path
+  );
+  
+  warn join(' ', @git_ls_tree);
+  
+  open my $fd, "-|", @git_ls_tree
     or die "Open git-ls-tree failed";
   my $line = <$fd>;
   close $fd or return undef;
