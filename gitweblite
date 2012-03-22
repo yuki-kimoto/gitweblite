@@ -458,13 +458,13 @@ get '/tree' => sub {
   
   unless (defined $tid) {
     if (defined $dir) {
-      $tid = $commit->{tree};
+      $tid = get_hash_by_path($root, $project, $cid, $dir, "tree");
     }
     else {
-       $tid = get_hash_by_path($root, $project, $cid, $dir, "tree");
+      $tid = $commit->{tree};
     }
   }
-
+  warn $self->dumper([$dir, $tid]);
   die 404, "No such tree" unless defined $tid;
 
   my @entries = ();
@@ -481,8 +481,9 @@ get '/tree' => sub {
   
   my @lines;
   foreach my $line (@entries) {
-    my %t = parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
-    push @lines, \%t;
+    my %tree = parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
+    $tree{mode_str} = mode_str($tree{mode});
+    push @lines, \%tree;
   }
   
   warn $self->dumper(\@lines);
