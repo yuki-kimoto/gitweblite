@@ -35,7 +35,6 @@ our $GIT = $conf->{git_bindir}
   : '/usr/local/bin/git';
 
 our $projects_list_description_width = 25;
-our $git_dir;
 our $gitweb_project_owner = undef;
 our $config_file = '';
 our %config;
@@ -912,20 +911,6 @@ sub get_project_description {
 }
 
 sub get_file_or_project_config {
-  my ($root, $project, $name) = @_;
-
-  my $git_dir = "$root/$project";
-  open my $fd, '<', "$git_dir/$name"
-    or return get_project_config($root, $project, $name);
-  my $conf = <$fd>;
-  close $fd;
-  if (defined $conf) {
-    chomp $conf;
-  }
-  return $conf;
-}
-
-sub get_file_or_project_config {
   my ($root, $path, $name) = @_;
 
   my $git_dir = "$root/$path";
@@ -1092,9 +1077,9 @@ sub get_short_hash {
 
 sub get_hash {
   my ($root, $project, $cid, @options) = @_;
+  my $git_dir = "$root/$project";
   my $o_git_dir = $git_dir;
   my $retval = undef;
-  my $git_dir = "$root/$project";
   if (open my $fd, '-|', git_cmd(), 'rev-parse',
       '--verify', '-q', @options, $cid) {
     $retval = <$fd>;
@@ -2336,6 +2321,7 @@ sub get_project_config {
 sub get_project_config {
   my ($root, $project, $key, $type) = @_;
 
+  my $git_dir = "$root/$project";
   return unless defined $git_dir;
 
   # key sanity check
