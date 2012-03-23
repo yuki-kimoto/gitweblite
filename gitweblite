@@ -428,8 +428,77 @@ get '/commit' => sub {
   );
 };
 
-get '/commitdiff' => sub {
-  shift->render;
+get '/commitdiff(:suffix)' => {suffix => ''} => sub {
+  my $self = shift;
+  
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    cid => {require => 0 } => ['not_blank'],
+    from_cid => {require => 0} => ['not_blank']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $cid = defined $params->{cid} ? $params->{cid} : 'HEAD';
+  my $from_cid = $params->{from_cid};
+  
+  # Commit
+  my $commit = parse_commit($cid)
+    or die 404, "Unknown commit object";
+  
+  # Check plain
+  my $plain;
+  my $suffix = $self->param('suffix');
+  if ($suffix) {
+    if ($suffix eq '_plain') { $plain = 1 }
+    else { return $self->render('not_found') }
+  }
+  else { $plain = 0 }
+
+  my $fd;
+  my @difftree;
+  if ($plain) {
+    # git diff-tree plain output
+    open my $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
+        '-p', $from_cid, $cid, "--"
+      or die 500, "Open git-diff-tree failed";
+    my $content = do { local $/; <$fd> };
+    close $fd
+      or print "Reading git-diff-tree failed\n";
+    
+    # Render
+    $self->render(text => $content);
+  }
+  else {
+    # git diff-tree output
+    open my $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
+        "--no-commit-id", "--patch-with-raw", "--full-index",
+        $from_cid, $cid, "--"
+      or die 500, "Open git-diff-tree failed";
+
+    # Parse output
+    my @diffs;
+    while (my $line = <$fd>) {
+      chomp $line;
+      last unless $line;
+      push @diffs, scalar parse_difftree_raw_line($line);
+    }
+    
+    # Render
+    $self->render(
+      'commitdiff',
+      root => $root,
+      project => $project,
+      cid => $cid,
+      commit => $commit,
+      diffs => \@diffs,
+    );
+  }
 };
 
 get '/tree' => sub {
@@ -464,7 +533,6 @@ get '/tree' => sub {
       $tid = $commit->{tree};
     }
   }
-  warn $self->dumper([$dir, $tid]);
   die 404, "No such tree" unless defined $tid;
 
   my @entries = ();
@@ -507,7 +575,11 @@ get '/tag' => sub {
 };
 
 get '/patch' => sub {
-  shift->render(text => 'patch');
+  my $self = shift;
+  
+  
+  
+  $self->render(text => 'patch');
 };
 
 get '/blob' => sub {
