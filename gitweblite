@@ -933,7 +933,7 @@ sub get_file_or_project_config {
 
   my $git_dir = "$root/$path";
   open my $fd, '<', "$git_dir/$name"
-    or return git_get_project_config($root, $project, $name);
+    or return get_project_config($root, $project, $name);
   my $conf = <$fd>;
   close $fd;
   if (defined $conf) {
@@ -1273,23 +1273,9 @@ sub git_get_path_by_hash {
   return undef;
 }
 
-sub git_get_project_category {
-  my $path = shift;
-  return git_get_file_or_project_config($path, 'category');
-}
-
-sub git_get_project_url_list {
-  my $path = shift;
-
-  $git_dir = "$projectroot/$path";
-  open my $fd, '<', "$git_dir/cloneurl"
-    or return wantarray ?
-    @{ config_to_multi(git_get_project_config('url')) } :
-       config_to_multi(git_get_project_config('url'));
-  my @git_project_url_list = map { chomp; $_ } <$fd>;
-  close $fd;
-
-  return wantarray ? @git_project_url_list : \@git_project_url_list;
+sub get_project_category {
+  my ($root, $project) =@_;
+  return get_file_or_project_config($root, $project, 'category');
 }
 
 sub get_project_urls {
@@ -2105,42 +2091,7 @@ sub build_projlist_by_category {
   return wantarray ? %categories : \%categories;
 }
 
-sub git_project_list_rows {
-  my ($projlist, $from, $to) = @_;
-
-  $from = 0 unless defined $from;
-  $to = $#$projlist if (!defined $to || $#$projlist < $to);
-
-  my $alternate = 1;
-  for (my $i = $from; $i <= $to; $i++) {
-    my $pr = $projlist->[$i];
-
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-
-    print "<td>" . $cgi->a({-href => href(project=>$pr->{'path'}, action=>"summary"),
-                            -class => "list"}, esc_html($pr->{'path'})) . "</td>\n" .
-          "<td>" . $cgi->a({-href => href(project=>$pr->{'path'}, action=>"summary"),
-                            -class => "list", -title => $pr->{'descr_long'}},
-                            esc_html($pr->{'descr'})) . "</td>\n" .
-          "<td><i>" . chop_and_escape_str($pr->{'owner'}, 15) . "</i></td>\n";
-    print "<td class=\"". age_class($pr->{'age'}) . "\">" .
-          (defined $pr->{'age_string'} ? $pr->{'age_string'} : "No commits") . "</td>\n" .
-          "<td class=\"link\">" .
-          $cgi->a({-href => href(project=>$pr->{'path'}, action=>"summary")}, "summary")   . " | " .
-          $cgi->a({-href => href(project=>$pr->{'path'}, action=>"shortlog")}, "shortlog") . " | " .
-          $cgi->a({-href => href(project=>$pr->{'path'}, action=>"log")}, "log") . " | " .
-          $cgi->a({-href => href(project=>$pr->{'path'}, action=>"tree")}, "tree") .
-          "</td>\n" .
-          "</tr>\n";
-  }
-}
-
-sub git_tags_body {
+sub _tags_body {
   # uses global variable $project
   my ($taglist, $from, $to, $extra) = @_;
   $from = 0 unless defined $from;
@@ -2203,7 +2154,7 @@ sub git_tags_body {
   print "</table>\n";
 }
 
-sub git_heads_body {
+sub _heads_body {
   # uses global variable $project
   my ($headlist, $head_at, $from, $to, $extra) = @_;
   $from = 0 unless defined $from;
@@ -2254,7 +2205,7 @@ sub untabify {
   return $line;
 }
 
-sub git_tag {
+sub _tag {
   my %tag = parse_tag($cid);
 
   if (! %tag) {
@@ -2286,7 +2237,7 @@ sub git_tag {
   git_footer_html();
 }
 
-sub git_tags {
+sub _tags {
   my $head = git_get_head_hash($project);
   git_header_html();
 
@@ -2297,7 +2248,7 @@ sub git_tags {
   git_footer_html();
 }
 
-sub git_heads {
+sub _heads {
   my $head = git_get_head_hash($project);
   git_header_html();
 
@@ -2626,14 +2577,14 @@ sub get_project_owner {
   my $owner;
 
   if (!defined $gitweb_project_owner) {
-    git_get_project_list_from_file();
+    get_project_list_from_file($root, $project);
   }
 
   if (exists $gitweb_project_owner->{$project}) {
     $owner = $gitweb_project_owner->{$project};
   }
   if (!defined $owner){
-    $owner = git_get_project_config('owner');
+    $owner = get_project_config($root, $project, 'owner');
   }
   if (!defined $owner) {
     $owner = get_file_owner("$git_dir");
@@ -2642,8 +2593,9 @@ sub get_project_owner {
   return $owner;
 }
 
-sub git_get_project_list_from_file {
-
+sub get_project_list_from_file {
+  my ($root, $project) = @_;
+  
   return if (defined $gitweb_project_owner);
 
   $gitweb_project_owner = {};
@@ -2689,7 +2641,7 @@ sub get_project_config {
   # get config
   if (!defined $config_file ||
       $config_file ne "$git_dir/config") {
-    %config = git_parse_project_config('gitweb');
+    %config = parse_project_config($root, $project, 'gitweb');
     $config_file = "$git_dir/config";
   }
 
@@ -2708,8 +2660,8 @@ sub get_project_config {
   return $config{"gitweb.$key"};
 }
 
-sub git_get_project_config {
-  my ($key, $type) = @_;
+sub get_project_config {
+  my ($root, $project, $key, $type) = @_;
 
   return unless defined $git_dir;
 
@@ -2735,7 +2687,7 @@ sub git_get_project_config {
   # get config
   if (!defined $config_file ||
       $config_file ne "$git_dir/config") {
-    %config = git_parse_project_config('gitweb');
+    %config = parse_project_config($root, $project, 'gitweb');
     $config_file = "$git_dir/config";
   }
 
@@ -2754,13 +2706,13 @@ sub git_get_project_config {
   return $config{"gitweb.$key"};
 }
 
-sub git_parse_project_config {
-  my $section_regexp = shift;
+sub parse_project_config {
+  my ($root, $project, $section_regexp) = @_;
   my %config;
 
   local $/ = "\0";
 
-  open my $fh, "-|", git_cmd(), "config", '-z', '-l',
+  open my $fh, "-|", git($root, $project), "config", '-z', '-l',
     or return;
 
   while (my $keyval = <$fh>) {
@@ -2773,11 +2725,6 @@ sub git_parse_project_config {
   close $fh;
 
   return %config;
-}
-
-sub git_cmd {
-  $number_of_git_cmds++;
-  return $GIT, '--git-dir='.$git_dir;
 }
 
 sub git {
