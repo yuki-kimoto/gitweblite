@@ -413,6 +413,14 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   # Commit
   my $commit = parse_commit($root, $project, $cid)
     or die 404, "Unknown commit object";
+  my %author_date = %$commit
+    ? parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
+    : ();
+  my %committer_date = %$commit
+    ? parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'})
+    : ();
+  $commit->{author_date} = format_timestamp_html(\%author_date);
+  $commit->{committer_date} = format_timestamp_html(\%committer_date);
   $from_cid = $commit->{parent} unless defined $from_cid;
   
   # Check plain
