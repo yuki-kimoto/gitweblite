@@ -119,6 +119,5 @@
   </div>
   <div class="list_head">
   </div>
-  % my $parents = ;
   <%= include '/include/difftree', cid => $cid, from_cid => $from_cid,
     difftrees => $difftrees, parents => $commit->{parents} %>

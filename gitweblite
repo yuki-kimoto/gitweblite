@@ -472,9 +472,9 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
       open $fd, "-|", @git_diff_tree
         or die 500, "Open git-diff-tree failed";
       
-      my $blobdiff = do { local $/; <$fd> };
+      my @lines = map { chomp $_; $_ } <$fd>;
       close $fd;
-      push @blobdiffs, $blobdiff;
+      push @blobdiffs, {lines => \@lines};
     }
     
     # Render
@@ -800,6 +800,7 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
     # patch
     my @lines;
     while (my $line = <$fd>) {
+      chomp $line;
       my $class;
       
       if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
