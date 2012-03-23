@@ -1219,7 +1219,6 @@ our %actions = (
   "commitdiff" => \&git_commitdiff,
   "commitdiff_plain" => \&git_commitdiff_plain,
   "commit" => \&git_commit,
-  "forks" => \&git_forks,
   "heads" => \&git_heads,
   "history" => \&git_history,
   "log" => \&git_log,
@@ -3144,7 +3143,7 @@ sub format_sort_th {
 }
 
 sub git_project_list_rows {
-  my ($projlist, $from, $to, $check_forks) = @_;
+  my ($projlist, $from, $to) = @_;
 
   $from = 0 unless defined $from;
   $to = $#$projlist if (!defined $to || $#$projlist < $to);
@@ -3160,19 +3159,6 @@ sub git_project_list_rows {
     }
     $alternate ^= 1;
 
-    if ($check_forks) {
-      print "<td>";
-      if ($pr->{'forks'}) {
-        my $nforks = scalar @{$pr->{'forks'}};
-        if ($nforks > 0) {
-          print $cgi->a({-href => href(project=>$pr->{'path'}, action=>"forks"),
-                         -title => "$nforks forks"}, "+");
-        } else {
-          print $cgi->span({-title => "$nforks forks"}, "+");
-        }
-      }
-      print "</td>\n";
-    }
     print "<td>" . $cgi->a({-href => href(project=>$pr->{'path'}, action=>"summary"),
                             -class => "list"}, esc_html($pr->{'path'})) . "</td>\n" .
           "<td>" . $cgi->a({-href => href(project=>$pr->{'path'}, action=>"summary"),
@@ -3186,7 +3172,6 @@ sub git_project_list_rows {
           $cgi->a({-href => href(project=>$pr->{'path'}, action=>"shortlog")}, "shortlog") . " | " .
           $cgi->a({-href => href(project=>$pr->{'path'}, action=>"log")}, "log") . " | " .
           $cgi->a({-href => href(project=>$pr->{'path'}, action=>"tree")}, "tree") .
-          ($pr->{'forks'} ? " | " . $cgi->a({-href => href(project=>$pr->{'path'}, action=>"forks")}, "forks") : '') .
           "</td>\n" .
           "</tr>\n";
   }
@@ -3706,22 +3691,6 @@ sub git_search_grep_body {
   print "</table>\n";
 }
 
-sub git_forks {
-  my $order = $input_params{'order'};
-  if (defined $order && $order !~ m/none|project|descr|owner|age/) {
-    die_error(400, "Unknown order parameter");
-  }
-
-  my @list = git_get_projects_list($project);
-  if (!@list) {
-    die_error(404, "No forks found");
-  }
-
-  git_header_html();
-  git_project_list_body(\@list, $order);
-  git_footer_html();
-}
-
 sub git_summary {
   my $descr = git_get_project_description($project) || "none";
   my %commit = parse_commit("HEAD");
@@ -3734,14 +3703,7 @@ sub git_summary {
 
   my @taglist  = git_get_tags_list(16);
   my @headlist = git_get_heads_list(16);
-  my @forklist;
-  my $check_forks = gitweb_check_feature('forks');
 
-  if ($check_forks) {
-    # find forks of a project
-    @forklist = git_get_projects_list($project);
-    # filter out forks of forks
-  }
 
   git_header_html();
 
@@ -3809,13 +3771,6 @@ sub git_summary {
     git_heads_body(\@headlist, $head, 0, 15,
                    $#headlist <= 15 ? undef :
                    $cgi->a({-href => href(action=>"heads")}, "..."));
-  }
-
-  if (@forklist) {
-    git_project_list_body(\@forklist, 'age', 0, 15,
-                          $#forklist <= 15 ? undef :
-                          $cgi->a({-href => href(action=>"forks")}, "..."),
-                          'no_header');
   }
 
   git_footer_html();
