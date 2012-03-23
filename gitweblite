@@ -7,11 +7,12 @@ use Time::HiRes qw/gettimeofday tv_interval/;
 use Carp 'croak';
 use utf8;
 use Validator::Custom;
-
 use Encode qw/encode decode/;
+
+# Encode
 sub e($) { encode('UTF-8', shift) }
 
-
+# Validator
 my $validator = Validator::Custom->new;
 $validator->register_constraint(hex => sub {
   my $value = shift;
@@ -3046,55 +3047,6 @@ sub git_print_page_path {
   print "<br/></div>\n";
 }
 
-sub git_print_log {
-  my $log = shift;
-  my %opts = @_;
-
-  if ($opts{'-remove_title'}) {
-    # remove title, i.e. first line of log
-    shift @$log;
-  }
-  # remove leading empty lines
-  while (defined $log->[0] && $log->[0] eq "") {
-    shift @$log;
-  }
-
-  # print log
-  my $signoff = 0;
-  my $empty = 0;
-  for my $line (@$log) {
-    if ($line =~ m/^ *(signed[ \-]off[ \-]by[ :]|acked[ \-]by[ :]|cc[ :])/i) {
-      $signoff = 1;
-      $empty = 0;
-      if (! $opts{'-remove_signoff'}) {
-        print "<span class=\"signoff\">" . esc_html($line) . "</span><br/>\n";
-        next;
-      } else {
-        # remove signoff lines
-        next;
-      }
-    } else {
-      $signoff = 0;
-    }
-
-    # print only one empty line
-    # do not print empty line after signoff
-    if ($line eq "") {
-      next if ($empty || $signoff);
-      $empty = 1;
-    } else {
-      $empty = 0;
-    }
-
-    print format_log_line_html($line) . "<br/>\n";
-  }
-
-  if ($opts{'-final_empty_line'}) {
-    # end with single empty line
-    print "<br/>\n" unless $empty;
-  }
-}
-
 # return link target (what link points to)
 sub git_get_link_target {
   my $cid = shift;
@@ -3674,7 +3626,6 @@ sub git_log_body {
           print "<br/>\n</div>\n";
 
     print "<div class=\"log_body\">\n";
-    git_print_log($commit{'comment'}, -final_empty_line=> 1);
     print "</div>\n";
   }
   if ($extra) {
@@ -5116,7 +5067,6 @@ sub git_commit {
         "</div>\n";
 
   print "<div class=\"page_body\">\n";
-  git_print_log($commit{'comment'});
   print "</div>\n";
 
   git_difftree_body(\@difftree, $cid, @$parents);
@@ -5495,7 +5445,6 @@ sub git_commitdiff {
     print "<div class=\"page_body\">\n";
     if (@{$commit{'comment'}} > 1) {
       print "<div class=\"log\">\n";
-      git_print_log($commit{'comment'}, -final_empty_line=> 1, -remove_title => 1);
       print "</div>\n"; # class="log"
     }
 
