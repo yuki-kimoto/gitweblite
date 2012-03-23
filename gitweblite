@@ -50,7 +50,7 @@ our @git_base_url_list = grep { $_ ne '' } ("");
 our @diff_opts = ('-M');
 our $prevent_xss = 0;
 
-our ($action, $project, $file, $file_parent, $cid, $parent_cid, $base_cid,
+our ($project, $file, $file_parent, $cid, $parent_cid, $base_cid,
      $parent_base_cid, @extra_options, $page);
 
 our $t0 = [ gettimeofday() ];
@@ -100,29 +100,6 @@ our ($GITWEB_CONFIG, $GITWEB_CONFIG_SYSTEM, $GITWEB_CONFIG_COMMON);
 our %input_params = ();
 our @cgi_param_mapping = ();
 our %cgi_param_mapping = @cgi_param_mapping;
-
-our %actions = (
-  "blobdiff" => \&git_blobdiff,
-  "blobdiff_plain" => \&git_blobdiff_plain,
-  "blob" => \&git_blob,
-  "blob_plain" => \&git_blob_plain,
-  "commitdiff" => \&git_commitdiff,
-  "commitdiff_plain" => \&git_commitdiff_plain,
-  "commit" => \&git_commit,
-  "heads" => \&git_heads,
-  "log" => \&git_log,
-  "patch" => \&git_patch,
-  "patches" => \&git_patches,
-  "shortlog" => \&git_shortlog,
-  "summary" => \&git_summary,
-  "tag" => \&git_tag,
-  "tags" => \&git_tags,
-  "tree" => \&git_tree,
-  "snapshot" => \&git_snapshot,
-  "object" => \&git_object,
-  "project_list" => \&git_project_list,
-  "project_index" => \&git_project_index,
-);
 
 our %allowed_options = ();
 
@@ -1863,27 +1840,6 @@ sub run_highlighter {
   return $fd;
 }
 
-## ======================================================================
-## functions printing HTML: header, footer, error page
-
-sub get_page_title {
-  my $title = to_utf8($site_name);
-
-  return $title unless (defined $project);
-  $title .= " - " . to_utf8($project);
-
-  return $title unless (defined $action);
-  $title .= "/$action"; # $action is US-ASCII (7bit ASCII)
-
-  return $title unless (defined $file);
-  $title .= " - " . esc_path($file);
-  if ($action eq "tree" && $file !~ m|/$|) {
-    $title .= "/";
-  }
-
-  return $title;
-}
-
 sub get_content_type_html {
   # require explicit support from the UA if we are to send the page as
   # 'application/xhtml+xml', otherwise send it as plain old 'text/html'.
@@ -2011,7 +1967,6 @@ sub href {
       (exists $params{-path_info} ? $params{-path_info} : $use_pathinfo)) {
     # try to put as many parameters as possible in PATH_INFO:
     #   - project name
-    #   - action
     #   - hash_parent or hash_parent_base:/file_parent
     #   - hash or hash_base:/filename
 
@@ -2026,14 +1981,6 @@ sub href {
     delete $params{'project'};
 
     # since we destructively absorb parameters, we keep this
-
-    # Summary just uses the project path URL, any other action is
-    # added to the URL
-    if (defined $params{'action'}) {
-      $href .= "/".esc_path_info($params{'action'})
-        unless $params{'action'} eq 'summary';
-      delete $params{'action'};
-    }
 
     # Next, we put hash_parent_base:/file_parent..hash_base:/file_name,
     # stripping nonexistent or useless pieces
