@@ -1201,7 +1201,6 @@ our %actions = (
   "commitdiff_plain" => \&git_commitdiff_plain,
   "commit" => \&git_commit,
   "heads" => \&git_heads,
-  "history" => \&git_history,
   "log" => \&git_log,
   "patch" => \&git_patch,
   "patches" => \&git_patches,
@@ -1218,11 +1217,9 @@ our %actions = (
 
 our %allowed_options = ();
 
-our (@snapshot_fmts, $git_avatar);
+our ($git_avatar);
 sub configure_gitweb_features {
   # list of supported snapshot formats
-  our @snapshot_fmts = gitweb_get_feature('snapshot');
-  @snapshot_fmts = filter_snapshot_fmts(@snapshot_fmts);
 
   # check that the avatar feature is set to a known provider name,
   # and for each provider check if the dependencies are satisfied.
@@ -1736,41 +1733,6 @@ sub process_diff_line {
 
   }
   return $diff_class, esc_html($line, -nbsp=>1);
-}
-
-# Generates undef or something like "_snapshot_" or "snapshot (_tbz2_ _zip_)",
-# linked.  Pass the hash of the tree/commit to snapshot.
-sub format_snapshot_links {
-  my ($cid) = @_;
-  my $num_fmts = @snapshot_fmts;
-  if ($num_fmts > 1) {
-    # A parenthesized list of links bearing format names.
-    # e.g. "snapshot (_tar.gz_ _zip_)"
-    return "snapshot (" . join(' ', map
-      $cgi->a({
-        -href => href(
-          action=>"snapshot",
-          hash=>$cid,
-          snapshot_format=>$_
-        )
-      }, $known_snapshot_formats{$_}{'display'})
-    , @snapshot_fmts) . ")";
-  } elsif ($num_fmts == 1) {
-    # A single "snapshot" link whose tooltip bears the format name.
-    # i.e. "_snapshot_"
-    my ($fmt) = @snapshot_fmts;
-    return
-      $cgi->a({
-        -href => href(
-          action=>"snapshot",
-          hash=>$cid,
-          snapshot_format=>$fmt
-        ),
-        -title => "in format: $known_snapshot_formats{$fmt}{'display'}"
-      }, "snapshot");
-  } else { # $num_fmts == 0
-    return undef;
-  }
 }
 
 sub quote_command {
@@ -2807,10 +2769,6 @@ sub is_deleted {
   return $diffinfo->{'to_id'} eq ('0' x 40);
 }
 
-# does patch correspond to [previous] difftree raw line
-# $diffinfo  - hashref of parsed raw diff format
-# $patchinfo - hashref of parsed patch diff format
-#              (the same keys as in $diffinfo)
 sub is_patch_split {
   my ($diffinfo, $patchinfo) = @_;
 
@@ -2844,7 +2802,6 @@ sub href {
     #   - action
     #   - hash_parent or hash_parent_base:/file_parent
     #   - hash or hash_base:/filename
-    #   - the snapshot_format as an appropriate suffix
 
     # When the script is the root DirectoryIndex for the domain,
     # $href here would be something like http://gitweb.example.com/
@@ -2857,8 +2814,6 @@ sub href {
     delete $params{'project'};
 
     # since we destructively absorb parameters, we keep this
-    # boolean that remembers if we're handling a snapshot
-    my $is_snapshot = $params{'action'} eq 'snapshot';
 
     # Summary just uses the project path URL, any other action is
     # added to the URL
@@ -2904,17 +2859,6 @@ sub href {
       delete $params{'hash'};
     }
 
-    # If the action was a snapshot, we can absorb the
-    # snapshot_format parameter too
-    if ($is_snapshot) {
-      my $fmt = $params{'snapshot_format'};
-      # snapshot_format should always be defined when href()
-      # is called, but just in case some code forgets, we
-      # fall back to the default
-      $fmt ||= $snapshot_fmts[0];
-      $href .= $known_snapshot_formats{$fmt}{'suffix'};
-      delete $params{'snapshot_format'};
-    }
   }
 
   # now encode the parameters explicitly
@@ -3074,65 +3018,6 @@ sub git_project_list_rows {
           "</td>\n" .
           "</tr>\n";
   }
-}
-
-sub git_history_body {
-  # Warning: assumes constant type (blob or tree) during history
-  my ($commitlist, $from, $to, $refs, $extra,
-      $file, $file_hash, $ftype) = @_;
-
-  $from = 0 unless defined $from;
-  $to = $#{$commitlist} unless (defined $to && $to <= $#{$commitlist});
-
-  print "<table class=\"history\">\n";
-  my $alternate = 1;
-  for (my $i = $from; $i <= $to; $i++) {
-    my %commit = %{$commitlist->[$i]};
-    if (!%commit) {
-      next;
-    }
-    my $commit = $commit{'id'};
-
-    my $ref = format_ref_marker($refs, $commit);
-
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-    print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
-          format_author_html('td', \%commit, 15, 3) . "<td>";
-    # originally git_history used _chop_str($commit{'title'}, 50)
-    print format_subject_html($commit{'title'}, $commit{'title_short'},
-                              href(action=>"commit", hash=>$commit), $ref);
-    print "</td>\n" .
-          "<td class=\"link\">" .
-          $cgi->a({-href => href(action=>$ftype, hash_base=>$commit, file_name=>$file)}, $ftype) . " | " .
-          $cgi->a({-href => href(action=>"commitdiff", hash=>$commit)}, "commitdiff");
-
-    if ($ftype eq 'blob') {
-      my $blob_current = $file_hash;
-      my $blob_parent  = git_get_hash_by_path($commit, $file);
-      if (defined $blob_current && defined $blob_parent &&
-          $blob_current ne $blob_parent) {
-        print " | " .
-          $cgi->a({-href => href(action=>"blobdiff",
-                                 hash=>$blob_current, hash_parent=>$blob_parent,
-                                 hash_base=>$base_cid, hash_parent_base=>$commit,
-                                 file_name=>$file)},
-                  "diff to current");
-      }
-    }
-    print "</td>\n" .
-          "</tr>\n";
-  }
-  if (defined $extra) {
-    print "<tr>\n" .
-          "<td colspan=\"4\">$extra</td>\n" .
-          "</tr>\n";
-  }
-  print "</table>\n";
 }
 
 sub git_tags_body {
@@ -3343,11 +3228,6 @@ sub git_tree {
                                hash_base=>"HEAD", file_name=>$file)},
                 "HEAD"),
     }
-    my $snapshot_links = format_snapshot_links($cid);
-    if (defined $snapshot_links) {
-      # FIXME: Should be available when we have no hash base as well.
-      push @views_nav, $snapshot_links;
-    }
   } else {
     undef $base_cid;
     print "<div class=\"page_nav\">\n";
@@ -3433,115 +3313,6 @@ sub snapshot_name {
   $name = "$name-$ver";
 
   return wantarray ? ($name, $name) : $name;
-}
-
-sub git_snapshot {
-  my $format = $input_params{'snapshot_format'};
-  if (!@snapshot_fmts) {
-    die_error(403, "Snapshots not allowed");
-  }
-  # default to first supported snapshot format
-  $format ||= $snapshot_fmts[0];
-  if ($format !~ m/^[a-z0-9]+$/) {
-    die_error(400, "Invalid snapshot format parameter");
-  } elsif (!exists($known_snapshot_formats{$format})) {
-    die_error(400, "Unknown snapshot format");
-  } elsif ($known_snapshot_formats{$format}{'disabled'}) {
-    die_error(403, "Snapshot format not allowed");
-  } elsif (!grep($_ eq $format, @snapshot_fmts)) {
-    die_error(403, "Unsupported snapshot format");
-  }
-
-  my $type = git_get_type("$cid^{}");
-  if (!$type) {
-    die_error(404, 'Object does not exist');
-  }  elsif ($type eq 'blob') {
-    die_error(400, 'Object is not a tree-ish');
-  }
-
-  my ($name, $prefix) = snapshot_name($project, $cid);
-  my $file = "$name$known_snapshot_formats{$format}{'suffix'}";
-  my $cmd = quote_command(
-    git_cmd(), 'archive',
-    "--format=$known_snapshot_formats{$format}{'format'}",
-    "--prefix=$prefix/", $cid);
-  if (exists $known_snapshot_formats{$format}{'compressor'}) {
-    $cmd .= ' | ' . quote_command(@{$known_snapshot_formats{$format}{'compressor'}});
-  }
-
-  $file =~ s/(["\\])/\\$1/g;
-  print $cgi->header(
-    -type => $known_snapshot_formats{$format}{'type'},
-    -content_disposition => 'inline; filename="' . $file . '"',
-    -status => '200 OK');
-
-  open my $fd, "-|", $cmd
-    or die_error(500, "Execute git-archive failed");
-  binmode STDOUT, ':raw';
-  print <$fd>;
-  binmode STDOUT, ':utf8'; # as set at the beginning of gitweb.cgi
-  close $fd;
-}
-
-sub get_log_general {
-  my ($root, $project, $fmt_name, $body_subr, $base, $parent, $file, $file_hash) = @_;
-
-  my $head_id = get_head_id($root, $project);
-
-  my $refs = get_references($root, $project);
-
-  my $commit_hash = $base;
-  if (defined $parent) {
-    $commit_hash = "$parent..$base";
-  }
-  my @commitlist =
-    parse_commits($commit_hash, 101, (100 * $page),
-                  defined $file ? ($file, "--full-history") : ());
-
-  my $ftype;
-  if (!defined $file_hash && defined $file) {
-    # some commits could have deleted file in question,
-    # and not have it in tree, but one of them has to have it
-    for (my $i = 0; $i < @commitlist; $i++) {
-      $file_hash = git_get_hash_by_path($commitlist[$i]{'id'}, $file);
-      last if defined $file_hash;
-    }
-  }
-  if (defined $file_hash) {
-    $ftype = git_get_type($file_hash);
-  }
-  if (defined $file && !defined $ftype) {
-    die_error(500, "Unknown type of object");
-  }
-  my %commit;
-  if (defined $file) {
-    %commit = parse_commit($base)
-      or die_error(404, "Unknown commit object");
-  }
-
-
-  my $paging_nav = format_paging_nav($fmt_name, $page, $#commitlist >= 100);
-  my $next_link = '';
-  if ($#commitlist >= 100) {
-    $next_link =
-      $cgi->a({-href => href(-replay=>1, page=>$page+1),
-               -accesskey => "n", -title => "Alt-n"}, "next");
-  }
-  my $patch_max = gitweb_get_feature('patches');
-  if ($patch_max && !defined $file) {
-    if ($patch_max < 0 || @commitlist <= $patch_max) {
-      $paging_nav .= " &sdot; " .
-        $cgi->a({-href => href(action=>"patches", -replay=>1)},
-          "patches");
-    }
-  }
-
-  git_header_html();
-
-  $body_subr->(\@commitlist, 0, 99, $refs, $next_link,
-               $file, $file_hash, $ftype);
-
-  git_footer_html();
 }
 
 sub git_object {
