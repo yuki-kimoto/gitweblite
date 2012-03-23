@@ -41,42 +41,16 @@ our %config;
 our $fallback_encoding = 'latin1';
 our $project_maxdepth = 1;
 use CGI ();
-our $cgi = CGI->new;
-our @git_base_url_list = grep { $_ ne '' } ("");
-our @diff_opts = ('-M');
-our $prevent_xss = 0;
+my $cgi = CGI->new;
+my @git_base_url_list = grep { $_ ne '' } ("");
+my @diff_opts = ('-M');
 
-our ($project, $file, $file_parent, $cid, $parent_cid, $base_cid,
+my $prevent_xss = 0;
+
+my ($file, $file_parent, $cid, $parent_cid, $base_cid,
      $parent_base_cid, @extra_options, $page);
 
-our $t0 = [ gettimeofday() ];
-
-our ($my_url, $my_uri, $base_url, $path_info, $home_link);
-our $home_link_str = "projects";
-our $site_name = ""
-                 || ($ENV{'SERVER_NAME'} || "Untitled") . " Git";
-our $site_html_head_string = "";
-our $site_header = "";
-our $home_text = "indextext.html";
-our $site_footer = "";
-our $logo = "static/git-logo.png";
-our $favicon = "static/git-favicon.png";
-our $logo_url = "http://git-scm.com/";
-our $logo_label = "git homepage";
-our $default_projects_order = "project";
-our $strict_export = "";
-our $default_blob_plain_mimetype = 'text/plain';
-our $default_text_plain_charset  = undef;
-our $mimetypes_file = undef;
-our $maxload = 300;
-
-our $per_request_config = 1;
-our ($GITWEB_CONFIG, $GITWEB_CONFIG_SYSTEM, $GITWEB_CONFIG_COMMON);
-our %input_params = ();
-our @cgi_param_mapping = ();
-our %cgi_param_mapping = @cgi_param_mapping;
-
-our %allowed_options = ();
+my $DEFAULT_TEXT_PLAIN_CHARSET  = undef;
 
 get '/' => sub {
   my $self = shift;
@@ -567,12 +541,6 @@ get '/blob_plain' => sub {
     $save_as .= '.txt';
   }
 
-  # With XSS prevention on, blobs of all types except a few known safe
-  # ones are served with "Content-Disposition: attachment" to make sure
-  # they don't run in our security domain.  For certain image types,
-  # blob view writes an <img> tag referring to blob_plain view, and we
-  # want to be sure not to break that by serving the image as an
-  # attachment (though Firefox 3 doesn't seem to care).
   my $sandbox = $prevent_xss &&
     $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
 
@@ -889,9 +857,9 @@ sub get_project_description {
 }
 
 sub get_file_or_project_config {
-  my ($root, $path, $name) = @_;
+  my ($root, $project, $name) = @_;
 
-  my $git_dir = "$root/$path";
+  my $git_dir = "$root/$project";
   open my $fd, '<', "$git_dir/$name"
     or return get_project_config($root, $project, $name);
   my $conf = <$fd>;
@@ -916,10 +884,6 @@ sub check_head_link {
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
-sub reset_timer {
-  our $t0 = [ gettimeofday() ]
-    if defined $t0;
-}
 sub age_class {
   my $age = shift;
 
@@ -1475,54 +1439,12 @@ sub insert_file {
   close $fd;
 }
 
-sub mimetype_guess_file {
-  my $file = shift;
-  my $mimemap = shift;
-  -r $mimemap or return undef;
-
-  my %mimemap;
-  open(my $mh, '<', $mimemap) or return undef;
-  while (<$mh>) {
-    next if m/^#/; # skip comments
-    my ($mimetype, @exts) = split(/\s+/);
-    for my $ext (@exts) {
-      $mimemap{$ext} = $mimetype;
-    }
-  }
-  close($mh);
-
-  $file =~ /\.([^.]*)$/;
-  return $mimemap{$1};
-}
-
-sub mimetype_guess {
-  my $file = shift;
-  my $mime;
-  $file =~ /\./ or return undef;
-
-  if ($mimetypes_file) {
-    my $file = $mimetypes_file;
-    if ($file !~ m!^/!) { # if it is relative path
-      # it is relative to project
-      $file = "$projectroot/$project/$file";
-    }
-    $mime = mimetype_guess_file($file, $file);
-  }
-  $mime ||= mimetype_guess_file($file, '/etc/mime.types');
-  return $mime;
-}
-
 sub blob_mimetype {
   my $fd = shift;
   my $file = shift;
 
-  if ($file) {
-    my $mime = mimetype_guess($file);
-    $mime and return $mime;
-  }
-
   # just in case
-  return $default_blob_plain_mimetype unless $fd;
+  return 'text/plain' unless $fd;
 
   if (-T $fd) {
     return 'text/plain';
@@ -1543,8 +1465,8 @@ sub blob_contenttype {
   my ($fd, $file, $type) = @_;
 
   $type ||= blob_mimetype($fd, $file);
-  if ($type eq 'text/plain' && defined $default_text_plain_charset) {
-    $type .= "; charset=$default_text_plain_charset";
+  if ($type eq 'text/plain' && defined $DEFAULT_TEXT_PLAIN_CHARSET) {
+    $type .= "; charset=$DEFAULT_TEXT_PLAIN_CHARSET";
   }
 
   return $type;
@@ -1842,7 +1764,7 @@ sub _tag {
 }
 
 sub _tags {
-  my ($root, $proejct) = @_;
+  my ($root, $project) = @_;
   
   my $head = get_head_hash($root, $project);
   git_header_html();
@@ -2218,54 +2140,6 @@ sub get_project_list_from_file {
     }
     close $fd;
   }
-}
-
-sub get_project_config {
-  my ($root, $project, $key, $type) = @_;
-  
-  my $git_dir = "$root/$project";
-
-  return unless defined $git_dir;
-
-  # key sanity check
-  return unless ($key);
-  # only subsection, if exists, is case sensitive,
-  # and not lowercased by 'git config -z -l'
-  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
-    $key = join(".", lc($hi), $mi, lc($lo));
-  } else {
-    $key = lc($key);
-  }
-  $key =~ s/^gitweb\.//;
-  return if ($key =~ m/\W/);
-
-  # type sanity check
-  if (defined $type) {
-    $type =~ s/^--//;
-    $type = undef
-      unless ($type eq 'bool' || $type eq 'int');
-  }
-
-  # get config
-  if (!defined $config_file ||
-      $config_file ne "$git_dir/config") {
-    %config = parse_project_config($root, $project, 'gitweb');
-    $config_file = "$git_dir/config";
-  }
-
-  # check if config variable (key) exists
-  return unless exists $config{"gitweb.$key"};
-
-  # ensure given type
-  if (!defined $type) {
-    return $config{"gitweb.$key"};
-  } elsif ($type eq 'bool') {
-    # backward compatibility: 'git config --bool' returns true/false
-    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
-  } elsif ($type eq 'int') {
-    return config_to_int($config{"gitweb.$key"});
-  }
-  return $config{"gitweb.$key"};
 }
 
 sub get_project_config {
