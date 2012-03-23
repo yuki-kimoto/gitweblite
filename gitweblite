@@ -53,6 +53,79 @@ our $prevent_xss = 0;
 our ($action, $project, $file, $file_parent, $cid, $parent_cid, $base_cid,
      $parent_base_cid, @extra_options, $page);
 
+our $t0 = [ gettimeofday() ];
+
+our ($my_url, $my_uri, $base_url, $path_info, $home_link);
+our $home_link_str = "projects";
+our $site_name = ""
+                 || ($ENV{'SERVER_NAME'} || "Untitled") . " Git";
+our $site_html_head_string = "";
+our $site_header = "";
+our $home_text = "indextext.html";
+our $site_footer = "";
+our $logo = "static/git-logo.png";
+our $favicon = "static/git-favicon.png";
+our $logo_url = "http://git-scm.com/";
+our $logo_label = "git homepage";
+our $default_projects_order = "project";
+our $strict_export = "";
+our $default_blob_plain_mimetype = 'text/plain';
+our $default_text_plain_charset  = undef;
+our $mimetypes_file = undef;
+our $highlight_bin = "highlight";
+our $maxload = 300;
+our %highlight_basename = (
+  #'Program' => 'py',
+  #'Library' => 'py',
+  'SConstruct' => 'py', # SCons equivalent of Makefile
+  'Makefile' => 'make',
+);
+# match by extension
+our %highlight_ext = (
+  # main extensions, defining name of syntax;
+  # see files in /usr/share/highlight/langDefs/ directory
+  map { $_ => $_ }
+    qw(py c cpp rb java css php sh pl js tex bib xml awk bat ini spec tcl sql make),
+  # alternate extensions, see /etc/highlight/filetypes.conf
+  'h' => 'c',
+  map { $_ => 'sh'  } qw(bash zsh ksh),
+  map { $_ => 'cpp' } qw(cxx c++ cc),
+  map { $_ => 'php' } qw(php3 php4 php5 phps),
+  map { $_ => 'pl'  } qw(perl pm), # perhaps also 'cgi'
+  map { $_ => 'make'} qw(mak mk),
+  map { $_ => 'xml' } qw(xhtml html htm),
+);
+our $per_request_config = 1;
+our ($GITWEB_CONFIG, $GITWEB_CONFIG_SYSTEM, $GITWEB_CONFIG_COMMON);
+our %input_params = ();
+our @cgi_param_mapping = ();
+our %cgi_param_mapping = @cgi_param_mapping;
+
+our %actions = (
+  "blobdiff" => \&git_blobdiff,
+  "blobdiff_plain" => \&git_blobdiff_plain,
+  "blob" => \&git_blob,
+  "blob_plain" => \&git_blob_plain,
+  "commitdiff" => \&git_commitdiff,
+  "commitdiff_plain" => \&git_commitdiff_plain,
+  "commit" => \&git_commit,
+  "heads" => \&git_heads,
+  "log" => \&git_log,
+  "patch" => \&git_patch,
+  "patches" => \&git_patches,
+  "shortlog" => \&git_shortlog,
+  "summary" => \&git_summary,
+  "tag" => \&git_tag,
+  "tags" => \&git_tags,
+  "tree" => \&git_tree,
+  "snapshot" => \&git_snapshot,
+  "object" => \&git_object,
+  "project_list" => \&git_project_list,
+  "project_index" => \&git_project_index,
+);
+
+our %allowed_options = ();
+
 get '/' => sub {
   my $self = shift;
   
@@ -248,60 +321,6 @@ get '/commit' => sub {
     ref_names => $ref_names
   );
 };
-
-sub get_difftree {
-  my ($root, $project, $cid, $parent, $parents) = @_;
-  
-  # Execute "git diff-tree"
-  my @git_diff_tree = (
-    git($root, $project),
-    "diff-tree", '-r',
-    "--no-commit-id",
-    @diff_opts,
-    (@$parents <= 1 ? $parent : '-c'),
-    $cid,
-    "--"
-  );
-  open my $fd, "-|", @git_diff_tree
-    or die "Open git-diff-tree failed";
-  my @difftree = map { chomp; $_ } <$fd>;
-  close $fd or die "Reading git-diff-tree failed";
-  
-  # Parse "git diff-tree" output
-  my $diffs = [];
-  my @parents = @$parents;
-  for my $line (@difftree) {
-    my $diff = parsed_difftree_line($line);
-
-    my ($to_mode_oct, $to_mode_str, $to_file_type);
-    my ($from_mode_oct, $from_mode_str, $from_file_type);
-    if ($diff->{'to_mode'} ne ('0' x 6)) {
-      $to_mode_oct = oct $diff->{'to_mode'};
-      if (S_ISREG($to_mode_oct)) { # only for regular file
-        $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
-      }
-      $to_file_type = file_type($diff->{'to_mode'});
-    }
-    if ($diff->{'from_mode'} ne ('0' x 6)) {
-      $from_mode_oct = oct $diff->{'from_mode'};
-      if (S_ISREG($from_mode_oct)) { # only for regular file
-        $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
-      }
-      $from_file_type = file_type($diff->{'from_mode'});
-    }
-    
-    $diff->{to_mode_str} = $to_mode_str;
-    $diff->{to_mode_oct} = $to_mode_oct;
-    $diff->{to_file_type} = $to_file_type;
-    $diff->{from_mode_str} = $from_mode_str;
-    $diff->{from_mode_oct} = $from_mode_oct;
-    $diff->{from_file_type} = $from_file_type;
-
-    push @$diffs, $diff;
-  }
-  
-  return $diffs;
-}
 
 get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $self = shift;
@@ -809,6 +828,62 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
   }
 };
 
+app->start;
+
+sub get_difftree {
+  my ($root, $project, $cid, $parent, $parents) = @_;
+  
+  # Execute "git diff-tree"
+  my @git_diff_tree = (
+    git($root, $project),
+    "diff-tree", '-r',
+    "--no-commit-id",
+    @diff_opts,
+    (@$parents <= 1 ? $parent : '-c'),
+    $cid,
+    "--"
+  );
+  open my $fd, "-|", @git_diff_tree
+    or die "Open git-diff-tree failed";
+  my @difftree = map { chomp; $_ } <$fd>;
+  close $fd or die "Reading git-diff-tree failed";
+  
+  # Parse "git diff-tree" output
+  my $diffs = [];
+  my @parents = @$parents;
+  for my $line (@difftree) {
+    my $diff = parsed_difftree_line($line);
+
+    my ($to_mode_oct, $to_mode_str, $to_file_type);
+    my ($from_mode_oct, $from_mode_str, $from_file_type);
+    if ($diff->{'to_mode'} ne ('0' x 6)) {
+      $to_mode_oct = oct $diff->{'to_mode'};
+      if (S_ISREG($to_mode_oct)) { # only for regular file
+        $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
+      }
+      $to_file_type = file_type($diff->{'to_mode'});
+    }
+    if ($diff->{'from_mode'} ne ('0' x 6)) {
+      $from_mode_oct = oct $diff->{'from_mode'};
+      if (S_ISREG($from_mode_oct)) { # only for regular file
+        $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
+      }
+      $from_file_type = file_type($diff->{'from_mode'});
+    }
+    
+    $diff->{to_mode_str} = $to_mode_str;
+    $diff->{to_mode_oct} = $to_mode_oct;
+    $diff->{to_file_type} = $to_file_type;
+    $diff->{from_mode_str} = $from_mode_str;
+    $diff->{from_mode_oct} = $from_mode_oct;
+    $diff->{from_file_type} = $from_file_type;
+
+    push @$diffs, $diff;
+  }
+  
+  return $diffs;
+}
+
 sub esc_html {
   my $str = shift;
   my %opts = @_;
@@ -925,90 +1000,6 @@ sub check_head_link {
   return ((-e $headfile) ||
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
-
-our $t0 = [ gettimeofday() ];
-
-our ($my_url, $my_uri, $base_url, $path_info, $home_link);
-our $home_link_str = "projects";
-our $site_name = ""
-                 || ($ENV{'SERVER_NAME'} || "Untitled") . " Git";
-our $site_html_head_string = "";
-our $site_header = "";
-our $home_text = "indextext.html";
-our $site_footer = "";
-our $logo = "static/git-logo.png";
-our $favicon = "static/git-favicon.png";
-our $logo_url = "http://git-scm.com/";
-our $logo_label = "git homepage";
-our $default_projects_order = "project";
-our $strict_export = "";
-our $default_blob_plain_mimetype = 'text/plain';
-our $default_text_plain_charset  = undef;
-our $mimetypes_file = undef;
-our $highlight_bin = "highlight";
-
-# Used to set the maximum load that we will still respond to gitweb queries.
-# If server load exceed this value then return "503 server busy" error.
-# If gitweb cannot determined server load, it is taken to be 0.
-# Leave it undefined (or set to 'undef') to turn off load checking.
-our $maxload = 300;
-
-# configuration for 'highlight' (http://www.andre-simon.de/)
-# match by basename
-our %highlight_basename = (
-  #'Program' => 'py',
-  #'Library' => 'py',
-  'SConstruct' => 'py', # SCons equivalent of Makefile
-  'Makefile' => 'make',
-);
-# match by extension
-our %highlight_ext = (
-  # main extensions, defining name of syntax;
-  # see files in /usr/share/highlight/langDefs/ directory
-  map { $_ => $_ }
-    qw(py c cpp rb java css php sh pl js tex bib xml awk bat ini spec tcl sql make),
-  # alternate extensions, see /etc/highlight/filetypes.conf
-  'h' => 'c',
-  map { $_ => 'sh'  } qw(bash zsh ksh),
-  map { $_ => 'cpp' } qw(cxx c++ cc),
-  map { $_ => 'php' } qw(php3 php4 php5 phps),
-  map { $_ => 'pl'  } qw(perl pm), # perhaps also 'cgi'
-  map { $_ => 'make'} qw(mak mk),
-  map { $_ => 'xml' } qw(xhtml html htm),
-);
-
-
-
-our $per_request_config = 1;
-our ($GITWEB_CONFIG, $GITWEB_CONFIG_SYSTEM, $GITWEB_CONFIG_COMMON);
-our %input_params = ();
-our @cgi_param_mapping = ();
-our %cgi_param_mapping = @cgi_param_mapping;
-
-our %actions = (
-  "blobdiff" => \&git_blobdiff,
-  "blobdiff_plain" => \&git_blobdiff_plain,
-  "blob" => \&git_blob,
-  "blob_plain" => \&git_blob_plain,
-  "commitdiff" => \&git_commitdiff,
-  "commitdiff_plain" => \&git_commitdiff_plain,
-  "commit" => \&git_commit,
-  "heads" => \&git_heads,
-  "log" => \&git_log,
-  "patch" => \&git_patch,
-  "patches" => \&git_patches,
-  "shortlog" => \&git_shortlog,
-  "summary" => \&git_summary,
-  "tag" => \&git_tag,
-  "tags" => \&git_tags,
-  "tree" => \&git_tree,
-  "snapshot" => \&git_snapshot,
-  "object" => \&git_object,
-  "project_list" => \&git_project_list,
-  "project_index" => \&git_project_index,
-);
-
-our %allowed_options = ();
 
 sub reset_timer {
   our $t0 = [ gettimeofday() ]
@@ -2978,5 +2969,4 @@ sub _params {
   return $params;
 }
 
-app->start;
 
