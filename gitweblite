@@ -324,7 +324,7 @@ get '/commit' => sub {
     $parent = "--root";
   }
   
-  my $diffs = _get_difftree($root, $project, $cid, $parent, $parents);
+  my $difftrees = get_difftree($root, $project, $cid, $parent, $parents);
   
   $self->render(
     root => $root,
@@ -332,12 +332,12 @@ get '/commit' => sub {
     cid => $cid,
     commit => \%commit,
     ref_names => $ref_names,
-    diffs => $diffs,
+    difftrees => $difftrees,
     ref_names => $ref_names
   );
 };
 
-sub _get_difftree {
+sub get_difftree {
   my ($root, $project, $cid, $parent, $parents) = @_;
   
   # Execute "git diff-tree"
@@ -413,6 +413,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   # Commit
   my $commit = parse_commit($root, $project, $cid)
     or die 404, "Unknown commit object";
+  $from_cid = $commit->{parent} unless defined $from_cid;
   
   # Check plain
   my $plain;
@@ -446,11 +447,34 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
       or die 500, "Open git-diff-tree failed";
 
     # Parse output
-    my @diffs;
+    my @diffinfos;
     while (my $line = <$fd>) {
       chomp $line;
       last unless $line;
-      push @diffs, scalar parse_difftree_raw_line($line);
+      push @diffinfos, scalar parse_difftree_raw_line($line);
+    }
+    
+    my $difftrees = get_difftree($root, $project,
+      $cid,$commit->{parent}, $commit->{parents});
+    
+    my @blobdiffs;
+    for my $diffinfo (@diffinfos) {
+      
+      my $from_file = $diffinfo->{'from_file'};
+      my $file = $diffinfo->{'to_file'};
+      my $from_bid = $diffinfo->{'from_id'};
+      my $bid = $diffinfo->{'to_id'};
+      
+      my @git_diff_tree = (git($root, $project), "diff-tree", '-r',
+        @diff_opts, '-p', (!$plain ? "--full-index" : ()), $from_cid, $cid,
+        "--", (defined $from_file ? $from_file : ()), $file
+      );
+      open $fd, "-|", @git_diff_tree
+        or die 500, "Open git-diff-tree failed";
+      
+      my $blobdiff = do { local $/; <$fd> };
+      close $fd;
+      push @blobdiffs, $blobdiff;
     }
     
     # Render
@@ -460,7 +484,8 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
       project => $project,
       cid => $cid,
       commit => $commit,
-      diffs => \@diffs,
+      difftrees => $difftrees,
+      blobdiffs => \@blobdiffs
     );
   }
 };
@@ -563,8 +588,8 @@ get '/blob' => sub {
   
   # Blob id
   my $bid = get_hash_by_path($root, $project, $cid, $file, "blob")
-		or die "Cannot find file";
-	
+    or die "Cannot find file";
+  
   # Blob
   my @git_cat_file = (
     git($root, $project),
@@ -591,7 +616,7 @@ get '/blob' => sub {
   my @lines;
   while (my $line = <$fd>) {
     chomp $line;
-		$line = untabify($line);
+    $line = untabify($line);
     push @lines, $line;
   }
   
@@ -627,7 +652,7 @@ get '/blob_plain' => sub {
 
   # Blob id
   my $bid = get_hash_by_path($root, $project, $cid, $file, "blob")
-		or die "Cannot find file";
+    or die "Cannot find file";
   open my $fd, "-|", git($root, $project), "cat-file", "blob", $bid
     or die "Open git-cat-file blob '$bid' failed";
 
@@ -698,69 +723,69 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
   }
   else { $plain = 0 }
 
-	my $fd;
-	my @difftree;
-	my %diffinfo;
-	
-	my $bid;
-	my $from_bid;
-
-	if (defined $cid && defined $from_cid) {
-		if (defined $file) {
-			# git diff tree
-			my @git_diff_tree = (git($root, $project), "diff-tree", '-r',
-			  @diff_opts, $from_cid, $cid, "--",
-			  (defined $from_file ? $from_file : ()), $file
-		  );
-		  
-			open $fd, "-|", @git_diff_tree
-				or die 500, "Open git-diff-tree failed";
-			@difftree = map { chomp; $_ } <$fd>;
-			close $fd
-				or die 404, "Reading git-diff-tree failed";
-			@difftree
-				or die 404, "Blob diff not found";
-
-		} elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
-
-			# read filtered raw output
-			open $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
-				  $from_cid, $cid, "--"
-				or die "Open git-diff-tree failed";
-			@difftree =
-				grep { /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} $bid/ }
-				map { chomp; $_ } <$fd>;
-			close $fd
-				or die("Reading git-diff-tree failed");
-			@difftree
-				or die("Blob diff not found");
-
-		} else {
-			die "Missing one of the blob diff parameters";
-		}
-
-		if (@difftree > 1) {
-			die "Ambiguous blob diff specification";
-		}
-
-		%diffinfo = parse_difftree_raw_line($difftree[0]);
-		$from_file ||= $diffinfo{'from_file'} || $file;
-		$file   ||= $diffinfo{'to_file'};
-
-		$from_bid ||= $diffinfo{'from_id'};
-		$bid        ||= $diffinfo{'to_id'};
-
-		# open patch output
-		open $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
-			'-p', (!$plain ? "--full-index" : ()),
-			$from_cid, $cid,
-			"--", (defined $from_file ? $from_file : ()), $file
-			or die_error(500, "Open git-diff-tree failed");
-	}
+  my $fd;
+  my @difftree;
+  my %diffinfo;
   
-	if (!%diffinfo) {
-		die '404 Not Found', "Missing one of the blob diff parameters";
-	}
+  my $bid;
+  my $from_bid;
+
+  if (defined $cid && defined $from_cid) {
+    if (defined $file) {
+      # git diff tree
+      my @git_diff_tree = (git($root, $project), "diff-tree", '-r',
+        @diff_opts, $from_cid, $cid, "--",
+        (defined $from_file ? $from_file : ()), $file
+      );
+      
+      open $fd, "-|", @git_diff_tree
+        or die 500, "Open git-diff-tree failed";
+      @difftree = map { chomp; $_ } <$fd>;
+      close $fd
+        or die 404, "Reading git-diff-tree failed";
+      @difftree
+        or die 404, "Blob diff not found";
+
+    } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
+
+      # read filtered raw output
+      open $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
+          $from_cid, $cid, "--"
+        or die "Open git-diff-tree failed";
+      @difftree =
+        grep { /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} $bid/ }
+        map { chomp; $_ } <$fd>;
+      close $fd
+        or die("Reading git-diff-tree failed");
+      @difftree
+        or die("Blob diff not found");
+
+    } else {
+      die "Missing one of the blob diff parameters";
+    }
+
+    if (@difftree > 1) {
+      die "Ambiguous blob diff specification";
+    }
+
+    %diffinfo = parse_difftree_raw_line($difftree[0]);
+    $from_file ||= $diffinfo{'from_file'} || $file;
+    $file   ||= $diffinfo{'to_file'};
+
+    $from_bid ||= $diffinfo{'from_id'};
+    $bid        ||= $diffinfo{'to_id'};
+
+    # open patch output
+    open $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
+      '-p', (!$plain ? "--full-index" : ()),
+      $from_cid, $cid,
+      "--", (defined $from_file ? $from_file : ()), $file
+      or die_error(500, "Open git-diff-tree failed");
+  }
+  
+  if (!%diffinfo) {
+    die '404 Not Found', "Missing one of the blob diff parameters";
+  }
   
   my $commit = parse_commit($root, $project, $cid);
 
@@ -772,20 +797,20 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
     $self->render_data($content);
   }
   else {
-  	# patch
-  	my @lines;
-  	while (my $line = <$fd>) {
-  	  my $class;
-  	  
-  	  if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
-  	  elsif ($line =~ /^index /) { $class = 'diff extended_header' }
-  	  elsif ($line =~ /^\+/) { $class = 'diff to_file' }
-  	  elsif ($line =~ /^\-/) { $class = 'diff from_file' }
-  	  elsif ($line =~ /^\@\@/) { $class = 'diff chunk_header' }
-  	  else { $class = 'diff' }
-  	  push @lines, {value => $line, class => $class};
-  	}
-  	close $fd;
+    # patch
+    my @lines;
+    while (my $line = <$fd>) {
+      my $class;
+      
+      if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
+      elsif ($line =~ /^index /) { $class = 'diff extended_header' }
+      elsif ($line =~ /^\+/) { $class = 'diff to_file' }
+      elsif ($line =~ /^\-/) { $class = 'diff from_file' }
+      elsif ($line =~ /^\@\@/) { $class = 'diff chunk_header' }
+      else { $class = 'diff' }
+      push @lines, {value => $line, class => $class};
+    }
+    close $fd;
 
     $self->render(
       '/blobdiff',
@@ -802,121 +827,121 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
 };
 
 sub format_diff_line {
-	my $line = shift;
-	my ($from, $to) = @_;
-	my $diff_class = "";
+  my $line = shift;
+  my ($from, $to) = @_;
+  my $diff_class = "";
 
-	chomp $line;
+  chomp $line;
 
-	if ($from && $to && ref($from->{'href'}) eq "ARRAY") {
-		# combined diff
-		my $prefix = substr($line, 0, scalar @{$from->{'href'}});
-		if ($line =~ m/^\@{3}/) {
-			$diff_class = " chunk_header";
-		} elsif ($line =~ m/^\\/) {
-			$diff_class = " incomplete";
-		} elsif ($prefix =~ tr/+/+/) {
-			$diff_class = " add";
-		} elsif ($prefix =~ tr/-/-/) {
-			$diff_class = " rem";
-		}
-	} else {
-		# assume ordinary diff
-		my $char = substr($line, 0, 1);
-		if ($char eq '+') {
-			$diff_class = " add";
-		} elsif ($char eq '-') {
-			$diff_class = " rem";
-		} elsif ($char eq '@') {
-			$diff_class = " chunk_header";
-		} elsif ($char eq "\\") {
-			$diff_class = " incomplete";
-		}
-	}
-	$line = untabify($line);
-	if ($from && $to && $line =~ m/^\@{2} /) {
-		my ($from_text, $from_start, $from_lines, $to_text, $to_start, $to_lines, $section) =
-			$line =~ m/^\@{2} (-(\d+)(?:,(\d+))?) (\+(\d+)(?:,(\d+))?) \@{2}(.*)$/;
+  if ($from && $to && ref($from->{'href'}) eq "ARRAY") {
+    # combined diff
+    my $prefix = substr($line, 0, scalar @{$from->{'href'}});
+    if ($line =~ m/^\@{3}/) {
+      $diff_class = " chunk_header";
+    } elsif ($line =~ m/^\\/) {
+      $diff_class = " incomplete";
+    } elsif ($prefix =~ tr/+/+/) {
+      $diff_class = " add";
+    } elsif ($prefix =~ tr/-/-/) {
+      $diff_class = " rem";
+    }
+  } else {
+    # assume ordinary diff
+    my $char = substr($line, 0, 1);
+    if ($char eq '+') {
+      $diff_class = " add";
+    } elsif ($char eq '-') {
+      $diff_class = " rem";
+    } elsif ($char eq '@') {
+      $diff_class = " chunk_header";
+    } elsif ($char eq "\\") {
+      $diff_class = " incomplete";
+    }
+  }
+  $line = untabify($line);
+  if ($from && $to && $line =~ m/^\@{2} /) {
+    my ($from_text, $from_start, $from_lines, $to_text, $to_start, $to_lines, $section) =
+      $line =~ m/^\@{2} (-(\d+)(?:,(\d+))?) (\+(\d+)(?:,(\d+))?) \@{2}(.*)$/;
 
-		$from_lines = 0 unless defined $from_lines;
-		$to_lines   = 0 unless defined $to_lines;
+    $from_lines = 0 unless defined $from_lines;
+    $to_lines   = 0 unless defined $to_lines;
 
-		if ($from->{'href'}) {
-			$from_text = $cgi->a({-href=>"$from->{'href'}#l$from_start",
-			                     -class=>"list"}, $from_text);
-		}
-		if ($to->{'href'}) {
-			$to_text   = $cgi->a({-href=>"$to->{'href'}#l$to_start",
-			                     -class=>"list"}, $to_text);
-		}
-		$line = "<span class=\"chunk_info\">@@ $from_text $to_text @@</span>" .
-		        "<span class=\"section\">" . esc_html($section, -nbsp=>1) . "</span>";
-		return "<div class=\"diff$diff_class\">$line</div>\n";
-	} elsif ($from && $to && $line =~ m/^\@{3}/) {
-		my ($prefix, $ranges, $section) = $line =~ m/^(\@+) (.*?) \@+(.*)$/;
-		my (@from_text, @from_start, @from_nlines, $to_text, $to_start, $to_nlines);
+    if ($from->{'href'}) {
+      $from_text = $cgi->a({-href=>"$from->{'href'}#l$from_start",
+                           -class=>"list"}, $from_text);
+    }
+    if ($to->{'href'}) {
+      $to_text   = $cgi->a({-href=>"$to->{'href'}#l$to_start",
+                           -class=>"list"}, $to_text);
+    }
+    $line = "<span class=\"chunk_info\">@@ $from_text $to_text @@</span>" .
+            "<span class=\"section\">" . esc_html($section, -nbsp=>1) . "</span>";
+    return "<div class=\"diff$diff_class\">$line</div>\n";
+  } elsif ($from && $to && $line =~ m/^\@{3}/) {
+    my ($prefix, $ranges, $section) = $line =~ m/^(\@+) (.*?) \@+(.*)$/;
+    my (@from_text, @from_start, @from_nlines, $to_text, $to_start, $to_nlines);
 
-		@from_text = split(' ', $ranges);
-		for (my $i = 0; $i < @from_text; ++$i) {
-			($from_start[$i], $from_nlines[$i]) =
-				(split(',', substr($from_text[$i], 1)), 0);
-		}
+    @from_text = split(' ', $ranges);
+    for (my $i = 0; $i < @from_text; ++$i) {
+      ($from_start[$i], $from_nlines[$i]) =
+        (split(',', substr($from_text[$i], 1)), 0);
+    }
 
-		$to_text   = pop @from_text;
-		$to_start  = pop @from_start;
-		$to_nlines = pop @from_nlines;
+    $to_text   = pop @from_text;
+    $to_start  = pop @from_start;
+    $to_nlines = pop @from_nlines;
 
-		$line = "<span class=\"chunk_info\">$prefix ";
-		for (my $i = 0; $i < @from_text; ++$i) {
-			if ($from->{'href'}[$i]) {
-				$line .= $cgi->a({-href=>"$from->{'href'}[$i]#l$from_start[$i]",
-				                  -class=>"list"}, $from_text[$i]);
-			} else {
-				$line .= $from_text[$i];
-			}
-			$line .= " ";
-		}
-		if ($to->{'href'}) {
-			$line .= $cgi->a({-href=>"$to->{'href'}#l$to_start",
-			                  -class=>"list"}, $to_text);
-		} else {
-			$line .= $to_text;
-		}
-		$line .= " $prefix</span>" .
-		         "<span class=\"section\">" . esc_html($section, -nbsp=>1) . "</span>";
-		return "<div class=\"diff$diff_class\">$line</div>\n";
-	}
-	return "<div class=\"diff$diff_class\">" . esc_html($line, -nbsp=>1) . "</div>\n";
+    $line = "<span class=\"chunk_info\">$prefix ";
+    for (my $i = 0; $i < @from_text; ++$i) {
+      if ($from->{'href'}[$i]) {
+        $line .= $cgi->a({-href=>"$from->{'href'}[$i]#l$from_start[$i]",
+                          -class=>"list"}, $from_text[$i]);
+      } else {
+        $line .= $from_text[$i];
+      }
+      $line .= " ";
+    }
+    if ($to->{'href'}) {
+      $line .= $cgi->a({-href=>"$to->{'href'}#l$to_start",
+                        -class=>"list"}, $to_text);
+    } else {
+      $line .= $to_text;
+    }
+    $line .= " $prefix</span>" .
+             "<span class=\"section\">" . esc_html($section, -nbsp=>1) . "</span>";
+    return "<div class=\"diff$diff_class\">$line</div>\n";
+  }
+  return "<div class=\"diff$diff_class\">" . esc_html($line, -nbsp=>1) . "</div>\n";
 }
 
 sub esc_html {
-	my $str = shift;
-	my %opts = @_;
+  my $str = shift;
+  my %opts = @_;
 
-	return undef unless defined $str;
+  return undef unless defined $str;
 
-	$str = to_utf8($str);
-	$str = $cgi->escapeHTML($str);
-	if ($opts{'-nbsp'}) {
-		$str =~ s/ /&nbsp;/g;
-	}
-	$str =~ s|([[:cntrl:]])|(($1 ne "\t") ? quot_cec($1) : $1)|eg;
-	return $str;
+  $str = to_utf8($str);
+  $str = $cgi->escapeHTML($str);
+  if ($opts{'-nbsp'}) {
+    $str =~ s/ /&nbsp;/g;
+  }
+  $str =~ s|([[:cntrl:]])|(($1 ne "\t") ? quot_cec($1) : $1)|eg;
+  return $str;
 }
 
 sub esc_path {
-	my $str = shift;
-	my %opts = @_;
+  my $str = shift;
+  my %opts = @_;
 
-	return undef unless defined $str;
+  return undef unless defined $str;
 
-	$str = to_utf8($str);
-	$str = $cgi->escapeHTML($str);
-	if ($opts{'-nbsp'}) {
-		$str =~ s/ /&nbsp;/g;
-	}
-	$str =~ s|([[:cntrl:]])|quot_cec($1)|eg;
-	return $str;
+  $str = to_utf8($str);
+  $str = $cgi->escapeHTML($str);
+  if ($opts{'-nbsp'}) {
+    $str =~ s/ /&nbsp;/g;
+  }
+  $str =~ s|([[:cntrl:]])|quot_cec($1)|eg;
+  return $str;
 }
 
 sub get_projects {
@@ -3446,171 +3471,171 @@ sub print_sidebyside_diff_chunk {
 }
 
 sub href {
-	my %params = @_;
-	# default is to use -absolute url() i.e. $my_uri
-	my $href = $params{-full} ? $my_url : $my_uri;
+  my %params = @_;
+  # default is to use -absolute url() i.e. $my_uri
+  my $href = $params{-full} ? $my_url : $my_uri;
 
-	# implicit -replay, must be first of implicit params
-	$params{-replay} = 1 if (keys %params == 1 && $params{-anchor});
+  # implicit -replay, must be first of implicit params
+  $params{-replay} = 1 if (keys %params == 1 && $params{-anchor});
 
-	$params{'project'} = $project unless exists $params{'project'};
+  $params{'project'} = $project unless exists $params{'project'};
 
-	if ($params{-replay}) {
-		while (my ($name, $symbol) = each %cgi_param_mapping) {
-			if (!exists $params{$name}) {
-				$params{$name} = $input_params{$name};
-			}
-		}
-	}
+  if ($params{-replay}) {
+    while (my ($name, $symbol) = each %cgi_param_mapping) {
+      if (!exists $params{$name}) {
+        $params{$name} = $input_params{$name};
+      }
+    }
+  }
 
-	my $use_pathinfo = gitweb_check_feature('pathinfo');
-	if (defined $params{'project'} &&
-	    (exists $params{-path_info} ? $params{-path_info} : $use_pathinfo)) {
-		# try to put as many parameters as possible in PATH_INFO:
-		#   - project name
-		#   - action
-		#   - hash_parent or hash_parent_base:/file_parent
-		#   - hash or hash_base:/filename
-		#   - the snapshot_format as an appropriate suffix
+  my $use_pathinfo = gitweb_check_feature('pathinfo');
+  if (defined $params{'project'} &&
+      (exists $params{-path_info} ? $params{-path_info} : $use_pathinfo)) {
+    # try to put as many parameters as possible in PATH_INFO:
+    #   - project name
+    #   - action
+    #   - hash_parent or hash_parent_base:/file_parent
+    #   - hash or hash_base:/filename
+    #   - the snapshot_format as an appropriate suffix
 
-		# When the script is the root DirectoryIndex for the domain,
-		# $href here would be something like http://gitweb.example.com/
-		# Thus, we strip any trailing / from $href, to spare us double
-		# slashes in the final URL
-		$href =~ s,/$,,;
+    # When the script is the root DirectoryIndex for the domain,
+    # $href here would be something like http://gitweb.example.com/
+    # Thus, we strip any trailing / from $href, to spare us double
+    # slashes in the final URL
+    $href =~ s,/$,,;
 
-		# Then add the project name, if present
-		$href .= "/".esc_path_info($params{'project'});
-		delete $params{'project'};
+    # Then add the project name, if present
+    $href .= "/".esc_path_info($params{'project'});
+    delete $params{'project'};
 
-		# since we destructively absorb parameters, we keep this
-		# boolean that remembers if we're handling a snapshot
-		my $is_snapshot = $params{'action'} eq 'snapshot';
+    # since we destructively absorb parameters, we keep this
+    # boolean that remembers if we're handling a snapshot
+    my $is_snapshot = $params{'action'} eq 'snapshot';
 
-		# Summary just uses the project path URL, any other action is
-		# added to the URL
-		if (defined $params{'action'}) {
-			$href .= "/".esc_path_info($params{'action'})
-				unless $params{'action'} eq 'summary';
-			delete $params{'action'};
-		}
+    # Summary just uses the project path URL, any other action is
+    # added to the URL
+    if (defined $params{'action'}) {
+      $href .= "/".esc_path_info($params{'action'})
+        unless $params{'action'} eq 'summary';
+      delete $params{'action'};
+    }
 
-		# Next, we put hash_parent_base:/file_parent..hash_base:/file_name,
-		# stripping nonexistent or useless pieces
-		$href .= "/" if ($params{'hash_base'} || $params{'hash_parent_base'}
-			|| $params{'hash_parent'} || $params{'hash'});
-		if (defined $params{'hash_base'}) {
-			if (defined $params{'hash_parent_base'}) {
-				$href .= esc_path_info($params{'hash_parent_base'});
-				# skip the file_parent if it's the same as the file_name
-				if (defined $params{'file_parent'}) {
-					if (defined $params{'file_name'} && $params{'file_parent'} eq $params{'file_name'}) {
-						delete $params{'file_parent'};
-					} elsif ($params{'file_parent'} !~ /\.\./) {
-						$href .= ":/".esc_path_info($params{'file_parent'});
-						delete $params{'file_parent'};
-					}
-				}
-				$href .= "..";
-				delete $params{'hash_parent'};
-				delete $params{'hash_parent_base'};
-			} elsif (defined $params{'hash_parent'}) {
-				$href .= esc_path_info($params{'hash_parent'}). "..";
-				delete $params{'hash_parent'};
-			}
+    # Next, we put hash_parent_base:/file_parent..hash_base:/file_name,
+    # stripping nonexistent or useless pieces
+    $href .= "/" if ($params{'hash_base'} || $params{'hash_parent_base'}
+      || $params{'hash_parent'} || $params{'hash'});
+    if (defined $params{'hash_base'}) {
+      if (defined $params{'hash_parent_base'}) {
+        $href .= esc_path_info($params{'hash_parent_base'});
+        # skip the file_parent if it's the same as the file_name
+        if (defined $params{'file_parent'}) {
+          if (defined $params{'file_name'} && $params{'file_parent'} eq $params{'file_name'}) {
+            delete $params{'file_parent'};
+          } elsif ($params{'file_parent'} !~ /\.\./) {
+            $href .= ":/".esc_path_info($params{'file_parent'});
+            delete $params{'file_parent'};
+          }
+        }
+        $href .= "..";
+        delete $params{'hash_parent'};
+        delete $params{'hash_parent_base'};
+      } elsif (defined $params{'hash_parent'}) {
+        $href .= esc_path_info($params{'hash_parent'}). "..";
+        delete $params{'hash_parent'};
+      }
 
-			$href .= esc_path_info($params{'hash_base'});
-			if (defined $params{'file_name'} && $params{'file_name'} !~ /\.\./) {
-				$href .= ":/".esc_path_info($params{'file_name'});
-				delete $params{'file_name'};
-			}
-			delete $params{'hash'};
-			delete $params{'hash_base'};
-		} elsif (defined $params{'hash'}) {
-			$href .= esc_path_info($params{'hash'});
-			delete $params{'hash'};
-		}
+      $href .= esc_path_info($params{'hash_base'});
+      if (defined $params{'file_name'} && $params{'file_name'} !~ /\.\./) {
+        $href .= ":/".esc_path_info($params{'file_name'});
+        delete $params{'file_name'};
+      }
+      delete $params{'hash'};
+      delete $params{'hash_base'};
+    } elsif (defined $params{'hash'}) {
+      $href .= esc_path_info($params{'hash'});
+      delete $params{'hash'};
+    }
 
-		# If the action was a snapshot, we can absorb the
-		# snapshot_format parameter too
-		if ($is_snapshot) {
-			my $fmt = $params{'snapshot_format'};
-			# snapshot_format should always be defined when href()
-			# is called, but just in case some code forgets, we
-			# fall back to the default
-			$fmt ||= $snapshot_fmts[0];
-			$href .= $known_snapshot_formats{$fmt}{'suffix'};
-			delete $params{'snapshot_format'};
-		}
-	}
+    # If the action was a snapshot, we can absorb the
+    # snapshot_format parameter too
+    if ($is_snapshot) {
+      my $fmt = $params{'snapshot_format'};
+      # snapshot_format should always be defined when href()
+      # is called, but just in case some code forgets, we
+      # fall back to the default
+      $fmt ||= $snapshot_fmts[0];
+      $href .= $known_snapshot_formats{$fmt}{'suffix'};
+      delete $params{'snapshot_format'};
+    }
+  }
 
-	# now encode the parameters explicitly
-	my @result = ();
-	for (my $i = 0; $i < @cgi_param_mapping; $i += 2) {
-		my ($name, $symbol) = ($cgi_param_mapping[$i], $cgi_param_mapping[$i+1]);
-		if (defined $params{$name}) {
-			if (ref($params{$name}) eq "ARRAY") {
-				foreach my $par (@{$params{$name}}) {
-					push @result, $symbol . "=" . esc_param($par);
-				}
-			} else {
-				push @result, $symbol . "=" . esc_param($params{$name});
-			}
-		}
-	}
-	$href .= "?" . join(';', @result) if scalar @result;
+  # now encode the parameters explicitly
+  my @result = ();
+  for (my $i = 0; $i < @cgi_param_mapping; $i += 2) {
+    my ($name, $symbol) = ($cgi_param_mapping[$i], $cgi_param_mapping[$i+1]);
+    if (defined $params{$name}) {
+      if (ref($params{$name}) eq "ARRAY") {
+        foreach my $par (@{$params{$name}}) {
+          push @result, $symbol . "=" . esc_param($par);
+        }
+      } else {
+        push @result, $symbol . "=" . esc_param($params{$name});
+      }
+    }
+  }
+  $href .= "?" . join(';', @result) if scalar @result;
 
-	# final transformation: trailing spaces must be escaped (URI-encoded)
-	$href =~ s/(\s+)$/CGI::escape($1)/e;
+  # final transformation: trailing spaces must be escaped (URI-encoded)
+  $href =~ s/(\s+)$/CGI::escape($1)/e;
 
-	if ($params{-anchor}) {
-		$href .= "#".esc_param($params{-anchor});
-	}
+  if ($params{-anchor}) {
+    $href .= "#".esc_param($params{-anchor});
+  }
 
-	return $href;
+  return $href;
 }
 
 sub esc_param {
-	my $str = shift;
-	return undef unless defined $str;
-	$str =~ s/([^A-Za-z0-9\-_.~()\/:@ ]+)/CGI::escape($1)/eg;
-	$str =~ s/ /\+/g;
-	return $str;
+  my $str = shift;
+  return undef unless defined $str;
+  $str =~ s/([^A-Za-z0-9\-_.~()\/:@ ]+)/CGI::escape($1)/eg;
+  $str =~ s/ /\+/g;
+  return $str;
 }
 
 sub unquote {
-	my $str = shift;
+  my $str = shift;
 
-	sub unq {
-		my $seq = shift;
-		my %es = ( # character escape codes, aka escape sequences
-			't' => "\t",   # tab            (HT, TAB)
-			'n' => "\n",   # newline        (NL)
-			'r' => "\r",   # return         (CR)
-			'f' => "\f",   # form feed      (FF)
-			'b' => "\b",   # backspace      (BS)
-			'a' => "\a",   # alarm (bell)   (BEL)
-			'e' => "\e",   # escape         (ESC)
-			'v' => "\013", # vertical tab   (VT)
-		);
+  sub unq {
+    my $seq = shift;
+    my %es = ( # character escape codes, aka escape sequences
+      't' => "\t",   # tab            (HT, TAB)
+      'n' => "\n",   # newline        (NL)
+      'r' => "\r",   # return         (CR)
+      'f' => "\f",   # form feed      (FF)
+      'b' => "\b",   # backspace      (BS)
+      'a' => "\a",   # alarm (bell)   (BEL)
+      'e' => "\e",   # escape         (ESC)
+      'v' => "\013", # vertical tab   (VT)
+    );
 
-		if ($seq =~ m/^[0-7]{1,3}$/) {
-			# octal char sequence
-			return chr(oct($seq));
-		} elsif (exists $es{$seq}) {
-			# C escape sequence, aka character escape code
-			return $es{$seq};
-		}
-		# quoted ordinary character
-		return $seq;
-	}
+    if ($seq =~ m/^[0-7]{1,3}$/) {
+      # octal char sequence
+      return chr(oct($seq));
+    } elsif (exists $es{$seq}) {
+      # C escape sequence, aka character escape code
+      return $es{$seq};
+    }
+    # quoted ordinary character
+    return $seq;
+  }
 
-	if ($str =~ m/^"(.*)"$/) {
-		# needs unquoting
-		$str = $1;
-		$str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
-	}
-	return $str;
+  if ($str =~ m/^"(.*)"$/) {
+    # needs unquoting
+    $str = $1;
+    $str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
+  }
+  return $str;
 }
 
 sub sort_projects_list {
@@ -4196,16 +4221,16 @@ sub git_search_changes {
 }
 
 sub untabify {
-	my $line = shift;
+  my $line = shift;
 
-	while ((my $pos = index($line, "\t")) != -1) {
-		if (my $count = (8 - ($pos % 8))) {
-			my $spaces = ' ' x $count;
-			$line =~ s/\t/$spaces/;
-		}
-	}
+  while ((my $pos = index($line, "\t")) != -1) {
+    if (my $count = (8 - ($pos % 8))) {
+      my $spaces = ' ' x $count;
+      $line =~ s/\t/$spaces/;
+    }
+  }
 
-	return $line;
+  return $line;
 }
 
 sub git_search_files {
@@ -4783,41 +4808,41 @@ sub git_heads {
 }
 
 sub git_get_remotes_list {
-	my $wanted = shift;
-	my %remotes = ();
+  my $wanted = shift;
+  my %remotes = ();
 
-	open my $fd, '-|' , git_cmd(), 'remote', '-v';
-	return unless $fd;
-	while (my $remote = <$fd>) {
-		chomp $remote;
-		$remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
-		next if $wanted and not $remote eq $wanted;
-		my ($url, $key) = ($1, $2);
+  open my $fd, '-|' , git_cmd(), 'remote', '-v';
+  return unless $fd;
+  while (my $remote = <$fd>) {
+    chomp $remote;
+    $remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
+    next if $wanted and not $remote eq $wanted;
+    my ($url, $key) = ($1, $2);
 
-		$remotes{$remote} ||= { 'heads' => () };
-		$remotes{$remote}{$key} = $url;
-	}
-	close $fd or return;
-	return wantarray ? %remotes : \%remotes;
+    $remotes{$remote} ||= { 'heads' => () };
+    $remotes{$remote}{$key} = $url;
+  }
+  close $fd or return;
+  return wantarray ? %remotes : \%remotes;
 }
 
 sub get_remotes {
-	my ($root, $project, $wanted) = @_;
-	my %remotes = ();
+  my ($root, $project, $wanted) = @_;
+  my %remotes = ();
 
-	open my $fd, '-|' , git($root, $project), 'remote', '-v';
-	return unless $fd;
-	while (my $remote = <$fd>) {
-		chomp $remote;
-		$remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
-		next if $wanted and not $remote eq $wanted;
-		my ($url, $key) = ($1, $2);
+  open my $fd, '-|' , git($root, $project), 'remote', '-v';
+  return unless $fd;
+  while (my $remote = <$fd>) {
+    chomp $remote;
+    $remote =~ s!\t(.*?)\s+\((\w+)\)$!!;
+    next if $wanted and not $remote eq $wanted;
+    my ($url, $key) = ($1, $2);
 
-		$remotes{$remote} ||= { 'heads' => () };
-		$remotes{$remote}{$key} = $url;
-	}
-	close $fd or return;
-	return wantarray ? %remotes : \%remotes;
+    $remotes{$remote} ||= { 'heads' => () };
+    $remotes{$remote}{$key} = $url;
+  }
+  close $fd or return;
+  return wantarray ? %remotes : \%remotes;
 }
 
 # used both for single remote view and for list of all the remotes
@@ -6646,61 +6671,61 @@ sub _params {
 }
 
 sub filter_forks_from_projects_list {
-	my $projects = shift;
+  my $projects = shift;
 
-	my %trie; # prefix tree of directories (path components)
-	# generate trie out of those directories that might contain forks
-	foreach my $pr (@$projects) {
-		my $path = $pr->{'path'};
-		$path =~ s/\.git$//;      # forks of 'repo.git' are in 'repo/' directory
-		next if ($path =~ m!/$!); # skip non-bare repositories, e.g. 'repo/.git'
-		next unless ($path);      # skip '.git' repository: tests, git-instaweb
-		next unless (-d "$projectroot/$path"); # containing directory exists
-		$pr->{'forks'} = [];      # there can be 0 or more forks of project
+  my %trie; # prefix tree of directories (path components)
+  # generate trie out of those directories that might contain forks
+  foreach my $pr (@$projects) {
+    my $path = $pr->{'path'};
+    $path =~ s/\.git$//;      # forks of 'repo.git' are in 'repo/' directory
+    next if ($path =~ m!/$!); # skip non-bare repositories, e.g. 'repo/.git'
+    next unless ($path);      # skip '.git' repository: tests, git-instaweb
+    next unless (-d "$projectroot/$path"); # containing directory exists
+    $pr->{'forks'} = [];      # there can be 0 or more forks of project
 
-		# add to trie
-		my @dirs = split('/', $path);
-		# walk the trie, until either runs out of components or out of trie
-		my $ref = \%trie;
-		while (scalar @dirs &&
-		       exists($ref->{$dirs[0]})) {
-			$ref = $ref->{shift @dirs};
-		}
-		# create rest of trie structure from rest of components
-		foreach my $dir (@dirs) {
-			$ref = $ref->{$dir} = {};
-		}
-		# create end marker, store $pr as a data
-		$ref->{''} = $pr if (!exists $ref->{''});
-	}
+    # add to trie
+    my @dirs = split('/', $path);
+    # walk the trie, until either runs out of components or out of trie
+    my $ref = \%trie;
+    while (scalar @dirs &&
+           exists($ref->{$dirs[0]})) {
+      $ref = $ref->{shift @dirs};
+    }
+    # create rest of trie structure from rest of components
+    foreach my $dir (@dirs) {
+      $ref = $ref->{$dir} = {};
+    }
+    # create end marker, store $pr as a data
+    $ref->{''} = $pr if (!exists $ref->{''});
+  }
 
-	# filter out forks, by finding shortest prefix match for paths
-	my @filtered;
+  # filter out forks, by finding shortest prefix match for paths
+  my @filtered;
  PROJECT:
-	foreach my $pr (@$projects) {
-		# trie lookup
-		my $ref = \%trie;
-	DIR:
-		foreach my $dir (split('/', $pr->{'path'})) {
-			if (exists $ref->{''}) {
-				# found [shortest] prefix, is a fork - skip it
-				push @{$ref->{''}{'forks'}}, $pr;
-				next PROJECT;
-			}
-			if (!exists $ref->{$dir}) {
-				# not in trie, cannot have prefix, not a fork
-				push @filtered, $pr;
-				next PROJECT;
-			}
-			# If the dir is there, we just walk one step down the trie.
-			$ref = $ref->{$dir};
-		}
-		# we ran out of trie
-		# (shouldn't happen: it's either no match, or end marker)
-		push @filtered, $pr;
-	}
+  foreach my $pr (@$projects) {
+    # trie lookup
+    my $ref = \%trie;
+  DIR:
+    foreach my $dir (split('/', $pr->{'path'})) {
+      if (exists $ref->{''}) {
+        # found [shortest] prefix, is a fork - skip it
+        push @{$ref->{''}{'forks'}}, $pr;
+        next PROJECT;
+      }
+      if (!exists $ref->{$dir}) {
+        # not in trie, cannot have prefix, not a fork
+        push @filtered, $pr;
+        next PROJECT;
+      }
+      # If the dir is there, we just walk one step down the trie.
+      $ref = $ref->{$dir};
+    }
+    # we ran out of trie
+    # (shouldn't happen: it's either no match, or end marker)
+    push @filtered, $pr;
+  }
 
-	return @filtered;
+  return @filtered;
 }
 
 app->start;

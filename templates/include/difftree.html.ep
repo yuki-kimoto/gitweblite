@@ -1,0 +1,55 @@
+<table class="<%= @$parents > 1 ? 'combined' : 'diff_tree' %>"">
+  % for my $difftree (@$difftrees) {
+    % my $file = $difftree->{to_file};
+    % my $mode_str = $difftree->{to_mode_str};
+    % my $status = $difftree->{status};
+    <tr>
+      <td>
+        <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
+          cid => $cid, file => $file}) %>"
+        >
+          % if ($status eq 'D') {
+            <%= $file %>
+          % } else {
+            <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
+              cid => $cid, file => $file}) %>"
+            >
+              <%= $file %>
+            </a>
+          % }
+        </a>
+      </td>
+      <td>
+      % if ($status eq 'A') {
+        <span class="file_status new">
+          [ new <%= $difftree->{to_file_type} %>
+          % if ($mode_str) {
+             with mode: <%= $mode_str %>
+          % }
+          ]
+        </span>";
+      % } elsif ($status eq 'D') {
+        <span class="file_status deleted">[deleted <%= $difftree->{from_file_type} %>]</span>
+      % }
+      </td>
+      <td class="link">
+        % if ($status ne 'A') {
+          <a href="<%= url_for('/blobdiff')->query({root => $root, project => $project,
+            from_cid => $from_cid, cid => $cid, file => $file}) %>"
+          >
+            diff
+          </a>
+          |
+        % }
+        % if ($status ne 'D') {
+          <a href="<%= url_for('/blob')->query({root => $root, project => $project,
+            cid => $cid, file => $file}) %>"
+          >
+            blob
+          </a>
+        % }
+      </td>
+    </tr>
+    
+  % }
+</table>

@@ -8,11 +8,11 @@
   %= include '/include/page_navi', current => 'commit', head_cid => $cid, root => $root, project => $project;
   
   <div class="page_nav">
-    % my $parent_cid = $commit->{parent};
+    % my $from_cid = $commit->{parent};
     (
       parent:
-      <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $parent_cid}) %>">
-        <%= substr($parent_cid, 0, 7) %>
+      <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $from_cid}) %>">
+        <%= substr($from_cid, 0, 7) %>
       </a>
     ) |
   </div>
@@ -90,18 +90,18 @@
         </td>
         <td class="sha1">
           <a class="list"
-            href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $parent_cid}) %>"
+            href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $from_cid}) %>"
           >
-            <%= $parent_cid %>
+            <%= $from_cid %>
           </a>
         </td>
         <td class="link">
-          <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $parent_cid}) %>">
+          <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $from_cid}) %>">
             commit
           </a>
           |
           <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project,
-            cid => $commit->{id}, before_cid => $parent_cid}) %>"
+            cid => $commit->{id}, from_cid => $from_cid}) %>"
           >
             diff
           </a>
@@ -119,60 +119,6 @@
   </div>
   <div class="list_head">
   </div>
-  % my $parents = $commit->{parents};
-  <table class="<%= @$parents > 1 ? 'combined' : 'diff_tree' %>"">
-    
-    % for my $diff (@$diffs) {
-      % my $file = $diff->{to_file};
-      % my $mode_str = $diff->{to_mode_str};
-      % my $status = $diff->{status};
-      <tr>
-        <td>
-          <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
-            cid => $cid, file => $file}) %>"
-          >
-            % if ($status eq 'D') {
-              <%= $file %>
-            % } else {
-              <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
-                cid => $cid, file => $file}) %>"
-              >
-                <%= $file %>
-              </a>
-            % }
-          </a>
-        </td>
-        <td>
-        % if ($status eq 'A') {
-    			<span class="file_status new">
-    			  [ new <%= $diff->{to_file_type} %>
-    			  % if ($mode_str) {
-    			     with mode: <%= $mode_str %>
-    			  % }
-    			  ]
-    			</span>";
-        % } elsif ($status eq 'D') {
-          <span class="file_status deleted">[deleted <%= $diff->{from_file_type} %>]</span>
-        % }
-        </td>
-        <td class="link">
-          % if ($status ne 'A') {
-            <a href="<%= url_for('/blobdiff')->query({root => $root, project => $project,
-              from_cid => $parent_cid, cid => $cid, file => $file}) %>"
-            >
-              diff
-            </a>
-            |
-          % }
-          % if ($status ne 'D') {
-            <a href="<%= url_for('/blob')->query({root => $root, project => $project,
-              cid => $cid, file => $file}) %>"
-            >
-              blob
-            </a>
-          % }
-        </td>
-      </tr>
-      
-    % }
-  </table>
+  % my $parents = ;
+  <%= include '/include/difftree', cid => $cid, from_cid => $from_cid,
+    difftrees => $difftrees, parents => $commit->{parents} %>
