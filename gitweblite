@@ -9,8 +9,29 @@ use utf8;
 use Validator::Custom;
 use Encode qw/encode decode/;
 
+our $VERSION = '0.01';
+
 # Encode
 sub e($) { encode('UTF-8', shift) }
+
+my $conf = plugin 'Config';
+
+# Config
+my $projectroots = $conf->{projectroots};
+my $projectroot = $conf->{projectroots}->[0];
+my $projects_list = $conf->{projects_list} //= $projectroot;
+my $export_ok = $conf->{export_ok} // '';
+my $export_auth_hook = $conf->{export_ok} // undef;
+my $GIT = $conf->{git_bindir}
+  ? $conf->{git_bindir} . '/git'
+  : '/usr/local/bin/git';
+
+my $cgi;
+my @diff_opts = ('-M');
+my $prevent_xss = 0;
+
+my $default_text_plain_charset  = undef;
+my $gitweb_project_owner = undef;
 
 # Validator
 my $validator = Validator::Custom->new;
@@ -19,38 +40,6 @@ $validator->register_constraint(hex => sub {
   return 0 unless defined $value;
   $value =~ /^[0-9a-fA-F]+$/ ? 1 : 0;
 });
-
-our $version = '0.01';
-
-my $conf = plugin 'Config';
-
-# Config
-our $projectroots = $conf->{projectroots};
-our $projectroot = $conf->{projectroots}->[0];
-our $projects_list = $conf->{projects_list} //= $projectroot;
-our $export_ok = $conf->{export_ok} // '';
-our $export_auth_hook = $conf->{export_ok} // undef;
-our $GIT = $conf->{git_bindir}
-  ? $conf->{git_bindir} . '/git'
-  : '/usr/local/bin/git';
-
-our $projects_list_description_width = 25;
-our $gitweb_project_owner = undef;
-our $config_file = '';
-our %config;
-our $fallback_encoding = 'latin1';
-our $project_maxdepth = 1;
-use CGI ();
-my $cgi = CGI->new;
-my @git_base_url_list = grep { $_ ne '' } ("");
-my @diff_opts = ('-M');
-
-my $prevent_xss = 0;
-
-my ($file, $file_parent, $cid, $parent_cid, $base_cid,
-     $parent_base_cid, @extra_options, $page);
-
-my $DEFAULT_TEXT_PLAIN_CHARSET  = undef;
 
 get '/' => sub {
   my $self = shift;
@@ -107,7 +96,6 @@ get '/summary' => sub {
   my $last_change = _timestamp_html(\%committer_date);
   my $head_cid = $head_commit->{id};
   my $urls = get_project_urls($root, $project);
-  $urls = [map { "$_/$project" } @git_base_url_list] unless @$urls;
   
   # Commits
   my $commit_count = 20;
@@ -244,7 +232,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
       or die 500, "Open git-diff-tree failed";
 
     my $content = do { local $/; <$fd> };
-    my $content_disposition .= "inline; filename=$file";
+    my $content_disposition .= "inline; filename=$cid";
     $self->res->headers->content_disposition($content_disposition);
     $self->res->headers->content_type("text/plain");
     $self->render_data($content);
@@ -349,7 +337,7 @@ get '/tree' => sub {
   {
     local $/ = "\0";
     open my $fd, "-|", git($root, $project), "ls-tree", '-z',
-      ($show_sizes ? '-l' : ()), @extra_options, $tid
+      ($show_sizes ? '-l' : ()), $tid
       or die 500, "Open git-ls-tree failed";
     @entries = map { chomp; $_ } <$fd>;
     close $fd
@@ -368,7 +356,6 @@ get '/tree' => sub {
     project => $project,
     cid => $cid,
     tid => $tid,
-    file => $file,
     commit => $commit,
     trees => \@trees
   );
@@ -861,7 +848,7 @@ sub get_file_or_project_config {
 
   my $git_dir = "$root/$project";
   open my $fd, '<', "$git_dir/$name"
-    or return get_project_config($root, $project, $name);
+    or return ;
   my $conf = <$fd>;
   close $fd;
   if (defined $conf) {
@@ -1136,7 +1123,7 @@ sub get_project_urls {
 
   my $git_dir = "$root/$project";
   open my $fd, '<', "$git_dir/cloneurl"
-    or return config_to_multi(get_project_config($root, $project, 'url'));
+    or return;
   my @urls = map { chomp; $_ } <$fd>;
   close $fd;
 
@@ -1195,7 +1182,6 @@ sub parse_commits {
     @args,
     ("--max-count=" . $maxcount),
     ("--skip=" . $skip),
-    @extra_options,
     $cid,
     "--",
     ($file ? ($file) : ())
@@ -1465,8 +1451,8 @@ sub blob_contenttype {
   my ($fd, $file, $type) = @_;
 
   $type ||= blob_mimetype($fd, $file);
-  if ($type eq 'text/plain' && defined $DEFAULT_TEXT_PLAIN_CHARSET) {
-    $type .= "; charset=$DEFAULT_TEXT_PLAIN_CHARSET";
+  if ($type eq 'text/plain' && defined $default_text_plain_charset) {
+    $type .= "; charset=$default_text_plain_charset";
   }
 
   return $type;
@@ -1731,6 +1717,8 @@ sub untabify {
 
 sub _tag {
   my ($root, $project) = @_;
+  
+  my $cid;
   
   my %tag = parse_tag($cid);
 
@@ -2113,9 +2101,7 @@ sub get_project_owner {
   if (exists $gitweb_project_owner->{$project}) {
     $owner = $gitweb_project_owner->{$project};
   }
-  if (!defined $owner){
-    $owner = get_project_config($root, $project, 'owner');
-  }
+
   if (!defined $owner) {
     $owner = get_file_owner("$git_dir");
   }
@@ -2140,53 +2126,6 @@ sub get_project_list_from_file {
     }
     close $fd;
   }
-}
-
-sub get_project_config {
-  my ($root, $project, $key, $type) = @_;
-
-  my $git_dir = "$root/$project";
-  return unless defined $git_dir;
-
-  # key sanity check
-  return unless ($key);
-  # only subsection, if exists, is case sensitive,
-  # and not lowercased by 'git config -z -l'
-  if (my ($hi, $mi, $lo) = ($key =~ /^([^.]*)\.(.*)\.([^.]*)$/)) {
-    $key = join(".", lc($hi), $mi, lc($lo));
-  } else {
-    $key = lc($key);
-  }
-  $key =~ s/^gitweb\.//;
-  return if ($key =~ m/\W/);
-
-  # type sanity check
-  if (defined $type) {
-    $type =~ s/^--//;
-    $type = undef
-      unless ($type eq 'bool' || $type eq 'int');
-  }
-
-  # get config
-  if (!defined $config_file ||
-      $config_file ne "$git_dir/config") {
-    %config = parse_project_config($root, $project, 'gitweb');
-    $config_file = "$git_dir/config";
-  }
-
-  # check if config variable (key) exists
-  return unless exists $config{"gitweb.$key"};
-
-  # ensure given type
-  if (!defined $type) {
-    return $config{"gitweb.$key"};
-  } elsif ($type eq 'bool') {
-    # backward compatibility: 'git config --bool' returns true/false
-    return config_to_bool($config{"gitweb.$key"}) ? 'true' : 'false';
-  } elsif ($type eq 'int') {
-    return config_to_int($config{"gitweb.$key"});
-  }
-  return $config{"gitweb.$key"};
 }
 
 sub parse_project_config {
@@ -2237,7 +2176,7 @@ sub to_utf8 {
   if (utf8::is_utf8($str) || utf8::decode($str)) {
     return $str;
   } else {
-    return decode($fallback_encoding, $str, Encode::FB_DEFAULT);
+    return decode('latin1', $str, Encode::FB_DEFAULT);
   }
 }
 
@@ -2256,7 +2195,7 @@ sub fill_project_list_info {
       my $descr = get_project_description($root, $pr->{'path'}) || "";
       $descr = to_utf8($descr);
       $pr->{'descr_long'} = $descr;
-      $pr->{'descr'} = _chop_str($descr, $projects_list_description_width, 5);
+      $pr->{'descr'} = _chop_str($descr, 25, 5);
     }
 
     push @projects, $pr;
