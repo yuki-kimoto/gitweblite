@@ -15,7 +15,6 @@
         <%= substr($parent_cid, 0, 7) %>
       </a>
     ) |
-    <a href="<%= url_for('/patch')->query({root => $root, project => $project, cid => $cid}) %>">patch</a><br/>
   </div>
   
   <div class="header">

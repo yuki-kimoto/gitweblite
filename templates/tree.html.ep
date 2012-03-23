@@ -5,7 +5,7 @@
     <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
     Short Log
   </div>
-  %= include '/include/page_navi', current => 'shortlog', root => $root, project => $project;
+  %= include '/include/page_navi', current => 'tree', root => $root, project => $project;
 
   <div class="page_nav">
     <a title="in format: tar.gz" rel="nofollow"

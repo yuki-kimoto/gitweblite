@@ -1,51 +1,27 @@
 % layout 'common';
   <div class="page_header">
-
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
-<!-- git web interface version 1.6.1.rc3.39.g16180.dirty, (C) 2005-2006, Kay Sievers <kay.sievers@vrfy.org>, Christian Gierke -->
-<!-- git core binaries version 1.7.4.1 -->
-<head>
-<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
-<meta name="generator" content="gitweb/1.6.1.rc3.39.g16180.dirty git/1.7.4.1"/>
-<meta name="robots" content="index, nofollow"/>
-<title>perl5.git.perl.org Git - perl.git/commitdiff</title>
-<base href="http://perl5.git.perl.org/perl.git/commitdiff/2630d42bb94232640db98e1de206d235e3f280fa" />
-<link rel="stylesheet" type="text/css" href="/gitweb.css"/>
-<link rel="alternate" title="perl.git - log - RSS feed" href="/perl.git/rss" type="application/rss+xml" />
-<link rel="alternate" title="perl.git - log - RSS feed (no merges)" href="/perl.git/rss?opt=--no-merges" type="application/rss+xml" />
-<link rel="alternate" title="perl.git - log - Atom feed" href="/perl.git/atom?opt=--no-merges" type="application/atom+xml" />
-<link rel="alternate" title="perl.git - log - Atom feed (no merges)" href="/perl.git/atom?opt=--no-merges" type="application/atom+xml" />
-<link rel="shortcut icon" href="/git-favicon.png" type="image/png" />
-</head>
-<body>
-<div class="page_header">
-<a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / commitdiff
-</div>
-<form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
-<div class="search">
-<input name="a" type="hidden" value="search" />
-<input name="h" type="hidden" value="2630d42bb94232640db98e1de206d235e3f280fa" />
-<select name="st" >
-<option selected="selected" value="free">free</option>
-<option value="commit">commit</option>
-<option value="grep">grep</option>
-<option value="author">author</option>
-<option value="committer">committer</option>
-<option value="pickaxe">pickaxe</option>
-</select><sup><a href="/perl.git/search_help">?</a></sup> search:
-<input type="text" name="s"  />
-<span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
-</form>
-<div class="page_nav">
-<a href="/perl.git">summary</a> | <a href="/perl.git/shortlog/2630d42bb94232640db98e1de206d235e3f280fa">shortlog</a> | <a href="/perl.git/log/2630d42bb94232640db98e1de206d235e3f280fa">log</a> | <a href="/perl.git/commit/2630d42bb94232640db98e1de206d235e3f280fa">commit</a> | commitdiff | <a href="/perl.git/tree/2630d42bb94232640db98e1de206d235e3f280fa">tree</a><br/>
-<a href="/perl.git/commitdiff_plain/2630d42bb94232640db98e1de206d235e3f280fa">raw</a> | <a href="/perl.git/patch/2630d42bb94232640db98e1de206d235e3f280fa">patch</a> (parent: <a href="/perl.git/commitdiff/54fdd2d6d65255345f6c44bcc3bfee6b6921afd1">54fdd2d</a>)<br/>
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    Commit
+  </div>
+  %= include '/include/page_navi', current => 'commitdiff', root => $root, project => $project;
+  <div class="page_nav">
+    <a href="<%= url_for('/commitdiff_plain')->query({root => $root, project => $project}) %>">raw</a>
+  </div>
 </div>
 <div class="header">
-<a class="title" href="/perl.git/commit/2630d42bb94232640db98e1de206d235e3f280fa">Create a perldelta for 5.15.9 <span class="refs"> <span class="head" title="heads/blead"><a href="/perl.git/shortlog/refs/heads/blead">blead</a></span></span></a>
+  <a class="title" href="/perl.git/commit/2630d42bb94232640db98e1de206d235e3f280fa">
+    <%= $commit->{title} %>
+  </a>
 </div>
 <div class="title_text">
+  <span class="refs">
+    <span class="head" title="heads/blead">
+      <a href="/perl.git/shortlog/refs/heads/blead">blead</a>
+    </span>
+  </span>
+
 <table class="object_header">
 <tr><td>author</td><td>Abigail &lt;abigail@abigail.be&gt;</td><td rowspan="2"></td></tr>
 <tr><td></td><td> Tue, 20 Mar 2012 20:07:59 +0000 (21:07 +0100)</td></tr>

@@ -228,8 +228,13 @@ get '/summary' => sub {
   );
 };
 
-get '/shortlog' => sub {
-  my $self = shift;
+get '/shortlog' => sub { _log(shift, short => 1) };
+get '/log' => sub { _log(shift) };
+
+sub _log {
+  my ($self, %opt) = @_;
+
+  my $short = $opt{short};
 
   # Validation
   my $raw_params = _params($self);
@@ -246,14 +251,14 @@ get '/shortlog' => sub {
   my $project = $params->{project};
   my $page = $params->{page} || 0;
   $page = 0 if $page < 0;
-
+  
   # HEAD commit
   my $head_commit = parse_commit($root, $project, "HEAD");
   my $head_cid = $head_commit->{id};
   my $base_cid ||= $head_cid;
   
   # Commits
-  my $page_count = 50;
+  my $page_count = $short ? 50 : 20;
   my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
   
   # Ref names
@@ -264,59 +269,9 @@ get '/shortlog' => sub {
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
 
   # Render
+  my $template = $short ? 'shortlog' : 'log';
   $self->render(
-    root => $root,
-    project => $project,
-    head_cid => $head_cid,
-    base_cid => $base_cid,
-    commits => $commits,
-    ref_names => $ref_names,
-    page => $page,
-    page_count => $page_count
-  );
-};
-
-get '/log' => sub {
-  my $self = shift;
-
-  # Validation
-  my $raw_params = _params($self);
-  my $rule = [
-    root => ['not_blank'],
-    project => ['not_blank'],
-    page => {require => 0} => ['int'],
-    base_cid => {require => 0} => ['hex']
-  ];
-  my $vresult = $validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $root = $params->{root};
-  my $project = $params->{project};
-  my $page = $params->{page} // 0;
-  $page = 0 if $page < 0;
-
-  # Head Commit
-  my $head_commit = parse_commit($root, $project, "HEAD");
-  my $head_cid = $head_commit->{id};
-  my $base_cid ||= $head_cid;
-
-  # Commits
-  my $page_count = 20;
-  my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
-  for my $commit (@$commits) {
-    my %author_date = parse_date($commit->{author_epoch}, $commit->{author_tz});
-    $commit->{last_change} = format_timestamp_html(\%author_date);
-  }
-    
-  # Ref names
-  my $ref_names = {};
-  my $tags  = get_tags($root, $project);
-  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = get_heads($root, $project);
-  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
-  
-  # Render
-  $self->render(
+    $template,
     root => $root,
     project => $project,
     head_cid => $head_cid,
@@ -448,7 +403,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $from_cid = $params->{from_cid};
   
   # Commit
-  my $commit = parse_commit($cid)
+  my $commit = parse_commit($root, $project, $cid)
     or die 404, "Unknown commit object";
   
   # Check plain
@@ -459,9 +414,8 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
     else { return $self->render('not_found') }
   }
   else { $plain = 0 }
-
-  my $fd;
-  my @difftree;
+  
+  # Plain text
   if ($plain) {
     # git diff-tree plain output
     open my $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
@@ -474,6 +428,8 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
     # Render
     $self->render(text => $content);
   }
+  
+  # HTML
   else {
     # git diff-tree output
     open my $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,

@@ -1,17 +1,20 @@
 Gitweb Lite
 
-  (Beta release)
-  gitweb.cgi clone. Serve git repository to see it on brower.
+  (Alpha release)
+  gitweb.cgi clone. Serve git repository.
 
 Features
 
-  This is gitweb.cgi clone, and has the more following features.
+  This is gitweb.cgi clone, and has the following features.
 
-  - gitweblite is written by Perl and Mojolicious
-  - You can run "gitweblite.pl" very easily,
+  - Written by Perl and Mojolicious web framework
+  - Prerequisite is Perl 5.10.1+ (or Perl 5.8.7+ in trial version)
+  - Having HTTP server. You can run gitweblite,
     even if "apache" is not installed
-  - You can set Multiple project roots
-  - Zero configuration(Not yet)
+  - Multiple project directories
+  - Zero configuration(Not yet implemented)
+  - All most of gitweb.cgi features (Not yet implemented)
+  - No dependency (Not yet implemented)
 
 Operation
 
@@ -26,9 +29,7 @@ Operation
 NOTE
 
   I will make gitweblite a application which has no dependency,
-  but in beta relase, you need the following module to run gitweblite
+  but in beta relase, you need the following module to execute gitweblite
   
     Mojolicious
     Validator::Custom
-
-  And now some feature is lacked.
