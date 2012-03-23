@@ -225,7 +225,6 @@ get '/commit' => sub {
   my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
   $commit{author_date} = format_timestamp_html(\%author_date);
   $commit{committer_date} = format_timestamp_html(\%committer_date);
-  my $refs = get_references($root, $project);
   
   # Ref names
   my $ref_names = {};
@@ -1958,120 +1957,6 @@ sub git_get_project_category {
   return git_get_file_or_project_config($path, 'category');
 }
 
-sub git_get_project_ctags {
-  my $project = shift;
-  my $ctags = {};
-
-  $git_dir = "$projectroot/$project";
-  if (opendir my $dh, "$git_dir/ctags") {
-    my @files = grep { -f $_ } map { "$git_dir/ctags/$_" } readdir($dh);
-    for my $tagfile (@files) {
-      open my $ct, '<', $tagfile
-        or next;
-      my $val = <$ct>;
-      chomp $val if $val;
-      close $ct;
-
-      (my $ctag = $tagfile) =~ s#.*/##;
-      if ($val =~ /^\d+$/) {
-        $ctags->{$ctag} = $val;
-      } else {
-        $ctags->{$ctag} = 1;
-      }
-    }
-    closedir $dh;
-
-  } elsif (open my $fh, '<', "$git_dir/ctags") {
-    while (my $line = <$fh>) {
-      chomp $line;
-      $ctags->{$line}++ if $line;
-    }
-    close $fh;
-
-  } else {
-    my $taglist = config_to_multi(git_get_project_config('ctag'));
-    for my $tag (@$taglist) {
-      $ctags->{$tag}++;
-    }
-  }
-
-  return $ctags;
-}
-
-sub git_gather_all_ctags {
-  my $projects = shift;
-  my $ctags = {};
-
-  for my $p (@$projects) {
-    for my $ct (keys %{$p->{'ctags'}}) {
-      $ctags->{$ct} += $p->{'ctags'}->{$ct};
-    }
-  }
-
-  return $ctags;
-}
-
-sub git_populate_project_tagcloud {
-  my $ctags = shift;
-
-  # First, merge different-cased tags; tags vote on casing
-  my %ctags_lc;
-  for (keys %$ctags) {
-    $ctags_lc{lc $_}->{count} += $ctags->{$_};
-    if (not $ctags_lc{lc $_}->{topcount}
-        or $ctags_lc{lc $_}->{topcount} < $ctags->{$_}) {
-      $ctags_lc{lc $_}->{topcount} = $ctags->{$_};
-      $ctags_lc{lc $_}->{topname} = $_;
-    }
-  }
-
-  my $cloud;
-  my $matched = $input_params{'ctag'};
-  if (eval { require HTML::TagCloud; 1; }) {
-    $cloud = HTML::TagCloud->new;
-    for my $ctag (sort keys %ctags_lc) {
-      # Pad the title with spaces so that the cloud looks
-      # less crammed.
-      my $title = esc_html($ctags_lc{$ctag}->{topname});
-      $title =~ s/ /&nbsp;/g;
-      $title =~ s/^/&nbsp;/g;
-      $title =~ s/$/&nbsp;/g;
-      if (defined $matched && $matched eq $ctag) {
-        $title = qq(<span class="match">$title</span>);
-      }
-      $cloud->add($title, href(project=>undef, ctag=>$ctag),
-                  $ctags_lc{$ctag}->{count});
-    }
-  } else {
-    $cloud = {};
-    for my $ctag (keys %ctags_lc) {
-      my $title = esc_html($ctags_lc{$ctag}->{topname}, -nbsp=>1);
-      if (defined $matched && $matched eq $ctag) {
-        $title = qq(<span class="match">$title</span>);
-      }
-      $cloud->{$ctag}{count} = $ctags_lc{$ctag}->{count};
-      $cloud->{$ctag}{ctag} =
-        $cgi->a({-href=>href(project=>undef, ctag=>$ctag)}, $title);
-    }
-  }
-  return $cloud;
-}
-
-sub git_show_project_tagcloud {
-  my ($cloud, $count) = @_;
-  if (ref $cloud eq 'HTML::TagCloud') {
-    return $cloud->html_and_css($count);
-  } else {
-    my @tags = sort { $cloud->{$a}->{'count'} <=> $cloud->{$b}->{'count'} } keys %$cloud;
-    return
-      '<div id="htmltagcloud"'.($project ? '' : ' align="center"').'>' .
-      join (', ', map {
-        $cloud->{$_}->{'ctag'}
-      } splice(@tags, 0, $count)) .
-      '</div>';
-  }
-}
-
 sub git_get_project_url_list {
   my $path = shift;
 
@@ -3192,103 +3077,6 @@ sub git_heads {
   git_footer_html();
 }
 
-sub git_tree {
-  if (!defined $base_cid) {
-    $base_cid = "HEAD";
-  }
-  if (!defined $cid) {
-    if (defined $file) {
-      $cid = git_get_hash_by_path($base_cid, $file, "tree");
-    } else {
-      $cid = $base_cid;
-    }
-  }
-  die_error(404, "No such tree") unless defined($cid);
-
-  my $show_sizes = gitweb_check_feature('show-sizes');
-
-  my @entries = ();
-  {
-    local $/ = "\0";
-    open my $fd, "-|", git_cmd(), "ls-tree", '-z',
-      ($show_sizes ? '-l' : ()), @extra_options, $cid
-      or die_error(500, "Open git-ls-tree failed");
-    @entries = map { chomp; $_ } <$fd>;
-    close $fd
-      or die_error(404, "Reading tree failed");
-  }
-
-  my $refs = git_get_references();
-  my $ref = format_ref_marker($refs, $base_cid);
-  git_header_html();
-  my $basedir = '';
-  if (defined $base_cid && (my %commit = parse_commit($base_cid))) {
-    my @views_nav = ();
-    if (defined $file) {
-      push @views_nav,
-        $cgi->a({-href => href(action=>"history", -replay=>1)},
-                "history"),
-        $cgi->a({-href => href(action=>"tree",
-                               hash_base=>"HEAD", file_name=>$file)},
-                "HEAD"),
-    }
-  } else {
-    undef $base_cid;
-    print "<div class=\"page_nav\">\n";
-    print "<br/><br/></div>\n";
-    print "<div class=\"title\">".esc_html($cid)."</div>\n";
-  }
-  if (defined $file) {
-    $basedir = $file;
-    if ($basedir ne '' && substr($basedir, -1) ne '/') {
-      $basedir .= '/';
-    }
-  }
-  print "<div class=\"page_body\">\n";
-  print "<table class=\"tree\">\n";
-  my $alternate = 1;
-  # '..' (top directory) link if possible
-  if (defined $base_cid &&
-      defined $file && $file =~ m![^/]+$!) {
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-
-    my $up = $file;
-    $up =~ s!/?[^/]+$!!;
-    undef $up unless $up;
-    print '<td class="mode">' . mode_str('040000') . "</td>\n";
-    print '<td class="size">&nbsp;</td>'."\n" if $show_sizes;
-    print '<td class="list">';
-    print $cgi->a({-href => href(action=>"tree",
-                                 hash_base=>$base_cid,
-                                 file_name=>$up)},
-                  "..");
-    print "</td>\n";
-    print "<td class=\"link\"></td>\n";
-
-    print "</tr>\n";
-  }
-  for my $line (@entries) {
-    my %t = parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
-
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-
-    print "</tr>\n";
-  }
-  print "</table>\n" .
-        "</div>";
-  git_footer_html();
-}
-
 sub snapshot_name {
   my ($project, $cid) = @_;
 
@@ -3317,30 +3105,6 @@ sub snapshot_name {
   $name = "$name-$ver";
 
   return wantarray ? ($name, $name) : $name;
-}
-
-sub diff_style_nav {
-  my ($diff_style, $is_combined) = @_;
-  $diff_style ||= 'inline';
-
-  return "" if ($is_combined);
-
-  my @styles = (inline => 'inline', 'sidebyside' => 'side by side');
-  my %styles = @styles;
-  @styles =
-    @styles[ map { $_ * 2 } 0..$#styles/2 ];
-
-  return join '',
-    map { " | ".$_ }
-    map {
-      $_ eq $diff_style ? $styles{$_} :
-      $cgi->a({-href => href(-replay=>1, diff_style => $_)}, $styles{$_})
-    } @styles;
-}
-
-
-sub evaluate_git_dir {
-  our $git_dir = "$projectroot/$project" if $project;
 }
 
 sub read_config_file {
@@ -3387,50 +3151,6 @@ sub parse_date {
                             1900+$year, $mon+1, $mday,
                             $hour, $min, $sec, $tz);
   return %date;
-}
-
-sub git_get_references {
-  my $type = shift || "";
-  my %refs;
-  open my $fd, "-|", git_cmd(), "show-ref", "--dereference",
-    ($type ? ("--", "refs/$type") : ()) # use -- <pattern> if $type
-    or return;
-
-  while (my $line = <$fd>) {
-    chomp $line;
-    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
-      if (defined $refs{$1}) {
-        push @{$refs{$1}}, $2;
-      } else {
-        $refs{$1} = [ $2 ];
-      }
-    }
-  }
-  close $fd or return;
-  return \%refs;
-}
-
-sub get_references {
-  my ($root, $project, $type) = @_;
-  $type ||= "";
-  
-  my %refs;
-  open my $fd, "-|", git($root, $project), "show-ref", "--dereference",
-    ($type ? ("--", "refs/$type") : ()) # use -- <pattern> if $type
-    or return;
-
-  while (my $line = <$fd>) {
-    chomp $line;
-    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
-      if (defined $refs{$1}) {
-        push @{$refs{$1}}, $2;
-      } else {
-        $refs{$1} = [ $2 ];
-      }
-    }
-  }
-  close $fd or return;
-  return \%refs;
 }
 
 sub parse_commit {
@@ -3932,7 +3652,6 @@ sub fill_project_list_info {
   my $projlist = shift;
   my @projects;
 
-  my $show_ctags = gitweb_check_feature('ctags');
  PROJECT:
   for my $pr (@$projlist) {
     my (@activity) = git_get_last_activity($pr->{'path'});
@@ -3948,9 +3667,6 @@ sub fill_project_list_info {
     }
     if (!defined $pr->{'owner'}) {
       $pr->{'owner'} = git_get_project_owner("$pr->{'path'}") || "";
-    }
-    if ($show_ctags) {
-      $pr->{'ctags'} = git_get_project_ctags($pr->{'path'});
     }
     if ($projects_list_group_categories && !defined $pr->{'category'}) {
       my $cat = git_get_project_category($pr->{'path'}) ||
