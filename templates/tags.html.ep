@@ -1,0 +1,1069 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!-- git web interface version 1.6.1.rc3.39.g16180.dirty, (C) 2005-2006, Kay Sievers <kay.sievers@vrfy.org>, Christian Gierke -->
+<!-- git core binaries version 1.7.4.1 -->
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+<meta name="generator" content="gitweb/1.6.1.rc3.39.g16180.dirty git/1.7.4.1"/>
+<meta name="robots" content="index, nofollow"/>
+<title>perl5.git.perl.org Git - perl.git/tags</title>
+<base href="http://perl5.git.perl.org/perl.git/tags" />
+<link rel="stylesheet" type="text/css" href="/gitweb.css"/>
+<link rel="alternate" title="perl.git - log - RSS feed" href="/perl.git/rss" type="application/rss+xml" />
+<link rel="alternate" title="perl.git - log - RSS feed (no merges)" href="/perl.git/rss?opt=--no-merges" type="application/rss+xml" />
+<link rel="alternate" title="perl.git - log - Atom feed" href="/perl.git/atom?opt=--no-merges" type="application/atom+xml" />
+<link rel="alternate" title="perl.git - log - Atom feed (no merges)" href="/perl.git/atom?opt=--no-merges" type="application/atom+xml" />
+<link rel="shortcut icon" href="/git-favicon.png" type="image/png" />
+</head>
+<body>
+<div class="page_header">
+<a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / tags
+</div>
+<form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
+<div class="search">
+<input name="a" type="hidden" value="search" />
+<input name="h" type="hidden" value="HEAD" />
+<select name="st" >
+<option selected="selected" value="free">free</option>
+<option value="commit">commit</option>
+<option value="grep">grep</option>
+<option value="author">author</option>
+<option value="committer">committer</option>
+<option value="pickaxe">pickaxe</option>
+</select><sup><a href="/perl.git/search_help">?</a></sup> search:
+<input type="text" name="s"  />
+<span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+</form>
+<div class="page_nav">
+<a href="/perl.git">summary</a> | <a href="/perl.git/shortlog">shortlog</a> | <a href="/perl.git/log">log</a> | <a href="/perl.git/commit/15d94df60eb08a44107e2aaf4c9e5e8b26e084b6">commit</a> | <a href="/perl.git/commitdiff/15d94df60eb08a44107e2aaf4c9e5e8b26e084b6">commitdiff</a> | <a href="/perl.git/tree/15d94df60eb08a44107e2aaf4c9e5e8b26e084b6">tree</a><br/>
+<br/>
+</div>
+<div class="header">
+<a class="title" href="/perl.git">perl.git</a>
+</div>
+<table class="tags">
+<tr class="dark">
+<td><i>2 days ago</i></td>
+<td><a class="list name" href="/perl.git/commit/01725c1062c0e78d5d79424b6f84013e248992a5">v5.15.9</a></td>
+<td><a class="list subject" href="/perl.git/tag/7b50a15ad488ff4d4f50c99b5e534ede59c2d4af">Tenth release of the 5.15 series!</a></td>
+<td class="selflink"><a href="/perl.git/tag/7b50a15ad488ff4d4f50c99b5e534ede59c2d4af">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/01725c1062c0e78d5d79424b6f84013e248992a5">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.9">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.9">log</a></td>
+</tr><tr class="light">
+<td><i>4 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/commit/05ccd577e15cc66bbb7414fad5ee3c02f536c7a5">v5.15.8</a></td>
+<td><a class="list subject" href="/perl.git/tag/9b30811fee3478af913382334909acde68afd36d">Release of v5.15.8</a></td>
+<td class="selflink"><a href="/perl.git/tag/9b30811fee3478af913382334909acde68afd36d">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/05ccd577e15cc66bbb7414fad5ee3c02f536c7a5">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.8">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.8">log</a></td>
+</tr><tr class="dark">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/75ae21a085ad289d479c9d541163599ff4c70f3b">v5.15.7</a></td>
+<td><a class="list subject" title="This be v5.15.7, eighth release of the v5.11 series" href="/perl.git/tag/c605ae044d8a52e820eb785305f0fd4d271faf51">This be v5.15.7, eighth release... </a></td>
+<td class="selflink"><a href="/perl.git/tag/c605ae044d8a52e820eb785305f0fd4d271faf51">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/75ae21a085ad289d479c9d541163599ff4c70f3b">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.7">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.7">log</a></td>
+</tr><tr class="light">
+<td><i>3 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3c7c5233c4e0da1ca45c27d77fbe22d22b9c2b48">v5.15.6</a></td>
+<td><a class="list subject" href="/perl.git/tag/33a408b7de68c683fad755d341d7899ec1953216">Perl 5.15.6</a></td>
+<td class="selflink"><a href="/perl.git/tag/33a408b7de68c683fad755d341d7899ec1953216">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3c7c5233c4e0da1ca45c27d77fbe22d22b9c2b48">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.6">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.6">log</a></td>
+</tr><tr class="dark">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8fe0571645619844c3a4f2defc3990634138e838">v5.15.5</a></td>
+<td><a class="list subject" href="/perl.git/tag/424c2e57d9f2f65dc08ae9e0d8179f9aa5d581d9">Perl 5.15.5</a></td>
+<td class="selflink"><a href="/perl.git/tag/424c2e57d9f2f65dc08ae9e0d8179f9aa5d581d9">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8fe0571645619844c3a4f2defc3990634138e838">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.5">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.5">log</a></td>
+</tr><tr class="light">
+<td><i>5 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7dfc19adb38f5449154d7238f5079efbe7dee447">v5.15.4</a></td>
+<td><a class="list subject" href="/perl.git/tag/5f4091681272a7ec88e3fe7eb014a8083ed95c5f">Fifth release of the v5.15 series</a></td>
+<td class="selflink"><a href="/perl.git/tag/5f4091681272a7ec88e3fe7eb014a8083ed95c5f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7dfc19adb38f5449154d7238f5079efbe7dee447">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.4">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.4">log</a></td>
+</tr><tr class="dark">
+<td><i>5 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/dc281e6088d189558b79a5121119b7196c8b3db0">v5.14.2</a></td>
+<td><a class="list subject" title="The third stable release of Perl 5.14" href="/perl.git/tag/6a56b9d83500deafe8d850e244906f5513cdd222">The third stable release of Perl... </a></td>
+<td class="selflink"><a href="/perl.git/tag/6a56b9d83500deafe8d850e244906f5513cdd222">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/dc281e6088d189558b79a5121119b7196c8b3db0">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.2">log</a></td>
+</tr><tr class="light">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/93f0c9e611c4bad1e7a79bba04225397d3f5035b">v5.15.3</a></td>
+<td><a class="list subject" href="/perl.git/tag/eaa96143a800c6dca466021db99e8fe857e9e1b1">Third release of the v5.15 series</a></td>
+<td class="selflink"><a href="/perl.git/tag/eaa96143a800c6dca466021db99e8fe857e9e1b1">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/93f0c9e611c4bad1e7a79bba04225397d3f5035b">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.3">log</a></td>
+</tr><tr class="dark">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/c5e922dfa2405b9308cde828c140af65d21408be">v5.14.2-RC1</a></td>
+<td><a class="list subject" title="First release candidate for Perl 5.14.2" href="/perl.git/tag/8b560c3170c9c6e2263384868d0287017aecb59d">First release candidate for Perl... </a></td>
+<td class="selflink"><a href="/perl.git/tag/8b560c3170c9c6e2263384868d0287017aecb59d">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/c5e922dfa2405b9308cde828c140af65d21408be">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.2-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.2-RC1">log</a></td>
+</tr><tr class="light">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7035badac73e57009f52bc6cecc556bb06f29fda">v5.15.2</a></td>
+<td><a class="list subject" href="/perl.git/tag/a818eb37604096e91a51fbb947af5754c7067235">Third release of the v5.15 series!</a></td>
+<td class="selflink"><a href="/perl.git/tag/a818eb37604096e91a51fbb947af5754c7067235">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7035badac73e57009f52bc6cecc556bb06f29fda">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.2">log</a></td>
+</tr><tr class="dark">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ed4161079665cc0e28ebe176e4d8812a36448d20">v5.15.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/cbeacc71ada41500c888d4cbd36c7314a14843d1">Perl 5.15.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/cbeacc71ada41500c888d4cbd36c7314a14843d1">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/ed4161079665cc0e28ebe176e4d8812a36448d20">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.1">log</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/00b4043708e2509400eff8f5e4cb870d388854d4">v5.15.0</a></td>
+<td><a class="list subject" href="/perl.git/tag/cc2b21d47cd66b31fa33901d19112160488dc7d7">This is Perl 5.15.0</a></td>
+<td class="selflink"><a href="/perl.git/tag/cc2b21d47cd66b31fa33901d19112160488dc7d7">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/00b4043708e2509400eff8f5e4cb870d388854d4">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.15.0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.15.0">log</a></td>
+</tr><tr class="dark">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0cfb50b2327c758fdfe77a5cda07b115e58aed0b">v5.12.4</a></td>
+<td><a class="list subject" href="/perl.git/tag/733aee935bcd649b196da4a7e435e991476bc5a5">Tag release 5.12.4</a></td>
+<td class="selflink"><a href="/perl.git/tag/733aee935bcd649b196da4a7e435e991476bc5a5">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/0cfb50b2327c758fdfe77a5cda07b115e58aed0b">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.4">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.4">log</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/cc92ef02098c000d945bcf93c92bdb2a0a05fa97">v5.14.1</a></td>
+<td><a class="list subject" title="The second stable release of Perl 5.14" href="/perl.git/tag/cf28be8222b700a410ab05a0d7a770e029973b0c">The second stable release of Perl... </a></td>
+<td class="selflink"><a href="/perl.git/tag/cf28be8222b700a410ab05a0d7a770e029973b0c">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/cc92ef02098c000d945bcf93c92bdb2a0a05fa97">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.1">log</a></td>
+</tr><tr class="dark">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/5c26f8f6953ad4f9517732ac321914c726d7ec9d">v5.12.4-RC2</a></td>
+<td><a class="list subject" href="/perl.git/tag/ed7d4f2b6a8f9fd00ffd30c0a53ef761b55511dc">Tag 5.12.4-RC2</a></td>
+<td class="selflink"><a href="/perl.git/tag/ed7d4f2b6a8f9fd00ffd30c0a53ef761b55511dc">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/5c26f8f6953ad4f9517732ac321914c726d7ec9d">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.4-RC2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.4-RC2">log</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/4312ec987635747ef52777620b0331d270805b54">v5.14.1-RC1</a></td>
+<td><a class="list subject" title="The first release candidate for Perl 5.14.1" href="/perl.git/tag/0f687828d8e355bb557d0cf0d3b274cf08f6bae7">The first release candidate for... </a></td>
+<td class="selflink"><a href="/perl.git/tag/0f687828d8e355bb557d0cf0d3b274cf08f6bae7">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/4312ec987635747ef52777620b0331d270805b54">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.1-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.1-RC1">log</a></td>
+</tr><tr class="dark">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/72ce1249830c6ba0e06487dfc0e07b522f7df07c">v5.12.4-RC1</a></td>
+<td><a class="list subject" href="/perl.git/tag/47ed5740b420cb4cddd2d9a565692d02256ffcfc">Tag 5.12.4-RC1</a></td>
+<td class="selflink"><a href="/perl.git/tag/47ed5740b420cb4cddd2d9a565692d02256ffcfc">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/72ce1249830c6ba0e06487dfc0e07b522f7df07c">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.4-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.4-RC1">log</a></td>
+</tr><tr class="light">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a35ef416833511da752c4b5b836b7a8915712aab">v5.14.0</a></td>
+<td><a class="list subject" href="/perl.git/tag/6a69229c1ab56c42c6097e1a84993663bd6a23f3">Perl 5.14.0</a></td>
+<td class="selflink"><a href="/perl.git/tag/6a69229c1ab56c42c6097e1a84993663bd6a23f3">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/a35ef416833511da752c4b5b836b7a8915712aab">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.0">log</a></td>
+</tr><tr class="dark">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/eb70bb4a400e88a66c7e10414a2d52b5da4cfd1f">v5.14.0-RC3</a></td>
+<td><a class="list subject" href="/perl.git/tag/3a178b6f9ebcc27e659c48b690758c679fec5cc5">the third RC for perl 5.14.0</a></td>
+<td class="selflink"><a href="/perl.git/tag/3a178b6f9ebcc27e659c48b690758c679fec5cc5">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/eb70bb4a400e88a66c7e10414a2d52b5da4cfd1f">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.0-RC3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.0-RC3">log</a></td>
+</tr><tr class="light">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/f5a93a43fe9802cca88dfd56d68a220ec6625118">v5.14.0-RC2</a></td>
+<td><a class="list subject" title="The second release candidate for Perl 5.14.0" href="/perl.git/tag/a944cabb82c555112be417b6fdcf2abeea9e2c90">The second release candidate for... </a></td>
+<td class="selflink"><a href="/perl.git/tag/a944cabb82c555112be417b6fdcf2abeea9e2c90">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/f5a93a43fe9802cca88dfd56d68a220ec6625118">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.0-RC2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.0-RC2">log</a></td>
+</tr><tr class="dark">
+<td><i>11 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/476c37e218c9f95449edad498eaac770dc5acde9">v5.14.0-RC1</a></td>
+<td><a class="list subject" title="The first release candidate for v5.14.0" href="/perl.git/tag/6ac2c00aba1f90aa074905caff75d24ac4224c79">The first release candidate for... </a></td>
+<td class="selflink"><a href="/perl.git/tag/6ac2c00aba1f90aa074905caff75d24ac4224c79">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/476c37e218c9f95449edad498eaac770dc5acde9">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.14.0-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.14.0-RC1">log</a></td>
+</tr><tr class="light">
+<td><i>12 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b6d239474a266b62f64c827154d6800028f7b8f6">v5.13.11</a></td>
+<td><a class="list subject" title="Perl v5.13.11 - The ultimate 5.13 release" href="/perl.git/tag/ddb1aee3f1e67da548863acbf54b3389c51d41b9">Perl v5.13.11 - The ultimate 5... </a></td>
+<td class="selflink"><a href="/perl.git/tag/ddb1aee3f1e67da548863acbf54b3389c51d41b9">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/b6d239474a266b62f64c827154d6800028f7b8f6">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.11">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.11">log</a></td>
+</tr><tr class="dark">
+<td><i>12 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/aa00ea78eea85d7a3ca094d43e18e9c8c4da2ebb">v5.10.0</a></td>
+<td><a class="list subject" title="The real 5.10.0 release; the perl-5.10.0 tag is wrong" href="/perl.git/tag/89f5b930213204ef98d7e258d653c99c0d9f1ed3">The real 5.10.0 release; the perl... </a></td>
+<td class="selflink"><a href="/perl.git/tag/89f5b930213204ef98d7e258d653c99c0d9f1ed3">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/aa00ea78eea85d7a3ca094d43e18e9c8c4da2ebb">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.10.0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.10.0">log</a></td>
+</tr><tr class="light">
+<td><i>13 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/892528fd9702f80bc08486939e0831142045d6d9">v5.13.10</a></td>
+<td><a class="list subject" title="Perl v5.13.10 - The penultimate 5.13 release" href="/perl.git/tag/12d54caef8c8f6f51a7984bc426cb4b3e5903a7c">Perl v5.13.10 - The penultimate... </a></td>
+<td class="selflink"><a href="/perl.git/tag/12d54caef8c8f6f51a7984bc426cb4b3e5903a7c">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/892528fd9702f80bc08486939e0831142045d6d9">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.10">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.10">log</a></td>
+</tr><tr class="dark">
+<td><i>14 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/c0247066c34077145eaa8f33eddcbb64fa3b0f8d">v5.12.3</a></td>
+<td><a class="list subject" href="/perl.git/tag/ad1be4b5d28375b4a9734f4af4d183a6d6916b98">Fourth release of the v5.12 series!</a></td>
+<td class="selflink"><a href="/perl.git/tag/ad1be4b5d28375b4a9734f4af4d183a6d6916b98">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/c0247066c34077145eaa8f33eddcbb64fa3b0f8d">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.3">log</a></td>
+</tr><tr class="light">
+<td><i>14 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/57e9ad135a0bd26cf0c27c058712ad1518a209bf">v5.13.9</a></td>
+<td><a class="list subject" href="/perl.git/tag/a5ebd2dff0239f64f342318d01cd92dc19aa52c8">The release of perl v5.13.9</a></td>
+<td class="selflink"><a href="/perl.git/tag/a5ebd2dff0239f64f342318d01cd92dc19aa52c8">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/57e9ad135a0bd26cf0c27c058712ad1518a209bf">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.9">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.9">log</a></td>
+</tr><tr class="dark">
+<td><i>14 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/6065ea759a83cbcdc808029f305955a8d56bf27c">v5.12.3-RC3</a></td>
+<td><a class="list subject" href="/perl.git/tag/99f31ffe184ef5ab2055bba1623990dcf9c0a438">third RC for v5.12.3</a></td>
+<td class="selflink"><a href="/perl.git/tag/99f31ffe184ef5ab2055bba1623990dcf9c0a438">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/6065ea759a83cbcdc808029f305955a8d56bf27c">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.3-RC3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.3-RC3">log</a></td>
+</tr><tr class="light">
+<td><i>14 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8b2a3ac2993be989122a7b4a7241d2a03db24156">v5.12.3-RC2</a></td>
+<td><a class="list subject" href="/perl.git/tag/8d9285d9fc377fc7ce560f68c46987587fa09243">second RC for v5.12.3</a></td>
+<td class="selflink"><a href="/perl.git/tag/8d9285d9fc377fc7ce560f68c46987587fa09243">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8b2a3ac2993be989122a7b4a7241d2a03db24156">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.3-RC2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.3-RC2">log</a></td>
+</tr><tr class="dark">
+<td><i>14 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/6e71870610dda8a0e031b49a098914389a576f34">v5.12.3-RC1</a></td>
+<td><a class="list subject" href="/perl.git/tag/14a97be4f7ab0151e2e33e2fb7b58f7c4e04297e">first RC for v5.12.3</a></td>
+<td class="selflink"><a href="/perl.git/tag/14a97be4f7ab0151e2e33e2fb7b58f7c4e04297e">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/6e71870610dda8a0e031b49a098914389a576f34">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.3-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.3-RC1">log</a></td>
+</tr><tr class="light">
+<td><i>15 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b6aa14cd2bcbea5793902cd478a4258670ce6000">v5.13.8</a></td>
+<td><a class="list subject" href="/perl.git/tag/9e558ef2f9e0da2cbe687269c17fbf354568a1dd">Perl 5.13.8</a></td>
+<td class="selflink"><a href="/perl.git/tag/9e558ef2f9e0da2cbe687269c17fbf354568a1dd">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/b6aa14cd2bcbea5793902cd478a4258670ce6000">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.8">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.8">log</a></td>
+</tr><tr class="dark">
+<td><i>16 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/57fc91ac6f784443b7664e2bd192c2cc3813e50e">v5.13.7</a></td>
+<td><a class="list subject" href="/perl.git/tag/509c5fbb3419d9eceb00f44fac1348a256993071">This be v5.13.7</a></td>
+<td class="selflink"><a href="/perl.git/tag/509c5fbb3419d9eceb00f44fac1348a256993071">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/57fc91ac6f784443b7664e2bd192c2cc3813e50e">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.7">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.7">log</a></td>
+</tr><tr class="light">
+<td><i>17 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/5bc1001b08a9ab20cf55683d2a0b5f53d4ad2c2b">v5.13.6</a></td>
+<td><a class="list subject" href="/perl.git/tag/dd8ae1b0285da9c3708e7b4ff2e476f7db239e35">Tagged v5.13.6</a></td>
+<td class="selflink"><a href="/perl.git/tag/dd8ae1b0285da9c3708e7b4ff2e476f7db239e35">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/5bc1001b08a9ab20cf55683d2a0b5f53d4ad2c2b">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.6">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.6">log</a></td>
+</tr><tr class="dark">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/08d032c06ab3c03fde3df57f8ed6dbe979895a72">v5.13.5</a></td>
+<td><a class="list subject" href="/perl.git/tag/b62d113318d3f7172f3445847226e4bed3b9add3">Perl 5.13.5</a></td>
+<td class="selflink"><a href="/perl.git/tag/b62d113318d3f7172f3445847226e4bed3b9add3">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/08d032c06ab3c03fde3df57f8ed6dbe979895a72">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.5">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.5">log</a></td>
+</tr><tr class="light">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7a3b65c9d99f69553fffe01f73d49fe9abf95120">v5.12.2</a></td>
+<td><a class="list subject" href="/perl.git/tag/370e6febd6e0ad0f8a589c388a834bf806cb57cb">Perl 5.12.2</a></td>
+<td class="selflink"><a href="/perl.git/tag/370e6febd6e0ad0f8a589c388a834bf806cb57cb">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7a3b65c9d99f69553fffe01f73d49fe9abf95120">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.2">log</a></td>
+</tr><tr class="dark">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/9afa8c45e4e3064c0074f9d451805fb286e86176">v5.12.2-RC1</a></td>
+<td><a class="list subject" href="/perl.git/tag/28a16ac431c0cd23856c328e2540249fedc3a64f">5.12.2 RC1</a></td>
+<td class="selflink"><a href="/perl.git/tag/28a16ac431c0cd23856c328e2540249fedc3a64f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/9afa8c45e4e3064c0074f9d451805fb286e86176">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.2-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.2-RC1">log</a></td>
+</tr><tr class="light">
+<td><i>19 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3bc9c68be9b73fccbaf3154e7c08c09e241a3be6">v5.13.4</a></td>
+<td><a class="list subject" href="/perl.git/tag/3264f90faa962e7256f6c25e8eb456384f44fc14">This is perl 5.13.4</a></td>
+<td class="selflink"><a href="/perl.git/tag/3264f90faa962e7256f6c25e8eb456384f44fc14">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3bc9c68be9b73fccbaf3154e7c08c09e241a3be6">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.4">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.4">log</a></td>
+</tr><tr class="dark">
+<td><i>20 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/414abf85bdebb41ea3e612a8c85f5ca31190d570">v5.13.3</a></td>
+<td><a class="list subject" href="/perl.git/tag/ce6451257a09c80dd9c87d3107b955620c2e9f4d">This is perl v5.13.3</a></td>
+<td class="selflink"><a href="/perl.git/tag/ce6451257a09c80dd9c87d3107b955620c2e9f4d">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/414abf85bdebb41ea3e612a8c85f5ca31190d570">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.3">log</a></td>
+</tr><tr class="light">
+<td><i>21 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/e4b5ce810b542fc115cb7db392c771730fc4f98e">v5.13.2</a></td>
+<td><a class="list subject" href="/perl.git/tag/e6169e982d1121095c56cff02309ef2bcca96761">Third release of the v5.13 series!</a></td>
+<td class="selflink"><a href="/perl.git/tag/e6169e982d1121095c56cff02309ef2bcca96761">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/e4b5ce810b542fc115cb7db392c771730fc4f98e">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.2">log</a></td>
+</tr><tr class="dark">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/464b2b3dcc8158f7dee4ec9c9d06bd2f09c40687">v5.13.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/c420c2273d4fd71af0338529ab2b45d44df155c0">Second release of the v5.13 series!</a></td>
+<td class="selflink"><a href="/perl.git/tag/c420c2273d4fd71af0338529ab2b45d44df155c0">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/464b2b3dcc8158f7dee4ec9c9d06bd2f09c40687">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.1">log</a></td>
+</tr><tr class="light">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b85be81e3471288c8c432533cfaf3713e28157e9">v5.12.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/5257104e2bf08c90f24dc68fe1615b70135ff81c">Perl 5.12.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/5257104e2bf08c90f24dc68fe1615b70135ff81c">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/b85be81e3471288c8c432533cfaf3713e28157e9">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.1">log</a></td>
+</tr><tr class="dark">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/2f420d278aaae7859725c1813d9f6b7ea6a0fe55">v5.12.1-RC2</a></td>
+<td><a class="list subject" href="/perl.git/tag/b8081cc9e743e2b722de106449927b0154816534">RC2 for Perl 5.12.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/b8081cc9e743e2b722de106449927b0154816534">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/2f420d278aaae7859725c1813d9f6b7ea6a0fe55">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.1-RC2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.1-RC2">log</a></td>
+</tr><tr class="light">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ed9a37359c07a6d8b582c6c1dead720366ae1533">v5.12.1-RC1</a></td>
+<td><a class="list subject" title="The first release candidate for Perl 5.12.1" href="/perl.git/tag/f4a1d60188f084f77c422c2141463cb00aaf770b">The first release candidate for... </a></td>
+<td class="selflink"><a href="/perl.git/tag/f4a1d60188f084f77c422c2141463cb00aaf770b">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/ed9a37359c07a6d8b582c6c1dead720366ae1533">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.1-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.1-RC1">log</a></td>
+</tr><tr class="dark">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/e01378a33e10271b58f7345318c9241af28c64f8">v5.12.1-RC0</a></td>
+<td><a class="list subject" href="/perl.git/tag/f66c0d2e8311edfb1e42c474ca66615e76533eac">The 0th release of Perl 5.12.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/f66c0d2e8311edfb1e42c474ca66615e76533eac">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/e01378a33e10271b58f7345318c9241af28c64f8">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.1-RC0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.1-RC0">log</a></td>
+</tr><tr class="light">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a4ef29484100fcd961129071b2ca69064250b195">v5.13.0</a></td>
+<td><a class="list subject" href="/perl.git/tag/374120f0872efcf1842c376db4d306541374295b">First release of the v5.13 series!</a></td>
+<td class="selflink"><a href="/perl.git/tag/374120f0872efcf1842c376db4d306541374295b">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/a4ef29484100fcd961129071b2ca69064250b195">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.13.0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.13.0">log</a></td>
+</tr><tr class="dark">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/6d52c880307229a35c23215c596700e716bd7c32">v5.12.0</a></td>
+<td><a class="list subject" title="The first stable release of the 5.12 series" href="/perl.git/tag/a1f11ea523543662265a18cc2bfcda6052dc93f7">The first stable release of the... </a></td>
+<td class="selflink"><a href="/perl.git/tag/a1f11ea523543662265a18cc2bfcda6052dc93f7">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/6d52c880307229a35c23215c596700e716bd7c32">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0">log</a></td>
+</tr><tr class="light">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/431be7b35e7448c1ced59444d6bdcfa11c5f83c7">v5.12.0-RC5</a></td>
+<td><a class="list subject" href="/perl.git/tag/e82c8d74d28fb956bcd3f89bd74f0e26fcd02a32">Perl 5.12.0 Release Candidate 5</a></td>
+<td class="selflink"><a href="/perl.git/tag/e82c8d74d28fb956bcd3f89bd74f0e26fcd02a32">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/431be7b35e7448c1ced59444d6bdcfa11c5f83c7">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0-RC5">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0-RC5">log</a></td>
+</tr><tr class="dark">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8c57606294f48eb065dff03f7ffefc1e4e2cdce4">v5.12.0-RC4</a></td>
+<td><a class="list subject" title="4th release candidate for Perl 5.12.0" href="/perl.git/tag/e67bedffe2a129658aa94294c784fc7776e37201">4th release candidate for Perl... </a></td>
+<td class="selflink"><a href="/perl.git/tag/e67bedffe2a129658aa94294c784fc7776e37201">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8c57606294f48eb065dff03f7ffefc1e4e2cdce4">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0-RC4">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0-RC4">log</a></td>
+</tr><tr class="light">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/928e1fe927c71900e18cc53df7af320cbe4a2843">v5.12.0-RC3</a></td>
+<td><a class="list subject" title="The third release candidate for Perl 5.12.0" href="/perl.git/tag/56b5c48ab261dbbde3432f42d69315796d23ba99">The third release candidate for... </a></td>
+<td class="selflink"><a href="/perl.git/tag/56b5c48ab261dbbde3432f42d69315796d23ba99">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/928e1fe927c71900e18cc53df7af320cbe4a2843">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0-RC3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0-RC3">log</a></td>
+</tr><tr class="dark">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/07b13a8893f0db0ee5fb3e1fd9b24d94db191e41">v5.12.0-RC2</a></td>
+<td><a class="list subject" title="The second release candidate of perl 5.12.0" href="/perl.git/tag/a5535eead8c6271cf547b47b708f955a663360c8">The second release candidate of... </a></td>
+<td class="selflink"><a href="/perl.git/tag/a5535eead8c6271cf547b47b708f955a663360c8">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/07b13a8893f0db0ee5fb3e1fd9b24d94db191e41">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0-RC2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0-RC2">log</a></td>
+</tr><tr class="light">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/commit/208f012aa184134b9abfe8ba1bf8f2ae28539908">v5.12.0-RC1</a></td>
+<td><a class="list subject" title="The first release candidate for Perl 5.12.0" href="/perl.git/tag/f6680417e544d6156b9e251aa358eebf51c6b767">The first release candidate for... </a></td>
+<td class="selflink"><a href="/perl.git/tag/f6680417e544d6156b9e251aa358eebf51c6b767">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/208f012aa184134b9abfe8ba1bf8f2ae28539908">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0-RC1">log</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/79f7885ca13814e1bf32fa15901b6f0cdc95f9be">v5.12.0-RC0</a></td>
+<td><a class="list subject" title="Perl 5.12.0 - release candidate zero" href="/perl.git/tag/ef3f93f430a59315b0de7ef70734de7a06b6d8b8">Perl 5.12.0 - release candidate... </a></td>
+<td class="selflink"><a href="/perl.git/tag/ef3f93f430a59315b0de7ef70734de7a06b6d8b8">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/79f7885ca13814e1bf32fa15901b6f0cdc95f9be">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.12.0-RC0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.12.0-RC0">log</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b3289bd223cc434b2247c06d40ffe8d467f241de">v5.11.5</a></td>
+<td><a class="list subject" href="/perl.git/tag/5fa2b4840fef42acb7ab7eec3f74a43304e2cbc4">Perl 5.11.5</a></td>
+<td class="selflink"><a href="/perl.git/tag/5fa2b4840fef42acb7ab7eec3f74a43304e2cbc4">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/b3289bd223cc434b2247c06d40ffe8d467f241de">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.11.5">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.11.5">log</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/2908b263df5784d122bb6eb465f6512af2ea45b5">v5.11.4</a></td>
+<td><a class="list subject" href="/perl.git/tag/04ab1b5f731086436ff0f8514e5e7d9230c0be9c">Perl 5.11.4</a></td>
+<td class="selflink"><a href="/perl.git/tag/04ab1b5f731086436ff0f8514e5e7d9230c0be9c">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/2908b263df5784d122bb6eb465f6512af2ea45b5">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.11.4">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.11.4">log</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/9c3f2640bc47839fced0ccc78bae4b814ae82e97">v5.11.3</a></td>
+<td><a class="list subject" href="/perl.git/tag/a4ca95c0bb59725137996b103da10089990d7307">Perl 5.11.3</a></td>
+<td class="selflink"><a href="/perl.git/tag/a4ca95c0bb59725137996b103da10089990d7307">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/9c3f2640bc47839fced0ccc78bae4b814ae82e97">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.11.3">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.11.3">log</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/e507fdf52b6cc8b84c112b13ae72787f5ee1ffa2">v5.11.2</a></td>
+<td><a class="list subject" href="/perl.git/tag/d80dc3e16abcd4c8aaf554ee48c4d5ce594c5c33">Release 5.11.2</a></td>
+<td class="selflink"><a href="/perl.git/tag/d80dc3e16abcd4c8aaf554ee48c4d5ce594c5c33">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/e507fdf52b6cc8b84c112b13ae72787f5ee1ffa2">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.11.2">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.11.2">log</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/d5bddf6e73535489e587a205e0bfbe9b86aff43f">v5.11.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/3dddb9dacc30671e10a731d668eb2386c9f02754">Perl 5.11.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/3dddb9dacc30671e10a731d668eb2386c9f02754">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/d5bddf6e73535489e587a205e0bfbe9b86aff43f">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.11.1">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.11.1">log</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/96054f1230156cd59ef1d361884fb4cd0e8a0447">v5.11.0</a></td>
+<td><a class="list subject" title="First released version in the 5.11 devel series" href="/perl.git/tag/5ab6c76a24a407d3b76ad809e93e35e27646d3ef">First released version in the 5... </a></td>
+<td class="selflink"><a href="/perl.git/tag/5ab6c76a24a407d3b76ad809e93e35e27646d3ef">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/96054f1230156cd59ef1d361884fb4cd0e8a0447">commit</a> | <a href="/perl.git/shortlog/refs/tags/v5.11.0">shortlog</a> | <a href="/perl.git/log/refs/tags/v5.11.0">log</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/5348debf9fd57fc15c26529386769684fab96e57">perl-5.10.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/715f5cac067af85328656064e0217f2bee39ff74">Final release of Perl 5.10.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/715f5cac067af85328656064e0217f2bee39ff74">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/5348debf9fd57fc15c26529386769684fab96e57">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.10.1">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.10.1">log</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/cadfb47f21a9e60723e4e83c5cf07b040a9e4ae8">perl-5.10.1-RC2</a></td>
+<td><a class="list subject" href="/perl.git/tag/77f1d9e99e3637ba10340cad2b7edd7c8e0a4710">Release Candidate 2 of Perl 5.10.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/77f1d9e99e3637ba10340cad2b7edd7c8e0a4710">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/cadfb47f21a9e60723e4e83c5cf07b040a9e4ae8">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.10.1-RC2">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.10.1-RC2">log</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/d79203520c4254550b36937dae4d767b6a21d93d">perl-5.10.1-RC1</a></td>
+<td><a class="list subject" href="/perl.git/tag/8052bd7f98c7e9a4d96b2295739111e040160ca6">Release Candidate 1 of Perl 5.10.1</a></td>
+<td class="selflink"><a href="/perl.git/tag/8052bd7f98c7e9a4d96b2295739111e040160ca6">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/d79203520c4254550b36937dae4d767b6a21d93d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.10.1-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.10.1-RC1">log</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a1834a8ee289b1433049c65a0b29ec7c74ed44db">code-review/2009-07-22</a></td>
+<td><a class="list subject" href="/perl.git/tag/790fbd2b1de809897ebacddb828652a3f1d75dd9">Code Review from IRC</a></td>
+<td class="selflink"><a href="/perl.git/tag/790fbd2b1de809897ebacddb828652a3f1d75dd9">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/a1834a8ee289b1433049c65a0b29ec7c74ed44db">commit</a> | <a href="/perl.git/shortlog/refs/tags/code-review/2009-07-22">shortlog</a> | <a href="/perl.git/log/refs/tags/code-review/2009-07-22">log</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/1e89acdfb3de39e92ce0b33062221d82e21cb1e2">GitLive-blead</a></td>
+<td><a class="list subject" title="State of blead when we went live with Git as our repository" href="/perl.git/tag/da71581858ddfe0f74d9e276c5bbe888c75b6d7f">State of blead when we went live... </a></td>
+<td class="selflink"><a href="/perl.git/tag/da71581858ddfe0f74d9e276c5bbe888c75b6d7f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/1e89acdfb3de39e92ce0b33062221d82e21cb1e2">commit</a> | <a href="/perl.git/shortlog/refs/tags/GitLive-blead">shortlog</a> | <a href="/perl.git/log/refs/tags/GitLive-blead">log</a></td>
+</tr><tr class="dark">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a3748119a0056e5704588cdf9da3bd98766ce886">GitLive-maint-5.6</a></td>
+<td><a class="list subject" title="State of maint-5.6 when we went live with Git as our repository" href="/perl.git/tag/e03dffa8c006bd53504464a288371e71419497fd">State of maint-5.6 when we went... </a></td>
+<td class="selflink"><a href="/perl.git/tag/e03dffa8c006bd53504464a288371e71419497fd">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/a3748119a0056e5704588cdf9da3bd98766ce886">commit</a> | <a href="/perl.git/shortlog/refs/tags/GitLive-maint-5.6">shortlog</a> | <a href="/perl.git/log/refs/tags/GitLive-maint-5.6">log</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/40f32bb835cdb885e2b27ddaad9534590f697239">GitLive-maint-5.8</a></td>
+<td><a class="list subject" title="State of maint-5.8 when we went live with Git as our repository" href="/perl.git/tag/9b4fcc40a6ef2b8882b7dda7568ac911f7718b0f">State of maint-5.8 when we went... </a></td>
+<td class="selflink"><a href="/perl.git/tag/9b4fcc40a6ef2b8882b7dda7568ac911f7718b0f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/40f32bb835cdb885e2b27ddaad9534590f697239">commit</a> | <a href="/perl.git/shortlog/refs/tags/GitLive-maint-5.8">shortlog</a> | <a href="/perl.git/log/refs/tags/GitLive-maint-5.8">log</a></td>
+</tr><tr class="dark">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/4c23489ea0bd4cc992164ef03d52cb97464ace87">GitLive-maint-5.10</a></td>
+<td><a class="list subject" title="State of maint-5.10 when we went live with Git as our repository" href="/perl.git/tag/acb6b050e21c7f3a48affc353ed066777fc1bd0a">State of maint-5.10 when we went... </a></td>
+<td class="selflink"><a href="/perl.git/tag/acb6b050e21c7f3a48affc353ed066777fc1bd0a">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/4c23489ea0bd4cc992164ef03d52cb97464ace87">commit</a> | <a href="/perl.git/shortlog/refs/tags/GitLive-maint-5.10">shortlog</a> | <a href="/perl.git/log/refs/tags/GitLive-maint-5.10">log</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/c0eacbdf793d09cae5d1c0b6fff36dc1b7d7c1a3">GitLive-maint-5.004</a></td>
+<td><a class="list subject" title="State of maint-5.004 when we went live with Git as our repository" href="/perl.git/tag/c4fb1312746aed9e0b696326f3c2664a71284324">State of maint-5.004 when we went... </a></td>
+<td class="selflink"><a href="/perl.git/tag/c4fb1312746aed9e0b696326f3c2664a71284324">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/c0eacbdf793d09cae5d1c0b6fff36dc1b7d7c1a3">commit</a> | <a href="/perl.git/shortlog/refs/tags/GitLive-maint-5.004">shortlog</a> | <a href="/perl.git/log/refs/tags/GitLive-maint-5.004">log</a></td>
+</tr><tr class="dark">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0600390d2dc4cba49f523aa97e556bf8ae6a5bdf">GitLive-maint-5.005</a></td>
+<td><a class="list subject" title="State of maint-5.005 when we went live with Git as our repository" href="/perl.git/tag/5c487ee4c7541fbfd48376965aaefc58ee92541e">State of maint-5.005 when we went... </a></td>
+<td class="selflink"><a href="/perl.git/tag/5c487ee4c7541fbfd48376965aaefc58ee92541e">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/0600390d2dc4cba49f523aa97e556bf8ae6a5bdf">commit</a> | <a href="/perl.git/shortlog/refs/tags/GitLive-maint-5.005">shortlog</a> | <a href="/perl.git/log/refs/tags/GitLive-maint-5.005">log</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0d3ff86caffb5db8118ca460a7c48b04bbef3128">perl-5.8.9</a></td>
+<td><a class="list subject" href="/perl.git/tag/c848be9b0e233f853ef7ee1a564c09155a884f39">5.8.9</a></td>
+<td class="selflink"><a href="/perl.git/tag/c848be9b0e233f853ef7ee1a564c09155a884f39">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/0d3ff86caffb5db8118ca460a7c48b04bbef3128">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.9">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.9">log</a></td>
+</tr><tr class="dark">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7ccf7bf9adf1ace601be83b409b1315292b1d574">perl-5.8.9-RC1</a></td>
+<td><a class="list subject" href="/perl.git/tag/6fbfeeef55d3ef465f6780dcb2ccfbb01bd633c0">5.8.9 RC1</a></td>
+<td class="selflink"><a href="/perl.git/tag/6fbfeeef55d3ef465f6780dcb2ccfbb01bd633c0">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7ccf7bf9adf1ace601be83b409b1315292b1d574">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.9-RC1">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.9-RC1">log</a></td>
+</tr><tr class="light">
+<td><i>4 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/cb99a88456c6181881501e9f4881bc3d3d3e919e">timinatorII</a></td>
+<td><a class="list subject" href="/perl.git/tag/fed5e1a028bbaf4beec6411b69149a591b3fbabd">Amend note for Changes 984 and 985</a></td>
+<td class="selflink"><a href="/perl.git/tag/fed5e1a028bbaf4beec6411b69149a591b3fbabd">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/cb99a88456c6181881501e9f4881bc3d3d3e919e">commit</a> | <a href="/perl.git/shortlog/refs/tags/timinatorII">shortlog</a> | <a href="/perl.git/log/refs/tags/timinatorII">log</a></td>
+</tr><tr class="dark">
+<td><i>4 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/68daf0ababdc0e913335a90c4361b792b2715301">timinator</a></td>
+<td><a class="list subject" title="Amend note for missing Changes around 872 ~ 922" href="/perl.git/tag/6067526e719d730b361b3d2bc8bfb727c6664549">Amend note for missing Changes... </a></td>
+<td class="selflink"><a href="/perl.git/tag/6067526e719d730b361b3d2bc8bfb727c6664549">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/68daf0ababdc0e913335a90c4361b792b2715301">commit</a> | <a href="/perl.git/shortlog/refs/tags/timinator">shortlog</a> | <a href="/perl.git/log/refs/tags/timinator">log</a></td>
+</tr><tr class="light">
+<td><i>4 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3b8a46d8724fcee349bf29d0d90f830a0f9c6bd9">perl-5.10.0</a></td>
+<td><a class="list subject" href="/perl.git/tag/7c4e0b909d0799e62aa498f86351feeaf406f94e">Perl 5.10.0 is released</a></td>
+<td class="selflink"><a href="/perl.git/tag/7c4e0b909d0799e62aa498f86351feeaf406f94e">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3b8a46d8724fcee349bf29d0d90f830a0f9c6bd9">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.10.0">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.10.0">log</a></td>
+</tr><tr class="dark">
+<td><i>4 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/f0f8ac00571774df2307319009d1c8cf1e2b9358">perl-5.9.5</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/f0f8ac00571774df2307319009d1c8cf1e2b9358">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.9.5">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.9.5">log</a></td>
+</tr><tr class="light">
+<td><i>5 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/27e0a6173cfa04e70f8057a8b3a0ceb668a33dbc">perl-5.9.4</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/27e0a6173cfa04e70f8057a8b3a0ceb668a33dbc">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.9.4">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.9.4">log</a></td>
+</tr><tr class="dark">
+<td><i>6 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/978b5c81acdd9245251f6182632db23eb26ff2fb">perl-5.8.8</a></td>
+<td><a class="list subject" href="/perl.git/tag/c0c5394d6702c007885ef538974cc3801b414bea">5.8.8</a></td>
+<td class="selflink"><a href="/perl.git/tag/c0c5394d6702c007885ef538974cc3801b414bea">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/978b5c81acdd9245251f6182632db23eb26ff2fb">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.8">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.8">log</a></td>
+</tr><tr class="light">
+<td><i>6 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a64f392e66e01d9db39b7059203b84645a11c93d">perl-5.9.3</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/a64f392e66e01d9db39b7059203b84645a11c93d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.9.3">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.9.3">log</a></td>
+</tr><tr class="dark">
+<td><i>6 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3eef4faaf8d7fa185749184afd7dc737b8039f42">perl-5.8.7</a></td>
+<td><a class="list subject" href="/perl.git/tag/f36de55e22468c2a292b3c41ba93bc243b9d9f7f">5.8.7</a></td>
+<td class="selflink"><a href="/perl.git/tag/f36de55e22468c2a292b3c41ba93bc243b9d9f7f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3eef4faaf8d7fa185749184afd7dc737b8039f42">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.7">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.7">log</a></td>
+</tr><tr class="light">
+<td><i>6 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/31e0fb333baa3f4848b16dd03107480226ae8bc2">perl-5.9.2</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/31e0fb333baa3f4848b16dd03107480226ae8bc2">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.9.2">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.9.2">log</a></td>
+</tr><tr class="dark">
+<td><i>7 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/af2f6ef919d598eacc1a62ed3b5d2b99310dcf69">perl-5.8.6</a></td>
+<td><a class="list subject" href="/perl.git/tag/c845948bf906fed91612f25d3aae064733a48c18">5.8.6</a></td>
+<td class="selflink"><a href="/perl.git/tag/c845948bf906fed91612f25d3aae064733a48c18">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/af2f6ef919d598eacc1a62ed3b5d2b99310dcf69">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.6">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.6">log</a></td>
+</tr><tr class="light">
+<td><i>7 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3922be378e690f742fa5921f26b59638b24fba5e">perl-5.8.5</a></td>
+<td><a class="list subject" href="/perl.git/tag/869c9d54662db592aaee9f7a134fba5dda2c5985">5.8.5</a></td>
+<td class="selflink"><a href="/perl.git/tag/869c9d54662db592aaee9f7a134fba5dda2c5985">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3922be378e690f742fa5921f26b59638b24fba5e">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.5">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.5">log</a></td>
+</tr><tr class="dark">
+<td><i>7 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/81db23f595543c991f31e83b99c5762b23046351">perl-5.8.4</a></td>
+<td><a class="list subject" href="/perl.git/tag/5396bc60619e680e408fcbbbac0301415b6c67cb">5.8.4</a></td>
+<td class="selflink"><a href="/perl.git/tag/5396bc60619e680e408fcbbbac0301415b6c67cb">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/81db23f595543c991f31e83b99c5762b23046351">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.4">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.4">log</a></td>
+</tr><tr class="light">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b7a757786860f1e30527e61f0ca87a677ce6777b">perl-5.9.1</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/b7a757786860f1e30527e61f0ca87a677ce6777b">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.9.1">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.9.1">log</a></td>
+</tr><tr class="dark">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ea8172026c3b59f4fc1316988df207c1adf0fb48">perl-5.005_04</a></td>
+<td><a class="list subject" href="/perl.git/tag/3417e4f8422bcf13f799ce1acef44b27ccbef3d8">Perl 5.005_04 Released</a></td>
+<td class="selflink"><a href="/perl.git/tag/3417e4f8422bcf13f799ce1acef44b27ccbef3d8">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/ea8172026c3b59f4fc1316988df207c1adf0fb48">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.005_04">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.005_04">log</a></td>
+</tr><tr class="light">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/f0095d0783d416c5b117e7b415e301cfea24ac44">perl-5.8.3</a></td>
+<td><a class="list subject" href="/perl.git/tag/ba6808d72aabb68ff5699997ade5cc274ad49f39">5.8.3</a></td>
+<td class="selflink"><a href="/perl.git/tag/ba6808d72aabb68ff5699997ade5cc274ad49f39">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/f0095d0783d416c5b117e7b415e301cfea24ac44">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.3">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.3">log</a></td>
+</tr><tr class="dark">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/5fe6fe9e744e5dd360822dc892a626b8193eea40">perl-1.0.16</a></td>
+<td><a class="list subject" href="/perl.git/tag/4f78c20b5e222c45328d0f7f30988dc4bbe99c1e">perl 1.0.16</a></td>
+<td class="selflink"><a href="/perl.git/tag/4f78c20b5e222c45328d0f7f30988dc4bbe99c1e">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/5fe6fe9e744e5dd360822dc892a626b8193eea40">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-1.0.16">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-1.0.16">log</a></td>
+</tr><tr class="light">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/18c95a3cc11399383f0a2795432000d57b235c0d">perl-5.6.2</a></td>
+<td><a class="list subject" href="/perl.git/tag/f2985798c2b28f6a2d71920460a97df6ae8ee372">Perl 5.6.2</a></td>
+<td class="selflink"><a href="/perl.git/tag/f2985798c2b28f6a2d71920460a97df6ae8ee372">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/18c95a3cc11399383f0a2795432000d57b235c0d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.6.2">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.6.2">log</a></td>
+</tr><tr class="dark">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/cd0a488b07b3463de32e3c5e1e640816ea3d0b9a">perl-5.8.2</a></td>
+<td><a class="list subject" href="/perl.git/tag/3860f1dab79657b5f33ea3d651704fbbd804ec87">5.8.2</a></td>
+<td class="selflink"><a href="/perl.git/tag/3860f1dab79657b5f33ea3d651704fbbd804ec87">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/cd0a488b07b3463de32e3c5e1e640816ea3d0b9a">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.2">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.2">log</a></td>
+</tr><tr class="light">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ea4fd6daa1f959fe03730a32d225d60585be9797">perl-5.9.0</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/ea4fd6daa1f959fe03730a32d225d60585be9797">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.9.0">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.9.0">log</a></td>
+</tr><tr class="dark">
+<td><i>8 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0203dfd7184c1f3ed399de4f790fbaa48f862ece">perl-5.8.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/605c70d15eb214983cf6be9a130ac7d171e03b62">Perl 5.8.1 Has Been Released</a></td>
+<td class="selflink"><a href="/perl.git/tag/605c70d15eb214983cf6be9a130ac7d171e03b62">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/0203dfd7184c1f3ed399de4f790fbaa48f862ece">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.1">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.1">log</a></td>
+</tr><tr class="light">
+<td><i>9 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/de64de47f7150f9a23ee0bb6d23c1082e8c5e551">perl-1.0.15</a></td>
+<td><a class="list subject" href="/perl.git/tag/112e33b1b18999ffceafcdafac4e1888f882dc74">Perl 1.0.15</a></td>
+<td class="selflink"><a href="/perl.git/tag/112e33b1b18999ffceafcdafac4e1888f882dc74">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/de64de47f7150f9a23ee0bb6d23c1082e8c5e551">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-1.0.15">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-1.0.15">log</a></td>
+</tr><tr class="dark">
+<td><i>9 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/02a834a9ae508dc3fab0b5a0375804172985b012">perl-5.8.0</a></td>
+<td><a class="list subject" href="/perl.git/tag/cc111dc9da257232aaaa8a85a0336b91ecdf2ae3">Perl 5.8.0</a></td>
+<td class="selflink"><a href="/perl.git/tag/cc111dc9da257232aaaa8a85a0336b91ecdf2ae3">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/02a834a9ae508dc3fab0b5a0375804172985b012">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.8.0">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.8.0">log</a></td>
+</tr><tr class="light">
+<td><i>10 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/38bb8ccec9bd397fcc3e28e6eb0ede9740779a6b">perl-5.7.3</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/38bb8ccec9bd397fcc3e28e6eb0ede9740779a6b">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.7.3">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.7.3">log</a></td>
+</tr><tr class="dark">
+<td><i>10 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3234c387abe82f070889435d14cd0d45a1dbdc8f">perl-5.6.1</a></td>
+<td><a class="list subject" href="/perl.git/tag/4b620b9148c97568468ab402a94ed0806887de6f">riddles in the dark</a></td>
+<td class="selflink"><a href="/perl.git/tag/4b620b9148c97568468ab402a94ed0806887de6f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3234c387abe82f070889435d14cd0d45a1dbdc8f">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.6.1">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.6.1">log</a></td>
+</tr><tr class="light">
+<td><i>12 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/37590e525640e8a7292e3548240b36182deaf4a8">perl-5.6.0</a></td>
+<td><a class="list subject" href="/perl.git/tag/569e144e66ad3043ef8705aabc61b4591cae4450">party time</a></td>
+<td class="selflink"><a href="/perl.git/tag/569e144e66ad3043ef8705aabc61b4591cae4450">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/37590e525640e8a7292e3548240b36182deaf4a8">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.6.0">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.6.0">log</a></td>
+</tr><tr class="dark">
+<td><i>12 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/f21c173c5f797b475e2d34e9ddd0b93c58d36e12">perl-5.004_05</a></td>
+<td><a class="list subject" href="/perl.git/tag/8ef8d0240985e3fcf17cd6fa408d1a65011c42ee">5.004_05 goes gold!</a></td>
+<td class="selflink"><a href="/perl.git/tag/8ef8d0240985e3fcf17cd6fa408d1a65011c42ee">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/f21c173c5f797b475e2d34e9ddd0b93c58d36e12">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.004_05">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.004_05">log</a></td>
+</tr><tr class="light">
+<td><i>12 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7081d63cca21cb623806b6544c86a84c7bc5a1e1">perl-5.005_03</a></td>
+<td><a class="list subject" title="Perl 5.005: Maintenance update 03 is available" href="/perl.git/tag/ccc06e357110b7f6ee62e9894510c288b73212ee">Perl 5.005: Maintenance update... </a></td>
+<td class="selflink"><a href="/perl.git/tag/ccc06e357110b7f6ee62e9894510c288b73212ee">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7081d63cca21cb623806b6544c86a84c7bc5a1e1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.005_03">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.005_03">log</a></td>
+</tr><tr class="dark">
+<td><i>13 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/1eccc87f4ae921520ce1893dd988f4a8a1fa061d">perl-5.005_02</a></td>
+<td><a class="list subject" href="/perl.git/tag/626188fe36a5cc1fb0e80b66c99cf898bcf4fb00">5.005, the second maintenance release</a></td>
+<td class="selflink"><a href="/perl.git/tag/626188fe36a5cc1fb0e80b66c99cf898bcf4fb00">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/1eccc87f4ae921520ce1893dd988f4a8a1fa061d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.005_02">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.005_02">log</a></td>
+</tr><tr class="light">
+<td><i>13 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/46d2b8efbdb8a80b2cd16fb0b25dca2e0cf590b8">perl-5.005_01</a></td>
+<td><a class="list subject" href="/perl.git/tag/43a43dc969194af0c96a4494fa02cef3ea7ce301">Re: draft of 5.005 announcement </a></td>
+<td class="selflink"><a href="/perl.git/tag/43a43dc969194af0c96a4494fa02cef3ea7ce301">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/46d2b8efbdb8a80b2cd16fb0b25dca2e0cf590b8">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.005_01">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.005_01">log</a></td>
+</tr><tr class="dark">
+<td><i>13 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/2eac638167584a95d64b751a89a1df475c16cacd">perl-5.005</a></td>
+<td><a class="list subject" href="/perl.git/tag/62e2a2225fa20ce2db2f3aad36342ca6157d853b">5.005 is available</a></td>
+<td class="selflink"><a href="/perl.git/tag/62e2a2225fa20ce2db2f3aad36342ca6157d853b">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/2eac638167584a95d64b751a89a1df475c16cacd">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.005">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.005">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/fb73857aa0bfa8ed43d4d2f972c564c70a57e0c4">perl-5.004_04</a></td>
+<td><a class="list subject" href="/perl.git/tag/c19300c932dd7b479570f55e026492f10d0b5129">Perl 5.004_04</a></td>
+<td class="selflink"><a href="/perl.git/tag/c19300c932dd7b479570f55e026492f10d0b5129">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/fb73857aa0bfa8ed43d4d2f972c564c70a57e0c4">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.004_04">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.004_04">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/90248788f819cf7b59aabb5259fdd6d66bc4632b">perl-5.004_03</a></td>
+<td><a class="list subject" href="/perl.git/tag/e80f5bcf2a6d0eb39be8b9e500c082e6318e97e9">Perl 5.004_03</a></td>
+<td class="selflink"><a href="/perl.git/tag/e80f5bcf2a6d0eb39be8b9e500c082e6318e97e9">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/90248788f819cf7b59aabb5259fdd6d66bc4632b">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.004_03">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.004_03">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8490252049bf42d3d2f75d89178a8682bf22ba74">perl-5.004_02</a></td>
+<td><a class="list subject" href="/perl.git/tag/7b916029c07196492308a723d959dff653be8cc6">Perl 5.004_03</a></td>
+<td class="selflink"><a href="/perl.git/tag/7b916029c07196492308a723d959dff653be8cc6">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8490252049bf42d3d2f75d89178a8682bf22ba74">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.004_02">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.004_02">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/6ed747fa9d40c83684069ea79bb03d03c049b9d3">the_answer</a></td>
+<td><a class="list subject" href="/perl.git/tag/3ed00352e18ca29c817fa5c382d3382d500fb786">lookn fr ur commt?</a></td>
+<td class="selflink"><a href="/perl.git/tag/3ed00352e18ca29c817fa5c382d3382d500fb786">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/6ed747fa9d40c83684069ea79bb03d03c049b9d3">commit</a> | <a href="/perl.git/shortlog/refs/tags/the_answer">shortlog</a> | <a href="/perl.git/log/refs/tags/the_answer">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3e3baf6d63945cb64e829d6e5c70a7d00f3d3d03">perl-5.004_01</a></td>
+<td><a class="list subject" href="/perl.git/tag/ecad497c24bf33f26c933cadbf01e6d7f6dbca56">Perl 5.004_01</a></td>
+<td class="selflink"><a href="/perl.git/tag/ecad497c24bf33f26c933cadbf01e6d7f6dbca56">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3e3baf6d63945cb64e829d6e5c70a7d00f3d3d03">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.004_01">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.004_01">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/84c476bd7dc489e0b953be0e097d1a3adfd610d4">perl-5.004</a></td>
+<td><a class="list subject" href="/perl.git/tag/a923c5bf4b2f815a95fc4e1a2ab7787e7455d316">perl-5.004</a></td>
+<td class="selflink"><a href="/perl.git/tag/a923c5bf4b2f815a95fc4e1a2ab7787e7455d316">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/84c476bd7dc489e0b953be0e097d1a3adfd610d4">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.004">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.004">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/4aad70739bb5667e0ca185adfc2a6357768d5434">perl-5.003_99a</a></td>
+<td><a class="list subject" href="/perl.git/tag/9f98c66411c821bdf5805fb6642517ecb382d9e8">perl-5.003_99a</a></td>
+<td class="selflink"><a href="/perl.git/tag/9f98c66411c821bdf5805fb6642517ecb382d9e8">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/4aad70739bb5667e0ca185adfc2a6357768d5434">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_99a">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_99a">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/879742f685c2774bddf646722e69236d1357a983">perl-5.003_99</a></td>
+<td><a class="list subject" href="/perl.git/tag/cc4e685f86b71bb8ea4f3fa125f87886664175b6">perl-5.003_99</a></td>
+<td class="selflink"><a href="/perl.git/tag/cc4e685f86b71bb8ea4f3fa125f87886664175b6">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/879742f685c2774bddf646722e69236d1357a983">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_99">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_99">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/878e08dfd37ef18d0471607a99b747ae9fd31e93">perl-5.003_98</a></td>
+<td><a class="list subject" href="/perl.git/tag/2ac29e1bada2c1be30af16a2d6b57f386ca76ba3">perl-5.003_98</a></td>
+<td class="selflink"><a href="/perl.git/tag/2ac29e1bada2c1be30af16a2d6b57f386ca76ba3">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/878e08dfd37ef18d0471607a99b747ae9fd31e93">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_98">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_98">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/3ffbbd1f0315c067fbd05c166cf613d43783d8e1">perl-5.003_97j</a></td>
+<td><a class="list subject" href="/perl.git/tag/3f0968d5acc94891e409a8a05ee8831209dd0e3c">perl-5.003_97j</a></td>
+<td class="selflink"><a href="/perl.git/tag/3f0968d5acc94891e409a8a05ee8831209dd0e3c">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/3ffbbd1f0315c067fbd05c166cf613d43783d8e1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97j">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97j">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/47c94856bd307ecfd53661efde52c322dd650a2a">perl-5.003_97i</a></td>
+<td><a class="list subject" href="/perl.git/tag/3afa6ea5d00c69bec4fd15a7b65a6879b44e90c3">perl-5.003_97i</a></td>
+<td class="selflink"><a href="/perl.git/tag/3afa6ea5d00c69bec4fd15a7b65a6879b44e90c3">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/47c94856bd307ecfd53661efde52c322dd650a2a">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97i">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97i">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ed0487c9012a4b772071902a8bbcf6e16b8de5fb">perl-5.003_97h</a></td>
+<td><a class="list subject" href="/perl.git/tag/5ff748c3dd13028969f3597e82c53e5a59d98fbe">perl-5.003_97h</a></td>
+<td class="selflink"><a href="/perl.git/tag/5ff748c3dd13028969f3597e82c53e5a59d98fbe">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/ed0487c9012a4b772071902a8bbcf6e16b8de5fb">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97h">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97h">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/34cda023447cc35a1b9e90871460e035dddae4de">perl-5.003_97g</a></td>
+<td><a class="list subject" href="/perl.git/tag/8f1920c69889fe43516bace443aa106aa166b78f">perl-5.003_97g</a></td>
+<td class="selflink"><a href="/perl.git/tag/8f1920c69889fe43516bace443aa106aa166b78f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/34cda023447cc35a1b9e90871460e035dddae4de">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97g">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97g">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/debf9080d68fa692bfcb034241122c6cfa1b8d6e">perl-5.003_97f</a></td>
+<td><a class="list subject" href="/perl.git/tag/9f98d20b03330a3c2d6a54dbfe6915fa10c761db">perl-5.003_97f</a></td>
+<td class="selflink"><a href="/perl.git/tag/9f98d20b03330a3c2d6a54dbfe6915fa10c761db">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/debf9080d68fa692bfcb034241122c6cfa1b8d6e">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97f">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97f">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/137443ea0a858c43f5a720730cac6209a7d41948">perl-5.003_97e</a></td>
+<td><a class="list subject" href="/perl.git/tag/9c1743c6c6306adf4115e06797599457f334f832">perl-5.003_97e</a></td>
+<td class="selflink"><a href="/perl.git/tag/9c1743c6c6306adf4115e06797599457f334f832">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/137443ea0a858c43f5a720730cac6209a7d41948">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97e">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97e">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7a2e2cd6e4407ff4fe23355f0373307425305867">perl-5.003_97d</a></td>
+<td><a class="list subject" href="/perl.git/tag/966d917ddb2bd79d3afb8843668bc00444122970">perl-5.003_97d</a></td>
+<td class="selflink"><a href="/perl.git/tag/966d917ddb2bd79d3afb8843668bc00444122970">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7a2e2cd6e4407ff4fe23355f0373307425305867">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97d">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97d">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8945ff128fcfd0c205ea588d948d93b8633714b2">perl-5.003_97c</a></td>
+<td><a class="list subject" href="/perl.git/tag/3a9c13334bc5461a028e4db753a384e54df9dd87">perl-5.003_97c</a></td>
+<td class="selflink"><a href="/perl.git/tag/3a9c13334bc5461a028e4db753a384e54df9dd87">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8945ff128fcfd0c205ea588d948d93b8633714b2">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97c">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97c">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/bb7cd9e7d0c92580eb48816899db885db4d58b05">perl-5.003_97b</a></td>
+<td><a class="list subject" href="/perl.git/tag/ba7c7025f98e9a5b785bfc46d3b104244d2fc6ba">perl-5.003_97b</a></td>
+<td class="selflink"><a href="/perl.git/tag/ba7c7025f98e9a5b785bfc46d3b104244d2fc6ba">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/bb7cd9e7d0c92580eb48816899db885db4d58b05">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97b">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97b">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/e43cfa93c2ef6ac50be4121f06de5f795aa3fa62">perl-5.003_97a</a></td>
+<td><a class="list subject" href="/perl.git/tag/fa21ed85df0c7b0426c491b4b9674ad97706dead">perl-5.003_97a</a></td>
+<td class="selflink"><a href="/perl.git/tag/fa21ed85df0c7b0426c491b4b9674ad97706dead">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/e43cfa93c2ef6ac50be4121f06de5f795aa3fa62">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97a">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97a">log</a></td>
+</tr><tr class="dark">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8523fd8370f87f8e7cc44b73b86edff69f32270d">perl-5.003_97</a></td>
+<td><a class="list subject" href="/perl.git/tag/6c2286864e8c9e5854704e0f2f76e4acaede21c9">perl-5.003_97</a></td>
+<td class="selflink"><a href="/perl.git/tag/6c2286864e8c9e5854704e0f2f76e4acaede21c9">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8523fd8370f87f8e7cc44b73b86edff69f32270d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_97">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_97">log</a></td>
+</tr><tr class="light">
+<td><i>14 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ac1d45ba28d946eab50fa4af2a48e56aa1122da1">perl-5.003_96</a></td>
+<td><a class="list subject" href="/perl.git/tag/770cc2ec57cfffdf4e6e0b236e4ac6d3f4f156cd">perl-5.003_96</a></td>
+<td class="selflink"><a href="/perl.git/tag/770cc2ec57cfffdf4e6e0b236e4ac6d3f4f156cd">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/ac1d45ba28d946eab50fa4af2a48e56aa1122da1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_96">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_96">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/eb79544ff58c74c06888e5611739331fa5e91f32">perl-5.003_95</a></td>
+<td><a class="list subject" href="/perl.git/tag/f4135ee29a6ba098dcb34808d211955106dea1a0">perl-5.003_95</a></td>
+<td class="selflink"><a href="/perl.git/tag/f4135ee29a6ba098dcb34808d211955106dea1a0">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/eb79544ff58c74c06888e5611739331fa5e91f32">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_95">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_95">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b226d704a95b67a31c9c67a9ab25966507c62295">perl-5.003_94</a></td>
+<td><a class="list subject" href="/perl.git/tag/018aae727c3b70f4bd84b3ba625d3fbca663d22e">perl-5.003_94</a></td>
+<td class="selflink"><a href="/perl.git/tag/018aae727c3b70f4bd84b3ba625d3fbca663d22e">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/b226d704a95b67a31c9c67a9ab25966507c62295">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_94">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_94">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7f78d98189c412252e923b039525e576dc0eca8d">perl-5.003_93</a></td>
+<td><a class="list subject" href="/perl.git/tag/2c90bd5122441d3ffd67b42518f55a0da737e2b0">perl-5.003_93</a></td>
+<td class="selflink"><a href="/perl.git/tag/2c90bd5122441d3ffd67b42518f55a0da737e2b0">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7f78d98189c412252e923b039525e576dc0eca8d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_93">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_93">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/f80924e7bd8c4d7568804ea1ad8e9f6ad1b28f8f">perl-5.003_92</a></td>
+<td><a class="list subject" href="/perl.git/tag/45a349425d251084ca9614c7b8ebd2b475a022e0">perl-5.003_92</a></td>
+<td class="selflink"><a href="/perl.git/tag/45a349425d251084ca9614c7b8ebd2b475a022e0">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/f80924e7bd8c4d7568804ea1ad8e9f6ad1b28f8f">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_92">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_92">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/1536cbcdad02306820a683a6623c43d262850c91">perl-5.003_91</a></td>
+<td><a class="list subject" href="/perl.git/tag/3508d2b629952724414f48c3ccd24cc38a5cacf4">perl-5.003_91</a></td>
+<td class="selflink"><a href="/perl.git/tag/3508d2b629952724414f48c3ccd24cc38a5cacf4">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/1536cbcdad02306820a683a6623c43d262850c91">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_91">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_91">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ab52ffed6cff277a7a3483565cf8fee532ea7789">perl-5.003_90</a></td>
+<td><a class="list subject" href="/perl.git/tag/e068dd810b6a88d60def58601ace4fb7db60d751">perl-5.003_90</a></td>
+<td class="selflink"><a href="/perl.git/tag/e068dd810b6a88d60def58601ace4fb7db60d751">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/ab52ffed6cff277a7a3483565cf8fee532ea7789">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_90">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_90">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/7efcc441c96951d44f6ea2c8a2be6ddcc6ea6d4c">perl-5.003_28</a></td>
+<td><a class="list subject" href="/perl.git/tag/927b0b4cd5120a7df523972a098d9118d1941517">perl-5.003_28</a></td>
+<td class="selflink"><a href="/perl.git/tag/927b0b4cd5120a7df523972a098d9118d1941517">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/7efcc441c96951d44f6ea2c8a2be6ddcc6ea6d4c">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_28">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_28">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/5d00d11693752fafcd4d113566cd1347823fe92c">perl-5.003_27</a></td>
+<td><a class="list subject" href="/perl.git/tag/147cc559d06ec9e07958756491f3a86ee48915a5">perl-5.003_27</a></td>
+<td class="selflink"><a href="/perl.git/tag/147cc559d06ec9e07958756491f3a86ee48915a5">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/5d00d11693752fafcd4d113566cd1347823fe92c">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_27">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_27">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/4fdae80067c447c675a6ac92c7959d2206e207ba">perl-5.003_26</a></td>
+<td><a class="list subject" href="/perl.git/tag/5d5810d1c6de8a3a7380a493e10e99d45c2fdfa8">perl-5.003_26</a></td>
+<td class="selflink"><a href="/perl.git/tag/5d5810d1c6de8a3a7380a493e10e99d45c2fdfa8">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/4fdae80067c447c675a6ac92c7959d2206e207ba">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_26">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_26">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/f86702ccfcc3646d7aa30b09ce4f4413be9f99d1">perl-5.003_25</a></td>
+<td><a class="list subject" href="/perl.git/tag/f401c9f25871c376dcbfb36b8223dee1af376acf">perl-5.003_25</a></td>
+<td class="selflink"><a href="/perl.git/tag/f401c9f25871c376dcbfb36b8223dee1af376acf">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/f86702ccfcc3646d7aa30b09ce4f4413be9f99d1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_25">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_25">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0a753a764065f2260004b6e6975085378b850346">perl-5.003_24</a></td>
+<td><a class="list subject" href="/perl.git/tag/f698111030ef998e22f359e7cc6013a755013c98">perl-5.003_24</a></td>
+<td class="selflink"><a href="/perl.git/tag/f698111030ef998e22f359e7cc6013a755013c98">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/0a753a764065f2260004b6e6975085378b850346">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_24">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_24">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/774d564bb7dd1ed64ca0d7e534aa67e93f991f02">perl-5.003_23</a></td>
+<td><a class="list subject" href="/perl.git/tag/c17482d859ad924eed69061cee34d415c96dd036">perl-5.003_23</a></td>
+<td class="selflink"><a href="/perl.git/tag/c17482d859ad924eed69061cee34d415c96dd036">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/774d564bb7dd1ed64ca0d7e534aa67e93f991f02">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_23">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_23">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/fa83b5b6263413f922909c255e021c32c808b32d">perl-5.003_22</a></td>
+<td><a class="list subject" href="/perl.git/tag/a450582fafbfed0e73f4af686cfd9af9767c655f">perl-5.003_22</a></td>
+<td class="selflink"><a href="/perl.git/tag/a450582fafbfed0e73f4af686cfd9af9767c655f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/fa83b5b6263413f922909c255e021c32c808b32d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_22">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_22">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0f51a74ef561b3bfdfdc523f1a2cb56641806dfd">perl-5.003_21</a></td>
+<td><a class="list subject" href="/perl.git/tag/160f596370bd319a28800c06784046bba646a01c">perl-5.003_21</a></td>
+<td class="selflink"><a href="/perl.git/tag/160f596370bd319a28800c06784046bba646a01c">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/0f51a74ef561b3bfdfdc523f1a2cb56641806dfd">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_21">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_21">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/4b82bf0072cdd2af8ef94fe1550aa26813f9d110">perl-5.003_20</a></td>
+<td><a class="list subject" href="/perl.git/tag/6160ed969d77552af29192c9d758ca097e4f2623">perl-5.003_20</a></td>
+<td class="selflink"><a href="/perl.git/tag/6160ed969d77552af29192c9d758ca097e4f2623">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/4b82bf0072cdd2af8ef94fe1550aa26813f9d110">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_20">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_20">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/286a28a1f2ee9dcbcf8171f71146ad149ea97e8c">perl-5.003_19</a></td>
+<td><a class="list subject" href="/perl.git/tag/33502c5b4ee64074899031c457cf9716683184c4">perl-5.003_19</a></td>
+<td class="selflink"><a href="/perl.git/tag/33502c5b4ee64074899031c457cf9716683184c4">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/286a28a1f2ee9dcbcf8171f71146ad149ea97e8c">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_19">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_19">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/88a75bb558ee134d50b9497f083f462cd0a0358c">perl-5.003_18</a></td>
+<td><a class="list subject" href="/perl.git/tag/2e5e17f3a88325b29780c6cba8397138a725953f">perl-5.003_18</a></td>
+<td class="selflink"><a href="/perl.git/tag/2e5e17f3a88325b29780c6cba8397138a725953f">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/88a75bb558ee134d50b9497f083f462cd0a0358c">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_18">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_18">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/bba795f8e38f954b06d0b7c2168778d84a0096f9">perl-5.003_17</a></td>
+<td><a class="list subject" href="/perl.git/tag/7fba0250235f5256e8f87e81f39a43b57a3825f4">perl-5.003_17</a></td>
+<td class="selflink"><a href="/perl.git/tag/7fba0250235f5256e8f87e81f39a43b57a3825f4">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/bba795f8e38f954b06d0b7c2168778d84a0096f9">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_17">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_17">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/407cda0b55db743e94d67b83a6eb6d9c350f132c">perl-5.003_16</a></td>
+<td><a class="list subject" href="/perl.git/tag/a0181376d0b59c0197d01352284440d67ee8a5cf">perl-5.003_16</a></td>
+<td class="selflink"><a href="/perl.git/tag/a0181376d0b59c0197d01352284440d67ee8a5cf">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/407cda0b55db743e94d67b83a6eb6d9c350f132c">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_16">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_16">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/724421654fcf33f3acf0a7b8f4356b9255c9265a">perl-5.003_15</a></td>
+<td><a class="list subject" href="/perl.git/tag/af458508e3aecc47d1ba786c9878b7a081f0c607">perl-5.003_15</a></td>
+<td class="selflink"><a href="/perl.git/tag/af458508e3aecc47d1ba786c9878b7a081f0c607">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/724421654fcf33f3acf0a7b8f4356b9255c9265a">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_15">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_15">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/9a089a51dfdd5e97da27c26fc8f4b6089cd8d22d">perl-5.003_14</a></td>
+<td><a class="list subject" href="/perl.git/tag/8ce17d58707471746c013f21470e4c491b1528d1">perl-5.003_14</a></td>
+<td class="selflink"><a href="/perl.git/tag/8ce17d58707471746c013f21470e4c491b1528d1">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/9a089a51dfdd5e97da27c26fc8f4b6089cd8d22d">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_14">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_14">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/2aac9a1396c5797a801ec9bc9440f70324be8999">perl-5.003_13</a></td>
+<td><a class="list subject" href="/perl.git/tag/0137675c105d12c696699e187e15a717855db5e1">perl-5.003_13</a></td>
+<td class="selflink"><a href="/perl.git/tag/0137675c105d12c696699e187e15a717855db5e1">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/2aac9a1396c5797a801ec9bc9440f70324be8999">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_13">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_13">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/21c7390f1b0234eecbac840f2d0358407fc1c759">perl-5.003_12</a></td>
+<td><a class="list subject" href="/perl.git/tag/58b4fa454e0ece6644458135d2a1b953914e890b">perl-5.003_12</a></td>
+<td class="selflink"><a href="/perl.git/tag/58b4fa454e0ece6644458135d2a1b953914e890b">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/21c7390f1b0234eecbac840f2d0358407fc1c759">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_12">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_12">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/858f93c38ca9fcfb9375581eee2cdb1aea7005ce">perl-5.003_11</a></td>
+<td><a class="list subject" href="/perl.git/tag/c0ce25c4324ce509b1fa849fa1714cc53be05c1e">perl-5.003_11</a></td>
+<td class="selflink"><a href="/perl.git/tag/c0ce25c4324ce509b1fa849fa1714cc53be05c1e">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/858f93c38ca9fcfb9375581eee2cdb1aea7005ce">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_11">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_11">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/518b69bbb92860665c6a720b128d7a3a2584c8b1">perl-5.003_10</a></td>
+<td><a class="list subject" href="/perl.git/tag/c407cc441c4f7840e9470ebb574378e557410788">perl-5.003_10</a></td>
+<td class="selflink"><a href="/perl.git/tag/c407cc441c4f7840e9470ebb574378e557410788">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/518b69bbb92860665c6a720b128d7a3a2584c8b1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_10">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_10">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8116c2c07f07d9dcbb14398958add87770e8fe0a">perl-5.003_09</a></td>
+<td><a class="list subject" href="/perl.git/tag/caa48c6690970f2445e75b64a107fd944e6632e4">perl-5.003_09</a></td>
+<td class="selflink"><a href="/perl.git/tag/caa48c6690970f2445e75b64a107fd944e6632e4">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/8116c2c07f07d9dcbb14398958add87770e8fe0a">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_09">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_09">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/02b7f3ca47a09108373c9869f605c9627534d1fa">perl-5.003_08</a></td>
+<td><a class="list subject" href="/perl.git/tag/fc996c6d2516678fa2851fd9005f805d593dd0fd">perl-5.003_08</a></td>
+<td class="selflink"><a href="/perl.git/tag/fc996c6d2516678fa2851fd9005f805d593dd0fd">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/02b7f3ca47a09108373c9869f605c9627534d1fa">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_08">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_08">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/49e60db318dafe6977e7332fc64c4fac32f5eb2c">perl-5.003_07</a></td>
+<td><a class="list subject" href="/perl.git/tag/0908ec871018f1185fb0882a07463323d19d1780">5.003_07 is available</a></td>
+<td class="selflink"><a href="/perl.git/tag/0908ec871018f1185fb0882a07463323d19d1780">tag</a></td>
+<td class="link"> | <a href="/perl.git/commit/49e60db318dafe6977e7332fc64c4fac32f5eb2c">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_07">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_07">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/83f702e05ad51fc3e6dc8ca853f13c5ecfac6166">perl-5.003_05</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/83f702e05ad51fc3e6dc8ca853f13c5ecfac6166">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_05">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_05">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/6252a976dfa7360d3fe0c876e583cf00ccd46c21">perl-5.003_04</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/6252a976dfa7360d3fe0c876e583cf00ccd46c21">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_04">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_04">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/9bb683e6b9e9c477f8ad211dd2f5b8c19d1b7bc2">perl-5.003_03</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/9bb683e6b9e9c477f8ad211dd2f5b8c19d1b7bc2">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_03">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_03">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/0c73a419525723821ea6572a87abb4e3fd04cab1">perl-5.003_02</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/0c73a419525723821ea6572a87abb4e3fd04cab1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_02">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_02">log</a></td>
+</tr><tr class="dark">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/43cc1d52f97c5f21f3207f045444707e7be33927">perl-5.003_01</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/43cc1d52f97c5f21f3207f045444707e7be33927">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003_01">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003_01">log</a></td>
+</tr><tr class="light">
+<td><i>15 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/b4a488b9f66ab1d51091a616c6fab3b3b300db36">perl-5.003</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/b4a488b9f66ab1d51091a616c6fab3b3b300db36">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.003">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.003">log</a></td>
+</tr><tr class="dark">
+<td><i>16 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/cc72480dfb711da8819daacccecdeaf1b246ed48">perl-5.002_01</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/cc72480dfb711da8819daacccecdeaf1b246ed48">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.002_01">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.002_01">log</a></td>
+</tr><tr class="light">
+<td><i>16 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a5f75d667838e8e7bb037880391f5c44476d33b4">perl-5.002</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/a5f75d667838e8e7bb037880391f5c44476d33b4">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.002">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.002">log</a></td>
+</tr><tr class="dark">
+<td><i>16 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8e07c86ebc651fe92eb7e3b25f801f57cfb8dd6f">perl-5.001n</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/8e07c86ebc651fe92eb7e3b25f801f57cfb8dd6f">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.001n">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.001n">log</a></td>
+</tr><tr class="light">
+<td><i>17 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/748a93069b3d16374a9859d1456065dd3ae11394">perl-5.001</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/748a93069b3d16374a9859d1456065dd3ae11394">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.001">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.001">log</a></td>
+</tr><tr class="dark">
+<td><i>17 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/fec02dd38faf8f83471b031857d89cb76fea1ca0">perl-5.000o</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/fec02dd38faf8f83471b031857d89cb76fea1ca0">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.000o">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.000o">log</a></td>
+</tr><tr class="light">
+<td><i>17 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a0d0e21ea6ea90a22318550944fe6cb09ae10cda">perl-5.000</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/a0d0e21ea6ea90a22318550944fe6cb09ae10cda">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5.000">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5.000">log</a></td>
+</tr><tr class="dark">
+<td><i>17 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/85e6fe838fb25b257a1b363debf8691c0992ef71">perl-5a9</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/85e6fe838fb25b257a1b363debf8691c0992ef71">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5a9">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5a9">log</a></td>
+</tr><tr class="light">
+<td><i>18 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/79072805bf63abe5b5978b5928ab00d360ea3e7f">perl-5a2</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/79072805bf63abe5b5978b5928ab00d360ea3e7f">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-5a2">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-5a2">log</a></td>
+</tr><tr class="dark">
+<td><i>19 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/e334a159a5616cab575044bafaf68f75b7bb3a16">perl-4.0.36</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/e334a159a5616cab575044bafaf68f75b7bb3a16">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-4.0.36">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-4.0.36">log</a></td>
+</tr><tr class="light">
+<td><i>21 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/fe14fcc35f78a371a174a1d14256c2f35ae4262b">perl-4.0.00</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/fe14fcc35f78a371a174a1d14256c2f35ae4262b">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-4.0.00">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-4.0.00">log</a></td>
+</tr><tr class="dark">
+<td><i>21 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/27e2fb84680b9cc1db17238d5bf10b97626f477f">perl-3.044</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/27e2fb84680b9cc1db17238d5bf10b97626f477f">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-3.044">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-3.044">log</a></td>
+</tr><tr class="light">
+<td><i>22 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/a687059cbaf2c6fdccb5e0fae2aee80ec15625a8">perl-3.000</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/a687059cbaf2c6fdccb5e0fae2aee80ec15625a8">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-3.000">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-3.000">log</a></td>
+</tr><tr class="dark">
+<td><i>23 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/ffd30a0b488495f48bc676c58309803860e1e715">perl-2.001</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/ffd30a0b488495f48bc676c58309803860e1e715">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-2.001">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-2.001">log</a></td>
+</tr><tr class="light">
+<td><i>23 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/378cc40b38293ffc7298c6a7ed3cd740ad79be52">perl-2.0</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/378cc40b38293ffc7298c6a7ed3cd740ad79be52">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-2.0">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-2.0">log</a></td>
+</tr><tr class="dark">
+<td><i>24 years ago</i></td>
+<td><a class="list name" href="/perl.git/commit/8d063cd8450e59ea1c611a2f4f5a21059a2804f1">perl-1.0</a></td>
+<td></td>
+<td class="selflink">&nbsp;</td>
+<td class="link"> | <a href="/perl.git/commit/8d063cd8450e59ea1c611a2f4f5a21059a2804f1">commit</a> | <a href="/perl.git/shortlog/refs/tags/perl-1.0">shortlog</a> | <a href="/perl.git/log/refs/tags/perl-1.0">log</a></td>
+</tr></table>
+<div class="page_footer">
+<div class="page_footer_text">Perl5 Master Repository</div>
+<a class="rss_logo generic" title="log RSS feed" href="/perl.git/rss">RSS</a>
+<a class="rss_logo generic" title="log Atom feed" href="/perl.git/atom">Atom</a>
+</div>
+<div align="right"><a href="http://www.booking.com?aid=320485&amp;label=p5"><img src="/booking.gif" border="0" /></a></div>
+</body>
+</html>

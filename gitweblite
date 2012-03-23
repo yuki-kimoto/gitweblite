@@ -545,6 +545,10 @@ get '/tag' => sub {
   shift->render(text => 'tag');
 };
 
+get '/tags';
+
+get '/heads';
+
 get '/head' => sub {
   shift->render(text => 'head');
 };
@@ -3313,53 +3317,6 @@ sub snapshot_name {
   $name = "$name-$ver";
 
   return wantarray ? ($name, $name) : $name;
-}
-
-sub git_object {
-  # object is defined by:
-  # - hash or hash_base alone
-  # - hash_base and file_name
-  my $type;
-
-  # - hash or hash_base alone
-  if ($cid || ($base_cid && !defined $file)) {
-    my $object_id = $cid || $base_cid;
-
-    open my $fd, "-|", quote_command(
-      git_cmd(), 'cat-file', '-t', $object_id) . ' 2> /dev/null'
-      or die_error(404, "Object does not exist");
-    $type = <$fd>;
-    chomp $type;
-    close $fd
-      or die_error(404, "Object does not exist");
-
-  # - hash_base and file_name
-  } elsif ($base_cid && defined $file) {
-    $file =~ s,/+$,,;
-
-    system(git_cmd(), "cat-file", '-e', $base_cid) == 0
-      or die_error(404, "Base object does not exist");
-
-    # here errors should not hapen
-    open my $fd, "-|", git_cmd(), "ls-tree", $base_cid, "--", $file
-      or die_error(500, "Open git-ls-tree failed");
-    my $line = <$fd>;
-    close $fd;
-
-    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa  panic.c'
-    unless ($line && $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/) {
-      die_error(404, "File or directory for given base does not exist");
-    }
-    $type = $2;
-    $cid = $3;
-  } else {
-    die_error(400, "Not enough information to find object");
-  }
-
-  print $cgi->redirect(-uri => href(action=>$type, -full=>1,
-                                    hash=>$cid, hash_base=>$base_cid,
-                                    file_name=>$file),
-                       -status => '302 Found');
 }
 
 sub diff_style_nav {

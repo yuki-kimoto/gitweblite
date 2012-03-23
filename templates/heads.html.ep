@@ -1,0 +1,507 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US" lang="en-US">
+<!-- git web interface version 1.6.1.rc3.39.g16180.dirty, (C) 2005-2006, Kay Sievers <kay.sievers@vrfy.org>, Christian Gierke -->
+<!-- git core binaries version 1.7.4.1 -->
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+<meta name="generator" content="gitweb/1.6.1.rc3.39.g16180.dirty git/1.7.4.1"/>
+<meta name="robots" content="index, nofollow"/>
+<title>perl5.git.perl.org Git - perl.git/heads</title>
+<base href="http://perl5.git.perl.org/perl.git/heads" />
+<link rel="stylesheet" type="text/css" href="/gitweb.css"/>
+<link rel="alternate" title="perl.git - log - RSS feed" href="/perl.git/rss" type="application/rss+xml" />
+<link rel="alternate" title="perl.git - log - RSS feed (no merges)" href="/perl.git/rss?opt=--no-merges" type="application/rss+xml" />
+<link rel="alternate" title="perl.git - log - Atom feed" href="/perl.git/atom?opt=--no-merges" type="application/atom+xml" />
+<link rel="alternate" title="perl.git - log - Atom feed (no merges)" href="/perl.git/atom?opt=--no-merges" type="application/atom+xml" />
+<link rel="shortcut icon" href="/git-favicon.png" type="image/png" />
+</head>
+<body>
+<div class="page_header">
+<a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / heads
+</div>
+<form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
+<div class="search">
+<input name="a" type="hidden" value="search" />
+<input name="h" type="hidden" value="HEAD" />
+<select name="st" >
+<option selected="selected" value="free">free</option>
+<option value="commit">commit</option>
+<option value="grep">grep</option>
+<option value="author">author</option>
+<option value="committer">committer</option>
+<option value="pickaxe">pickaxe</option>
+</select><sup><a href="/perl.git/search_help">?</a></sup> search:
+<input type="text" name="s"  />
+<span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
+</form>
+<div class="page_nav">
+<a href="/perl.git">summary</a> | <a href="/perl.git/shortlog">shortlog</a> | <a href="/perl.git/log">log</a> | <a href="/perl.git/commit/15d94df60eb08a44107e2aaf4c9e5e8b26e084b6">commit</a> | <a href="/perl.git/commitdiff/15d94df60eb08a44107e2aaf4c9e5e8b26e084b6">commitdiff</a> | <a href="/perl.git/tree/15d94df60eb08a44107e2aaf4c9e5e8b26e084b6">tree</a><br/>
+<br/>
+</div>
+<div class="header">
+<a class="title" href="/perl.git">perl.git</a>
+</div>
+<table class="heads">
+<tr class="dark">
+<td><i>4 hours ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-5.14.3">smoke-me/khw-5.14.3</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-5.14.3">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-5.14.3">log</a> | <a href="/perl.git/tree/smoke-me/khw-5.14.3">tree</a></td>
+</tr><tr class="light">
+<td><i>4 hours ago</i></td>
+<td class="current_head"><a class="list name" href="/perl.git/shortlog/refs/heads/blead">blead</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/blead">shortlog</a> | <a href="/perl.git/log/refs/heads/blead">log</a> | <a href="/perl.git/tree/blead">tree</a></td>
+</tr><tr class="dark">
+<td><i>32 hours ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-smoke">smoke-me/khw-smoke</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-smoke">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-smoke">log</a> | <a href="/perl.git/tree/smoke-me/khw-smoke">tree</a></td>
+</tr><tr class="light">
+<td><i>2 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.14">maint-5.14</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.14">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.14">log</a> | <a href="/perl.git/tree/maint-5.14">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/trie_absorb">smoke-me/trie_absorb</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/trie_absorb">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/trie_absorb">log</a> | <a href="/perl.git/tree/smoke-me/trie_absorb">tree</a></td>
+</tr><tr class="light">
+<td><i>2 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/yves/trie_absorb">yves/trie_absorb</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/yves/trie_absorb">shortlog</a> | <a href="/perl.git/log/refs/heads/yves/trie_absorb">log</a> | <a href="/perl.git/tree/yves/trie_absorb">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/rgs/overload">rgs/overload</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/rgs/overload">shortlog</a> | <a href="/perl.git/log/refs/heads/rgs/overload">log</a> | <a href="/perl.git/tree/rgs/overload">tree</a></td>
+</tr><tr class="light">
+<td><i>3 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/rt_111842">smoke-me/rt_111842</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/rt_111842">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/rt_111842">log</a> | <a href="/perl.git/tree/smoke-me/rt_111842">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/yves/exactish_with_min_len">yves/exactish_with_min_len</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/yves/exactish_with_min_len">shortlog</a> | <a href="/perl.git/log/refs/heads/yves/exactish_with_min_len">log</a> | <a href="/perl.git/tree/yves/exactish_with_min_len">tree</a></td>
+</tr><tr class="light">
+<td><i>5 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed-doc">tonyc/readline-fixed-doc</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed-doc">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/readline-fixed-doc">log</a> | <a href="/perl.git/tree/tonyc/readline-fixed-doc">tree</a></td>
+</tr><tr class="dark">
+<td><i>6 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed">tonyc/readline-fixed</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/readline-fixed">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/readline-fixed">log</a> | <a href="/perl.git/tree/tonyc/readline-fixed">tree</a></td>
+</tr><tr class="light">
+<td><i>7 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-fixed_record">smoke-me/khw-fixed_record</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-fixed_record">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-fixed_record">log</a> | <a href="/perl.git/tree/smoke-me/khw-fixed_record">tree</a></td>
+</tr><tr class="dark">
+<td><i>9 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/rjbs/revert-compress">rjbs/revert-compress</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/rjbs/revert-compress">shortlog</a> | <a href="/perl.git/log/refs/heads/rjbs/revert-compress">log</a> | <a href="/perl.git/tree/rjbs/revert-compress">tree</a></td>
+</tr><tr class="light">
+<td><i>9 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/kick-FAKE_BIT_BUCKET">smoke-me/kick-FAKE_BIT_BUCKET</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/kick-FAKE_BIT_BUCKET">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/kick-FAKE_BIT_BUCKET">log</a> | <a href="/perl.git/tree/smoke-me/kick-FAKE_BIT_BUCKET">tree</a></td>
+</tr><tr class="dark">
+<td><i>9 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/compression-modules">smoke-me/compression-modules</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/compression-modules">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/compression-modules">log</a> | <a href="/perl.git/tree/smoke-me/compression-modules">tree</a></td>
+</tr><tr class="light">
+<td><i>9 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/fix-raw-zlib">tonyc/fix-raw-zlib</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/fix-raw-zlib">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/fix-raw-zlib">log</a> | <a href="/perl.git/tree/tonyc/fix-raw-zlib">tree</a></td>
+</tr><tr class="dark">
+<td><i>12 days ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/list-util">smoke-me/list-util</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/list-util">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/list-util">log</a> | <a href="/perl.git/tree/smoke-me/list-util">tree</a></td>
+</tr><tr class="light">
+<td><i>2 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/rjbs/unicook">rjbs/unicook</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/rjbs/unicook">shortlog</a> | <a href="/perl.git/log/refs/heads/rjbs/unicook">log</a> | <a href="/perl.git/tree/rjbs/unicook">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-mac">smoke-me/khw-mac</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-mac">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-mac">log</a> | <a href="/perl.git/tree/smoke-me/khw-mac">tree</a></td>
+</tr><tr class="light">
+<td><i>2 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-charnames">smoke-me/khw-charnames</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-charnames">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-charnames">log</a> | <a href="/perl.git/tree/smoke-me/khw-charnames">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/khw-regex">smoke-me/khw-regex</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/khw-regex">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/khw-regex">log</a> | <a href="/perl.git/tree/smoke-me/khw-regex">tree</a></td>
+</tr><tr class="light">
+<td><i>3 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/trie3">smoke-me/trie3</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/trie3">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/trie3">log</a> | <a href="/perl.git/tree/smoke-me/trie3">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/utf8-dg">smoke-me/utf8-dg</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/utf8-dg">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/utf8-dg">log</a> | <a href="/perl.git/tree/smoke-me/utf8-dg">tree</a></td>
+</tr><tr class="light">
+<td><i>3 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/module-build">smoke-me/module-build</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/module-build">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/module-build">log</a> | <a href="/perl.git/tree/smoke-me/module-build">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/nicholas/RT37033-followup">nicholas/RT37033-followup</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/nicholas/RT37033-followup">shortlog</a> | <a href="/perl.git/log/refs/heads/nicholas/RT37033-followup">log</a> | <a href="/perl.git/tree/nicholas/RT37033-followup">tree</a></td>
+</tr><tr class="light">
+<td><i>4 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/release-5.15.8">release-5.15.8</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/release-5.15.8">shortlog</a> | <a href="/perl.git/log/refs/heads/release-5.15.8">log</a> | <a href="/perl.git/tree/release-5.15.8">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/corion-5.15.8-zlib">corion-5.15.8-zlib</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/corion-5.15.8-zlib">shortlog</a> | <a href="/perl.git/log/refs/heads/corion-5.15.8-zlib">log</a> | <a href="/perl.git/tree/corion-5.15.8-zlib">tree</a></td>
+</tr><tr class="light">
+<td><i>4 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/cpan61577">smoke-me/cpan61577</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/cpan61577">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/cpan61577">log</a> | <a href="/perl.git/tree/smoke-me/cpan61577">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/davem/re_eval">davem/re_eval</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/davem/re_eval">shortlog</a> | <a href="/perl.git/log/refs/heads/davem/re_eval">log</a> | <a href="/perl.git/tree/davem/re_eval">tree</a></td>
+</tr><tr class="light">
+<td><i>4 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/re_eval">smoke-me/re_eval</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/re_eval">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/re_eval">log</a> | <a href="/perl.git/tree/smoke-me/re_eval">tree</a></td>
+</tr><tr class="dark">
+<td><i>5 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/io-socket-ip">smoke-me/io-socket-ip</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/io-socket-ip">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/io-socket-ip">log</a> | <a href="/perl.git/tree/smoke-me/io-socket-ip">tree</a></td>
+</tr><tr class="light">
+<td><i>6 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/blead">smoke-me/blead</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/blead">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/blead">log</a> | <a href="/perl.git/tree/smoke-me/blead">tree</a></td>
+</tr><tr class="dark">
+<td><i>7 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/ams/no-more-study">ams/no-more-study</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/ams/no-more-study">shortlog</a> | <a href="/perl.git/log/refs/heads/ams/no-more-study">log</a> | <a href="/perl.git/tree/ams/no-more-study">tree</a></td>
+</tr><tr class="light">
+<td><i>7 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/paul-evans/POSIX-strptime">smoke-me/paul-evans/POSIX-strptime</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/paul-evans/POSIX-strptime">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/paul-evans/POSIX-strptime">log</a> | <a href="/perl.git/tree/smoke-me/paul-evans/POSIX-strptime">tree</a></td>
+</tr><tr class="dark">
+<td><i>8 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/Copy-overlap-wrapper-proto">smoke-me/Copy-overlap-wrapper-proto</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/Copy-overlap-wrapper-proto">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/Copy-overlap-wrapper-proto">log</a> | <a href="/perl.git/tree/smoke-me/Copy-overlap-wrapper-proto">tree</a></td>
+</tr><tr class="light">
+<td><i>8 weeks ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/marcg/pod-html-addcache">smoke-me/marcg/pod-html-addcache</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/marcg/pod-html-addcache">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/marcg/pod-html-addcache">log</a> | <a href="/perl.git/tree/smoke-me/marcg/pod-html-addcache">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/bingos/release-5.15.7">bingos/release-5.15.7</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/bingos/release-5.15.7">shortlog</a> | <a href="/perl.git/log/refs/heads/bingos/release-5.15.7">log</a> | <a href="/perl.git/tree/bingos/release-5.15.7">tree</a></td>
+</tr><tr class="light">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/exec-magic">smoke-me/exec-magic</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/exec-magic">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/exec-magic">log</a> | <a href="/perl.git/tree/smoke-me/exec-magic">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/destruct">smoke-me/destruct</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/destruct">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/destruct">log</a> | <a href="/perl.git/tree/smoke-me/destruct">tree</a></td>
+</tr><tr class="light">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/nicholas/re-instate">nicholas/re-instate</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/nicholas/re-instate">shortlog</a> | <a href="/perl.git/log/refs/heads/nicholas/re-instate">log</a> | <a href="/perl.git/tree/nicholas/re-instate">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/hugmeir/fc_keyword">smoke-me/hugmeir/fc_keyword</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/hugmeir/fc_keyword">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/hugmeir/fc_keyword">log</a> | <a href="/perl.git/tree/smoke-me/hugmeir/fc_keyword">tree</a></td>
+</tr><tr class="light">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/madjson">tonyc/madjson</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/madjson">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/madjson">log</a> | <a href="/perl.git/tree/tonyc/madjson">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/magicflags3">chip/magicflags3</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/magicflags3">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/magicflags3">log</a> | <a href="/perl.git/tree/chip/magicflags3">tree</a></td>
+</tr><tr class="light">
+<td><i>3 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/POSIX-sleep">smoke-me/POSIX-sleep</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/POSIX-sleep">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/POSIX-sleep">log</a> | <a href="/perl.git/tree/smoke-me/POSIX-sleep">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/maint-5.14-old">smoke-me/maint-5.14-old</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/maint-5.14-old">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/maint-5.14-old">log</a> | <a href="/perl.git/tree/smoke-me/maint-5.14-old">tree</a></td>
+</tr><tr class="light">
+<td><i>3 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/takeover-podperldoc">briandfoy/takeover-podperldoc</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/takeover-podperldoc">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/takeover-podperldoc">log</a> | <a href="/perl.git/tree/briandfoy/takeover-podperldoc">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/sprout/POPBLOCK_normal">sprout/POPBLOCK_normal</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/sprout/POPBLOCK_normal">shortlog</a> | <a href="/perl.git/log/refs/heads/sprout/POPBLOCK_normal">log</a> | <a href="/perl.git/tree/sprout/POPBLOCK_normal">tree</a></td>
+</tr><tr class="light">
+<td><i>3 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/sprout/tokemess">sprout/tokemess</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/sprout/tokemess">shortlog</a> | <a href="/perl.git/log/refs/heads/sprout/tokemess">log</a> | <a href="/perl.git/tree/sprout/tokemess">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/perlduallife.pod">briandfoy/perlduallife.pod</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/perlduallife.pod">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/perlduallife.pod">log</a> | <a href="/perl.git/tree/briandfoy/perlduallife.pod">tree</a></td>
+</tr><tr class="light">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smueller/sort">smueller/sort</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smueller/sort">shortlog</a> | <a href="/perl.git/log/refs/heads/smueller/sort">log</a> | <a href="/perl.git/tree/smueller/sort">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/perldoc_pod2">briandfoy/perldoc_pod2</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/perldoc_pod2">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/perldoc_pod2">log</a> | <a href="/perl.git/tree/briandfoy/perldoc_pod2">tree</a></td>
+</tr><tr class="light">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/leonbrocard/dot">leonbrocard/dot</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/leonbrocard/dot">shortlog</a> | <a href="/perl.git/log/refs/heads/leonbrocard/dot">log</a> | <a href="/perl.git/tree/leonbrocard/dot">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/gsoc-pod">smoke-me/gsoc-pod</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/gsoc-pod">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/gsoc-pod">log</a> | <a href="/perl.git/tree/smoke-me/gsoc-pod">tree</a></td>
+</tr><tr class="light">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/sprout/overrides">sprout/overrides</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/sprout/overrides">shortlog</a> | <a href="/perl.git/log/refs/heads/sprout/overrides">log</a> | <a href="/perl.git/tree/sprout/overrides">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/sprout/featurebundles">sprout/featurebundles</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/sprout/featurebundles">shortlog</a> | <a href="/perl.git/log/refs/heads/sprout/featurebundles">log</a> | <a href="/perl.git/tree/sprout/featurebundles">tree</a></td>
+</tr><tr class="light">
+<td><i>4 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/vincent/be_gone_hv_common_gmagical">vincent/be_gone_hv_common_gmagical</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/vincent/be_gone_hv_common_gmagical">shortlog</a> | <a href="/perl.git/log/refs/heads/vincent/be_gone_hv_common_gmagical">log</a> | <a href="/perl.git/tree/vincent/be_gone_hv_common_gmagical">tree</a></td>
+</tr><tr class="dark">
+<td><i>5 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/magicflags2">chip/magicflags2</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/magicflags2">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/magicflags2">log</a> | <a href="/perl.git/tree/chip/magicflags2">tree</a></td>
+</tr><tr class="light">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/podcheck-_pm.PL">smoke-me/podcheck-_pm.PL</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/podcheck-_pm.PL">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/podcheck-_pm.PL">log</a> | <a href="/perl.git/tree/smoke-me/podcheck-_pm.PL">tree</a></td>
+</tr><tr class="dark">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/magicflags1">chip/magicflags1</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/magicflags1">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/magicflags1">log</a> | <a href="/perl.git/tree/chip/magicflags1">tree</a></td>
+</tr><tr class="light">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/drolsky/stub-deleted-pods">drolsky/stub-deleted-pods</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/drolsky/stub-deleted-pods">shortlog</a> | <a href="/perl.git/log/refs/heads/drolsky/stub-deleted-pods">log</a> | <a href="/perl.git/tree/drolsky/stub-deleted-pods">tree</a></td>
+</tr><tr class="dark">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.12">maint-5.12</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.12">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.12">log</a> | <a href="/perl.git/tree/maint-5.12">tree</a></td>
+</tr><tr class="light">
+<td><i>6 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/byteorder1">smoke-me/byteorder1</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/byteorder1">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/byteorder1">log</a> | <a href="/perl.git/tree/smoke-me/byteorder1">tree</a></td>
+</tr><tr class="dark">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/makedef0">smoke-me/makedef0</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/makedef0">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/makedef0">log</a> | <a href="/perl.git/tree/smoke-me/makedef0">tree</a></td>
+</tr><tr class="light">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smueller/static_xsub">smueller/static_xsub</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smueller/static_xsub">shortlog</a> | <a href="/perl.git/log/refs/heads/smueller/static_xsub">log</a> | <a href="/perl.git/tree/smueller/static_xsub">tree</a></td>
+</tr><tr class="dark">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/magicflags1">smoke-me/magicflags1</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/magicflags1">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/magicflags1">log</a> | <a href="/perl.git/tree/smoke-me/magicflags1">tree</a></td>
+</tr><tr class="light">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/drolsky/test-perlrun">drolsky/test-perlrun</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/drolsky/test-perlrun">shortlog</a> | <a href="/perl.git/log/refs/heads/drolsky/test-perlrun">log</a> | <a href="/perl.git/tree/drolsky/test-perlrun">tree</a></td>
+</tr><tr class="dark">
+<td><i>7 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/scalartypes">chip/scalartypes</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/scalartypes">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/scalartypes">log</a> | <a href="/perl.git/tree/chip/scalartypes">tree</a></td>
+</tr><tr class="light">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smueller/perllocal_eucmd">smueller/perllocal_eucmd</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smueller/perllocal_eucmd">shortlog</a> | <a href="/perl.git/log/refs/heads/smueller/perllocal_eucmd">log</a> | <a href="/perl.git/tree/smueller/perllocal_eucmd">tree</a></td>
+</tr><tr class="dark">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smueller/perllocal">smueller/perllocal</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smueller/perllocal">shortlog</a> | <a href="/perl.git/log/refs/heads/smueller/perllocal">log</a> | <a href="/perl.git/tree/smueller/perllocal">tree</a></td>
+</tr><tr class="light">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/sys_intern">smoke-me/sys_intern</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/sys_intern">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/sys_intern">log</a> | <a href="/perl.git/tree/smoke-me/sys_intern">tree</a></td>
+</tr><tr class="dark">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/rafl/assert-bincompat">smoke-me/rafl/assert-bincompat</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/rafl/assert-bincompat">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/rafl/assert-bincompat">log</a> | <a href="/perl.git/tree/smoke-me/rafl/assert-bincompat">tree</a></td>
+</tr><tr class="light">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smueller/eu_typemap">smueller/eu_typemap</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smueller/eu_typemap">shortlog</a> | <a href="/perl.git/log/refs/heads/smueller/eu_typemap">log</a> | <a href="/perl.git/tree/smueller/eu_typemap">tree</a></td>
+</tr><tr class="dark">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smueller/strictpxs_fixups">smueller/strictpxs_fixups</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smueller/strictpxs_fixups">shortlog</a> | <a href="/perl.git/log/refs/heads/smueller/strictpxs_fixups">log</a> | <a href="/perl.git/tree/smueller/strictpxs_fixups">tree</a></td>
+</tr><tr class="light">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/Shut-It%21">smoke-me/Shut-It!</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/Shut-It%21">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/Shut-It%21">log</a> | <a href="/perl.git/tree/smoke-me/Shut-It%21">tree</a></td>
+</tr><tr class="dark">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/bind2">chip/bind2</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/bind2">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/bind2">log</a> | <a href="/perl.git/tree/chip/bind2">tree</a></td>
+</tr><tr class="light">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/view2">chip/view2</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/view2">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/view2">log</a> | <a href="/perl.git/tree/chip/view2">tree</a></td>
+</tr><tr class="dark">
+<td><i>8 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/runperl">smoke-me/runperl</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/runperl">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/runperl">log</a> | <a href="/perl.git/tree/smoke-me/runperl">tree</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/remove_qw_hack">smoke-me/remove_qw_hack</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/remove_qw_hack">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/remove_qw_hack">log</a> | <a href="/perl.git/tree/smoke-me/remove_qw_hack">tree</a></td>
+</tr><tr class="dark">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/zefram/remove_qw_hack">zefram/remove_qw_hack</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/zefram/remove_qw_hack">shortlog</a> | <a href="/perl.git/log/refs/heads/zefram/remove_qw_hack">log</a> | <a href="/perl.git/tree/zefram/remove_qw_hack">tree</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/perlfaq">briandfoy/perlfaq</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/perlfaq">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/perlfaq">log</a> | <a href="/perl.git/tree/briandfoy/perlfaq">tree</a></td>
+</tr><tr class="dark">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/greerga/cygwin_g%2B%2B">greerga/cygwin_g++</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/greerga/cygwin_g%2B%2B">shortlog</a> | <a href="/perl.git/log/refs/heads/greerga/cygwin_g%2B%2B">log</a> | <a href="/perl.git/tree/greerga/cygwin_g%2B%2B">tree</a></td>
+</tr><tr class="light">
+<td><i>9 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/greerga/cygwin_g%2B%2B">smoke-me/greerga/cygwin_g++</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/greerga/cygwin_g%2B%2B">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/greerga/cygwin_g%2B%2B">log</a> | <a href="/perl.git/tree/smoke-me/greerga/cygwin_g%2B%2B">tree</a></td>
+</tr><tr class="dark">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/cpan">smoke-me/cpan</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/cpan">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/cpan">log</a> | <a href="/perl.git/tree/smoke-me/cpan">tree</a></td>
+</tr><tr class="light">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/chip/5.14.1-docs">chip/5.14.1-docs</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/chip/5.14.1-docs">shortlog</a> | <a href="/perl.git/log/refs/heads/chip/5.14.1-docs">log</a> | <a href="/perl.git/tree/chip/5.14.1-docs">tree</a></td>
+</tr><tr class="dark">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/tonyc/cygwin-rebase">tonyc/cygwin-rebase</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/tonyc/cygwin-rebase">shortlog</a> | <a href="/perl.git/log/refs/heads/tonyc/cygwin-rebase">log</a> | <a href="/perl.git/tree/tonyc/cygwin-rebase">tree</a></td>
+</tr><tr class="light">
+<td><i>10 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/poddupes">briandfoy/poddupes</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/poddupes">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/poddupes">log</a> | <a href="/perl.git/tree/briandfoy/poddupes">tree</a></td>
+</tr><tr class="dark">
+<td><i>11 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/english">briandfoy/english</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/english">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/english">log</a> | <a href="/perl.git/tree/briandfoy/english">tree</a></td>
+</tr><tr class="light">
+<td><i>12 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/inet_aton">smoke-me/inet_aton</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/inet_aton">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/inet_aton">log</a> | <a href="/perl.git/tree/smoke-me/inet_aton">tree</a></td>
+</tr><tr class="dark">
+<td><i>13 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/merijn/useperlio">merijn/useperlio</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/merijn/useperlio">shortlog</a> | <a href="/perl.git/log/refs/heads/merijn/useperlio">log</a> | <a href="/perl.git/tree/merijn/useperlio">tree</a></td>
+</tr><tr class="light">
+<td><i>14 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/slashN">briandfoy/slashN</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/slashN">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/slashN">log</a> | <a href="/perl.git/tree/briandfoy/slashN">tree</a></td>
+</tr><tr class="dark">
+<td><i>15 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/zefram/pad_api">zefram/pad_api</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/zefram/pad_api">shortlog</a> | <a href="/perl.git/log/refs/heads/zefram/pad_api">log</a> | <a href="/perl.git/tree/zefram/pad_api">tree</a></td>
+</tr><tr class="light">
+<td><i>16 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/compile">compile</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/compile">shortlog</a> | <a href="/perl.git/log/refs/heads/compile">log</a> | <a href="/perl.git/tree/compile">tree</a></td>
+</tr><tr class="dark">
+<td><i>16 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/perlvar">briandfoy/perlvar</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/perlvar">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/perlvar">log</a> | <a href="/perl.git/tree/briandfoy/perlvar">tree</a></td>
+</tr><tr class="light">
+<td><i>16 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/briandfoy/perlexperiment">briandfoy/perlexperiment</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/briandfoy/perlexperiment">shortlog</a> | <a href="/perl.git/log/refs/heads/briandfoy/perlexperiment">log</a> | <a href="/perl.git/tree/briandfoy/perlexperiment">tree</a></td>
+</tr><tr class="dark">
+<td><i>17 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/nicholas/arenas">nicholas/arenas</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/nicholas/arenas">shortlog</a> | <a href="/perl.git/log/refs/heads/nicholas/arenas">log</a> | <a href="/perl.git/tree/nicholas/arenas">tree</a></td>
+</tr><tr class="light">
+<td><i>17 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/arenas">smoke-me/arenas</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/arenas">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/arenas">log</a> | <a href="/perl.git/tree/smoke-me/arenas">tree</a></td>
+</tr><tr class="dark">
+<td><i>17 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/nan_inf_str">smoke-me/nan_inf_str</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/nan_inf_str">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/nan_inf_str">log</a> | <a href="/perl.git/tree/smoke-me/nan_inf_str">tree</a></td>
+</tr><tr class="light">
+<td><i>17 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/zefram/fake_first_line">zefram/fake_first_line</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/zefram/fake_first_line">shortlog</a> | <a href="/perl.git/log/refs/heads/zefram/fake_first_line">log</a> | <a href="/perl.git/tree/zefram/fake_first_line">tree</a></td>
+</tr><tr class="dark">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/mauve">mauve</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/mauve">shortlog</a> | <a href="/perl.git/log/refs/heads/mauve">log</a> | <a href="/perl.git/tree/mauve">tree</a></td>
+</tr><tr class="light">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/rafl/ld_export">rafl/ld_export</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/rafl/ld_export">shortlog</a> | <a href="/perl.git/log/refs/heads/rafl/ld_export">log</a> | <a href="/perl.git/tree/rafl/ld_export">tree</a></td>
+</tr><tr class="dark">
+<td><i>18 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/smoke-me/ld_export">smoke-me/ld_export</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/smoke-me/ld_export">shortlog</a> | <a href="/perl.git/log/refs/heads/smoke-me/ld_export">log</a> | <a href="/perl.git/tree/smoke-me/ld_export">tree</a></td>
+</tr><tr class="light">
+<td><i>22 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/dual/Safe">dual/Safe</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/dual/Safe">shortlog</a> | <a href="/perl.git/log/refs/heads/dual/Safe">log</a> | <a href="/perl.git/tree/dual/Safe">tree</a></td>
+</tr><tr class="dark">
+<td><i>23 months ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/zefram/gvsv_empty">zefram/gvsv_empty</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/zefram/gvsv_empty">shortlog</a> | <a href="/perl.git/log/refs/heads/zefram/gvsv_empty">log</a> | <a href="/perl.git/tree/zefram/gvsv_empty">tree</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/podder">podder</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/podder">shortlog</a> | <a href="/perl.git/log/refs/heads/podder">log</a> | <a href="/perl.git/tree/podder">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/podder2">podder2</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/podder2">shortlog</a> | <a href="/perl.git/log/refs/heads/podder2">log</a> | <a href="/perl.git/tree/podder2">tree</a></td>
+</tr><tr class="light">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.10">maint-5.10</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.10">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.10">log</a> | <a href="/perl.git/tree/maint-5.10">tree</a></td>
+</tr><tr class="dark">
+<td><i>2 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.8">maint-5.8</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.8">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.8">log</a> | <a href="/perl.git/tree/maint-5.8">tree</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.005">maint-5.005</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.005">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.005">log</a> | <a href="/perl.git/tree/maint-5.005">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.6">maint-5.6</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.6">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.6">log</a> | <a href="/perl.git/tree/maint-5.6">tree</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/vadim/cross">vadim/cross</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/vadim/cross">shortlog</a> | <a href="/perl.git/log/refs/heads/vadim/cross">log</a> | <a href="/perl.git/tree/vadim/cross">tree</a></td>
+</tr><tr class="dark">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/tux/5.8-dor">tux/5.8-dor</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/tux/5.8-dor">shortlog</a> | <a href="/perl.git/log/refs/heads/tux/5.8-dor">log</a> | <a href="/perl.git/tree/tux/5.8-dor">tree</a></td>
+</tr><tr class="light">
+<td><i>3 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-5.004">maint-5.004</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-5.004">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-5.004">log</a> | <a href="/perl.git/tree/maint-5.004">tree</a></td>
+</tr><tr class="dark">
+<td><i>4 years ago</i></td>
+<td><a class="list name" href="/perl.git/shortlog/refs/heads/maint-1.0">maint-1.0</a></td>
+<td class="link"><a href="/perl.git/shortlog/refs/heads/maint-1.0">shortlog</a> | <a href="/perl.git/log/refs/heads/maint-1.0">log</a> | <a href="/perl.git/tree/maint-1.0">tree</a></td>
+</tr></table>
+<div class="page_footer">
+<div class="page_footer_text">Perl5 Master Repository</div>
+<a class="rss_logo generic" title="log RSS feed" href="/perl.git/rss">RSS</a>
+<a class="rss_logo generic" title="log Atom feed" href="/perl.git/atom">Atom</a>
+</div>
+<div align="right"><a href="http://www.booking.com?aid=320485&amp;label=p5"><img src="/booking.gif" border="0" /></a></div>
+</body>
+</html>
