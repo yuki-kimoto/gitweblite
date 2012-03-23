@@ -324,7 +324,24 @@ get '/commit' => sub {
     $parent = "--root";
   }
   
-  my @command = (
+  my $diffs = _get_difftree($root, $project, $cid, $parent, $parents);
+  
+  $self->render(
+    root => $root,
+    project => $project,
+    cid => $cid,
+    commit => \%commit,
+    ref_names => $ref_names,
+    diffs => $diffs,
+    ref_names => $ref_names
+  );
+};
+
+sub _get_difftree {
+  my ($root, $project, $cid, $parent, $parents) = @_;
+  
+  # Execute "git diff-tree"
+  my @git_diff_tree = (
     git($root, $project),
     "diff-tree", '-r',
     "--no-commit-id",
@@ -333,13 +350,12 @@ get '/commit' => sub {
     $cid,
     "--"
   );
-  
-  open my $fd, "-|", @command
+  open my $fd, "-|", @git_diff_tree
     or die "Open git-diff-tree failed";
-  
   my @difftree = map { chomp; $_ } <$fd>;
   close $fd or die "Reading git-diff-tree failed";
   
+  # Parse "git diff-tree" output
   my $diffs = [];
   my @parents = @$parents;
   for my $line (@difftree) {
@@ -372,16 +388,8 @@ get '/commit' => sub {
     push @$diffs, $diff;
   }
   
-  $self->render(
-    root => $root,
-    project => $project,
-    cid => $cid,
-    commit => \%commit,
-    ref_names => $ref_names,
-    diffs => $diffs,
-    ref_names => $ref_names
-  );
-};
+  return $diffs;
+}
 
 get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $self = shift;
@@ -527,15 +535,11 @@ get '/snapshot' => sub {
 };
 
 get '/tag' => sub {
-  shift->render;
+  shift->render(text => 'tag');
 };
 
-get '/patch' => sub {
-  my $self = shift;
-  
-  
-  
-  $self->render(text => 'patch');
+get '/head' => sub {
+  shift->render(text => 'head');
 };
 
 get '/blob' => sub {
