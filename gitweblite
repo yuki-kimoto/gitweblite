@@ -128,7 +128,7 @@ get '/projects' => sub {
   die unless grep { $_ eq $root } @$projectroots;
   
   my @projects = get_projects($root);
-  @projects = fill_project_list_info(\@projects);
+  @projects = fill_project_list_info($root, \@projects);
  
   $self->render(projects => \@projects);
 } => 'projects';
@@ -503,7 +503,7 @@ get '/snapshot' => sub {
   if (!$type) { die 404, 'Object does not exist' }
   elsif ($type eq 'blob') { die 400, 'Object is not a tree-ish' }
 
-  my ($name, $prefix) = snapshot_name($project, $cid);
+  my ($name, $prefix) = snapshot_name($root, $project, $cid);
   my $file = "$name.tar.gz";
   my $cmd = quote_command(
     git($root, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
@@ -909,11 +909,6 @@ sub get_projects {
   return @projects;
 }
 
-sub git_get_project_description {
-  my $path = shift;
-  return git_get_file_or_project_config($path, 'description');
-}
-
 sub get_project_description {
   my ($root, $project) = @_;
   return get_file_or_project_config($root, $project, 'description');
@@ -933,35 +928,18 @@ sub get_file_or_project_config {
   return $conf;
 }
 
-sub git_get_file_or_project_config {
-  my ($path, $name) = @_;
+sub get_file_or_project_config {
+  my ($root, $path, $name) = @_;
 
-  $git_dir = "$projectroot/$path";
+  my $git_dir = "$root/$path";
   open my $fd, '<', "$git_dir/$name"
-    or return git_get_project_config($name);
+    or return git_get_project_config($root, $project, $name);
   my $conf = <$fd>;
   close $fd;
   if (defined $conf) {
     chomp $conf;
   }
   return $conf;
-}
-
-sub git_get_projects_list {
-  my $filter = shift || '';
-  my $root = shift;
-  my @projects;
-  
-  opendir my $dh, e$root
-    or croak qq/Can't open directory $root: $!/;
-  
-  while (my $project = readdir $dh) {
-    next unless $project =~ /\.git$/;
-    next unless check_export_ok("$root/$project");
-    push @projects, { path => $project };
-  }
-
-  return @projects;
 }
 
 sub check_export_ok {
@@ -2331,7 +2309,7 @@ sub git_heads {
 }
 
 sub snapshot_name {
-  my ($project, $cid) = @_;
+  my ($root, $project, $cid) = @_;
 
   my $name = to_utf8($project);
   $name =~ s,([^/])/*\.git$,$1,;
@@ -2341,7 +2319,7 @@ sub snapshot_name {
 
   my $ver = $cid;
   if ($cid =~ /^[0-9a-fA-F]+$/) {
-    my $full_hash = git_get_full_hash($project, $cid);
+    my $full_hash = get_hash($root, $project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
       $ver = git_get_short_hash($project, $cid);
     }
@@ -2583,27 +2561,6 @@ sub get_last_activity {
   return (undef, undef);
 }
 
-sub git_get_last_activity {
-  my ($path) = @_;
-  my $fd;
-
-  $git_dir = "$projectroot/$path";
-  open($fd, "-|", git_cmd(), 'for-each-ref',
-       '--format=%(committer)',
-       '--sort=-committerdate',
-       '--count=1',
-       'refs/heads') or return;
-  my $most_recent = <$fd>;
-  close $fd or return;
-  if (defined $most_recent &&
-      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
-    my $timestamp = $1;
-    my $age = time - $timestamp;
-    return ($age, age_string($age));
-  }
-  return (undef, undef);
-}
-
 sub _chop_str {
   my $str = shift;
   my $len = shift;
@@ -2667,30 +2624,6 @@ sub get_project_owner {
   my $git_dir = "$root/$project";
 
   my $owner;
-
-  if (!defined $gitweb_project_owner) {
-    git_get_project_list_from_file();
-  }
-
-  if (exists $gitweb_project_owner->{$project}) {
-    $owner = $gitweb_project_owner->{$project};
-  }
-  if (!defined $owner){
-    $owner = git_get_project_config('owner');
-  }
-  if (!defined $owner) {
-    $owner = get_file_owner("$git_dir");
-  }
-
-  return $owner;
-}
-
-sub git_get_project_owner {
-  my $project = shift;
-  my $owner;
-
-  return undef unless $project;
-  $git_dir = "$projectroot/$project";
 
   if (!defined $gitweb_project_owner) {
     git_get_project_list_from_file();
@@ -2879,25 +2812,23 @@ sub to_utf8 {
 }
 
 sub fill_project_list_info {
-  my $projlist = shift;
+  my ($root, $projlist) = @_;
   my @projects;
 
  PROJECT:
   for my $pr (@$projlist) {
-    my (@activity) = git_get_last_activity($pr->{'path'});
+    my (@activity) = get_last_activity($root, $pr->{'path'});
     unless (@activity) {
       next PROJECT;
     }
     ($pr->{'age'}, $pr->{'age_string'}) = @activity;
     if (!defined $pr->{'descr'}) {
-      my $descr = git_get_project_description($pr->{'path'}) || "";
+      my $descr = get_project_description($root, $pr->{'path'}) || "";
       $descr = to_utf8($descr);
       $pr->{'descr_long'} = $descr;
       $pr->{'descr'} = _chop_str($descr, $projects_list_description_width, 5);
     }
-    if (!defined $pr->{'owner'}) {
-      $pr->{'owner'} = git_get_project_owner("$pr->{'path'}") || "";
-    }
+
     if ($projects_list_group_categories && !defined $pr->{'category'}) {
       my $cat = git_get_project_category($pr->{'path'}) ||
                                          $project_list_default_category;
