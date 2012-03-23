@@ -41,8 +41,6 @@ our $config_file = '';
 our %config;
 our $number_of_git_cmds = 0;
 our $fallback_encoding = 'latin1';
-our $project_list_default_category = "";
-our $projects_list_group_categories = 0;
 our $project_maxdepth = 1;
 use CGI ();
 our $cgi = CGI->new;
@@ -1207,11 +1205,6 @@ sub get_hash_by_path {
   return $3;
 }
 
-sub get_project_category {
-  my ($root, $project) =@_;
-  return get_file_or_project_config($root, $project, 'category');
-}
-
 sub get_project_urls {
   my ($root, $project) = @_;
 
@@ -1763,44 +1756,6 @@ sub unquote {
     $str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
   }
   return $str;
-}
-
-sub sort_projects_list {
-  my ($projlist, $order) = @_;
-  my @projects;
-
-  my %order_info = (
-    project => { key => 'path', type => 'str' },
-    descr => { key => 'descr_long', type => 'str' },
-    owner => { key => 'owner', type => 'str' },
-    age => { key => 'age', type => 'num' }
-  );
-  my $oi = $order_info{$order};
-  return @$projlist unless defined $oi;
-  if ($oi->{'type'} eq 'str') {
-    @projects = sort {$a->{$oi->{'key'}} cmp $b->{$oi->{'key'}}} @$projlist;
-  } else {
-    @projects = sort {$a->{$oi->{'key'}} <=> $b->{$oi->{'key'}}} @$projlist;
-  }
-
-  return @projects;
-}
-
-# returns a hash of categories, containing the list of project
-# belonging to each category
-sub build_projlist_by_category {
-  my ($projlist, $from, $to) = @_;
-  my %categories;
-
-  $from = 0 unless defined $from;
-  $to = $#$projlist if (!defined $to || $#$projlist < $to);
-
-  for (my $i = $from; $i <= $to; $i++) {
-    my $pr = $projlist->[$i];
-    push @{$categories{ $pr->{'category'} }}, $pr;
-  }
-
-  return wantarray ? %categories : \%categories;
 }
 
 sub _tags_body {
@@ -2492,12 +2447,6 @@ sub fill_project_list_info {
       $descr = to_utf8($descr);
       $pr->{'descr_long'} = $descr;
       $pr->{'descr'} = _chop_str($descr, $projects_list_description_width, 5);
-    }
-
-    if ($projects_list_group_categories && !defined $pr->{'category'}) {
-      my $cat = git_get_project_category($pr->{'path'}) ||
-                                         $project_list_default_category;
-      $pr->{'category'} = to_utf8($cat);
     }
 
     push @projects, $pr;
