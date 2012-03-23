@@ -1207,25 +1207,7 @@ our %input_params = ();
 # XXX: Warning: If you touch this, check the search form for updating,
 # too.
 
-our @cgi_param_mapping = (
-  project => "p",
-  action => "a",
-  file_name => "f",
-  file_parent => "fp",
-  hash => "h",
-  hash_parent => "hp",
-  hash_base => "hb",
-  hash_parent_base => "hpb",
-  page => "pg",
-  order => "o",
-  searchtext => "s",
-  searchtype => "st",
-  snapshot_format => "sf",
-  extra_options => "opt",
-  search_use_regexp => "sr",
-  ctag => "by_tag",
-  diff_style => "ds",
-);
+our @cgi_param_mapping = ();
 our %cgi_param_mapping = @cgi_param_mapping;
 
 # we will also need to know the possible actions, for validation
@@ -1244,7 +1226,6 @@ our %actions = (
   "patch" => \&git_patch,
   "patches" => \&git_patches,
   "rss" => \&git_rss,
-  "atom" => \&git_atom,
   "search" => \&git_search,
   "search_help" => \&git_search_help,
   "shortlog" => \&git_shortlog,
@@ -1262,9 +1243,7 @@ our %actions = (
 
 # finally, we have the hash of allowed extra_options for the commands that
 # allow them
-our %allowed_options = (
-  "--no-merges" => [ qw(rss atom log shortlog history) ],
-);
+our %allowed_options = ();
 
 our (@snapshot_fmts, $git_avatar);
 sub configure_gitweb_features {
@@ -1894,52 +1873,6 @@ sub format_snapshot_links {
   }
 }
 
-## ......................................................................
-## functions returning values to be passed, perhaps after some
-## transformation, to other functions; e.g. returning arguments to href()
-
-# returns hash to be passed to href to generate gitweb URL
-# in -title key it returns description of link
-sub get_feed_info {
-  my $format = shift || 'Atom';
-  my %res = (action => lc($format));
-
-  # feed links are possible only for project views
-  return unless (defined $project);
-  # some views should link to OPML, or to generic project feed,
-  # or don't have specific feed yet (so they should use generic)
-  return if ($action =~ /^(?:tags|heads|forks|tag|search)$/x);
-
-  my $branch;
-  # branches refs uses 'refs/heads/' prefix (fullname) to differentiate
-  # from tag links; this also makes possible to detect branch links
-  if ((defined $base_cid && $base_cid =~ m!^refs/heads/(.*)$!) ||
-      (defined $cid      && $cid      =~ m!^refs/heads/(.*)$!)) {
-    $branch = $1;
-  }
-  # find log type for feed description (title)
-  my $type = 'log';
-  if (defined $file) {
-    $type  = "history of $file";
-    $type .= "/" if ($action eq 'tree');
-    $type .= " on '$branch'" if (defined $branch);
-  } else {
-    $type = "log of $branch" if (defined $branch);
-  }
-
-  $res{-title} = $type;
-  $res{'hash'} = (defined $branch ? "refs/heads/$branch" : undef);
-  $res{'file_name'} = $file;
-
-  return %res;
-}
-
-
-
-# quote the given arguments for passing them to the shell
-# quote_command("command", "arg 1", "arg with ' and ! characters")
-# => "'command' 'arg 1' 'arg with '\'' and '\!' characters'"
-# Try to avoid using this function wherever possible.
 sub quote_command {
   return join(' ',
     map { my $a = $_; $a =~ s/(['!])/'\\$1'/g; "'$a'" } @_ );
@@ -2850,9 +2783,6 @@ sub get_content_type_html {
   }
 }
 
-# returns a submenu for the nagivation of the refs views (tags, heads,
-# remotes) with the current view disabled and the remotes view only
-# available if the feature is enabled
 sub format_ref_views {
   my ($current) = @_;
   my @ref_views = qw{tags heads};
