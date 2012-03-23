@@ -1,0 +1,18 @@
+% if (my $name = $ref_names->{head}{$commit->{id}}) {
+  <span class="refs">
+    <span class="head" title="heads/<%= $name %>">
+      <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
+        <%= $name %>
+      </a>
+    </span>
+  </span>
+% }
+% if (my $name = $ref_names->{tag}{$commit->{id}}) {
+  <span class="refs">
+    <span class="tag" title="tags/<%= $name %>">
+      <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
+        <%= $name %>
+      </a>
+    </span>
+  </span>
+% }

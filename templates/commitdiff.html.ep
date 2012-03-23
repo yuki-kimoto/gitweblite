@@ -7,20 +7,15 @@
   </div>
   %= include '/include/page_navi', current => 'commitdiff', root => $root, project => $project;
   <div class="page_nav">
-    <a href="<%= url_for('/commitdiff_plain')->query({root => $root, project => $project}) %>">raw</a>
+    <a href="<%= url_for('/commitdiff_plain')->query({root => $root, project => $project}) %>">Raw</a>
   </div>
   <div class="header">
-    <a class="title" href="/perl.git/commit/2630d42bb94232640db98e1de206d235e3f280fa">
+    <a class="title" href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid}) %>">
       <%= $commit->{title} %>
     </a>
   </div>
   <div class="title_text">
-    <span class="refs">
-      <span class="head" title="heads/blead">
-        <a href="/perl.git/shortlog/refs/heads/blead">blead</a>
-      </span>
-    </span>
-
+    %= include 'include/refs', root => $root, project => $project, commit => $commit, ref_names => $ref_names;
     <table class="object_header">
       <tr><td>author</td><td>Abigail &lt;abigail@abigail.be&gt;</td><td rowspan="2"></td></tr>
       <tr><td></td><td> Tue, 20 Mar 2012 20:07:59 +0000 (21:07 +0100)</td></tr>

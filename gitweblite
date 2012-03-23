@@ -430,12 +430,12 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
     open my $fd, "-|", git($root, $project), "diff-tree", '-r', @diff_opts,
         '-p', $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
+
     my $content = do { local $/; <$fd> };
-    close $fd
-      or print "Reading git-diff-tree failed\n";
-    
-    # Render
-    $self->render(text => $content);
+    my $content_disposition .= "inline; filename=$file";
+    $self->res->headers->content_disposition($content_disposition);
+    $self->res->headers->content_type("text/plain");
+    $self->render_data($content);
   }
   
   # HTML
@@ -476,6 +476,13 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
       close $fd;
       push @blobdiffs, {lines => \@lines};
     }
+
+    # Ref names
+    my $ref_names = {};
+    my $tags  = get_tags($root, $project);
+    $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
+    my $heads = get_heads($root, $project);
+    $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
     
     # Render
     $self->render(
@@ -485,7 +492,8 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
       cid => $cid,
       commit => $commit,
       difftrees => $difftrees,
-      blobdiffs => \@blobdiffs
+      blobdiffs => \@blobdiffs,
+      ref_names => $ref_names
     );
   }
 };

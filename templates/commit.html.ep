@@ -23,25 +23,7 @@
     </a>
   </div>
   <div class="title_text">
-    % warn dumper([$cid, $commit->{id}, $ref_names]);
-    % if (my $name = $ref_names->{head}{$commit->{id}}) {
-      <span class="refs">
-        <span class="head" title="heads/<%= $name %>">
-          <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
-            <%= $name %>
-          </a>
-        </span>
-      </span>
-    % }
-    % if (my $name = $ref_names->{tag}{$commit->{id}}) {
-      <span class="refs">
-        <span class="tag" title="tags/<%= $name %>">
-          <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
-            <%= $name %>
-          </a>
-        </span>
-      </span>
-    % }
+    %= include 'include/refs', root => $root, project => $project, commit => $commit, ref_names => $ref_names;
     <table class="object_header">
       <tr>
         <td>author</td>
