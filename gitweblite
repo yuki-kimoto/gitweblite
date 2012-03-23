@@ -1,4 +1,4 @@
-use 5.010001;
+use 5.008007;
 use Mojolicious::Lite;
 use Fcntl ':mode';
 use File::Find 'find';
@@ -572,7 +572,58 @@ get '/tree' => sub {
 
 
 get '/snapshot' => sub {
-  shift->render(text => 'snapshot');
+  my $self = shift;
+
+  require Archive::Tar;
+  
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    cid => {require => 0 } => ['not_blank'],
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $cid = $params->{cid};
+  $cid = "HEAD" unless defined $cid;
+
+  # Object type
+  my $type = get_object_type($root, $project, "$cid^{}");
+  if (!$type) { die 404, 'Object does not exist' }
+  elsif ($type eq 'blob') { die 400, 'Object is not a tree-ish' }
+
+  my ($name, $prefix) = snapshot_name($project, $cid);
+  my $file = "$name.tar.gz";
+  my $cmd = quote_command(
+    git($root, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
+  );
+  $cmd .= ' | ' . quote_command('gzip', '-n');
+
+  $file =~ s/(["\\])/\\$1/g;
+
+  open my $fd, "-|", $cmd
+    or die 500, "Execute git-archive failed";
+  
+  # Write chunk
+  $self->res->headers->content_type('application/gzip');
+  $self->res->headers->content_disposition(qq/attachment;; filename="$file"/);
+  my $cb;
+  $cb = sub {
+    my $c = shift;
+    my $size = 500 * 1024;
+    my $length = sysread($fd, my $buffer, $size);
+    unless (defined $length) {
+      close $fd;
+      undef $cb;
+      return;
+    }
+    $c->write_chunk($buffer, $cb);
+  };
+  $self->$cb;
 };
 
 get '/tag' => sub {
@@ -2130,6 +2181,16 @@ sub git_get_type {
   return $type;
 }
 
+sub get_object_type {
+  my ($root, $project, $cid) = @_;
+
+  open my $fd, "-|", git($root, $project), "cat-file", '-t', $cid or return;
+  my $type = <$fd>;
+  close $fd or return;
+  chomp $type;
+  return $type;
+}
+
 # store multiple values for single key as anonymous array reference
 # single values stored directly in the hash, not as [ <value> ]
 sub hash_set_multi {
@@ -2485,7 +2546,7 @@ sub parse_tag {
 }
 
 sub parse_commits {
-  my ($root, $project, $cid, $maxcount, $skip, $filename, @args) = @_;
+  my ($root, $project, $cid, $maxcount, $skip, $file, @args) = @_;
 
   # git rev-list
   $maxcount ||= 1;
@@ -2498,7 +2559,7 @@ sub parse_commits {
     @extra_options,
     $cid,
     "--",
-    ($filename ? ($filename) : ())
+    ($file ? ($file) : ())
     or die_error(500, "Open git-rev-list failed");
 
   # Parse rev-list results
@@ -2825,9 +2886,9 @@ sub get_tags {
 
 # assume that file exists
 sub insert_file {
-  my $filename = shift;
+  my $file = shift;
 
-  open my $fd, '<', $filename;
+  open my $fd, '<', $file;
   print map { to_utf8($_) } <$fd>;
   close $fd;
 }
@@ -2836,7 +2897,7 @@ sub insert_file {
 ## mimetype related functions
 
 sub mimetype_guess_file {
-  my $filename = shift;
+  my $file = shift;
   my $mimemap = shift;
   -r $mimemap or return undef;
 
@@ -2851,14 +2912,14 @@ sub mimetype_guess_file {
   }
   close($mh);
 
-  $filename =~ /\.([^.]*)$/;
+  $file =~ /\.([^.]*)$/;
   return $mimemap{$1};
 }
 
 sub mimetype_guess {
-  my $filename = shift;
+  my $file = shift;
   my $mime;
-  $filename =~ /\./ or return undef;
+  $file =~ /\./ or return undef;
 
   if ($mimetypes_file) {
     my $file = $mimetypes_file;
@@ -2866,18 +2927,18 @@ sub mimetype_guess {
       # it is relative to project
       $file = "$projectroot/$project/$file";
     }
-    $mime = mimetype_guess_file($filename, $file);
+    $mime = mimetype_guess_file($file, $file);
   }
-  $mime ||= mimetype_guess_file($filename, '/etc/mime.types');
+  $mime ||= mimetype_guess_file($file, '/etc/mime.types');
   return $mime;
 }
 
 sub blob_mimetype {
   my $fd = shift;
-  my $filename = shift;
+  my $file = shift;
 
-  if ($filename) {
-    my $mime = mimetype_guess($filename);
+  if ($file) {
+    my $mime = mimetype_guess($file);
     $mime and return $mime;
   }
 
@@ -2886,13 +2947,13 @@ sub blob_mimetype {
 
   if (-T $fd) {
     return 'text/plain';
-  } elsif (! $filename) {
+  } elsif (! $file) {
     return 'application/octet-stream';
-  } elsif ($filename =~ m/\.png$/i) {
+  } elsif ($file =~ m/\.png$/i) {
     return 'image/png';
-  } elsif ($filename =~ m/\.gif$/i) {
+  } elsif ($file =~ m/\.gif$/i) {
     return 'image/gif';
-  } elsif ($filename =~ m/\.jpe?g$/i) {
+  } elsif ($file =~ m/\.jpe?g$/i) {
     return 'image/jpeg';
   } else {
     return 'application/octet-stream';
@@ -5164,8 +5225,6 @@ sub git_tree {
 sub snapshot_name {
   my ($project, $cid) = @_;
 
-  # path/to/project.git  -> project
-  # path/to/project/.git -> project
   my $name = to_utf8($project);
   $name =~ s,([^/])/*\.git$,$1,;
   $name = basename($name);
@@ -5174,25 +5233,20 @@ sub snapshot_name {
 
   my $ver = $cid;
   if ($cid =~ /^[0-9a-fA-F]+$/) {
-    # shorten SHA-1 hash
     my $full_hash = git_get_full_hash($project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
       $ver = git_get_short_hash($project, $cid);
     }
   } elsif ($cid =~ m!^refs/tags/(.*)$!) {
-    # tags don't need shortened SHA-1 hash
     $ver = $1;
   } else {
-    # branches and other need shortened SHA-1 hash
     if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
       $ver = $1;
     }
     $ver .= '-' . git_get_short_hash($project, $cid);
   }
-  # in case of hierarchical branch names
   $ver =~ s!/!.!g;
 
-  # name = project-version_string
   $name = "$name-$ver";
 
   return wantarray ? ($name, $name) : $name;
@@ -5223,7 +5277,7 @@ sub git_snapshot {
   }
 
   my ($name, $prefix) = snapshot_name($project, $cid);
-  my $filename = "$name$known_snapshot_formats{$format}{'suffix'}";
+  my $file = "$name$known_snapshot_formats{$format}{'suffix'}";
   my $cmd = quote_command(
     git_cmd(), 'archive',
     "--format=$known_snapshot_formats{$format}{'format'}",
@@ -5232,10 +5286,10 @@ sub git_snapshot {
     $cmd .= ' | ' . quote_command(@{$known_snapshot_formats{$format}{'compressor'}});
   }
 
-  $filename =~ s/(["\\])/\\$1/g;
+  $file =~ s/(["\\])/\\$1/g;
   print $cgi->header(
     -type => $known_snapshot_formats{$format}{'type'},
-    -content_disposition => 'inline; filename="' . $filename . '"',
+    -content_disposition => 'inline; filename="' . $file . '"',
     -status => '200 OK');
 
   open my $fd, "-|", $cmd
@@ -5886,13 +5940,13 @@ sub git_commitdiff {
   } elsif ($format eq 'plain') {
     my $refs = git_get_references("tags");
     my $tagname = git_get_rev_name_tags($cid);
-    my $filename = basename($project) . "-$cid.patch";
+    my $file = basename($project) . "-$cid.patch";
 
     print $cgi->header(
       -type => 'text/plain',
       -charset => 'utf-8',
       -expires => $expires,
-      -content_disposition => 'inline; filename="' . "$filename" . '"');
+      -content_disposition => 'inline; filename="' . "$file" . '"');
     my %ad = parse_date($commit{'author_epoch'}, $commit{'author_tz'});
     print "From: " . to_utf8($commit{'author'}) . "\n";
     print "Date: $ad{'rfc2822'} ($ad{'tz_local'})\n";
@@ -5906,13 +5960,13 @@ sub git_commitdiff {
     }
     print "---\n\n";
   } elsif ($format eq 'patch') {
-    my $filename = basename($project) . "-$cid.patch";
+    my $file = basename($project) . "-$cid.patch";
 
     print $cgi->header(
       -type => 'text/plain',
       -charset => 'utf-8',
       -expires => $expires,
-      -content_disposition => 'inline; filename="' . "$filename" . '"');
+      -content_disposition => 'inline; filename="' . "$file" . '"');
   }
 
   # write patch
@@ -6061,11 +6115,11 @@ sub evaluate_git_dir {
 }
 
 sub read_config_file {
-  my $filename = shift;
-  return unless defined $filename;
+  my $file = shift;
+  return unless defined $file;
   # die if there are errors parsing config file
-  if (-e $filename) {
-    do $filename;
+  if (-e $file) {
+    do $file;
     die $@ if $@;
     return 1;
   }
