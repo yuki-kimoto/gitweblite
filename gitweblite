@@ -1037,14 +1037,6 @@ our %known_snapshot_format_aliases = (
   'x-zip' => undef, '' => undef,
 );
 
-# Pixel sizes for icons and avatars. If the default font sizes or lineheights
-# are changed, it may be appropriate to change these values too via
-# $GITWEB_CONFIG.
-our %avatar_size = (
-  'default' => 16,
-  'double'  => 32
-);
-
 # Used to set the maximum load that we will still respond to gitweb queries.
 # If server load exceed this value then return "503 server busy" error.
 # If gitweb cannot determined server load, it is taken to be 0.
@@ -1112,85 +1104,8 @@ sub feature_patches {
   return ($_[0]);
 }
 
-
-
-sub feature_avatar {
-  my @val = (git_get_project_config('avatar'));
-
-  return @val ? @val : @_;
-}
-
-
-sub filter_snapshot_fmts {
-  my @fmts = @_;
-
-  @fmts = map {
-    exists $known_snapshot_format_aliases{$_} ?
-           $known_snapshot_format_aliases{$_} : $_} @fmts;
-  @fmts = grep {
-    exists $known_snapshot_formats{$_} &&
-    !$known_snapshot_formats{$_}{'disabled'}} @fmts;
-}
-
 our $per_request_config = 1;
-
 our ($GITWEB_CONFIG, $GITWEB_CONFIG_SYSTEM, $GITWEB_CONFIG_COMMON);
-sub evaluate_gitweb_config {
-  our $GITWEB_CONFIG = $ENV{'GITWEB_CONFIG'} || "gitweb_config.perl";
-  our $GITWEB_CONFIG_SYSTEM = $ENV{'GITWEB_CONFIG_SYSTEM'} || "/etc/gitweb.conf";
-  our $GITWEB_CONFIG_COMMON = $ENV{'GITWEB_CONFIG_COMMON'} || "/etc/gitweb-common.conf";
-
-  # Protect agains duplications of file names, to not read config twice.
-  # Only one of $GITWEB_CONFIG and $GITWEB_CONFIG_SYSTEM is used, so
-  # there possibility of duplication of filename there doesn't matter.
-  $GITWEB_CONFIG = ""        if ($GITWEB_CONFIG eq $GITWEB_CONFIG_COMMON);
-  $GITWEB_CONFIG_SYSTEM = "" if ($GITWEB_CONFIG_SYSTEM eq $GITWEB_CONFIG_COMMON);
-
-  # Common system-wide settings for convenience.
-  # Those settings can be ovverriden by GITWEB_CONFIG or GITWEB_CONFIG_SYSTEM.
-  read_config_file($GITWEB_CONFIG_COMMON);
-
-  # Use first config file that exists.  This means use the per-instance
-  # GITWEB_CONFIG if exists, otherwise use GITWEB_SYSTEM_CONFIG.
-  read_config_file($GITWEB_CONFIG) and return;
-  read_config_file($GITWEB_CONFIG_SYSTEM);
-}
-
-# Get loadavg of system, to compare against $maxload.
-# Currently it requires '/proc/loadavg' present to get loadavg;
-# if it is not present it returns 0, which means no load checking.
-sub get_loadavg {
-  if( -e '/proc/loadavg' ){
-    open my $fd, '<', '/proc/loadavg'
-      or return 0;
-    my @load = split(/\s+/, scalar <$fd>);
-    close $fd;
-
-    # The first three columns measure CPU and IO utilization of the last one,
-    # five, and 10 minute periods.  The fourth column shows the number of
-    # currently running processes and the total number of processes in the m/n
-    # format.  The last column displays the last process ID used.
-    return $load[0] || 0;
-  }
-  # additional checks for load average should go here for things that don't export
-  # /proc/loadavg
-
-  return 0;
-}
-
-# version of the core git binary
-our $git_version;
-sub evaluate_git_version {
-  our $git_version = qx("$GIT" --version) =~ m/git version (.*)$/ ? $1 : "unknown";
-  $number_of_git_cmds++;
-}
-
-sub check_loadavg {
-  if (defined $maxload && get_loadavg() > $maxload) {
-    die_error(503, "The load average on the server is too high");
-  }
-}
-
 our %input_params = ();
 our @cgi_param_mapping = ();
 our %cgi_param_mapping = @cgi_param_mapping;
@@ -1219,24 +1134,6 @@ our %actions = (
 );
 
 our %allowed_options = ();
-
-our ($git_avatar);
-sub configure_gitweb_features {
-  # list of supported snapshot formats
-
-  # check that the avatar feature is set to a known provider name,
-  # and for each provider check if the dependencies are satisfied.
-  # if the provider name is invalid or the dependencies are not met,
-  # reset $git_avatar to the empty string.
-  our ($git_avatar) = gitweb_get_feature('avatar');
-  if ($git_avatar eq 'gravatar') {
-    $git_avatar = '' unless (eval { require Digest::MD5; 1; });
-  } elsif ($git_avatar eq 'picon') {
-    # no dependencies
-  } else {
-    $git_avatar = '';
-  }
-}
 
 sub reset_timer {
   our $t0 = [ gettimeofday() ]
@@ -1420,17 +1317,6 @@ sub format_subject_html {
     return $cgi->a({-href => $href, -class => "list subject"},
            esc_html($long)) . $extra;
   }
-}
-
-our %avatar_cache = ();
-
-sub gravatar_url {
-  my $email = lc shift;
-  my $size = shift;
-  $avatar_cache{$email} ||=
-    "http://www.gravatar.com/avatar/" .
-      Digest::MD5::md5_hex($email) . "?s=";
-  return $avatar_cache{$email} . $size;
 }
 
 sub format_git_diff_header_line {
