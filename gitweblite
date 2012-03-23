@@ -1212,14 +1212,10 @@ our %actions = (
   "tree" => \&git_tree,
   "snapshot" => \&git_snapshot,
   "object" => \&git_object,
-  # those below don't need $project
-  "opml" => \&git_opml,
   "project_list" => \&git_project_list,
   "project_index" => \&git_project_index,
 );
 
-# finally, we have the hash of allowed extra_options for the commands that
-# allow them
 our %allowed_options = ();
 
 our (@snapshot_fmts, $git_avatar);
@@ -1435,33 +1431,6 @@ sub gravatar_url {
     "http://www.gravatar.com/avatar/" .
       Digest::MD5::md5_hex($email) . "?s=";
   return $avatar_cache{$email} . $size;
-}
-
-sub git_get_avatar {
-  my ($email, %opts) = @_;
-  my $pre_white  = ($opts{-pad_before} ? "&nbsp;" : "");
-  my $post_white = ($opts{-pad_after}  ? "&nbsp;" : "");
-  $opts{-size} ||= 'default';
-  my $size = $avatar_size{$opts{-size}} || $avatar_size{'default'};
-  my $url = "";
-  if ($git_avatar eq 'gravatar') {
-    $url = gravatar_url($email, $size);
-  } elsif ($git_avatar eq 'picon') {
-    $url = picon_url($email);
-  }
-  # Other providers can be added by extending the if chain, defining $url
-  # as needed. If no variant puts something in $url, we assume avatars
-  # are completely disabled/unavailable.
-  if ($url) {
-    return $pre_white .
-           "<img width=\"$size\" " .
-                "class=\"avatar\" " .
-                "src=\"".esc_url($url)."\" " .
-          "alt=\"\" " .
-           "/>" . $post_white;
-  } else {
-    return "";
-  }
 }
 
 sub format_git_diff_header_line {
@@ -2063,8 +2032,6 @@ sub git_get_project_ctags {
   return $ctags;
 }
 
-# return hash, where keys are content tags ('ctags'),
-# and values are sum of weights of given tag in every project
 sub git_gather_all_ctags {
   my $projects = shift;
   my $ctags = {};
@@ -3142,50 +3109,6 @@ sub git_log_body {
   }
 }
 
-sub git_shortlog_body {
-  # uses global variable $project
-  my ($commitlist, $from, $to, $refs, $extra) = @_;
-
-  $from = 0 unless defined $from;
-  $to = $#{$commitlist} if (!defined $to || $#{$commitlist} < $to);
-
-  print "<table class=\"shortlog\">\n";
-  my $alternate = 1;
-  for (my $i = $from; $i <= $to; $i++) {
-    my %commit = %{$commitlist->[$i]};
-    my $commit = $commit{'id'};
-    my $ref = format_ref_marker($refs, $commit);
-    if ($alternate) {
-      print "<tr class=\"dark\">\n";
-    } else {
-      print "<tr class=\"light\">\n";
-    }
-    $alternate ^= 1;
-    # git_summary() used print "<td><i>$commit{'age_string'}</i></td>\n" .
-    print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
-          format_author_html('td', \%commit, 10) . "<td>";
-    print format_subject_html($commit{'title'}, $commit{'title_short'},
-                              href(action=>"commit", hash=>$commit), $ref);
-    print "</td>\n" .
-          "<td class=\"link\">" .
-          $cgi->a({-href => href(action=>"commit", hash=>$commit)}, "commit") . " | " .
-          $cgi->a({-href => href(action=>"commitdiff", hash=>$commit)}, "commitdiff") . " | " .
-          $cgi->a({-href => href(action=>"tree", hash=>$commit, hash_base=>$commit)}, "tree");
-    my $snapshot_links = format_snapshot_links($commit);
-    if (defined $snapshot_links) {
-      print " | " . $snapshot_links;
-    }
-    print "</td>\n" .
-          "</tr>\n";
-  }
-  if (defined $extra) {
-    print "<tr>\n" .
-          "<td colspan=\"4\">$extra</td>\n" .
-          "</tr>\n";
-  }
-  print "</table>\n";
-}
-
 sub git_history_body {
   # Warning: assumes constant type (blob or tree) during history
   my ($commitlist, $from, $to, $refs, $extra,
@@ -3212,7 +3135,6 @@ sub git_history_body {
     }
     $alternate ^= 1;
     print "<td title=\"$commit{'age_string_age'}\"><i>$commit{'age_string_date'}</i></td>\n" .
-  # shortlog:   format_author_html('td', \%commit, 10)
           format_author_html('td', \%commit, 15, 3) . "<td>";
     # originally git_history used _chop_str($commit{'title'}, 50)
     print format_subject_html($commit{'title'}, $commit{'title_short'},
@@ -3358,91 +3280,6 @@ sub untabify {
   }
 
   return $line;
-}
-
-sub git_summary {
-  my $descr = git_get_project_description($project) || "none";
-  my %commit = parse_commit("HEAD");
-  my %cd = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
-  my $head = $commit{'id'};
-
-  my $owner = git_get_project_owner($project);
-
-  my $refs = git_get_references();
-
-  my @taglist  = git_get_tags_list(16);
-  my @headlist = git_get_heads_list(16);
-
-
-  git_header_html();
-
-  print "<div class=\"title\">&nbsp;</div>\n";
-  print "<table class=\"projects_list\">\n" .
-        "<tr id=\"metadata_desc\"><td>description</td><td>" . esc_html($descr) . "</td></tr>\n" .
-        "<tr id=\"metadata_owner\"><td>owner</td><td>" . esc_html($owner) . "</td></tr>\n";
-  if (defined $cd{'rfc2822'}) {
-    print "<tr id=\"metadata_lchange\"><td>last change</td>" .
-          "<td>".format_timestamp_html(\%cd)."</td></tr>\n";
-  }
-
-  # use per project git URL list in $projectroot/$project/cloneurl
-  # or make project git URL from git base URL and project name
-  my $url_tag = "URL";
-  my @url_list = git_get_project_url_list($project);
-  @url_list = map { "$_/$project" } @git_base_url_list unless @url_list;
-  for my $git_url (@url_list) {
-    next unless $git_url;
-    print format_repo_url($url_tag, $git_url);
-    $url_tag = "";
-  }
-
-  # Tag cloud
-  my $show_ctags = gitweb_check_feature('ctags');
-  if ($show_ctags) {
-    my $ctags = git_get_project_ctags($project);
-    if (%$ctags) {
-      # without ability to add tags, don't show if there are none
-      my $cloud = git_populate_project_tagcloud($ctags);
-      print "<tr id=\"metadata_ctags\">" .
-            "<td>content tags</td>" .
-            "<td>".git_show_project_tagcloud($cloud, 48)."</td>" .
-            "</tr>\n";
-    }
-  }
-
-  print "</table>\n";
-
-  # If XSS prevention is on, we don't include README.html.
-  # TODO: Allow a readme in some safe format.
-  if (!$prevent_xss && -s "$projectroot/$project/README.html") {
-    print "<div class=\"title\">readme</div>\n" .
-          "<div class=\"readme\">\n";
-    insert_file("$projectroot/$project/README.html");
-    print "\n</div>\n"; # class="readme"
-  }
-
-  # we need to request one more than 16 (0..15) to check if
-  # those 16 are all
-  my @commitlist = $head ? parse_commits($head, 17) : ();
-  if (@commitlist) {
-    git_shortlog_body(\@commitlist, 0, 15, $refs,
-                      $#commitlist <=  15 ? undef :
-                      $cgi->a({-href => href(action=>"shortlog")}, "..."));
-  }
-
-  if (@taglist) {
-    git_tags_body(\@taglist, 0, 15,
-                  $#taglist <=  15 ? undef :
-                  $cgi->a({-href => href(action=>"tags")}, "..."));
-  }
-
-  if (@headlist) {
-    git_heads_body(\@headlist, $head, 0, 15,
-                   $#headlist <= 15 ? undef :
-                   $cgi->a({-href => href(action=>"heads")}, "..."));
-  }
-
-  git_footer_html();
 }
 
 sub git_tag {
@@ -4503,11 +4340,6 @@ sub git_history {
   git_log_generic('history', \&git_history_body,
                   $base_cid, $parent_base_cid,
                   $file, $cid);
-}
-
-sub git_shortlog {
-  git_log_generic('shortlog', \&git_shortlog_body,
-                  $cid, $parent_cid);
 }
 
 sub evaluate_git_dir {
