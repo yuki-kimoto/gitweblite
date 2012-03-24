@@ -110,10 +110,10 @@ get '/summary' => sub {
   # Ref names
   my $ref_names = {};
   my $tag_count = 20;
-  my $tags  = get_tags($root, $project, $tag_count);
+  my $tags  = get_tags($root, $project, $tag_count - 1);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
   my $head_count = 20;
-  my $heads = get_heads($root, $project, $head_count);
+  my $heads = get_heads($root, $project, $head_count - 1);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   # Render
@@ -428,9 +428,57 @@ get '/tag' => sub {
   shift->render(text => 'tag');
 };
 
-get '/tags';
+get '/tags' => sub {
+  my $self = shift;
+  
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  
+  # Ref names
+  my $tags  = get_tags($root, $project);
+  
+  # Render
+  $self->render(
+    root => $root,
+    project => $project,
+    tags => $tags,
+  );
+};
 
-get '/heads';
+get '/heads' => sub {
+  my $self = shift;
+  
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  
+  # Ref names
+  my $heads  = get_tags($root, $project);
+  
+  # Render
+  $self->render(
+    root => $root,
+    project => $project,
+    heads => $heads,
+  );
+};
 
 get '/head' => sub {
   shift->render(text => 'head');

@@ -5,7 +5,7 @@
     <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
     Summary
   </div>
-  %= include '/include/page_navi', current => 'summary', head_cid => $head_cid;
+  %= include '/include/page_navi', current => 'summary';
   <table class="projects_list">
     <tr id="metadata_desc"><td><b>Description:</b></td><td><%= $project_description %></td></tr>
     <tr id="metadata_owner"><td><b>Owner:</b></td><td><%= $project_owner %></td></tr>
@@ -139,6 +139,7 @@
         </td>
       </tr>
     % }
+    % warn $self->dumper([scalar @$tags, $tag_count]);
     % if (@$tags == $tag_count) {
       <tr>
         <td>
