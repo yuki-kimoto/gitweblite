@@ -61,14 +61,20 @@ get '/projects' => sub {
   my $projectroots = app->config->{projectroots};
   die unless grep { $_ eq $root } @$projectroots;
   
+  # Fill project information
   my @projects = get_projects($root);
   @projects = fill_projects($root, \@projects);
   
+  # Fill owner
   for my $project (@projects) {
     $project->{owner} = get_project_owner($root, $project->{path});
   }
- 
-  $self->render(projects => \@projects);
+  
+  # Render
+  $self->render(
+    root => $root,
+    projects => \@projects
+  );
 } => 'projects';
 
 get '/summary' => sub {

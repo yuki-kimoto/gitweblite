@@ -1,7 +1,7 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= param('root') %>) /
-    <a href="<%= url_for('projects')->query($self->req->params->clone) %>">projects</a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for('projects')->query({root => $root}); %>">projects</a> /
   </div>
   <table class="project_list">
     <tr>
@@ -17,7 +17,13 @@
         <td><a class="list" title="<%= $project->{descr_long} %>" href="<%= url_for('/summary')->query(root => param('root'), project => $project->{path}) %>"><%= $project->{descr} %></a></td>
         <td><i><%= $project->{owner} %></i></td>
         <td class="age2"><%= $project->{age_string} %></td>
-        <td class="link"><a href="/metaconfig.git">summary</a> | <a href="/metaconfig.git/shortlog">shortlog</a> | <a href="/metaconfig.git/log">log</a> | <a href="/metaconfig.git/tree">tree</a></td>
+        <td class="link">
+          % my $pname = $project->{path};
+          <a href="<%= url_for('/summary')->query({root => $root, project => $pname}) %>">summary</a> |
+          <a href="<%= url_for('/shortlog')->query({root => $root, project => $pname}) %>">shortlog</a> |
+          <a href="<%= url_for('/log')->query({root => $root, project => $pname}) %>">log</a> |
+          <a href="<%= url_for('/tree')->query({root => $root, project => $pname}) %>">tree</a>
+        </td>
       </tr>
     % }
   </table>
