@@ -28,7 +28,6 @@ my @diff_opts = ('-M');
 my $prevent_xss = 0;
 
 my $default_text_plain_charset  = undef;
-my $gitweb_project_owner = undef;
 
 # Validator
 my $validator = Validator::Custom->new;
@@ -64,6 +63,10 @@ get '/projects' => sub {
   
   my @projects = get_projects($root);
   @projects = fill_projects($root, \@projects);
+  
+  for my $project (@projects) {
+    $project->{owner} = get_project_owner($root, $project->{path});
+  }
  
   $self->render(projects => \@projects);
 } => 'projects';
@@ -172,6 +175,7 @@ get '/commit' => sub {
   $self->render(
     root => $root,
     project => $project,
+    project_owner => $project_owner,
     cid => $cid,
     commit => \%commit,
     ref_names => $ref_names,
@@ -835,21 +839,33 @@ sub get_projects {
 
 sub get_project_description {
   my ($root, $project) = @_;
-  return get_file_or_project_config($root, $project, 'description');
+  
+  my $git_dir = "$root/$project";
+  my $description_file = "$git_dir/description";
+  
+  my $description = slurp($description_file) || '';
+  
+  return $description;
 }
 
-sub get_file_or_project_config {
-  my ($root, $project, $name) = @_;
-
+sub get_project_owner {
+  my ($root, $project) = @_;
+  
   my $git_dir = "$root/$project";
-  open my $fd, '<', "$git_dir/$name"
-    or return ;
-  my $conf = <$fd>;
-  close $fd;
-  if (defined $conf) {
-    chomp $conf;
-  }
-  return $conf;
+  my $user_id = (stat $git_dir)[4];
+  my $user = getpwuid($user_id);
+  
+  return $user;
+}
+
+sub slurp {
+  my $file = shift;
+  
+  open my $fh, '<', $file
+    or die qq/Can't open file "$file": $!/;
+  my $content = do { local $/; <$fh> };
+  
+  return $content;
 }
 
 sub check_export_ok {
@@ -1037,51 +1053,6 @@ sub hash_set_multi {
   } else {
     push @{$cid->{$key}}, $value;
   }
-}
-
-
-
-# convert config value to boolean: 'true' or 'false'
-# no value, number > 0, 'true' and 'yes' values are true
-# rest of values are treated as false (never as error)
-sub config_to_bool {
-  my $val = shift;
-
-  return 1 if !defined $val;             # section.key
-
-  # strip leading and trailing whitespace
-  $val =~ s/^\s+//;
-  $val =~ s/\s+$//;
-
-  return (($val =~ /^\d+$/ && $val) ||   # section.key = 1
-          ($val =~ /^(?:true|yes)$/i));  # section.key = true
-}
-
-# convert config value to simple decimal number
-# an optional value suffix of 'k', 'm', or 'g' will cause the value
-# to be multiplied by 1024, 1048576, or 1073741824
-sub config_to_int {
-  my $val = shift;
-
-  # strip leading and trailing whitespace
-  $val =~ s/^\s+//;
-  $val =~ s/\s+$//;
-
-  if (my ($num, $unit) = ($val =~ /^([0-9]*)([kmg])$/i)) {
-    $unit = lc($unit);
-    # unknown unit is treated as 1
-    return $num * ($unit eq 'g' ? 1073741824 :
-                   $unit eq 'm' ?    1048576 :
-                   $unit eq 'k' ?       1024 : 1);
-  }
-  return $val;
-}
-
-# convert config value to array reference, if needed
-sub config_to_multi {
-  my $val = shift;
-
-  return ref($val) ? $val : (defined($val) ? [ $val ] : []);
 }
 
 sub get_hash_by_path {
@@ -2077,48 +2048,6 @@ sub _chop_str {
       $tail = "... ";
     }
     return "$body$tail";
-  }
-}
-
-sub get_project_owner {
-  my ($root, $project) = @_;
-
-  return unless defined $root && defined $project;
-  my $git_dir = "$root/$project";
-
-  my $owner;
-
-  if (!defined $gitweb_project_owner) {
-    get_project_list_from_file($root, $project);
-  }
-
-  if (exists $gitweb_project_owner->{$project}) {
-    $owner = $gitweb_project_owner->{$project};
-  }
-
-  if (!defined $owner) {
-    $owner = get_file_owner("$git_dir");
-  }
-
-  return $owner;
-}
-
-sub get_project_list_from_file {
-  my ($root, $project) = @_;
-  
-  return if (defined $gitweb_project_owner);
-
-  $gitweb_project_owner = {};
-  if (-f $projects_list) {
-    open(my $fd, '<', $projects_list);
-    while (my $line = <$fd>) {
-      chomp $line;
-      my ($pr, $ow) = split ' ', $line;
-      $pr = unescape($pr);
-      $ow = unescape($ow);
-      $gitweb_project_owner->{$pr} = $ow;
-    }
-    close $fd;
   }
 }
 
