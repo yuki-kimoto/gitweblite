@@ -20,7 +20,7 @@
       </td>
       <td class="selflink">
         <a href=
-          "<%= url_for('/tag')->query({root => $root, project => $project, name => $name}) %>"
+          "<%= url_for('/tag')->query({root => $root, project => $project, id => $tag->{id}}) %>"
         >
           tag
         </a>

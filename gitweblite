@@ -423,7 +423,33 @@ get '/snapshot' => sub {
 };
 
 get '/tag' => sub {
-  shift->render(text => 'tag');
+  my $self = shift;
+  
+  # Validation
+  my $raw_params = _params($self);
+  my $rule = [
+    root => ['not_blank'],
+    project => ['not_blank'],
+    id => ['not_blank']
+  ];
+  my $vresult = $validator->validate($raw_params, $rule);
+  die unless $vresult->is_ok;
+  my $params = $vresult->data;
+  my $root = $params->{root};
+  my $project = $params->{project};
+  my $id = $params->{id};
+  
+  # Ref names
+  my $tag  = parse_tag($root, $project, $id);
+  
+  warn $self->dumper($tag);
+  
+  # Render
+  $self->render(
+    root => $root,
+    project => $project,
+    tag => $tag,
+  );
 };
 
 get '/tags' => sub {
@@ -1151,8 +1177,10 @@ sub parse_tag {
   my ($root, $project, $tag_id) = @_;
   my %tag;
   my @comment;
-
-  open my $fd, "-|", git($root, $project), "cat-file", "tag", $tag_id or return;
+  
+  my @git_cat_file = (git($root, $project), "cat-file", "tag", $tag_id);
+  
+  open my $fd, "-|", @git_cat_file or return;
   $tag{'id'} = $tag_id;
   while (my $line = <$fd>) {
     chomp $line;
@@ -1185,7 +1213,7 @@ sub parse_tag {
   if (!defined $tag{'name'}) {
     return
   };
-  return %tag
+  return \%tag
 }
 
 sub parse_commits {

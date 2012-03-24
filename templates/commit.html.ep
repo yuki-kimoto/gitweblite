@@ -5,7 +5,7 @@
     <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
     Commit
   </div>
-  %= include '/include/page_navi', current => 'commit', head_cid => $cid, root => $root, project => $project;
+  %= include '/include/page_navi', current => 'commit', root => $root, project => $project;
   
   <div class="page_nav">
     % my $from_cid = $commit->{parent};

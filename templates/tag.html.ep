@@ -1,28 +1,16 @@
 % layout 'common';
   <div class="page_header">
-  <a title="git homepage" href="http://git-scm.com/"><img src="/git-logo.png" width="72" height="27" alt="git" class="logo"/></a><a href="/">projects</a> / <a href="/perl.git">perl.git</a> / tag
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    Tag
   </div>
-  <form method="get" action="/perl.git" enctype="application/x-www-form-urlencoded">
-  <div class="search">
-  <input name="a" type="hidden" value="search" />
-  <input name="h" type="hidden" value="9b30811fee3478af913382334909acde68afd36d" />
-  <select name="st" >
-  <option selected="selected" value="free">free</option>
-  <option value="commit">commit</option>
-  <option value="grep">grep</option>
-  <option value="author">author</option>
-  <option value="committer">committer</option>
-  <option value="pickaxe">pickaxe</option>
-  </select><sup><a href="/perl.git/search_help">?</a></sup> search:
-  <input type="text" name="s"  />
-  <span title="Extended regular expression"><label><input type="checkbox" name="sr" value="1" />re</label></span></div>
-  </form>
-  <div class="page_nav">
-  <a href="/perl.git">summary</a> | <a href="/perl.git/shortlog">shortlog</a> | <a href="/perl.git/log">log</a> | <a href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">commit</a> | <a href="/perl.git/commitdiff/f6067adc61108c3398de698bb0294d95f09b55ef">commitdiff</a> | <a href="/perl.git/tree/f6067adc61108c3398de698bb0294d95f09b55ef">tree</a><br/>
-  <br/>
-  </div>
+  %= include '/include/page_navi', current => 'commit', root => $root, project => $project;
+
   <div class="header">
-  <a class="title" href="/perl.git/commit/9b30811fee3478af913382334909acde68afd36d">v5.15.8</a>
+    <a class="title" href="<%= url_for('/commit')->query({root => $root, project => $project}) %>">
+      v5.15.8
+    </a>
   </div>
   <div class="title_text">
   <table class="object_header">
