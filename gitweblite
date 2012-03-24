@@ -16,9 +16,9 @@ my $conf = plugin 'Config';
 # Config
 my $projectroots = $conf->{projectroots};
 my $projectroot = $conf->{projectroots}->[0];
-my $projects_list = $conf->{projects_list} //= $projectroot;
-my $export_ok = $conf->{export_ok} // '';
-my $export_auth_hook = $conf->{export_ok} // undef;
+my $projects_list = $conf->{projects_list} ||= $projectroot;
+my $export_ok = $conf->{export_ok} || '';
+my $export_auth_hook = $conf->{export_ok} || undef;
 my $GIT = $conf->{git_bindir}
   ? $conf->{git_bindir} . '/git'
   : '/usr/local/bin/git';
