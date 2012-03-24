@@ -15,8 +15,10 @@
     </a>
   </div>
   <div class="header">
-    <a class="title" href="/perl.git/commit/f6067adc61108c3398de698bb0294d95f09b55ef">
-      charnames: Clarify viacode pod
+    <a class="title" href="<%= url_for('/commit')->query({root => $root,
+      project => $project, cid => $cid}) %>"
+    >
+      <%= $commit->{title} %>
     </a>
   </div>
   <div class="page_body">

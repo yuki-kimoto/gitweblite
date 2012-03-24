@@ -6,7 +6,7 @@
       <td><i><%= $head->{age} %></i></td>
       <td class="current_head">
         <a class="list name" href="<%= url_for('/log')->query({root => $root,
-          project => $project, base_cid => $name}) %>"
+          project => $project, cid => $name}) %>"
         >
           <%= $head->{name} %>
         </a>
@@ -17,9 +17,7 @@
         >
           shortlog
         </a> |
-      <a href="<%= url_for('/log')->query({root => $root, project => $project,
-        base_cid => $name}) %>"
-      >
+      <a href="<%= url_for('/log')->query({root => $root, project => $project, cid => $name}) %>">
         log
       </a> |
         <a href="<%= url_for('/tree')->query({root => $root, project => $project,

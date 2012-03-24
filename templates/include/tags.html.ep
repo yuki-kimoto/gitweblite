@@ -39,7 +39,7 @@
         </a>
         |
         <a href="<%= url_for('/log')->query({root => $root, project => $project,
-          base_cid => $name}) %>"
+          cid => $name}) %>"
         >
           log
         </a>

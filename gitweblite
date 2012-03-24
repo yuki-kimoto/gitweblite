@@ -357,8 +357,6 @@ get '/tree' => sub {
     $tree{mode_str} = mode_str($tree{mode});
     push @trees, \%tree;
   }
-  
-  warn $self->dumper(\@trees);
 
   $self->render(
     root => $root,
@@ -1118,8 +1116,6 @@ sub get_hash_by_path {
   my @git_ls_tree = (
     git($root, $project), "ls-tree", $id, "--", $path
   );
-  
-  warn join(' ', @git_ls_tree);
   
   open my $fd, "-|", @git_ls_tree
     or die "Open git-ls-tree failed";
