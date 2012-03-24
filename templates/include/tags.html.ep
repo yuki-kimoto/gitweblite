@@ -1,0 +1,60 @@
+<table class="tags">
+  % for (my $i = 0; $i < @$tags; $i++) {
+    % my $tag = $tags->[$i];
+    % my $name = $tag->{name};
+    <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
+      <td><i><%= $tag->{age} %></i></td>
+      <td>
+        <a class="list name" href=
+          "<%= url_for('/commit')->query({root => $root, project => $project, cid => $name}) %>"
+        >
+          %= $tag->{name};
+        </a>
+      </td>
+      <td>
+        <a class="list subject" href=
+          "<%= url_for('/commit')->query({root => $root, project => $project, cid => $name}) %>"
+        >
+          <%= $tag->{subject} || '' %>
+        </a>
+      </td>
+      <td class="selflink">
+        <a href=
+          "<%= url_for('/tag')->query({root => $root, project => $project, name => $name}) %>"
+        >
+          tag
+        </a>
+      </td>
+      <td class="link"> |
+        <a href="<%= url_for('/commit')->query({root => $root,
+          project => $project, cid => $name}) %>"
+        >
+          commit
+        </a>
+        |
+        <a href="<%= url_for('/tag')->query({root => $root, project => $project,
+          name => $name}) %>"
+        >
+          shortlog
+        </a>
+        |
+        <a href="<%= url_for('/log')->query({root => $root, project => $project,
+          base_cid => $name}) %>"
+        >
+          log
+        </a>
+      </td>
+    </tr>
+  % }
+  % if (stash('summary')) {
+    % if (@$tags == stash('tag_count')) {
+      <tr>
+        <td>
+          <a href="<%= url_for('/tags')->query({root => $root, project => $project}) %>">
+            ...
+          </a>
+        </td>
+      </tr>
+    % }
+  % }
+</table>
