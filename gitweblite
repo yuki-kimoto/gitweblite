@@ -371,8 +371,6 @@ get '/tree' => sub {
 get '/snapshot' => sub {
   my $self = shift;
 
-  require Archive::Tar;
-  
   # Validation
   my $raw_params = _params($self);
   my $rule = [
@@ -406,7 +404,7 @@ get '/snapshot' => sub {
     or die 500, "Execute git-archive failed";
   
   # Write chunk
-  $self->res->headers->content_type('application/gzip');
+  $self->res->headers->content_type('application/x-tar');
   $self->res->headers->content_disposition(qq/attachment; filename="$file"/);
   my $cb;
   $cb = sub {
@@ -1025,7 +1023,7 @@ sub get_hash {
   my $git_dir = "$root/$project";
   my $o_git_dir = $git_dir;
   my $retval = undef;
-  if (open my $fd, '-|', git_cmd(), 'rev-parse',
+  if (open my $fd, '-|', git($root, $project), 'rev-parse',
       '--verify', '-q', @options, $cid) {
     $retval = <$fd>;
     chomp $retval if defined $retval;
@@ -1103,11 +1101,11 @@ sub get_project_urls {
 }
 
 sub parse_tag {
-  my $tag_id = shift;
+  my ($root, $project, $tag_id) = @_;
   my %tag;
   my @comment;
 
-  open my $fd, "-|", git_cmd(), "cat-file", "tag", $tag_id or return;
+  open my $fd, "-|", git($root, $project), "cat-file", "tag", $tag_id or return;
   $tag{'id'} = $tag_id;
   while (my $line = <$fd>) {
     chomp $line;
@@ -1291,10 +1289,10 @@ sub get_heads {
 }
 
 sub git_get_tags_list {
-  my $limit = shift;
+  my ($root, $project, $limit) = @_;
   my @tagslist;
 
-  open my $fd, '-|', git_cmd(), 'for-each-ref',
+  open my $fd, '-|', git($root, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
@@ -1762,7 +1760,7 @@ sub snapshot_name {
   if ($cid =~ /^[0-9a-fA-F]+$/) {
     my $full_hash = get_hash($root, $project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
-      $ver = git_get_short_hash($project, $cid);
+      $ver = get_short_hash($root, $project, $cid);
     }
   } elsif ($cid =~ m!^refs/tags/(.*)$!) {
     $ver = $1;
@@ -1770,7 +1768,7 @@ sub snapshot_name {
     if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
       $ver = $1;
     }
-    $ver .= '-' . git_get_short_hash($project, $cid);
+    $ver .= '-' . get_short_hash($root, $project, $cid);
   }
   $ver =~ s!/!.!g;
 

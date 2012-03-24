@@ -58,7 +58,7 @@
             commitdiff
           </a>
           |
-          <a href="<%= url_for('/commitdifftree')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/tree')->query({root => $root, project => $project, cid => $cid}) %>">
             tree
           </a>
           |
