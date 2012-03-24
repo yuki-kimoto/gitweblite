@@ -18,9 +18,9 @@
     %= include 'include/refs', root => $root, project => $project, commit => $commit, ref_names => $ref_names;
     <table class="object_header">
       <tr><td>Author</td><td><%= $commit->{author} %></td><td rowspan="2"></td></tr>
-      <tr><td></td><td><%= b($commit->{author_date}) %></td></tr>
+      <tr><td></td><td><%= $commit->{author_date} %></td></tr>
       <tr><td>Committer</td><td><%= $commit->{committer} %></td><td rowspan="2"></td></tr>
-      <tr><td></td><td><%= b($commit->{committer_date}) %></td></tr>
+      <tr><td></td><td><%= $commit->{committer_date} %></td></tr>
     </table>
   </div>
   <div class="page_body">

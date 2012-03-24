@@ -32,7 +32,7 @@
       </tr>
       <tr>
         <td></td>
-        <td><%= b($commit->{author_date}) %></td>
+        <td><%= $commit->{author_date} %></td>
       </tr>
       <tr>
         <td>committer</td>
@@ -41,7 +41,7 @@
       </tr>
       <tr>
         <td></td>
-        <td><%= b($commit->{committer_date}) %></td>
+        <td><%= $commit->{committer_date} %></td>
       </tr>
       <tr>
         <td>commit</td>
