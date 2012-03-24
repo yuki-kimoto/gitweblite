@@ -27,19 +27,29 @@
     </span>
     
   <table class="tree">
-    % for my $tree (@$trees) {
+    % for (my $i = 0; $i <@$trees; $i++) {
+      % my $tree = $trees->[$i];
       % my $type = $tree->{type};
       % my $name = $tree->{name};
-      <tr class="dark">
+      % my $child_dir = length $dir ? join('/', $dir, $tree->{name}) : $tree->{name};
+      <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td class="mode">
           <%= $tree->{mode_str} %>
         </td>
         <td class="list">
-          <a class="list" href="<%= url_for('/blob')->query({root => $root,
-            project => $project, cid => $cid, file => $name}) %>"
-          >
-            <%= $tree->{name} %>
-          </a>
+          % if ($type eq 'blob') {
+            <a class="list" href="<%= url_for('/blob')->query({root => $root,
+              project => $project, cid => $cid, file => $name}) %>"
+            >
+              <%= $tree->{name} %>
+            </a>
+          % } elsif ($tree) {
+            <a href="<%= url_for('/tree')->query({root => $root,
+              project => $project, cid => $cid, dir => $child_dir}) %>"
+            >
+              <%= $tree->{name} %>
+            </a>
+          % }
         </td>
         <td class="link">
           % if ($type eq 'blob') {
@@ -49,19 +59,18 @@
               blob
             </a>
             |
+            <a href="<%= url_for('/blob_plain')->query({root => $root,
+                project => $project, cid => $cid, file => $name}) %>"
+            >
+              raw
+            </a>
           % } elsif ($type eq 'tree') {
             <a href="<%= url_for('/tree')->query({root => $root,
-              project => $project, cid => $cid, dir => $name}) %>"
+              project => $project, cid => $cid, dir => $child_dir}) %>"
             >
               tree
             </a>
-            |
           % }
-          <a href="<%= url_for('/blob_plain')->query({root => $root,
-              project => $project, cid => $cid, file => $name}) %>"
-          >
-            raw
-          </a>
         </td>
       </tr>
     % }

@@ -357,10 +357,13 @@ get '/tree' => sub {
     $tree{mode_str} = mode_str($tree{mode});
     push @trees, \%tree;
   }
+  
+  warn $self->dumper(\@trees);
 
   $self->render(
     root => $root,
     project => $project,
+    dir => $dir,
     cid => $cid,
     tid => $tid,
     commit => $commit,
