@@ -1,11 +1,8 @@
 use 5.008007;
 use Mojolicious::Lite;
 use Fcntl ':mode';
-use File::Find 'find';
 use File::Basename 'basename';
-use Time::HiRes qw/gettimeofday tv_interval/;
 use Carp 'croak';
-use utf8;
 use Validator::Custom;
 use Encode qw/encode decode/;
 
@@ -66,7 +63,7 @@ get '/projects' => sub {
   die unless grep { $_ eq $root } @$projectroots;
   
   my @projects = get_projects($root);
-  @projects = fill_project_list_info($root, \@projects);
+  @projects = fill_projects($root, \@projects);
  
   $self->render(projects => \@projects);
 } => 'projects';
@@ -796,7 +793,6 @@ sub esc_html {
 
   return undef unless defined $str;
 
-  $str = to_utf8($str);
   $str = $cgi->escapeHTML($str);
   if ($opts{'-nbsp'}) {
     $str =~ s/ /&nbsp;/g;
@@ -811,7 +807,6 @@ sub esc_path {
 
   return undef unless defined $str;
 
-  $str = to_utf8($str);
   $str = $cgi->escapeHTML($str);
   if ($opts{'-nbsp'}) {
     $str =~ s/ /&nbsp;/g;
@@ -1421,7 +1416,7 @@ sub insert_file {
   my $file = shift;
 
   open my $fd, '<', $file;
-  print map { to_utf8($_) } <$fd>;
+  print <$fd>;
   close $fd;
 }
 
@@ -1780,7 +1775,7 @@ sub _heads {
 sub snapshot_name {
   my ($root, $project, $cid) = @_;
 
-  my $name = to_utf8($project);
+  my $name = $project;
   $name =~ s,([^/])/*\.git$,$1,;
   $name = basename($name);
   # sanitize name
@@ -1900,7 +1895,7 @@ sub parse_commit_text {
     } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
       push @parents, $1;
     } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
-      $commit{'author'} = to_utf8($1);
+      $commit{'author'} = $1;
       $commit{'author_epoch'} = $2;
       $commit{'author_tz'} = $3;
       if ($commit{'author'} =~ m/^([^<]+) <([^>]*)>/) {
@@ -1910,7 +1905,7 @@ sub parse_commit_text {
         $commit{'author_name'} = $commit{'author'};
       }
     } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
-      $commit{'committer'} = to_utf8($1);
+      $commit{'committer'} = $1;
       $commit{'committer_epoch'} = $2;
       $commit{'committer_tz'} = $3;
       if ($commit{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
@@ -2038,7 +2033,6 @@ sub _chop_str {
 
   # Make sure perl knows it is utf8 encoded so we don't
   # cut in the middle of a utf8 multibyte char.
-  $str = to_utf8($str);
 
   # allow only $len chars, but don't cut a word if it would fit in $add_len
   # if it doesn't fit, cut it if it's still longer than the dots we would add
@@ -2122,7 +2116,7 @@ sub get_project_list_from_file {
       my ($pr, $ow) = split ' ', $line;
       $pr = unescape($pr);
       $ow = unescape($ow);
-      $gitweb_project_owner->{$pr} = to_utf8($ow);
+      $gitweb_project_owner->{$pr} = $ow;
     }
     close $fd;
   }
@@ -2166,39 +2160,24 @@ sub get_file_owner {
   }
   my $owner = $gcos;
   $owner =~ s/[,;].*$//;
-  return to_utf8($owner);
+  return $owner;
 }
 
-sub to_utf8 {
-  my $str = shift;
-  return undef unless defined $str;
+sub fill_projects {
+  my ($root, $ps) = @_;
 
-  if (utf8::is_utf8($str) || utf8::decode($str)) {
-    return $str;
-  } else {
-    return decode('latin1', $str, Encode::FB_DEFAULT);
-  }
-}
-
-sub fill_project_list_info {
-  my ($root, $projlist) = @_;
   my @projects;
-
- PROJECT:
-  for my $pr (@$projlist) {
-    my (@activity) = get_last_activity($root, $pr->{'path'});
-    unless (@activity) {
-      next PROJECT;
-    }
-    ($pr->{'age'}, $pr->{'age_string'}) = @activity;
-    if (!defined $pr->{'descr'}) {
-      my $descr = get_project_description($root, $pr->{'path'}) || "";
-      $descr = to_utf8($descr);
-      $pr->{'descr_long'} = $descr;
-      $pr->{'descr'} = _chop_str($descr, 25, 5);
+  for my $project (@$ps) {
+    my (@activity) = get_last_activity($root, $project->{'path'});
+    next unless @activity;
+    ($project->{'age'}, $project->{'age_string'}) = @activity;
+    if (!defined $project->{'descr'}) {
+      my $descr = get_project_description($root, $project->{'path'}) || "";
+      $project->{'descr_long'} = $descr;
+      $project->{'descr'} = _chop_str($descr, 25, 5);
     }
 
-    push @projects, $pr;
+    push @projects, $project;
   }
 
   return @projects;
