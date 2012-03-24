@@ -441,8 +441,11 @@ get '/tag' => sub {
   
   # Ref names
   my $tag  = parse_tag($root, $project, $id);
-  
-  warn $self->dumper($tag);
+  my %author_date = %$tag
+    ? parse_date($tag->{author_epoch}, $tag->{author_tz})
+    : ();
+  my $author_date = _timestamp_html(\%author_date);
+  $tag->{author_date} = $author_date;
   
   # Render
   $self->render(

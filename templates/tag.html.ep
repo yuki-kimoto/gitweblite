@@ -8,26 +8,52 @@
   %= include '/include/page_navi', current => 'commit', root => $root, project => $project;
 
   <div class="header">
-    <a class="title" href="<%= url_for('/commit')->query({root => $root, project => $project}) %>">
-      v5.15.8
+    <a class="title" href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $tag->{id}}) %>">
+      <%= $tag->{name} %>
     </a>
   </div>
   <div class="title_text">
   <table class="object_header">
-  <tr>
-  <td>object</td>
-  <td><a class="list" href="/perl.git/commit/05ccd577e15cc66bbb7414fad5ee3c02f536c7a5">05ccd577e15cc66bbb7414fad5ee3c02f536c7a5</a></td>
-  <td class="link"><a href="/perl.git/commit/05ccd577e15cc66bbb7414fad5ee3c02f536c7a5">commit</a></td>
-  </tr>
-  <tr><td>author</td><td>Max Maischein &lt;corion@cpan.org&gt;</td><td rowspan="2"></td></tr>
-  <tr><td></td><td> Mon, 20 Feb 2012 22:58:17 +0000 (23:58 +0100)</td></tr>
+    <tr>
+      <td>object</td>
+      <td>
+        <a class="list" href="<%= url_for('/commit')->query({root => $root,
+          project => $project, cid => $tag->{object}}) %>"
+        >
+          <%= $tag->{object} %>
+        </a>
+      </td>
+      <td class="link">
+        <a href="<%= url_for('/commit')->query({root => $root,
+          project => $project, cid => $tag->{object}}) %>"
+        >
+          commit
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        author
+      </td>
+      <td>
+        <%= $tag->{author} || '' %>
+      </td>
+      <td rowspan="2">
+      </td>
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+        <%= b($tag->{author_date}) %>
+      </td>
+    </tr>
   </table>
 
   </div>
-  <div class="page_body">Release&nbsp;of&nbsp;v5.15.8<br/>
-  </div>
-  <div class="page_footer">
-  <div class="page_footer_text">Perl5 Master Repository</div>
-  <a class="rss_logo generic" title="log RSS feed" href="/perl.git/rss">RSS</a>
-  <a class="rss_logo generic" title="log Atom feed" href="/perl.git/atom">Atom</a>
+  <div class="page_body">
+    % for my $comment (@{$tag->{comment}}) {
+      <%= $comment %>
+      <br>
+    % }
   </div>
