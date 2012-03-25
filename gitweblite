@@ -1,15 +1,23 @@
 use 5.008007;
+use FindBin;
+use lib "$FindBin::Bin/lib";
+use File::Basename 'dirname';
+use lib dirname(__FILE__) . '/lib';
 use Mojolicious::Lite;
 use Fcntl ':mode';
 use File::Basename 'basename';
 use Carp 'croak';
 use Validator::Custom;
 use Encode qw/encode decode/;
+use Gitweblite::Git;
 
 our $VERSION = '0.01';
 
 # Encode
 sub e($) { encode('UTF-8', shift) }
+
+app->attr('validator');
+app->attr('git');
 
 my $conf = plugin 'Config';
 
@@ -17,17 +25,16 @@ my $conf = plugin 'Config';
 my $projectroots = $conf->{projectroots};
 my $projectroot = $conf->{projectroots}->[0];
 my $projects_list = $conf->{projects_list} ||= $projectroot;
-my $export_ok = $conf->{export_ok} || '';
-my $export_auth_hook = $conf->{export_ok} || undef;
-my $GIT = $conf->{git_bindir}
-  ? $conf->{git_bindir} . '/git'
-  : '/usr/local/bin/git';
 
-my $cgi;
 my @diff_opts = ('-M');
 my $prevent_xss = 0;
-
 my $default_text_plain_charset  = undef;
+
+# Git
+my $git_bin = $conf->{git} ? $conf->{git} : '/usr/local/bin/git';
+my $GIT = $git_bin;
+my $git = Gitweblite::Git->new(bin => $git_bin);
+app->git($git);
 
 # Validator
 my $validator = Validator::Custom->new;
@@ -36,6 +43,7 @@ $validator->register_constraint(hex => sub {
   return 0 unless defined $value;
   $value =~ /^[0-9a-fA-F]+$/ ? 1 : 0;
 });
+app->validator($validator);
 
 get '/' => sub {
   my $self = shift;
@@ -53,7 +61,7 @@ get '/projects' => sub {
   my $rule = [
     root => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -61,13 +69,16 @@ get '/projects' => sub {
   my $projectroots = app->config->{projectroots};
   die unless grep { $_ eq $root } @$projectroots;
   
+  # Git
+  my $git = app->git;
+  
   # Fill project information
-  my @projects = get_projects($root);
+  my @projects = $git->get_projects($root);
   @projects = fill_projects($root, \@projects);
   
   # Fill owner
   for my $project (@projects) {
-    $project->{owner} = get_project_owner($root, $project->{path});
+    $project->{owner} = $git->get_project_owner($root, $project->{path});
   }
   
   # Render
@@ -86,15 +97,18 @@ get '/summary' => sub {
     root => ['not_blank'],
     project => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
   
+  # Git
+  my $git = app->git;
+  
   # HEAd commit
   my $project_description = get_project_description($root, $project);
-  my $project_owner = get_project_owner($root, $project);
+  my $project_owner = $git->get_project_owner($root, $project);
   my $head_commit = parse_commit($root, $project, "HEAD");
   my %committer_date = %$head_commit
     ? parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
@@ -147,16 +161,19 @@ get '/commit' => sub {
     project => ['not_blank'],
     cid => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
   my $cid = $params->{cid};
+  
+  # Git
+  my $git = app->git;
 
   # Project information
   my $project_description = get_project_description($root, $project);
-  my $project_owner = get_project_owner($root, $project);
+  my $project_owner = $git->get_project_owner($root, $project);
   my %commit = parse_commit($root, $project, $cid);
   my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
   my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
@@ -201,7 +218,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
     cid => {require => 0 } => ['not_blank'],
     from_cid => {require => 0} => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -317,7 +334,7 @@ get '/tree' => sub {
     dir => {require => 0 } => ['not_blank'],
     tid => {require => 0 } => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -379,7 +396,7 @@ get '/snapshot' => sub {
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -432,7 +449,7 @@ get '/tag' => sub {
     project => ['not_blank'],
     id => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -464,7 +481,7 @@ get '/tags' => sub {
     root => ['not_blank'],
     project => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -490,7 +507,7 @@ get '/heads' => sub {
     root => ['not_blank'],
     project => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -522,7 +539,7 @@ get '/blob' => sub {
     cid => ['not_blank'],
     file => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -586,7 +603,7 @@ get '/blob_plain' => sub {
     cid => ['not_blank'],
     file => ['not_blank']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -643,7 +660,7 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
     file => ['any'],
     from_cid => ['any'],
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -780,7 +797,7 @@ sub _log {
     page => {require => 0} => ['int'],
     base_cid => {require => 0} => ['any']
   ];
-  my $vresult = $validator->validate($raw_params, $rule);
+  my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
   my $root = $params->{root};
@@ -873,24 +890,6 @@ sub get_difftree {
   return $diffs;
 }
 
-sub get_projects {
-  my ($root, %opt) = @_;
-  my $filter = $opt{filter};
-  
-  opendir my $dh, e$root
-    or croak qq/Can't open directory $root: $!/;
-  
-  my @projects;
-  while (my $project = readdir $dh) {
-    next unless $project =~ /\.git$/;
-    next unless check_export_ok("$root/$project");
-    next if defined $filter && $project !~ /\Q$filter\E/;
-    push @projects, { path => $project };
-  }
-
-  return @projects;
-}
-
 sub get_project_description {
   my ($root, $project) = @_;
   
@@ -902,16 +901,6 @@ sub get_project_description {
   return $description;
 }
 
-sub get_project_owner {
-  my ($root, $project) = @_;
-  
-  my $git_dir = "$root/$project";
-  my $user_id = (stat $git_dir)[4];
-  my $user = getpwuid($user_id);
-  
-  return $user;
-}
-
 sub slurp {
   my $file = shift;
   
@@ -920,20 +909,6 @@ sub slurp {
   my $content = do { local $/; <$fh> };
   
   return $content;
-}
-
-sub check_export_ok {
-  my ($dir) = @_;
-  return (check_head_link($dir) &&
-    (!$export_ok || -e "$dir/$export_ok") &&
-    (!$export_auth_hook || $export_auth_hook->($dir)));
-}
-
-sub check_head_link {
-  my ($dir) = @_;
-  my $headfile = "$dir/HEAD";
-  return ((-e $headfile) ||
-    (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
 sub age_class {
