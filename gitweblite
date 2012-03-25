@@ -70,7 +70,7 @@ get '/projects' => sub {
   die unless grep { $_ eq $root } @$projectroots;
   
   # Git
-  my $git = app->git;
+  my $git = $self->app->git;
   
   # Fill project information
   my @projects = $git->get_projects($root);
@@ -104,10 +104,10 @@ get '/summary' => sub {
   my $project = $params->{project};
   
   # Git
-  my $git = app->git;
+  my $git = $self->app->git;
   
   # HEAd commit
-  my $project_description = get_project_description($root, $project);
+  my $project_description = $git->get_project_description($root, $project);
   my $project_owner = $git->get_project_owner($root, $project);
   my $head_commit = parse_commit($root, $project, "HEAD");
   my %committer_date = %$head_commit
@@ -169,10 +169,10 @@ get '/commit' => sub {
   my $cid = $params->{cid};
   
   # Git
-  my $git = app->git;
+  my $git = $self->app->git;
 
   # Project information
-  my $project_description = get_project_description($root, $project);
+  my $project_description = $git->get_project_description($root, $project);
   my $project_owner = $git->get_project_owner($root, $project);
   my %commit = parse_commit($root, $project, $cid);
   my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
@@ -888,27 +888,6 @@ sub get_difftree {
   }
   
   return $diffs;
-}
-
-sub get_project_description {
-  my ($root, $project) = @_;
-  
-  my $git_dir = "$root/$project";
-  my $description_file = "$git_dir/description";
-  
-  my $description = slurp($description_file) || '';
-  
-  return $description;
-}
-
-sub slurp {
-  my $file = shift;
-  
-  open my $fh, '<', $file
-    or die qq/Can't open file "$file": $!/;
-  my $content = do { local $/; <$fh> };
-  
-  return $content;
 }
 
 sub age_class {
@@ -1772,7 +1751,7 @@ sub fill_projects {
     next unless @activity;
     ($project->{'age'}, $project->{'age_string'}) = @activity;
     if (!defined $project->{'descr'}) {
-      my $descr = get_project_description($root, $project->{'path'}) || "";
+      my $descr = $git->get_project_description($root, $project->{'path'}) || "";
       $project->{'descr_long'} = $descr;
       $project->{'descr'} = chop_str($descr, 25, 5);
     }

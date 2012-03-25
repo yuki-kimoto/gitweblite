@@ -27,16 +27,6 @@ sub check_head_link {
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
-sub get_project_owner {
-  my ($self, $root, $project) = @_;
-  
-  my $git_dir = "$root/$project";
-  my $user_id = (stat $git_dir)[4];
-  my $user = getpwuid($user_id);
-  
-  return $user;
-}
-
 sub get_projects {
   my ($self, $root, %opt) = @_;
   my $filter = $opt{filter};
@@ -53,6 +43,37 @@ sub get_projects {
   }
 
   return @projects;
+}
+
+sub get_project_description {
+  my ($self, $root, $project) = @_;
+  
+  my $git_dir = "$root/$project";
+  my $description_file = "$git_dir/description";
+  
+  my $description = $self->_slurp($description_file) || '';
+  
+  return $description;
+}
+
+sub get_project_owner {
+  my ($self, $root, $project) = @_;
+  
+  my $git_dir = "$root/$project";
+  my $user_id = (stat $git_dir)[4];
+  my $user = getpwuid($user_id);
+  
+  return $user;
+}
+
+sub _slurp {
+  my ($self, $file) = @_;
+  
+  open my $fh, '<', $file
+    or die qq/Can't open file "$file": $!/;
+  my $content = do { local $/; <$fh> };
+  
+  return $content;
 }
 
 1;
