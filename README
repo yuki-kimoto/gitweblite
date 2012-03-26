@@ -7,29 +7,72 @@ Features
 
   This is gitweb.cgi clone, and has the following features.
 
-  - Written by Perl and Mojolicious web framework
-  - Prerequisite is Perl 5.10.1+ (or Perl 5.8.7+ in trial version)
+  - Written by Perl and Mojolicious web framework.
+  - Prerequisite is Perl 5.10.1+
+    (or Perl 5.8.7+ for gitweblite5008(not yet implemented))
   - Having HTTP server. You can run gitweblite,
-    even if "apache" is not installed
-  - Multiple project directories
-  - Zero configuration(Not yet implemented)
-  - All most of gitweb.cgi features (Not yet implemented)
-  - No dependency (Not yet implemented)
+    even if "apache" is not installed.
+  - Multiple project homes.
+  - Zero configuration.
+  - having gitweb.cgi default features(but merge logic is incomplete).
+
+Installation
+
+  Install required moudles.
+
+    perl cpanm -l extlib Module::CoreList
+    perl t/module.t list | perl -Iextlib/lib/perl5 cpanm -n -L extlib
 
 Operation
 
   Start
   
-    hypnotoad gitweblite
+      ./run script/gitweblite
+  
+    Application start in back ground. Port is C<10010>.
+    If you change port, edit C<gitweblite.conf>.
   
   Stop
   
-    hypnotoad  --stop
+      ./run --stop
+    
+    You can stop application by C<--stop> option.
 
-NOTE
+Config
 
-  I will make gitweblite a application which has no dependency,
-  but in beta relase, you need the following module to execute gitweblite
-  
-    Mojolicious
-    Validator::Custom
+  You can set config in gitweblite.conf
+
+    search_dirs => [$dir, ...]
+    
+      Git repository searching directories.
+      
+      Default:
+      
+        search_dirs => ['/git/pub', '/home']
+    
+    search_max_depth => $num
+    
+      Searching directory max depth.
+      
+      Default:
+      
+        search_max_depth => 10
+    
+    git_bin => $path
+    
+      git command
+      
+      Default:
+      
+        git_bin => '/usr/local/bin/git'
+    
+    hypnotoad => {$opt => $val, ...}
+    
+      Server configuration.
+    
+      Default:
+      
+        hypnotoad => {
+          listen => ['http://*:10010']
+        }
+=cut
