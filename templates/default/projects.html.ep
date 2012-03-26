@@ -1,10 +1,10 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for('projects')->query({home => $home}); %>">Projects</a>
-    <%= $home %>
+    <a href="#">Projects</a>
   </div>
   <table class="project_list">
-    <a href="<%= url_for '/' %>">homes</a>
+    <a href="<%= url_for '/' %>">homes</a> &gt;
+    <a href="<%= url_for('/projects')->query(home => $home) %>"><%= $home %></a>
     <tr>
       <th>Project</th>
       <th>Description</th>

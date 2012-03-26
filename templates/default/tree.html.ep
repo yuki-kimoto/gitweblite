@@ -1,9 +1,10 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $home %>) /
-    <a href="<%= url_for('/projects')->query({home => $home}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({home => $home, project => $project}) %>"><%= $project %></a> /
-    Short Log
+    <a href="#">Tree</a> # <%= $project %>
+  </div>
+  <div>
+    <a href="<%= url_for '/' %>">homes</a> &gt;
+    <a href="<%= url_for('/projects')->query(home => $home) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'tree', home => $home, project => $project;
 

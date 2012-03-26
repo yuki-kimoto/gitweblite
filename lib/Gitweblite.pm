@@ -39,7 +39,7 @@ sub startup {
     $r = $r->waypoint('/')->via('get')->to('default#homes');
     
     # Others
-    $r->get('/projects/*home')->to('#projects')->name('projects');
+    $r->get('/projects')->to('#projects');
     $r->get('/summary')->to('#summary');
     $r->get('/shortlog')->to('#shortlog');
     $r->get('/log')->to('#log');
@@ -51,7 +51,7 @@ sub startup {
     $r->get('/heads')->to('#heads');
     $r->get('/tree')->to('#tree');
     $r->get('/blob')->to('#blob');
-    $r->get('/blob_plain')->to('#blob');
+    $r->get('/blob_plain')->to('#blob_plain');
     $r->get('/blobdiff(:suffix)')->to('#blobdiff', suffix => '');
     $r->get('/snapshot')->to('#snapshot');
   }

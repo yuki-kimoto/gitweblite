@@ -118,7 +118,7 @@ sub commit {
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
-    cid => ['not_blank']
+    cid => {require => 0} => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
@@ -126,6 +126,7 @@ sub commit {
   my $home = $self->_fix_home($params->{home});
   my $project = $params->{project};
   my $cid = $params->{cid};
+  $cid = 'HEAD' unless defined $cid;
   
   # Git
   my $git = $self->app->git;
@@ -664,7 +665,7 @@ sub blob_plain {
     or die "Open git-cat-file blob '$bid' failed";
 
   # content-type (can include charset)
-  my $type = $self->blob_contenttype($fd, $file);
+  my $type = $git->blob_contenttype($fd, $file);
 
   # "save as" filename, even when no $file is given
   my $save_as = "$cid";

@@ -1,9 +1,10 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $home %>) /
-    <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= $project %></a> /
-    Blob
+    <a href="#">Blob</a> # <%= $project %>
+  </div>
+  <div>
+    <a href="<%= url_for '/' %>">homes</a> &gt;
+    <a href="<%= url_for('/projects')->query(home => $home) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'blob', head_cid => $cid, home => $home, project => $project;
   <div class="page_nav">
