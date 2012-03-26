@@ -39,7 +39,7 @@ sub startup {
     $r = $r->waypoint('/')->via('get')->to('default#homes');
     
     # Others
-    $r->get('/projects')->to('#projects');
+    $r->get('/projects/*home')->to('#projects')->name('projects');
     $r->get('/summary')->to('#summary');
     $r->get('/shortlog')->to('#shortlog');
     $r->get('/log')->to('#log');
