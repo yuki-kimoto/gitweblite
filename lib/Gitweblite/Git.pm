@@ -66,6 +66,93 @@ sub get_project_owner {
   return $user;
 }
 
+sub get_tags {
+  my ($self, $root, $project, $limit) = @_;
+  my @tags;
+
+  open my $fd, '-|', $self->git($root, $project), 'for-each-ref',
+    ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
+    '--format=%(objectname) %(objecttype) %(refname) '.
+    '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
+    'refs/tags'
+    or return;
+  while (my $line = <$fd>) {
+    my %ref_item;
+
+    chomp $line;
+    my ($refinfo, $creatorinfo) = split(/\0/, $line);
+    my ($id, $type, $name, $refid, $reftype, $title) = split(' ', $refinfo, 6);
+    my ($creator, $epoch, $tz) =
+      ($creatorinfo =~ /^(.*) ([0-9]+) (.*)$/);
+    $ref_item{'fullname'} = $name;
+    $name =~ s!^refs/tags/!!;
+
+    $ref_item{'type'} = $type;
+    $ref_item{'id'} = $id;
+    $ref_item{'name'} = $name;
+    if ($type eq "tag") {
+      $ref_item{'subject'} = $title;
+      $ref_item{'reftype'} = $reftype;
+      $ref_item{'refid'}   = $refid;
+    } else {
+      $ref_item{'reftype'} = $type;
+      $ref_item{'refid'}   = $id;
+    }
+
+    if ($type eq "tag" || $type eq "commit") {
+      $ref_item{'epoch'} = $epoch;
+      if ($epoch) {
+        $ref_item{'age'} = $self->_age_string(time - $ref_item{'epoch'});
+      } else {
+        $ref_item{'age'} = "unknown";
+      }
+    }
+
+    push @tags, \%ref_item;
+  }
+  close $fd;
+
+  return \@tags;
+}
+
+sub git {
+  my ($self, $root, $project) = @_;
+  my $git_dir = "$root/$project";
+  
+  return ($self->bin, "--git-dir=$git_dir");
+}
+
+sub _age_string {
+  my ($self, $age) = @_;
+  my $age_str;
+
+  if ($age > 60*60*24*365*2) {
+    $age_str = (int $age/60/60/24/365);
+    $age_str .= " years ago";
+  } elsif ($age > 60*60*24*(365/12)*2) {
+    $age_str = int $age/60/60/24/(365/12);
+    $age_str .= " months ago";
+  } elsif ($age > 60*60*24*7*2) {
+    $age_str = int $age/60/60/24/7;
+    $age_str .= " weeks ago";
+  } elsif ($age > 60*60*24*2) {
+    $age_str = int $age/60/60/24;
+    $age_str .= " days ago";
+  } elsif ($age > 60*60*2) {
+    $age_str = int $age/60/60;
+    $age_str .= " hours ago";
+  } elsif ($age > 60*2) {
+    $age_str = int $age/60;
+    $age_str .= " min ago";
+  } elsif ($age > 2) {
+    $age_str = int $age;
+    $age_str .= " sec ago";
+  } else {
+    $age_str .= " right now";
+  }
+  return $age_str;
+}
+
 sub _slurp {
   my ($self, $file) = @_;
   

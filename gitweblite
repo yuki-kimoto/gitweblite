@@ -124,7 +124,7 @@ get '/summary' => sub {
   # Ref names
   my $ref_names = {};
   my $tag_count = 20;
-  my $tags  = get_tags($root, $project, $tag_count - 1);
+  my $tags  = $git->get_tags($root, $project, $tag_count - 1);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
   my $head_count = 20;
   my $heads = get_heads($root, $project, $head_count - 1);
@@ -182,7 +182,7 @@ get '/commit' => sub {
   
   # Ref names
   my $ref_names = {};
-  my $tags  = get_tags($root, $project);
+  my $tags  = $git->get_tags($root, $project);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
   my $heads = get_heads($root, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
@@ -225,6 +225,9 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $project = $params->{project};
   my $cid = defined $params->{cid} ? $params->{cid} : 'HEAD';
   my $from_cid = $params->{from_cid};
+  
+  # Git
+  my $git = $self->app->git;
   
   # Commit
   my $commit = parse_commit($root, $project, $cid)
@@ -303,7 +306,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
 
     # Ref names
     my $ref_names = {};
-    my $tags  = get_tags($root, $project);
+    my $tags  = $git->get_tags($root, $project);
     $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
     my $heads = get_heads($root, $project);
     $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
@@ -487,8 +490,11 @@ get '/tags' => sub {
   my $root = $params->{root};
   my $project = $params->{project};
   
+  # Git
+  my $git = $self->app->git;
+  
   # Ref names
-  my $tags  = get_tags($root, $project);
+  my $tags  = $git->get_tags($root, $project);
   
   # Render
   $self->render(
@@ -513,8 +519,11 @@ get '/heads' => sub {
   my $root = $params->{root};
   my $project = $params->{project};
   
+  # Git
+  my $git = $self->app->git;
+  
   # Ref names
-  my $heads  = get_tags($root, $project);
+  my $heads  = $git->get_tags($root, $project);
   
   # Render
   $self->render(
@@ -805,6 +814,9 @@ sub _log {
   my $page = $params->{page} || 0;
   $page = 0 if $page < 0;
   
+  # Git
+  my $git = $self->app->git;
+  
   # HEAD commit
   my $head_commit = parse_commit($root, $project, "HEAD");
   my $head_cid = $head_commit->{id};
@@ -816,7 +828,7 @@ sub _log {
   
   # Ref names
   my $ref_names = {};
-  my $tags  = get_tags($root, $project);
+  my $tags  = $git->get_tags($root, $project);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
   my $heads = get_heads($root, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
