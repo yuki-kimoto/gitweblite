@@ -28,7 +28,6 @@ my $projects_list = $conf->{projects_list} ||= $projectroot;
 
 my @diff_opts = ('-M');
 my $prevent_xss = 0;
-my $default_text_plain_charset  = undef;
 
 # Git
 my $git_bin = $conf->{git} ? $conf->{git} : '/usr/local/bin/git';
@@ -630,7 +629,7 @@ get '/blob_plain' => sub {
     or die "Open git-cat-file blob '$bid' failed";
 
   # content-type (can include charset)
-  my $type = blob_contenttype($fd, $file);
+  my $type = $self->blob_contenttype($fd, $file);
 
   # "save as" filename, even when no $file is given
   my $save_as = "$cid";
@@ -974,39 +973,6 @@ sub parse_commits {
   close $fd;
 
   return \@commits;
-}
-
-sub blob_mimetype {
-  my $fd = shift;
-  my $file = shift;
-
-  # just in case
-  return 'text/plain' unless $fd;
-
-  if (-T $fd) {
-    return 'text/plain';
-  } elsif (! $file) {
-    return 'application/octet-stream';
-  } elsif ($file =~ m/\.png$/i) {
-    return 'image/png';
-  } elsif ($file =~ m/\.gif$/i) {
-    return 'image/gif';
-  } elsif ($file =~ m/\.jpe?g$/i) {
-    return 'image/jpeg';
-  } else {
-    return 'application/octet-stream';
-  }
-}
-
-sub blob_contenttype {
-  my ($fd, $file, $type) = @_;
-
-  $type ||= blob_mimetype($fd, $file);
-  if ($type eq 'text/plain' && defined $default_text_plain_charset) {
-    $type .= "; charset=$default_text_plain_charset";
-  }
-
-  return $type;
 }
 
 sub _timestamp {

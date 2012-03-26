@@ -17,6 +17,39 @@ my $conf = {};
 my $export_ok = $conf->{export_ok} || '';
 my $export_auth_hook = $conf->{export_ok} || undef;
 my @diff_opts = ('-M');
+my $default_text_plain_charset  = undef;
+
+sub blob_mimetype {
+  my ($self, $fd, $file) = @_;
+
+  # just in case
+  return 'text/plain' unless $fd;
+
+  if (-T $fd) {
+    return 'text/plain';
+  } elsif (! $file) {
+    return 'application/octet-stream';
+  } elsif ($file =~ m/\.png$/i) {
+    return 'image/png';
+  } elsif ($file =~ m/\.gif$/i) {
+    return 'image/gif';
+  } elsif ($file =~ m/\.jpe?g$/i) {
+    return 'image/jpeg';
+  } else {
+    return 'application/octet-stream';
+  }
+}
+
+sub blob_contenttype {
+  my ($self, $fd, $file, $type) = @_;
+
+  $type ||= $self->blob_mimetype($fd, $file);
+  if ($type eq 'text/plain' && defined $default_text_plain_charset) {
+    $type .= "; charset=$default_text_plain_charset";
+  }
+
+  return $type;
+}
 
 sub check_export_ok {
   my ($self, $dir) = @_;
