@@ -56,7 +56,7 @@ get '/projects' => sub {
   my $self = shift;
   
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank']
   ];
@@ -91,7 +91,7 @@ get '/summary' => sub {
   my $self = shift;
   
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank']
@@ -154,7 +154,7 @@ get '/commit' => sub {
   my $self = shift;
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -210,7 +210,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $self = shift;
   
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -328,7 +328,7 @@ get '/tree' => sub {
   my $self = shift;
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -350,7 +350,7 @@ get '/tree' => sub {
   
   unless (defined $tid) {
     if (defined $dir) {
-      $tid = get_id_by_path($root, $project, $cid, $dir, "tree");
+      $tid = $git->get_id_by_path($root, $project, $cid, $dir, "tree");
     }
     else {
       $tid = $commit->{tree};
@@ -392,7 +392,7 @@ get '/snapshot' => sub {
   my $self = shift;
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -413,10 +413,10 @@ get '/snapshot' => sub {
 
   my ($name, $prefix) = $git->snapshot_name($root, $project, $cid);
   my $file = "$name.tar.gz";
-  my $cmd = quote_command(
+  my $cmd = _quote_command(
     git($root, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
   );
-  $cmd .= ' | ' . quote_command('gzip', '-n');
+  $cmd .= ' | ' . _quote_command('gzip', '-n');
 
   $file =~ s/(["\\])/\\$1/g;
 
@@ -445,7 +445,7 @@ get '/tag' => sub {
   my $self = shift;
   
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -481,7 +481,7 @@ get '/tags' => sub {
   my $self = shift;
   
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank']
@@ -510,7 +510,7 @@ get '/heads' => sub {
   my $self = shift;
   
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank']
@@ -543,7 +543,7 @@ get '/blob' => sub {
   my $self = shift;
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -559,7 +559,7 @@ get '/blob' => sub {
   my $file = $params->{file};
   
   # Blob id
-  my $bid = get_id_by_path($root, $project, $cid, $file, "blob")
+  my $bid = $git->get_id_by_path($root, $project, $cid, $file, "blob")
     or die "Cannot find file";
   
   # Blob
@@ -572,7 +572,7 @@ get '/blob' => sub {
   open my $fd, "-|", @git_cat_file
     or die "Couldn't cat $file, $bid";
   
-  my $mimetype = blob_mimetype($fd, $file);
+  my $mimetype = $git->blob_mimetype($fd, $file);
 
   # Redirect to blob plane
   if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
@@ -607,7 +607,7 @@ get '/blob_plain' => sub {
   my $self = shift;
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -623,7 +623,7 @@ get '/blob_plain' => sub {
   my $file = $params->{file};
 
   # Blob id
-  my $bid = get_id_by_path($root, $project, $cid, $file, "blob")
+  my $bid = $git->get_id_by_path($root, $project, $cid, $file, "blob")
     or die "Cannot find file";
   open my $fd, "-|", git($root, $project), "cat-file", "blob", $bid
     or die "Open git-cat-file blob '$bid' failed";
@@ -663,7 +663,7 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
   my $self = shift;
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -801,7 +801,7 @@ sub _log {
   my $short = $opt{short};
 
   # Validation
-  my $raw_params = parse_params($self);
+  my $raw_params = _parse_params($self);
   my $rule = [
     root => ['not_blank'],
     project => ['not_blank'],
@@ -850,15 +850,17 @@ sub _log {
   );
 };
 
-sub quote_command {
+sub _parse_params {
+  my $c = shift;
+  my $params = {map { $_ => scalar $c->param($_) } $c->param};
+  return $params;
+}
+
+sub _quote_command {
   return join(' ',
     map { my $a = $_; $a =~ s/(['!])/'\\$1'/g; "'$a'" } @_ );
 }
 
-sub get_head_hash {
-  my ($root, $project) = (shift, shift);
-  return get_id($root, $project, 'HEAD');
-}
 
 sub get_head_id {
   my ($root, $project) = (shift, shift);
@@ -933,49 +935,6 @@ sub get_id_by_path {
   return $3;
 }
 
-sub untabify {
-  my $line = shift;
-
-  while ((my $pos = index($line, "\t")) != -1) {
-    if (my $count = (8 - ($pos % 8))) {
-      my $spaces = ' ' x $count;
-      $line =~ s/\t/$spaces/;
-    }
-  }
-
-  return $line;
-}
-
-sub snapshot_name {
-  my ($root, $project, $cid) = @_;
-
-  my $name = $project;
-  $name =~ s,([^/])/*\.git$,$1,;
-  $name = basename($name);
-  # sanitize name
-  $name =~ s/[[:cntrl:]]/?/g;
-
-  my $ver = $cid;
-  if ($cid =~ /^[0-9a-fA-F]+$/) {
-    my $full_hash = get_id($root, $project, $cid);
-    if ($full_hash =~ /^$cid/ && length($cid) > 7) {
-      $ver = get_short_id($root, $project, $cid);
-    }
-  } elsif ($cid =~ m!^refs/tags/(.*)$!) {
-    $ver = $1;
-  } else {
-    if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
-      $ver = $1;
-    }
-    $ver .= '-' . get_short_id($root, $project, $cid);
-  }
-  $ver =~ s!/!.!g;
-
-  $name = "$name-$ver";
-
-  return wantarray ? ($name, $name) : $name;
-}
-
 sub git {
   my ($root, $project) = @_;
   my $git_dir = "$root/$project";
@@ -983,10 +942,5 @@ sub git {
   return ($GIT, "--git-dir=$git_dir");
 }
 
-sub parse_params {
-  my $c = shift;
-  my $params = {map { $_ => scalar $c->param($_) } $c->param};
-  return $params;
-}
 
 

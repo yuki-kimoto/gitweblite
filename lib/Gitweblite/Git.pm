@@ -3,6 +3,7 @@ use Mojo::Base -base;
 
 use Carp 'croak';
 use Encode qw/encode decode/;
+use File::Basename 'basename';
 use Fcntl ':mode';
 use constant {
   S_IFINVALID => 0030000,
@@ -138,6 +139,84 @@ sub get_difftree {
   
   return $diffs;
 }
+
+sub get_head_id {
+  my ($self, $root, $project) = (shift, shift, shift);
+  return get_id($root, $project, 'HEAD', @_);
+};
+
+sub get_short_id {
+  my ($self, $root, $project) = (shift, shift, shift);
+  return get_id($root, $project, @_, '--short=7');
+}
+
+sub get_id {
+  my ($self, $root, $project, $ref, @options) = @_;
+  
+  my $id;
+  my $git_dir = "$root/$project";
+  if (open my $fd, '-|', $self->git($root, $project), 'rev-parse',
+      '--verify', '-q', @options, $ref) {
+    $id = <$fd>;
+    chomp $id if defined $id;
+    close $fd;
+  }
+  return $id;
+}
+
+sub get_object_type {
+  my ($self, $root, $project, $cid) = @_;
+
+  open my $fd, "-|", $self->git($root, $project), "cat-file", '-t', $cid or return;
+  my $type = <$fd>;
+  close $fd or return;
+  chomp $type;
+  return $type;
+}
+
+sub id_set_multi {
+  my ($self, $cid, $key, $value) = @_;
+
+  if (!exists $cid->{$key}) {
+    $cid->{$key} = $value;
+  } elsif (!ref $cid->{$key}) {
+    $cid->{$key} = [ $cid->{$key}, $value ];
+  } else {
+    push @{$cid->{$key}}, $value;
+  }
+}
+
+sub get_id_by_path {
+  my ($self, $root, $project, $id, $path, $type) = @_;
+
+  $path =~ s,/+$,,;
+  
+  my @git_ls_tree = (
+    $self->git($root, $project), "ls-tree", $id, "--", $path
+  );
+  
+  open my $fd, "-|", @git_ls_tree
+    or die "Open git-ls-tree failed";
+  my $line = <$fd>;
+  close $fd or return undef;
+
+  if (!defined $line) {
+    # there is no tree or hash given by $path at $base
+    return undef;
+  }
+
+  $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/;
+  if (defined $type && $type ne $2) {
+    # type doesn't match
+    return undef;
+  }
+  return $3;
+}
+
+
+
+
+
 
 sub get_heads {
   my ($self, $root, $project, $limit, @classes) = @_;
