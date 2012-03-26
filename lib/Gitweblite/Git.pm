@@ -27,6 +27,45 @@ sub check_head_link {
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
+sub get_heads {
+  my ($self, $root, $project, $limit, @classes) = @_;
+  @classes = ('heads') unless @classes;
+  my @patterns = map { "refs/$_" } @classes;
+  my @heads;
+
+  open my $fd, '-|', $self->git($root, $project), 'for-each-ref',
+    ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
+    '--format=%(objectname) %(refname) %(subject)%00%(committer)',
+    @patterns
+    or return;
+  while (my $line = <$fd>) {
+    my %ref_item;
+
+    chomp $line;
+    my ($refinfo, $committerinfo) = split(/\0/, $line);
+    my ($cid, $name, $title) = split(' ', $refinfo, 3);
+    my ($committer, $epoch, $tz) =
+      ($committerinfo =~ /^(.*) ([0-9]+) (.*)$/);
+    $ref_item{'fullname'}  = $name;
+    $name =~ s!^refs/(?:head|remote)s/!!;
+
+    $ref_item{'name'}  = $name;
+    $ref_item{'id'}    = $cid;
+    $ref_item{'title'} = $title || '(no commit message)';
+    $ref_item{'epoch'} = $epoch;
+    if ($epoch) {
+      $ref_item{'age'} = $self->_age_string(time - $ref_item{'epoch'});
+    } else {
+      $ref_item{'age'} = "unknown";
+    }
+
+    push @heads, \%ref_item;
+  }
+  close $fd;
+
+  return \@heads;
+}
+
 sub get_projects {
   my ($self, $root, %opt) = @_;
   my $filter = $opt{filter};

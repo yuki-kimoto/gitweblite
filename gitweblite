@@ -127,7 +127,7 @@ get '/summary' => sub {
   my $tags  = $git->get_tags($root, $project, $tag_count - 1);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
   my $head_count = 20;
-  my $heads = get_heads($root, $project, $head_count - 1);
+  my $heads = $git->get_heads($root, $project, $head_count - 1);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   # Render
@@ -184,7 +184,7 @@ get '/commit' => sub {
   my $ref_names = {};
   my $tags  = $git->get_tags($root, $project);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = get_heads($root, $project);
+  my $heads = $git->get_heads($root, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   my $parent = $commit{parent};
@@ -308,7 +308,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
     my $ref_names = {};
     my $tags  = $git->get_tags($root, $project);
     $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-    my $heads = get_heads($root, $project);
+    my $heads = $git->get_heads($root, $project);
     $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
     
     # Render
@@ -523,7 +523,7 @@ get '/heads' => sub {
   my $git = $self->app->git;
   
   # Ref names
-  my $heads  = $git->get_tags($root, $project);
+  my $heads  = $git->get_heads($root, $project);
   
   # Render
   $self->render(
@@ -830,7 +830,7 @@ sub _log {
   my $ref_names = {};
   my $tags  = $git->get_tags($root, $project);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = get_heads($root, $project);
+  my $heads = $git->get_heads($root, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
 
   # Render
@@ -1240,94 +1240,6 @@ sub parse_ls_tree_line {
   }
 
   return wantarray ? %res : \%res;
-}
-
-sub get_heads {
-  my ($root, $project, $limit, @classes) = @_;
-  @classes = ('heads') unless @classes;
-  my @patterns = map { "refs/$_" } @classes;
-  my @heads;
-
-  open my $fd, '-|', git($root, $project), 'for-each-ref',
-    ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
-    '--format=%(objectname) %(refname) %(subject)%00%(committer)',
-    @patterns
-    or return;
-  while (my $line = <$fd>) {
-    my %ref_item;
-
-    chomp $line;
-    my ($refinfo, $committerinfo) = split(/\0/, $line);
-    my ($cid, $name, $title) = split(' ', $refinfo, 3);
-    my ($committer, $epoch, $tz) =
-      ($committerinfo =~ /^(.*) ([0-9]+) (.*)$/);
-    $ref_item{'fullname'}  = $name;
-    $name =~ s!^refs/(?:head|remote)s/!!;
-
-    $ref_item{'name'}  = $name;
-    $ref_item{'id'}    = $cid;
-    $ref_item{'title'} = $title || '(no commit message)';
-    $ref_item{'epoch'} = $epoch;
-    if ($epoch) {
-      $ref_item{'age'} = age_string(time - $ref_item{'epoch'});
-    } else {
-      $ref_item{'age'} = "unknown";
-    }
-
-    push @heads, \%ref_item;
-  }
-  close $fd;
-
-  return \@heads;
-}
-
-sub get_tags {
-  my ($root, $project, $limit) = @_;
-  my @tags;
-
-  open my $fd, '-|', git($root, $project), 'for-each-ref',
-    ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
-    '--format=%(objectname) %(objecttype) %(refname) '.
-    '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
-    'refs/tags'
-    or return;
-  while (my $line = <$fd>) {
-    my %ref_item;
-
-    chomp $line;
-    my ($refinfo, $creatorinfo) = split(/\0/, $line);
-    my ($id, $type, $name, $refid, $reftype, $title) = split(' ', $refinfo, 6);
-    my ($creator, $epoch, $tz) =
-      ($creatorinfo =~ /^(.*) ([0-9]+) (.*)$/);
-    $ref_item{'fullname'} = $name;
-    $name =~ s!^refs/tags/!!;
-
-    $ref_item{'type'} = $type;
-    $ref_item{'id'} = $id;
-    $ref_item{'name'} = $name;
-    if ($type eq "tag") {
-      $ref_item{'subject'} = $title;
-      $ref_item{'reftype'} = $reftype;
-      $ref_item{'refid'}   = $refid;
-    } else {
-      $ref_item{'reftype'} = $type;
-      $ref_item{'refid'}   = $id;
-    }
-
-    if ($type eq "tag" || $type eq "commit") {
-      $ref_item{'epoch'} = $epoch;
-      if ($epoch) {
-        $ref_item{'age'} = age_string(time - $ref_item{'epoch'});
-      } else {
-        $ref_item{'age'} = "unknown";
-      }
-    }
-
-    push @tags, \%ref_item;
-  }
-  close $fd;
-
-  return \@tags;
 }
 
 sub blob_mimetype {
