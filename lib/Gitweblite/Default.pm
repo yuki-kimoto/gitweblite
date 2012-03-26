@@ -1,8 +1,8 @@
 package Gitweblite::Default;
 use Mojo::Base 'Mojolicious::Controller';
 
-my @diff_opts = ('-M');
-my $prevent_xss = 0;
+has diff_opts => sub { ['-M'] };
+has prevent_xss => 0;
 
 sub projectroots {
   my $self = shift;
@@ -215,7 +215,7 @@ sub commitdiff {
   # Plain text
   if ($plain) {
     # git diff-tree plain output
-    open my $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @diff_opts,
+    open my $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
         '-p', $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
 
@@ -229,7 +229,7 @@ sub commitdiff {
   # HTML
   else {
     # git diff-tree output
-    open my $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @diff_opts,
+    open my $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
         "--no-commit-id", "--patch-with-raw", "--full-index",
         $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
@@ -254,7 +254,7 @@ sub commitdiff {
       my $bid = $diffinfo->{'to_id'};
       
       my @git_diff_tree = ($git->git($root, $project), "diff-tree", '-r',
-        @diff_opts, '-p', (!$plain ? "--full-index" : ()), $from_cid, $cid,
+        @{$self->diff_opts}, '-p', (!$plain ? "--full-index" : ()), $from_cid, $cid,
         "--", (defined $from_file ? $from_file : ()), $file
       );
       open $fd, "-|", @git_diff_tree
@@ -676,11 +676,11 @@ sub blob_plain {
     $save_as .= '.txt';
   }
 
-  my $sandbox = $prevent_xss &&
+  my $sandbox = $self->prevent_xss &&
     $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
 
   # serve text/* as text/plain
-  if ($prevent_xss &&
+  if ($self->prevent_xss &&
       ($type =~ m!^text/[a-z]+\b(.*)$! ||
        ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fd))) {
     my $rest = $1;
@@ -741,7 +741,7 @@ sub blobdiff {
     if (defined $file) {
       # git diff tree
       my @git_diff_tree = ($git->git($root, $project), "diff-tree", '-r',
-        @diff_opts, $from_cid, $cid, "--",
+        @{$self->diff_opts}, $from_cid, $cid, "--",
         (defined $from_file ? $from_file : ()), $file
       );
       
@@ -756,7 +756,7 @@ sub blobdiff {
     } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
 
       # read filtered raw output
-      open $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @diff_opts,
+      open $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
           $from_cid, $cid, "--"
         or die "Open git-diff-tree failed";
       @difftree =
@@ -783,7 +783,7 @@ sub blobdiff {
     $bid        ||= $diffinfo{'to_id'};
 
     # open patch output
-    open $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @diff_opts,
+    open $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
       '-p', (!$plain ? "--full-index" : ()),
       $from_cid, $cid,
       "--", (defined $from_file ? $from_file : ()), $file
