@@ -1,14 +1,14 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
-    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
+    <a href="<%= url_for('/projects')->query({project_dir => $project_dir}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $project}) %>"><%= $project %></a> /
     Tag
   </div>
-  %= include '/include/page_navi', current => 'commit', root => $root, project => $project;
+  %= include '/include/page_navi', current => 'commit', project_dir => $project_dir, project => $project;
 
   <div class="header">
-    <a class="title" href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $tag->{id}}) %>">
+    <a class="title" href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $tag->{id}}) %>">
       <%= $tag->{name} %>
     </a>
   </div>
@@ -17,14 +17,14 @@
     <tr>
       <td>object</td>
       <td>
-        <a class="list" href="<%= url_for('/commit')->query({root => $root,
+        <a class="list" href="<%= url_for('/commit')->query({project_dir => $project_dir,
           project => $project, cid => $tag->{object}}) %>"
         >
           <%= $tag->{object} %>
         </a>
       </td>
       <td class="link">
-        <a href="<%= url_for('/commit')->query({root => $root,
+        <a href="<%= url_for('/commit')->query({project_dir => $project_dir,
           project => $project, cid => $tag->{object}}) %>"
         >
           commit

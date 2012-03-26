@@ -1,8 +1,8 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
-    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
+    <a href="<%= url_for('/projects')->query({project_dir => $project_dir}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $project}) %>"><%= $project %></a> /
     Summary
   </div>
   %= include '/include/page_navi', current => 'summary';
@@ -35,7 +35,7 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid}) %>"
+            "<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>"
           >
             %= $commit->{title_short};
           </a>
@@ -43,7 +43,7 @@
             % if (my $name = $ref_names->{$type}{$cid}) {
               <span class="refs">
                 <span class="<%= $type %>" title="<%= $type %>s/<%= $name %>">
-                  <a href="<%= url_for('/shortlog')->query({root => $root,
+                  <a href="<%= url_for('/shortlog')->query({project_dir => $project_dir,
                     project => $project, cid => $name}) %>"
                   >
                     <%= $name %>
@@ -54,22 +54,22 @@
           % }
         </td>
         <td class="link">
-          <a href="<%= url_for('/commit')->query({root => $root,
+          <a href="<%= url_for('/commit')->query({project_dir => $project_dir,
             project => $project, cid => $cid}) %>"
           >
             commit
           </a>
           |
-          <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/commitdiff')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('/tree')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/tree')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('/snapshot')->query({root => $root, project => $project, cid => $cid}) %>
+            <%= url_for('/snapshot')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>
           >
             snapshot
           </a>
@@ -79,7 +79,7 @@
     % if (@$commits == $commit_count) {
       <tr>
         <td>
-          <a href="<%= url_for('/shortlog')->query({root => $root, project => $project}) %>">
+          <a href="<%= url_for('/shortlog')->query({project_dir => $project_dir, project => $project}) %>">
             ...
           </a>
         </td>
@@ -89,18 +89,18 @@
   
   <!-- Tags -->
   <div class="header">
-    <a class="title" href="<%= url_for('/tags')->query({root => $root, project => $project}) %>">Tags</a>
+    <a class="title" href="<%= url_for('/tags')->query({project_dir => $project_dir, project => $project}) %>">Tags</a>
   </div>
-  <%= include '/include/tags', root => $root, project => $project,
+  <%= include '/include/tags', project_dir => $project_dir, project => $project,
     tags => $tags, tag_count => $tag_count, summary => 1; %>
   
   <!-- Heads -->
   <div class="header">
-    <a class="title" href="<%= url_for('/heads')->query({root => $root,
+    <a class="title" href="<%= url_for('/heads')->query({project_dir => $project_dir,
       project => $project}) %>"
     >
       Heads
     </a>
   </div>
-  <%= include '/include/heads', root => $root, project => $project,
+  <%= include '/include/heads', project_dir => $project_dir, project => $project,
     tags => $tags, head_count => $head_count, summary => 1; %>

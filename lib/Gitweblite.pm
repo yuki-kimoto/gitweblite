@@ -37,7 +37,7 @@ sub startup {
     my $r = $self->routes;
     
     # Top
-    $r = $r->waypoint('/')->via('get')->to('default#projectroots');
+    $r = $r->waypoint('/')->via('get')->to('default#directories');
     
     # Others
     $r->get('/projects')->to('#projects');

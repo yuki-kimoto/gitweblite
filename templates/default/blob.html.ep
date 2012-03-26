@@ -1,19 +1,19 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
     <a href="<%= url_for('/projects')->query($self->req->params->clone) %>">Projects</a> /<br>
     <a href="<%= url_for('/summary')->query($self->req->params->clone) %>"><%= $project %></a> /
     Blob
   </div>
-  %= include '/include/page_navi', current => 'blob', head_cid => $cid, root => $root, project => $project;
+  %= include '/include/page_navi', current => 'blob', head_cid => $cid, project_dir => $project_dir, project => $project;
   <div class="page_nav">
-    <a href="<%= url_for('/blob_plain')->query({root => $root,
+    <a href="<%= url_for('/blob_plain')->query({project_dir => $project_dir,
       project => $project, cid => $cid, file => $file}) %>"
     >
       Raw
     </a>
     |
-    <a href="<%= url_for('/blob')->query({root => $root,
+    <a href="<%= url_for('/blob')->query({project_dir => $project_dir,
       project => $project, cid => 'HEAD', file => $file}) %>"
     >
       HEAD
@@ -22,7 +22,7 @@
   </div>
   <div class="header">
   <a class="title" href=
-    "<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid}) %>"
+    "<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>"
   >
     <%= $commit->{title} %>
   </a>
@@ -33,8 +33,8 @@
     % for (my $i = 0; $i < @parts; $i++) {
       % my $part = $parts[$i];
       % $path .= "/$part";
-      <a title="tree root" href=
-        "<%= url_for('/tree')->query({root => $root, project => $project, cid => $cid, dir => $path}) %>"
+      <a title="tree project_dir" href=
+        "<%= url_for('/tree')->query({project_dir => $project_dir, project => $project, cid => $cid, dir => $path}) %>"
       >
        <%= $part %>
       </a>

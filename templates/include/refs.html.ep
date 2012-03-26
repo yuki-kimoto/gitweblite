@@ -1,7 +1,7 @@
 % if (my $name = $ref_names->{head}{$commit->{id}}) {
   <span class="refs">
     <span class="head" title="heads/<%= $name %>">
-      <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
+      <a href="<%= url_for('/shortlog')->query({project_dir => $project_dir, project => $project, cid => $name}) %>">
         <%= $name %>
       </a>
     </span>
@@ -10,7 +10,7 @@
 % if (my $name = $ref_names->{tag}{$commit->{id}}) {
   <span class="refs">
     <span class="tag" title="tags/<%= $name %>">
-      <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, cid => $name}) %>">
+      <a href="<%= url_for('/shortlog')->query({project_dir => $project_dir, project => $project, cid => $name}) %>">
         <%= $name %>
       </a>
     </span>

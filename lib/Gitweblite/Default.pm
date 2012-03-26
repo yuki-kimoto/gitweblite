@@ -4,12 +4,12 @@ use Mojo::Base 'Mojolicious::Controller';
 has diff_opts => sub { ['-M'] };
 has prevent_xss => 0;
 
-sub projectroots {
+sub directories {
   my $self = shift;
   
-  my $projectroots = $self->app->config('projectroots');
+  my $directories = $self->app->config('projectroots');
 
-  $self->render(projectroots => $projectroots);
+  $self->render(directories => $directories);
 }
 
 sub projects {
@@ -18,31 +18,31 @@ sub projects {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank']
+    project_dir => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   
   my $projectroots = $self->app->config->{projectroots};
-  die unless grep { $_ eq $root } @$projectroots;
+  die unless grep { $_ eq $project_dir } @$projectroots;
   
   # Git
   my $git = $self->app->git;
   
   # Fill project information
-  my @projects = $git->get_projects($root);
-  @projects = $git->fill_projects($root, \@projects);
+  my @projects = $git->get_projects($project_dir);
+  @projects = $git->fill_projects($project_dir, \@projects);
   
   # Fill owner
   for my $project (@projects) {
-    $project->{owner} = $git->get_project_owner($root, $project->{path});
+    $project->{owner} = $git->get_project_owner($project_dir, $project->{path});
   }
   
   # Render
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     projects => \@projects
   );
 }
@@ -53,45 +53,45 @@ sub summary {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   
   # Git
   my $git = $self->app->git;
   
   # HEAd commit
-  my $project_description = $git->get_project_description($root, $project);
-  my $project_owner = $git->get_project_owner($root, $project);
-  my $head_commit = $git->parse_commit($root, $project, "HEAD");
+  my $project_description = $git->get_project_description($project_dir, $project);
+  my $project_owner = $git->get_project_owner($project_dir, $project);
+  my $head_commit = $git->parse_commit($project_dir, $project, "HEAD");
   my %committer_date = %$head_commit
     ? $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
   my $last_change = $git->_timestamp(\%committer_date);
   my $head_cid = $head_commit->{id};
-  my $urls = $git->get_project_urls($root, $project);
+  my $urls = $git->get_project_urls($project_dir, $project);
   
   # Commits
   my $commit_count = 20;
-  my $commits = $head_cid ? $git->parse_commits($root, $project, $head_cid, $commit_count) : ();
+  my $commits = $head_cid ? $git->parse_commits($project_dir, $project, $head_cid, $commit_count) : ();
   
   # Ref names
   my $ref_names = {};
   my $tag_count = 20;
-  my $tags  = $git->get_tags($root, $project, $tag_count - 1);
+  my $tags  = $git->get_tags($project_dir, $project, $tag_count - 1);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
   my $head_count = 20;
-  my $heads = $git->get_heads($root, $project, $head_count - 1);
+  my $heads = $git->get_heads($project_dir, $project, $head_count - 1);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   # Render
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     project_description => $project_description,
     project_owner => $project_owner,
@@ -118,14 +118,14 @@ sub commit {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   
@@ -133,9 +133,9 @@ sub commit {
   my $git = $self->app->git;
 
   # Project information
-  my $project_description = $git->get_project_description($root, $project);
-  my $project_owner = $git->get_project_owner($root, $project);
-  my %commit = $git->parse_commit($root, $project, $cid);
+  my $project_description = $git->get_project_description($project_dir, $project);
+  my $project_owner = $git->get_project_owner($project_dir, $project);
+  my %commit = $git->parse_commit($project_dir, $project, $cid);
   my %committer_date = %commit ? $git->parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
   my %author_date = %commit ? $git->parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
   $commit{author_date} = $git->_timestamp(\%author_date);
@@ -143,21 +143,21 @@ sub commit {
   
   # Ref names
   my $ref_names = {};
-  my $tags  = $git->get_tags($root, $project);
+  my $tags  = $git->get_tags($project_dir, $project);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = $git->get_heads($root, $project);
+  my $heads = $git->get_heads($project_dir, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   my $parent = $commit{parent};
   my $parents = $commit{parents};
   if (!defined $parent) {
-    $parent = "--root";
+    $parent = "--project_dir";
   }
   
-  my $difftrees = $git->get_difftree($root, $project, $cid, $parent, $parents);
+  my $difftrees = $git->get_difftree($project_dir, $project, $cid, $parent, $parents);
   
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     project_owner => $project_owner,
     cid => $cid,
@@ -174,7 +174,7 @@ sub commitdiff {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
     from_cid => {require => 0} => ['not_blank']
@@ -182,7 +182,7 @@ sub commitdiff {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = defined $params->{cid} ? $params->{cid} : 'HEAD';
   my $from_cid = $params->{from_cid};
@@ -191,7 +191,7 @@ sub commitdiff {
   my $git = $self->app->git;
   
   # Commit
-  my $commit = $git->parse_commit($root, $project, $cid)
+  my $commit = $git->parse_commit($project_dir, $project, $cid)
     or die 404, "Unknown commit object";
   my %author_date = %$commit
     ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
@@ -215,7 +215,7 @@ sub commitdiff {
   # Plain text
   if ($plain) {
     # git diff-tree plain output
-    open my $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fd, "-|", $git->git($project_dir, $project), "diff-tree", '-r', @{$self->diff_opts},
         '-p', $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
 
@@ -229,7 +229,7 @@ sub commitdiff {
   # HTML
   else {
     # git diff-tree output
-    open my $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fd, "-|", $git->git($project_dir, $project), "diff-tree", '-r', @{$self->diff_opts},
         "--no-commit-id", "--patch-with-raw", "--full-index",
         $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
@@ -242,7 +242,7 @@ sub commitdiff {
       push @diffinfos, scalar $git->parse_difftree_raw_line($line);
     }
     
-    my $difftrees = $git->get_difftree($root, $project,
+    my $difftrees = $git->get_difftree($project_dir, $project,
       $cid,$commit->{parent}, $commit->{parents});
     
     my @blobdiffs;
@@ -253,7 +253,7 @@ sub commitdiff {
       my $from_bid = $diffinfo->{'from_id'};
       my $bid = $diffinfo->{'to_id'};
       
-      my @git_diff_tree = ($git->git($root, $project), "diff-tree", '-r',
+      my @git_diff_tree = ($git->git($project_dir, $project), "diff-tree", '-r',
         @{$self->diff_opts}, '-p', (!$plain ? "--full-index" : ()), $from_cid, $cid,
         "--", (defined $from_file ? $from_file : ()), $file
       );
@@ -267,15 +267,15 @@ sub commitdiff {
 
     # Ref names
     my $ref_names = {};
-    my $tags  = $git->get_tags($root, $project);
+    my $tags  = $git->get_tags($project_dir, $project);
     $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-    my $heads = $git->get_heads($root, $project);
+    my $heads = $git->get_heads($project_dir, $project);
     $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
     
     # Render
     $self->render(
       'commitdiff',
-      root => $root,
+      project_dir => $project_dir,
       project => $project,
       cid => $cid,
       commit => $commit,
@@ -292,7 +292,7 @@ sub tree {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
     dir => {require => 0 } => ['not_blank'],
@@ -301,7 +301,7 @@ sub tree {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
@@ -311,11 +311,11 @@ sub tree {
   # Git
   my $git = $self->app->git;
 
-  my $commit = $git->parse_commit($root, $project, $cid);
+  my $commit = $git->parse_commit($project_dir, $project, $cid);
   
   unless (defined $tid) {
     if (defined $dir) {
-      $tid = $git->get_id_by_path($root, $project, $cid, $dir, "tree");
+      $tid = $git->get_id_by_path($project_dir, $project, $cid, $dir, "tree");
     }
     else {
       $tid = $commit->{tree};
@@ -327,7 +327,7 @@ sub tree {
   my $show_sizes = 0;
   {
     local $/ = "\0";
-    open my $fd, "-|", $git->git($root, $project), "ls-tree", '-z',
+    open my $fd, "-|", $git->git($project_dir, $project), "ls-tree", '-z',
       ($show_sizes ? '-l' : ()), $tid
       or die 500, "Open git-ls-tree failed";
     @entries = map { chomp; $_ } <$fd>;
@@ -343,7 +343,7 @@ sub tree {
   }
 
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     dir => $dir,
     cid => $cid,
@@ -359,14 +359,14 @@ sub snapshot {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
@@ -375,14 +375,14 @@ sub snapshot {
   my $git = $self->app->git;
 
   # Object type
-  my $type = $git->get_object_type($root, $project, "$cid^{}");
+  my $type = $git->get_object_type($project_dir, $project, "$cid^{}");
   if (!$type) { die 404, 'Object does not exist' }
   elsif ($type eq 'blob') { die 400, 'Object is not a tree-ish' }
 
-  my ($name, $prefix) = $git->snapshot_name($root, $project, $cid);
+  my ($name, $prefix) = $git->snapshot_name($project_dir, $project, $cid);
   my $file = "$name.tar.gz";
   my $cmd = _quote_command(
-    $git->git($root, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
+    $git->git($project_dir, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
   );
   $cmd .= ' | ' . _quote_command('gzip', '-n');
 
@@ -415,14 +415,14 @@ sub tag {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     id => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $id = $params->{id};
   
@@ -430,7 +430,7 @@ sub tag {
   my $git = $self->app->git;
   
   # Ref names
-  my $tag  = $git->parse_tag($root, $project, $id);
+  my $tag  = $git->parse_tag($project_dir, $project, $id);
   my %author_date = %$tag
     ? $git->parse_date($tag->{author_epoch}, $tag->{author_tz})
     : ();
@@ -439,7 +439,7 @@ sub tag {
   
   # Render
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     tag => $tag,
   );
@@ -451,24 +451,24 @@ sub tags {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   
   # Git
   my $git = $self->app->git;
   
   # Ref names
-  my $tags  = $git->get_tags($root, $project);
+  my $tags  = $git->get_tags($project_dir, $project);
   
   # Render
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     tags => $tags,
   );
@@ -480,24 +480,24 @@ sub heads {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   
   # Git
   my $git = $self->app->git;
   
   # Ref names
-  my $heads  = $git->get_heads($root, $project);
+  my $heads  = $git->get_heads($project_dir, $project);
   
   # Render
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     heads => $heads,
   );
@@ -509,7 +509,7 @@ sub head {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => ['not_blank'],
     file => ['not_blank']
@@ -517,7 +517,7 @@ sub head {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -526,12 +526,12 @@ sub head {
   my $git = $self->app->git;
 
   # Blob id
-  my $bid = $git->get_id_by_path($root, $project, $cid, $file, "blob")
+  my $bid = $git->get_id_by_path($project_dir, $project, $cid, $file, "blob")
     or die "Cannot find file";
   
   # Blob
   my @git_cat_file = (
-    $git->git($root, $project),
+    $git->git($project_dir, $project),
     "cat-file",
     "blob",
     $bid
@@ -544,13 +544,13 @@ sub head {
   # Redirect to blob plane
   if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
     close $fd;
-    my $url = $self->url_for('/blob_plain')->query([root => $root, project => $project,
+    my $url = $self->url_for('/blob_plain')->query([project_dir => $project_dir, project => $project,
       cid => $cid, file => $file]);
     return $self->refirect_to($url);
   }
   
   # Commit
-  my %commit = $git->parse_commit($root, $project, $cid);
+  my %commit = $git->parse_commit($project_dir, $project, $cid);
 
   my @lines;
   while (my $line = <$fd>) {
@@ -560,7 +560,7 @@ sub head {
   }
   
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     cid => $cid,
     bid => $bid,
@@ -576,7 +576,7 @@ sub blob {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => ['not_blank'],
     file => ['not_blank']
@@ -584,7 +584,7 @@ sub blob {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -593,12 +593,12 @@ sub blob {
   my $git = $self->app->git;
 
   # Blob id
-  my $bid = $git->get_id_by_path($root, $project, $cid, $file, "blob")
+  my $bid = $git->get_id_by_path($project_dir, $project, $cid, $file, "blob")
     or die "Cannot find file";
   
   # Blob
   my @git_cat_file = (
-    $git->git($root, $project),
+    $git->git($project_dir, $project),
     "cat-file",
     "blob",
     $bid
@@ -611,13 +611,13 @@ sub blob {
   # Redirect to blob plane
   if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
     close $fd;
-    my $url = $self->url_for('/blob_plain')->query([root => $root, project => $project,
+    my $url = $self->url_for('/blob_plain')->query([project_dir => $project_dir, project => $project,
       cid => $cid, file => $file]);
     return $self->refirect_to($url);
   }
   
   # Commit
-  my %commit = $git->parse_commit($root, $project, $cid);
+  my %commit = $git->parse_commit($project_dir, $project, $cid);
 
   my @lines;
   while (my $line = <$fd>) {
@@ -627,7 +627,7 @@ sub blob {
   }
   
   $self->render(
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     cid => $cid,
     bid => $bid,
@@ -643,7 +643,7 @@ sub blob_plain {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => ['not_blank'],
     file => ['not_blank']
@@ -651,7 +651,7 @@ sub blob_plain {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -660,9 +660,9 @@ sub blob_plain {
   my $git = $self->app->git;
 
   # Blob id
-  my $bid = $git->get_id_by_path($root, $project, $cid, $file, "blob")
+  my $bid = $git->get_id_by_path($project_dir, $project, $cid, $file, "blob")
     or die "Cannot find file";
-  open my $fd, "-|", $git->git($root, $project), "cat-file", "blob", $bid
+  open my $fd, "-|", $git->git($project_dir, $project), "cat-file", "blob", $bid
     or die "Open git-cat-file blob '$bid' failed";
 
   # content-type (can include charset)
@@ -703,7 +703,7 @@ sub blobdiff {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     cid => ['any'],
     file => ['any'],
@@ -712,7 +712,7 @@ sub blobdiff {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -740,7 +740,7 @@ sub blobdiff {
   if (defined $cid && defined $from_cid) {
     if (defined $file) {
       # git diff tree
-      my @git_diff_tree = ($git->git($root, $project), "diff-tree", '-r',
+      my @git_diff_tree = ($git->git($project_dir, $project), "diff-tree", '-r',
         @{$self->diff_opts}, $from_cid, $cid, "--",
         (defined $from_file ? $from_file : ()), $file
       );
@@ -756,7 +756,7 @@ sub blobdiff {
     } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
 
       # read filtered raw output
-      open $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
+      open $fd, "-|", $git->git($project_dir, $project), "diff-tree", '-r', @{$self->diff_opts},
           $from_cid, $cid, "--"
         or die "Open git-diff-tree failed";
       @difftree =
@@ -783,7 +783,7 @@ sub blobdiff {
     $bid        ||= $diffinfo{'to_id'};
 
     # open patch output
-    open $fd, "-|", $git->git($root, $project), "diff-tree", '-r', @{$self->diff_opts},
+    open $fd, "-|", $git->git($project_dir, $project), "diff-tree", '-r', @{$self->diff_opts},
       '-p', (!$plain ? "--full-index" : ()),
       $from_cid, $cid,
       "--", (defined $from_file ? $from_file : ()), $file
@@ -794,7 +794,7 @@ sub blobdiff {
     die '404 Not Found', "Missing one of the blob diff parameters";
   }
   
-  my $commit = $git->parse_commit($root, $project, $cid);
+  my $commit = $git->parse_commit($project_dir, $project, $cid);
 
   if ($plain) {
     my $content = do { local $/; <$fd> };
@@ -822,7 +822,7 @@ sub blobdiff {
 
     $self->render(
       '/blobdiff',
-      root => $root,
+      project_dir => $project_dir,
       project => $project,
       cid => $cid,
       from_cid => $from_cid,
@@ -842,7 +842,7 @@ sub _log {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    root => ['not_blank'],
+    project_dir => ['not_blank'],
     project => ['not_blank'],
     page => {require => 0} => ['int'],
     base_cid => {require => 0} => ['any']
@@ -850,7 +850,7 @@ sub _log {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $root = $params->{root};
+  my $project_dir = $params->{project_dir};
   my $project = $params->{project};
   my $base_cid = defined $params->{base_cid}
     ? $params->{base_cid}
@@ -862,24 +862,24 @@ sub _log {
   my $git = $self->app->git;
   
   # Base commit
-  my $base_commit = $git->parse_commit($root, $project, $base_cid);
+  my $base_commit = $git->parse_commit($project_dir, $project, $base_cid);
   
   # Commits
   my $page_count = $short ? 50 : 20;
-  my $commits = $git->parse_commits($root, $project, $base_commit->{id}, $page_count, $page_count * $page);
+  my $commits = $git->parse_commits($project_dir, $project, $base_commit->{id}, $page_count, $page_count * $page);
   
   # Ref names
   my $ref_names = {};
-  my $tags  = $git->get_tags($root, $project);
+  my $tags  = $git->get_tags($project_dir, $project);
   $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = $git->get_heads($root, $project);
+  my $heads = $git->get_heads($project_dir, $project);
   $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
 
   # Render
   my $template = $short ? 'shortlog' : 'log';
   $self->render(
     $template,
-    root => $root,
+    project_dir => $project_dir,
     project => $project,
     base_cid => $base_cid,
     commits => $commits,

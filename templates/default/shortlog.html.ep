@@ -1,11 +1,11 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
-    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
+    <a href="<%= url_for('/projects')->query({project_dir => $project_dir}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $project}) %>"><%= $project %></a> /
     Short Log
   </div>
-  %= include '/include/page_navi', current => 'shortlog', root => $root, project => $project;
+  %= include '/include/page_navi', current => 'shortlog', project_dir => $project_dir, project => $project;
   <%= include '/include/page_navi2', current => 'shortlog', base_cid => $base_cid,
     page => $page, page_count => $page_count,commits => $commits;
   %>
@@ -22,7 +22,7 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid}) %>"
+            "<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>"
           >
             <%= $commit->{title_short} %>
           </a>
@@ -30,7 +30,7 @@
             % if (my $name = $ref_names->{$type}{$cid}) {
               <span class="refs">
                 <span class="<%= $type %>" title="<%= $type %>s/<%= $name %>">
-                  <a href="<%= url_for('/shortlog')->query({root => $root, project => $project, base_cid => $name}) %>">
+                  <a href="<%= url_for('/shortlog')->query({project_dir => $project_dir, project => $project, base_cid => $name}) %>">
                     <%= $name %>
                   </a>
                 </span>
@@ -39,18 +39,18 @@
           % }
         </td>
         <td class="link">
-          <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $cid}) %>">commit</a>
+          <a href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">commit</a>
           |
-          <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/commitdiff')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('/tree')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/tree')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('/snapshot')->query({root => $root, project => $project, cid => $cid}) %>
+            <%= url_for('/snapshot')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>
           >
             snapshot
           </a>
@@ -60,7 +60,7 @@
     <tr>
       <td colspan="4">
         % if (@$commits == $page_count) {
-          <a title="Alt-n" accesskey="n" href="<%= url_for('/shortlog')->query({root => $root,
+          <a title="Alt-n" accesskey="n" href="<%= url_for('/shortlog')->query({project_dir => $project_dir,
             project => $project, base_cid => $base_cid, page => $page + 1}) %>"
           >
             Next

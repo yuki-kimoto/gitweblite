@@ -67,15 +67,15 @@ sub check_head_link {
 }
 
 sub fill_projects {
-  my ($self, $root, $ps) = @_;
+  my ($self, $project_dir, $ps) = @_;
 
   my @projects;
   for my $project (@$ps) {
-    my (@activity) = $self->get_last_activity($root, $project->{'path'});
+    my (@activity) = $self->get_last_activity($project_dir, $project->{'path'});
     next unless @activity;
     ($project->{'age'}, $project->{'age_string'}) = @activity;
     if (!defined $project->{'descr'}) {
-      my $descr = $self->get_project_description($root, $project->{'path'}) || "";
+      my $descr = $self->get_project_description($project_dir, $project->{'path'}) || "";
       $project->{'descr_long'} = $descr;
       $project->{'descr'} = $self->_chop_str($descr, 25, 5);
     }
@@ -87,11 +87,11 @@ sub fill_projects {
 }
 
 sub get_difftree {
-  my ($self, $root, $project, $cid, $parent, $parents) = @_;
+  my ($self, $project_dir, $project, $cid, $parent, $parents) = @_;
   
   # Execute "git diff-tree"
   my @git_diff_tree = (
-    $self->git($root, $project),
+    $self->git($project_dir, $project),
     "diff-tree", '-r',
     "--no-commit-id",
     @diff_opts,
@@ -141,21 +141,21 @@ sub get_difftree {
 }
 
 sub get_head_id {
-  my ($self, $root, $project) = (shift, shift, shift);
-  return get_id($root, $project, 'HEAD', @_);
+  my ($self, $project_dir, $project) = (shift, shift, shift);
+  return get_id($project_dir, $project, 'HEAD', @_);
 };
 
 sub get_short_id {
-  my ($self, $root, $project) = (shift, shift, shift);
-  return $self->get_id($root, $project, @_, '--short=7');
+  my ($self, $project_dir, $project) = (shift, shift, shift);
+  return $self->get_id($project_dir, $project, @_, '--short=7');
 }
 
 sub get_id {
-  my ($self, $root, $project, $ref, @options) = @_;
+  my ($self, $project_dir, $project, $ref, @options) = @_;
   
   my $id;
-  my $git_dir = "$root/$project";
-  if (open my $fd, '-|', $self->git($root, $project), 'rev-parse',
+  my $git_dir = "$project_dir/$project";
+  if (open my $fd, '-|', $self->git($project_dir, $project), 'rev-parse',
       '--verify', '-q', @options, $ref) {
     $id = <$fd>;
     chomp $id if defined $id;
@@ -165,9 +165,9 @@ sub get_id {
 }
 
 sub get_object_type {
-  my ($self, $root, $project, $cid) = @_;
+  my ($self, $project_dir, $project, $cid) = @_;
 
-  open my $fd, "-|", $self->git($root, $project), "cat-file", '-t', $cid or return;
+  open my $fd, "-|", $self->git($project_dir, $project), "cat-file", '-t', $cid or return;
   my $type = <$fd>;
   close $fd or return;
   chomp $type;
@@ -187,12 +187,12 @@ sub id_set_multi {
 }
 
 sub get_id_by_path {
-  my ($self, $root, $project, $id, $path, $type) = @_;
+  my ($self, $project_dir, $project, $id, $path, $type) = @_;
 
   $path =~ s,/+$,,;
   
   my @git_ls_tree = (
-    $self->git($root, $project), "ls-tree", $id, "--", $path
+    $self->git($project_dir, $project), "ls-tree", $id, "--", $path
   );
   
   open my $fd, "-|", @git_ls_tree
@@ -219,12 +219,12 @@ sub get_id_by_path {
 
 
 sub get_heads {
-  my ($self, $root, $project, $limit, @classes) = @_;
+  my ($self, $project_dir, $project, $limit, @classes) = @_;
   @classes = ('heads') unless @classes;
   my @patterns = map { "refs/$_" } @classes;
   my @heads;
 
-  open my $fd, '-|', $self->git($root, $project), 'for-each-ref',
+  open my $fd, '-|', $self->git($project_dir, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
     '--format=%(objectname) %(refname) %(subject)%00%(committer)',
     @patterns
@@ -258,11 +258,11 @@ sub get_heads {
 }
 
 sub get_last_activity {
-  my ($self, $root, $project) = @_;
+  my ($self, $project_dir, $project) = @_;
 
   my $fd;
   my @git_command = (
-    $self->git($root, $project),
+    $self->git($project_dir, $project),
     'for-each-ref',
     '--format=%(committer)',
     '--sort=-committerdate',
@@ -282,9 +282,9 @@ sub get_last_activity {
 }
 
 sub get_project_description {
-  my ($self, $root, $project) = @_;
+  my ($self, $project_dir, $project) = @_;
   
-  my $git_dir = "$root/$project";
+  my $git_dir = "$project_dir/$project";
   my $description_file = "$git_dir/description";
   
   my $description = $self->_slurp($description_file) || '';
@@ -293,9 +293,9 @@ sub get_project_description {
 }
 
 sub get_project_owner {
-  my ($self, $root, $project) = @_;
+  my ($self, $project_dir, $project) = @_;
   
-  my $git_dir = "$root/$project";
+  my $git_dir = "$project_dir/$project";
   my $user_id = (stat $git_dir)[4];
   my $user = getpwuid($user_id);
   
@@ -303,9 +303,9 @@ sub get_project_owner {
 }
 
 sub get_project_urls {
-  my ($self, $root, $project) = @_;
+  my ($self, $project_dir, $project) = @_;
 
-  my $git_dir = "$root/$project";
+  my $git_dir = "$project_dir/$project";
   open my $fd, '<', "$git_dir/cloneurl"
     or return;
   my @urls = map { chomp; $_ } <$fd>;
@@ -315,16 +315,16 @@ sub get_project_urls {
 }
 
 sub get_projects {
-  my ($self, $root, %opt) = @_;
+  my ($self, $project_dir, %opt) = @_;
   my $filter = $opt{filter};
   
-  opendir my $dh, e$root
-    or croak qq/Can't open directory $root: $!/;
+  opendir my $dh, e$project_dir
+    or croak qq/Can't open directory $project_dir: $!/;
   
   my @projects;
   while (my $project = readdir $dh) {
     next unless $project =~ /\.git$/;
-    next unless $self->check_export_ok("$root/$project");
+    next unless $self->check_export_ok("$project_dir/$project");
     next if defined $filter && $project !~ /\Q$filter\E/;
     push @projects, { path => $project };
   }
@@ -333,10 +333,10 @@ sub get_projects {
 }
 
 sub get_tags {
-  my ($self, $root, $project, $limit) = @_;
+  my ($self, $project_dir, $project, $limit) = @_;
   my @tags;
 
-  open my $fd, '-|', $self->git($root, $project), 'for-each-ref',
+  open my $fd, '-|', $self->git($project_dir, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
@@ -382,8 +382,8 @@ sub get_tags {
 }
 
 sub git {
-  my ($self, $root, $project) = @_;
-  my $git_dir = "$root/$project";
+  my ($self, $project_dir, $project) = @_;
+  my $git_dir = "$project_dir/$project";
   
   return ($self->bin, "--git-dir=$git_dir");
 }
@@ -469,11 +469,11 @@ sub parse_ls_tree_line {
 }
 
 sub parse_commit {
-  my ($self, $root, $project, $id) = @_;
+  my ($self, $project_dir, $project, $id) = @_;
   
   # Git rev-list
   my @git_rev_list = (
-    $self->git($root, $project),
+    $self->git($project_dir, $project),
     "rev-list",
     "--parents",
     "--header",
@@ -591,12 +591,12 @@ sub parse_commit_text {
 }
 
 sub parse_commits {
-  my ($self, $root, $project, $cid, $maxcount, $skip, $file, @args) = @_;
+  my ($self, $project_dir, $project, $cid, $maxcount, $skip, $file, @args) = @_;
 
   # git rev-list
   $maxcount ||= 1;
   $skip ||= 0;
-  open my $fd, "-|", $self->git($root, $project), "rev-list",
+  open my $fd, "-|", $self->git($project_dir, $project), "rev-list",
     "--header",
     @args,
     ("--max-count=" . $maxcount),
@@ -654,11 +654,11 @@ sub parse_date {
 }
 
 sub parse_tag {
-  my ($self, $root, $project, $tag_id) = @_;
+  my ($self, $project_dir, $project, $tag_id) = @_;
   my %tag;
   my @comment;
   
-  my @git_cat_file = ($self->git($root, $project), "cat-file", "tag", $tag_id);
+  my @git_cat_file = ($self->git($project_dir, $project), "cat-file", "tag", $tag_id);
   
   open my $fd, "-|", @git_cat_file or return;
   $tag{'id'} = $tag_id;
@@ -697,7 +697,7 @@ sub parse_tag {
 }
 
 sub snapshot_name {
-  my ($self, $root, $project, $cid) = @_;
+  my ($self, $project_dir, $project, $cid) = @_;
 
   my $name = $project;
   $name =~ s,([^/])/*\.git$,$1,;
@@ -707,9 +707,9 @@ sub snapshot_name {
 
   my $ver = $cid;
   if ($cid =~ /^[0-9a-fA-F]+$/) {
-    my $full_hash = $self->get_id($root, $project, $cid);
+    my $full_hash = $self->get_id($project_dir, $project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
-      $ver = $self->get_short_id($root, $project, $cid);
+      $ver = $self->get_short_id($project_dir, $project, $cid);
     }
   } elsif ($cid =~ m!^refs/tags/(.*)$!) {
     $ver = $1;
@@ -717,7 +717,7 @@ sub snapshot_name {
     if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
       $ver = $1;
     }
-    $ver .= '-' . $self->get_short_id($root, $project, $cid);
+    $ver .= '-' . $self->get_short_id($project_dir, $project, $cid);
   }
   $ver =~ s!/!.!g;
 

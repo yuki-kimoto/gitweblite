@@ -5,13 +5,13 @@
     % my $status = $difftree->{status};
     <tr>
       <td>
-        <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
+        <a class="list" href="<%= url_for('/blob')->query({project_dir => $project_dir, project => $project,
           cid => $cid, file => $file}) %>"
         >
           % if ($status eq 'D') {
             <%= $file %>
           % } else {
-            <a class="list" href="<%= url_for('/blob')->query({root => $root, project => $project,
+            <a class="list" href="<%= url_for('/blob')->query({project_dir => $project_dir, project => $project,
               cid => $cid, file => $file}) %>"
             >
               <%= $file %>
@@ -34,7 +34,7 @@
       </td>
       <td class="link">
         % if ($status ne 'A') {
-          <a href="<%= url_for('/blobdiff')->query({root => $root, project => $project,
+          <a href="<%= url_for('/blobdiff')->query({project_dir => $project_dir, project => $project,
             from_cid => $from_cid, cid => $cid, file => $file}) %>"
           >
             diff
@@ -42,7 +42,7 @@
           |
         % }
         % if ($status ne 'D') {
-          <a href="<%= url_for('/blob')->query({root => $root, project => $project,
+          <a href="<%= url_for('/blob')->query({project_dir => $project_dir, project => $project,
             cid => $cid, file => $file}) %>"
           >
             blob

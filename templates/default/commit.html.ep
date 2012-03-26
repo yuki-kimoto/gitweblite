@@ -1,29 +1,29 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $root %>) /
-    <a href="<%= url_for('/projects')->query({root => $root}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({root => $root, project => $project}) %>"><%= $project %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
+    <a href="<%= url_for('/projects')->query({project_dir => $project_dir}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $project}) %>"><%= $project %></a> /
     Commit
   </div>
-  %= include '/include/page_navi', current => 'commit', root => $root, project => $project;
+  %= include '/include/page_navi', current => 'commit', project_dir => $project_dir, project => $project;
   
   <div class="page_nav">
     % my $from_cid = $commit->{parent};
     (
       parent:
-      <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $from_cid}) %>">
+      <a href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $from_cid}) %>">
         <%= substr($from_cid, 0, 7) %>
       </a>
     ) |
   </div>
   
   <div class="header">
-    <a class="title" href="<%= url_for('/commitdiff')->query({root => $root, project => $project, cid => $cid}) %>">
+    <a class="title" href="<%= url_for('/commitdiff')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
       <%= $commit->{title} %>
     </a>
   </div>
   <div class="title_text">
-    %= include 'include/refs', root => $root, project => $project, commit => $commit, ref_names => $ref_names;
+    %= include 'include/refs', project_dir => $project_dir, project => $project, commit => $commit, ref_names => $ref_names;
     <table class="object_header">
       <tr>
         <td>author</td>
@@ -50,17 +50,17 @@
       <tr>
         <td>tree</td>
         <td class="sha1">
-          <a class="list" href="<%= url_for('/tree')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a class="list" href="<%= url_for('/tree')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
             <%= $cid %>
           </a>
         </td>
         <td class="link">
-          <a href="<%= url_for('/tree')->query({root => $root, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/tree')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow"
-            href="<%= url_for('/snapshot')->query({root => $root, project => $project, cid => $cid}) %>"
+            href="<%= url_for('/snapshot')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>"
           >
             snapshot
           </a>
@@ -72,17 +72,17 @@
         </td>
         <td class="sha1">
           <a class="list"
-            href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $from_cid}) %>"
+            href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $from_cid}) %>"
           >
             <%= $from_cid %>
           </a>
         </td>
         <td class="link">
-          <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => $from_cid}) %>">
+          <a href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $from_cid}) %>">
             commit
           </a>
           |
-          <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project,
+          <a href="<%= url_for('/commitdiff')->query({project_dir => $project_dir, project => $project,
             cid => $commit->{id}, from_cid => $from_cid}) %>"
           >
             diff

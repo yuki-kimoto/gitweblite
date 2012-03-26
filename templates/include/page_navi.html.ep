@@ -20,18 +20,18 @@
   % if ($current eq 'commit') {
     Commit
   % } else {
-    <a href="<%= url_for('/commit')->query({root => $root, project => $project, cid => 'HEAD'}) %>">Commit</a>
+    <a href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => 'HEAD'}) %>">Commit</a>
   % }
   |
   % if ($current eq 'commitdiff') {
     Commitdiff
   % } else {
-    <a href="<%= url_for('/commitdiff')->query({root => $root, project => $project, cid => 'HEAD'}) %>">Commitdiff</a>
+    <a href="<%= url_for('/commitdiff')->query({project_dir => $project_dir, project => $project, cid => 'HEAD'}) %>">Commitdiff</a>
   % }
   |
   % if ($current eq 'tree') {
     Tree
   % } else {
-    <a href="<%= url_for('/tree')->query({root => $root, project => $project, cid => 'HEAD'}) %>">Tree</a>
+    <a href="<%= url_for('/tree')->query({project_dir => $project_dir, project => $project, cid => 'HEAD'}) %>">Tree</a>
   % }
 </div>
