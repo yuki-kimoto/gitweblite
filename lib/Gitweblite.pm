@@ -1,34 +1,19 @@
 package Gitweblite;
 use Mojo::Base 'Mojolicious';
 
-use FindBin;
-use lib "$FindBin::Bin/lib";
-use File::Basename 'dirname';
-use lib dirname(__FILE__) . '/lib';
-use Fcntl ':mode';
-use File::Basename 'basename';
-use Carp 'croak';
 use Validator::Custom;
-use Encode qw/encode decode/;
 use Gitweblite::Git;
 
 our $VERSION = '0.01';
 
-# Encode
-sub e($) { encode('UTF-8', shift) }
-
 has 'validator';
 has 'git';
-
-my @diff_opts = ('-M');
-my $prevent_xss = 0;
 
 sub startup {
   my $self = shift;
   
-  my $conf = $self->plugin('Config');
-
   # Config
+  my $conf = $self->plugin('Config');
   my $projectroots = $conf->{projectroots};
   my $projectroot = $conf->{projectroots}->[0];
   my $projects_list = $conf->{projects_list} ||= $projectroot;
