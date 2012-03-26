@@ -149,6 +149,18 @@ sub get_project_owner {
   return $user;
 }
 
+sub get_project_urls {
+  my ($self, $root, $project) = @_;
+
+  my $git_dir = "$root/$project";
+  open my $fd, '<', "$git_dir/cloneurl"
+    or return;
+  my @urls = map { chomp; $_ } <$fd>;
+  close $fd;
+
+  return \@urls;
+}
+
 sub get_tags {
   my ($self, $root, $project, $limit) = @_;
   my @tags;

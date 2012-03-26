@@ -115,7 +115,7 @@ get '/summary' => sub {
     : ();
   my $last_change = _timestamp(\%committer_date);
   my $head_cid = $head_commit->{id};
-  my $urls = get_project_urls($root, $project);
+  my $urls = $git->get_project_urls($root, $project);
   
   # Commits
   my $commit_count = 20;
@@ -1077,18 +1077,6 @@ sub get_id_by_path {
     return undef;
   }
   return $3;
-}
-
-sub get_project_urls {
-  my ($root, $project) = @_;
-
-  my $git_dir = "$root/$project";
-  open my $fd, '<', "$git_dir/cloneurl"
-    or return;
-  my @urls = map { chomp; $_ } <$fd>;
-  close $fd;
-
-  return \@urls;
 }
 
 sub parse_tag {
