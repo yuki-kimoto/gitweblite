@@ -1234,7 +1234,7 @@ sub get_heads {
   my ($root, $project, $limit, @classes) = @_;
   @classes = ('heads') unless @classes;
   my @patterns = map { "refs/$_" } @classes;
-  my @headslist;
+  my @heads;
 
   open my $fd, '-|', git($root, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
@@ -1262,16 +1262,16 @@ sub get_heads {
       $ref_item{'age'} = "unknown";
     }
 
-    push @headslist, \%ref_item;
+    push @heads, \%ref_item;
   }
   close $fd;
 
-  return \@headslist;
+  return \@heads;
 }
 
 sub get_tags {
   my ($root, $project, $limit) = @_;
-  my @tagslist;
+  my @tags;
 
   open my $fd, '-|', git($root, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
@@ -1311,11 +1311,11 @@ sub get_tags {
       }
     }
 
-    push @tagslist, \%ref_item;
+    push @tags, \%ref_item;
   }
   close $fd;
 
-  return \@tagslist;
+  return \@tags;
 }
 
 sub blob_mimetype {
@@ -1727,19 +1727,6 @@ sub git {
   my $git_dir = "$root/$project";
   
   return ($GIT, "--git-dir=$git_dir");
-}
-
-sub get_file_owner {
-  my $path = shift;
-
-  my ($dev, $ino, $mode, $nlink, $st_uid, $st_gid, $rdev, $size) = stat($path);
-  my ($name, $passwd, $uid, $gid, $quota, $comment, $gcos, $dir, $shell) = getpwuid($st_uid);
-  if (!defined $gcos) {
-    return undef;
-  }
-  my $owner = $gcos;
-  $owner =~ s/[,;].*$//;
-  return $owner;
 }
 
 sub fill_projects {
