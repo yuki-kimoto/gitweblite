@@ -13,11 +13,11 @@
       </td>
       <td class="link">
         <a href="<%= url_for('/shortlog')->query({root => $root,
-          project => $project, cid => $name}) %>"
+          project => $project, base_cid => $name}) %>"
         >
           shortlog
         </a> |
-      <a href="<%= url_for('/log')->query({root => $root, project => $project, cid => $name}) %>">
+      <a href="<%= url_for('/log')->query({root => $root, project => $project, base_cid => $name}) %>">
         log
       </a> |
         <a href="<%= url_for('/tree')->query({root => $root, project => $project,

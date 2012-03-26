@@ -852,20 +852,21 @@ sub _log {
   my $params = $vresult->data;
   my $root = $params->{root};
   my $project = $params->{project};
+  my $base_cid = defined $params->{base_cid}
+    ? $params->{base_cid}
+    :"HEAD";
   my $page = $params->{page} || 0;
   $page = 0 if $page < 0;
   
   # Git
   my $git = $self->app->git;
   
-  # HEAD commit
-  my $head_commit = $git->parse_commit($root, $project, "HEAD");
-  my $head_cid = $head_commit->{id};
-  my $base_cid ||= $head_cid;
+  # Base commit
+  my $base_commit = $git->parse_commit($root, $project, $base_cid);
   
   # Commits
   my $page_count = $short ? 50 : 20;
-  my $commits = $git->parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
+  my $commits = $git->parse_commits($root, $project, $base_commit->{id}, $page_count, $page_count * $page);
   
   # Ref names
   my $ref_names = {};
@@ -880,7 +881,6 @@ sub _log {
     $template,
     root => $root,
     project => $project,
-    head_cid => $head_cid,
     base_cid => $base_cid,
     commits => $commits,
     ref_names => $ref_names,
