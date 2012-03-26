@@ -147,7 +147,7 @@ sub get_head_id {
 
 sub get_short_id {
   my ($self, $root, $project) = (shift, shift, shift);
-  return get_id($root, $project, @_, '--short=7');
+  return $self->get_id($root, $project, @_, '--short=7');
 }
 
 sub get_id {
@@ -707,9 +707,9 @@ sub snapshot_name {
 
   my $ver = $cid;
   if ($cid =~ /^[0-9a-fA-F]+$/) {
-    my $full_hash = get_id($root, $project, $cid);
+    my $full_hash = $self->get_id($root, $project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
-      $ver = get_short_id($root, $project, $cid);
+      $ver = $self->get_short_id($root, $project, $cid);
     }
   } elsif ($cid =~ m!^refs/tags/(.*)$!) {
     $ver = $1;
@@ -717,7 +717,7 @@ sub snapshot_name {
     if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
       $ver = $1;
     }
-    $ver .= '-' . get_short_id($root, $project, $cid);
+    $ver .= '-' . $self->get_short_id($root, $project, $cid);
   }
   $ver =~ s!/!.!g;
 
