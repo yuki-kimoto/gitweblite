@@ -27,6 +27,26 @@ sub check_head_link {
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
+sub fill_projects {
+  my ($self, $root, $ps) = @_;
+
+  my @projects;
+  for my $project (@$ps) {
+    my (@activity) = $self->get_last_activity($root, $project->{'path'});
+    next unless @activity;
+    ($project->{'age'}, $project->{'age_string'}) = @activity;
+    if (!defined $project->{'descr'}) {
+      my $descr = $self->get_project_description($root, $project->{'path'}) || "";
+      $project->{'descr_long'} = $descr;
+      $project->{'descr'} = $self->_chop_str($descr, 25, 5);
+    }
+
+    push @projects, $project;
+  }
+
+  return @projects;
+}
+
 sub get_heads {
   my ($self, $root, $project, $limit, @classes) = @_;
   @classes = ('heads') unless @classes;
@@ -64,6 +84,30 @@ sub get_heads {
   close $fd;
 
   return \@heads;
+}
+
+sub get_last_activity {
+  my ($self, $root, $project) = @_;
+
+  my $fd;
+  my @git_command = (
+    $self->git($root, $project),
+    'for-each-ref',
+    '--format=%(committer)',
+    '--sort=-committerdate',
+    '--count=1',
+    'refs/heads'  
+  );
+  open($fd, "-|", @git_command) or return;
+  my $most_recent = <$fd>;
+  close $fd or return;
+  if (defined $most_recent &&
+      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
+    my $timestamp = $1;
+    my $age = time - $timestamp;
+    return ($age, $self->_age_string($age));
+  }
+  return (undef, undef);
 }
 
 sub get_projects {
@@ -190,6 +234,53 @@ sub _age_string {
     $age_str .= " right now";
   }
   return $age_str;
+}
+
+sub _chop_str {
+  my $self = shift;
+  my $str = shift;
+  my $len = shift;
+  my $add_len = shift || 10;
+  my $where = shift || 'right'; # 'left' | 'center' | 'right'
+
+  if ($where eq 'center') {
+    return $str if ($len + 5 >= length($str)); # filler is length 5
+    $len = int($len/2);
+  } else {
+    return $str if ($len + 4 >= length($str)); # filler is length 4
+  }
+
+  # regexps: ending and beginning with word part up to $add_len
+  my $endre = qr/.{$len}\w{0,$add_len}/;
+  my $begre = qr/\w{0,$add_len}.{$len}/;
+
+  if ($where eq 'left') {
+    $str =~ m/^(.*?)($begre)$/;
+    my ($lead, $body) = ($1, $2);
+    if (length($lead) > 4) {
+      $lead = " ...";
+    }
+    return "$lead$body";
+
+  } elsif ($where eq 'center') {
+    $str =~ m/^($endre)(.*)$/;
+    my ($left, $str)  = ($1, $2);
+    $str =~ m/^(.*?)($begre)$/;
+    my ($mid, $right) = ($1, $2);
+    if (length($mid) > 5) {
+      $mid = " ... ";
+    }
+    return "$left$mid$right";
+
+  } else {
+    $str =~ m/^($endre)(.*)$/;
+    my $body = $1;
+    my $tail = $2;
+    if (length($tail) > 4) {
+      $tail = "... ";
+    }
+    return "$body$tail";
+  }
 }
 
 sub _slurp {

@@ -74,7 +74,7 @@ get '/projects' => sub {
   
   # Fill project information
   my @projects = $git->get_projects($root);
-  @projects = fill_projects($root, \@projects);
+  @projects = $git->fill_projects($root, \@projects);
   
   # Fill owner
   for my $project (@projects) {
@@ -1555,30 +1555,6 @@ sub age_string {
   return $age_str;
 }
 
-sub get_last_activity {
-  my ($root, $project) = @_;
-
-  my $fd;
-  my @git_command = (
-    git($root, $project),
-    'for-each-ref',
-    '--format=%(committer)',
-    '--sort=-committerdate',
-    '--count=1',
-    'refs/heads'  
-  );
-  open($fd, "-|", @git_command) or return;
-  my $most_recent = <$fd>;
-  close $fd or return;
-  if (defined $most_recent &&
-      $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
-    my $timestamp = $1;
-    my $age = time - $timestamp;
-    return ($age, age_string($age));
-  }
-  return (undef, undef);
-}
-
 sub chop_str {
   my $str = shift;
   my $len = shift;
@@ -1651,26 +1627,6 @@ sub git {
   my $git_dir = "$root/$project";
   
   return ($GIT, "--git-dir=$git_dir");
-}
-
-sub fill_projects {
-  my ($root, $ps) = @_;
-
-  my @projects;
-  for my $project (@$ps) {
-    my (@activity) = get_last_activity($root, $project->{'path'});
-    next unless @activity;
-    ($project->{'age'}, $project->{'age_string'}) = @activity;
-    if (!defined $project->{'descr'}) {
-      my $descr = $git->get_project_description($root, $project->{'path'}) || "";
-      $project->{'descr_long'} = $descr;
-      $project->{'descr'} = chop_str($descr, 25, 5);
-    }
-
-    push @projects, $project;
-  }
-
-  return @projects;
 }
 
 sub parse_params {
