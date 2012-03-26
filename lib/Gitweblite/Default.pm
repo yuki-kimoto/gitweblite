@@ -1,16 +1,25 @@
 package Gitweblite::Default;
 use Mojo::Base 'Mojolicious::Controller';
+use Mojo::Cache;
 
 has diff_opts => sub { ['-M'] };
 has prevent_xss => 0;
 
 sub homes {
   my $self = shift;
-  
-  my $roots = $self->app->config('root');
-  my @homes = map { $_ =~ s/^\///g; $_ } @$roots;
 
-  $self->render(homes => \@homes);
+  # Search git repositories
+  my $dirs = $self->app->config('search_dirs');
+  my $max_depth = $self->app->config('search_max_depth');
+  my $projects = $self->app->_search_projects(
+    dirs => $dirs,
+    max_depth => $max_depth
+  );
+  
+  my $homes = {};
+  $homes->{$_->{home}} = 1 for @$projects;
+
+  $self->render(homes => [keys %$homes]);
 }
 
 sub projects {
@@ -24,7 +33,7 @@ sub projects {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
 
   # Git
   my $git = $self->app->git;
@@ -57,7 +66,7 @@ sub summary {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   
   # Git
@@ -123,7 +132,7 @@ sub commit {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = 'HEAD' unless defined $cid;
@@ -181,7 +190,7 @@ sub commitdiff {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = defined $params->{cid} ? $params->{cid} : 'HEAD';
   my $from_cid = $params->{from_cid};
@@ -300,7 +309,7 @@ sub tree {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
@@ -365,7 +374,7 @@ sub snapshot {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
@@ -421,7 +430,7 @@ sub tag {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $id = $params->{id};
   
@@ -456,7 +465,7 @@ sub tags {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   
   # Git
@@ -485,7 +494,7 @@ sub heads {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   
   # Git
@@ -499,73 +508,6 @@ sub heads {
     home => $home,
     project => $project,
     heads => $heads,
-  );
-}
-
-sub head {
-  my $self = shift;
-
-  # Validation
-  my $raw_params = _parse_params($self);
-  my $rule = [
-    home => ['not_blank'],
-    project => ['not_blank'],
-    cid => ['not_blank'],
-    file => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
-  my $project = $params->{project};
-  my $cid = $params->{cid};
-  my $file = $params->{file};
-  
-  # Git
-  my $git = $self->app->git;
-
-  # Blob id
-  my $bid = $git->get_id_by_path($home, $project, $cid, $file, "blob")
-    or die "Cannot find file";
-  
-  # Blob
-  my @git_cat_file = (
-    $git->git($home, $project),
-    "cat-file",
-    "blob",
-    $bid
-  );
-  open my $fd, "-|", @git_cat_file
-    or die "Couldn't cat $file, $bid";
-  
-  my $mimetype = $git->blob_mimetype($fd, $file);
-
-  # Redirect to blob plane
-  if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
-    close $fd;
-    my $url = $self->url_for('/blob_plain')->query([home => $home, project => $project,
-      cid => $cid, file => $file]);
-    return $self->refirect_to($url);
-  }
-  
-  # Commit
-  my %commit = $git->parse_commit($home, $project, $cid);
-
-  my @lines;
-  while (my $line = <$fd>) {
-    chomp $line;
-    $line = $git->_untabify($line);
-    push @lines, $line;
-  }
-  
-  $self->render(
-    home => $home,
-    project => $project,
-    cid => $cid,
-    bid => $bid,
-    file => $file,
-    commit => \%commit,
-    lines => \@lines
   );
 }
 
@@ -583,7 +525,7 @@ sub blob {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -650,7 +592,7 @@ sub blob_plain {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -711,7 +653,7 @@ sub blobdiff {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -849,7 +791,7 @@ sub _log {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
+  my $home = $params->{home};
   my $project = $params->{project};
   my $base_cid = defined $params->{base_cid}
     ? $params->{base_cid}
@@ -899,11 +841,4 @@ sub _quote_command {
     map { my $a = $_; $a =~ s/(['!])/'\\$1'/g; "'$a'" } @_ );
 }
 
-sub _fix_home {
-  my ($self, $home) = @_;
-  
-  if ($home !~ /^\//) { $home = '/' . $home }
-
-  return $home;
-}
 1;

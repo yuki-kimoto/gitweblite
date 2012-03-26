@@ -10,7 +10,7 @@
       <tr class="dark">
         <td>
           <a class="list" href="<%= url_for('/projects')->query(home => $home); %>">
-            /<%= $home %>
+            <%= $home %>
           </a>
         </td>
     % }
