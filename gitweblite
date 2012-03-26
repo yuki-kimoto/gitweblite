@@ -112,7 +112,7 @@ get '/summary' => sub {
   my %committer_date = %$head_commit
     ? parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
-  my $last_change = _timestamp(\%committer_date);
+  my $last_change = $git->_timestamp(\%committer_date);
   my $head_cid = $head_commit->{id};
   my $urls = $git->get_project_urls($root, $project);
   
@@ -176,8 +176,8 @@ get '/commit' => sub {
   my %commit = parse_commit($root, $project, $cid);
   my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
   my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
-  $commit{author_date} = _timestamp(\%author_date);
-  $commit{committer_date} = _timestamp(\%committer_date);
+  $commit{author_date} = $git->_timestamp(\%author_date);
+  $commit{committer_date} = $git->_timestamp(\%committer_date);
   
   # Ref names
   my $ref_names = {};
@@ -237,8 +237,8 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my %committer_date = %$commit
     ? parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'})
     : ();
-  $commit->{author_date} = _timestamp(\%author_date);
-  $commit->{committer_date} = _timestamp(\%committer_date);
+  $commit->{author_date} = $git->_timestamp(\%author_date);
+  $commit->{committer_date} = $git->_timestamp(\%committer_date);
   $from_cid = $commit->{parent} unless defined $from_cid;
   
   # Check plain
@@ -466,7 +466,7 @@ get '/tag' => sub {
   my %author_date = %$tag
     ? parse_date($tag->{author_epoch}, $tag->{author_tz})
     : ();
-  my $author_date = _timestamp(\%author_date);
+  my $author_date = $git->_timestamp(\%author_date);
   $tag->{author_date} = $author_date;
   
   # Render
@@ -973,21 +973,6 @@ sub parse_commits {
   close $fd;
 
   return \@commits;
-}
-
-sub _timestamp {
-  my $date = shift;
-  my $strtime = $date->{'rfc2822'};
-
-  my $localtime_format = '(%02d:%02d %s)';
-  if ($date->{'hour_local'} < 6) {
-    $localtime_format = '(%02d:%02d %s)';
-  }
-  $strtime .= ' ' .
-              sprintf($localtime_format,
-                      $date->{'hour_local'}, $date->{'minute_local'}, $date->{'tz_local'});
-
-  return $strtime;
 }
 
 sub unquote {

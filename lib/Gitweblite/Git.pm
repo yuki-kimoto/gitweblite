@@ -631,4 +631,19 @@ sub _S_ISGITLINK {
   return (($mode & S_IFMT) == S_IFGITLINK)
 }
 
+sub _timestamp {
+  my ($self, $date) = @_;
+  my $strtime = $date->{'rfc2822'};
+
+  my $localtime_format = '(%02d:%02d %s)';
+  if ($date->{'hour_local'} < 6) {
+    $localtime_format = '(%02d:%02d %s)';
+  }
+  $strtime .= ' ' .
+              sprintf($localtime_format,
+                      $date->{'hour_local'}, $date->{'minute_local'}, $date->{'tz_local'});
+
+  return $strtime;
+}
+
 1;
