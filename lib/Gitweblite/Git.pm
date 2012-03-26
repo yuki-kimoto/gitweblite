@@ -117,14 +117,14 @@ sub get_difftree {
       if (S_ISREG($to_mode_oct)) { # only for regular file
         $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
       }
-      $to_file_type = file_type($diff->{'to_mode'});
+      $to_file_type = $self->file_type($diff->{'to_mode'});
     }
     if ($diff->{'from_mode'} ne ('0' x 6)) {
       $from_mode_oct = oct $diff->{'from_mode'};
       if (S_ISREG($from_mode_oct)) { # only for regular file
         $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
       }
-      $from_file_type = file_type($diff->{'from_mode'});
+      $from_file_type = $self->file_type($diff->{'from_mode'});
     }
     
     $diff->{to_mode_str} = $to_mode_str;
