@@ -7,7 +7,7 @@ has prevent_xss => 0;
 sub homes {
   my $self = shift;
   
-  my $homes = $self->app->config('projectroots');
+  my $homes = $self->app->config('root');
 
   $self->render(homes => $homes);
 }
@@ -25,8 +25,9 @@ sub projects {
   my $params = $vresult->data;
   my $home = $params->{home};
   
-  my $projectroots = $self->app->config->{projectroots};
-  die unless grep { $_ eq $home } @$projectroots;
+  my $roots = $self->app->config->{root};
+  $roots = [$roots] if defined $roots && ref $roots ne 'ARRAY';
+  die unless grep { $_ eq $home } @$roots;
   
   # Git
   my $git = $self->app->git;
