@@ -23,6 +23,12 @@ Installation
     perl cpanm -l extlib Module::CoreList
     perl t/module.t list | perl -Iextlib/lib/perl5 cpanm -n -L extlib
 
+  Check if installation is successed.
+  
+    prove t
+
+  All tests is successed, module installation is success.
+
 Operation
 
   Start
@@ -30,6 +36,10 @@ Operation
       ./run script/gitweblite
   
     Application start in back ground. Port is C<10010>.
+    You can access the following URL.
+      
+      http://localhost:10010
+    
     If you change port, edit C<gitweblite.conf>.
   
   Stop

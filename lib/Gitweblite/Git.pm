@@ -11,6 +11,7 @@ use constant {
 };
 
 sub e($) { encode('UTF-8', shift) }
+sub d($) { decode('UTF-8', shift) }
 
 has 'bin';
 
@@ -21,12 +22,12 @@ my @diff_opts = ('-M');
 my $default_text_plain_charset  = undef;
 
 sub blob_mimetype {
-  my ($self, $fd, $file) = @_;
+  my ($self, $fh, $file) = @_;
 
   # just in case
-  return 'text/plain' unless $fd;
+  return 'text/plain' unless $fh;
 
-  if (-T $fd) {
+  if (-T $fh) {
     return 'text/plain';
   } elsif (! $file) {
     return 'application/octet-stream';
@@ -42,9 +43,9 @@ sub blob_mimetype {
 }
 
 sub blob_contenttype {
-  my ($self, $fd, $file, $type) = @_;
+  my ($self, $fh, $file, $type) = @_;
 
-  $type ||= $self->blob_mimetype($fd, $file);
+  $type ||= $self->blob_mimetype($fh, $file);
   if ($type eq 'text/plain' && defined $default_text_plain_charset) {
     $type .= "; charset=$default_text_plain_charset";
   }
@@ -99,10 +100,10 @@ sub get_difftree {
     $cid,
     "--"
   );
-  open my $fd, "-|", @git_diff_tree
+  open my $fh, "-|", @git_diff_tree
     or die "Open git-diff-tree failed";
-  my @difftree = map { chomp; $_ } <$fd>;
-  close $fd or die "Reading git-diff-tree failed";
+  my @difftree = map { chomp; d$_ } <$fh>;
+  close $fh or die "Reading git-diff-tree failed";
   
   # Parse "git diff-tree" output
   my $diffs = [];
@@ -155,11 +156,12 @@ sub get_id {
   
   my $id;
   my $git_dir = "$home/$project";
-  if (open my $fd, '-|', $self->git($home, $project), 'rev-parse',
+  if (open my $fh, '-|', $self->git($home, $project), 'rev-parse',
       '--verify', '-q', @options, $ref) {
-    $id = <$fd>;
+    $id = <$fh>;
+    $id = d$id;
     chomp $id if defined $id;
-    close $fd;
+    close $fh;
   }
   return $id;
 }
@@ -167,9 +169,10 @@ sub get_id {
 sub get_object_type {
   my ($self, $home, $project, $cid) = @_;
 
-  open my $fd, "-|", $self->git($home, $project), "cat-file", '-t', $cid or return;
-  my $type = <$fd>;
-  close $fd or return;
+  open my $fh, "-|", $self->git($home, $project), "cat-file", '-t', $cid or return;
+  my $type = <$fh>;
+  $type = d$type;
+  close $fh or return;
   chomp $type;
   return $type;
 }
@@ -195,10 +198,11 @@ sub get_id_by_path {
     $self->git($home, $project), "ls-tree", $id, "--", $path
   );
   
-  open my $fd, "-|", @git_ls_tree
+  open my $fh, "-|", @git_ls_tree
     or die "Open git-ls-tree failed";
-  my $line = <$fd>;
-  close $fd or return undef;
+  my $line = <$fh>;
+  $line = d$line;
+  close $fh or return undef;
 
   if (!defined $line) {
     # there is no tree or hash given by $path at $base
@@ -224,12 +228,13 @@ sub get_heads {
   my @patterns = map { "refs/$_" } @classes;
   my @heads;
 
-  open my $fd, '-|', $self->git($home, $project), 'for-each-ref',
+  open my $fh, '-|', $self->git($home, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
     '--format=%(objectname) %(refname) %(subject)%00%(committer)',
     @patterns
     or return;
-  while (my $line = <$fd>) {
+  while (my $line = <$fh>) {
+    $line = d$line;
     my %ref_item;
 
     chomp $line;
@@ -252,7 +257,7 @@ sub get_heads {
 
     push @heads, \%ref_item;
   }
-  close $fd;
+  close $fh;
 
   return \@heads;
 }
@@ -260,7 +265,7 @@ sub get_heads {
 sub get_last_activity {
   my ($self, $home, $project) = @_;
 
-  my $fd;
+  my $fh;
   my @git_command = (
     $self->git($home, $project),
     'for-each-ref',
@@ -269,9 +274,11 @@ sub get_last_activity {
     '--count=1',
     'refs/heads'  
   );
-  open($fd, "-|", @git_command) or return;
-  my $most_recent = <$fd>;
-  close $fd or return;
+  open($fh, "-|", @git_command) or return;
+  my $most_recent = <$fh>;
+  $most_recent = d$most_recent;
+  
+  close $fh or return;
   if (defined $most_recent &&
       $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
     my $timestamp = $1;
@@ -306,10 +313,10 @@ sub get_project_urls {
   my ($self, $home, $project) = @_;
 
   my $git_dir = "$home/$project";
-  open my $fd, '<', "$git_dir/cloneurl"
+  open my $fh, '<', "$git_dir/cloneurl"
     or return;
-  my @urls = map { chomp; $_ } <$fd>;
-  close $fd;
+  my @urls = map { chomp; d$_ } <$fh>;
+  close $fh;
 
   return \@urls;
 }
@@ -336,13 +343,15 @@ sub get_tags {
   my ($self, $home, $project, $limit) = @_;
   my @tags;
 
-  open my $fd, '-|', $self->git($home, $project), 'for-each-ref',
+  open my $fh, '-|', $self->git($home, $project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
     'refs/tags'
     or return;
-  while (my $line = <$fd>) {
+  while (my $line = <$fh>) {
+    $line = d$line;
+    
     my %ref_item;
 
     chomp $line;
@@ -376,7 +385,7 @@ sub get_tags {
 
     push @tags, \%ref_item;
   }
-  close $fd;
+  close $fh;
 
   return \@tags;
 }
@@ -481,13 +490,15 @@ sub parse_commit {
     $id,
     "--"
   );
-  open my $fd, "-|", @git_rev_list
+  open my $fh, "-|", @git_rev_list
     or die "Open git-rev-list failed";
   
   # Parse rev-list result
   local $/ = "\0";
-  my %commit = $self->parse_commit_text(<$fd>, 1);
-  close $fd;
+  my $content = <$fh>;
+  $content = d$content;
+  my %commit = $self->parse_commit_text($content, 1);
+  close $fh;
 
   return wantarray ? %commit : \%commit;
 }
@@ -596,7 +607,7 @@ sub parse_commits {
   # git rev-list
   $maxcount ||= 1;
   $skip ||= 0;
-  open my $fd, "-|", $self->git($home, $project), "rev-list",
+  open my $fh, "-|", $self->git($home, $project), "rev-list",
     "--header",
     @args,
     ("--max-count=" . $maxcount),
@@ -609,11 +620,12 @@ sub parse_commits {
   # Parse rev-list results
   local $/ = "\0";
   my @commits;
-  while (my $line = <$fd>) {
+  while (my $line = <$fh>) {
+    $line = d$line;
     my %commit = $self->parse_commit_text($line);
     push @commits, \%commit;
   }
-  close $fd;
+  close $fh;
 
   return \@commits;
 }
@@ -660,9 +672,11 @@ sub parse_tag {
   
   my @git_cat_file = ($self->git($home, $project), "cat-file", "tag", $tag_id);
   
-  open my $fd, "-|", @git_cat_file or return;
+  open my $fh, "-|", @git_cat_file or return;
   $tag{'id'} = $tag_id;
-  while (my $line = <$fd>) {
+  while (my $line = <$fh>) {
+    $line = d$line;
+    
     chomp $line;
     if ($line =~ m/^object ([0-9a-fA-F]{40})$/) {
       $tag{'object'} = $1;
@@ -687,9 +701,10 @@ sub parse_tag {
       last;
     }
   }
-  push @comment, <$fd>;
+  my $comment = <$fh>;
+  push @comment, d$comment;
   $tag{'comment'} = \@comment;
-  close $fd or return;
+  close $fh or return;
   if (!defined $tag{'name'}) {
     return
   };
@@ -880,6 +895,7 @@ sub _slurp {
   open my $fh, '<', $file
     or die qq/Can't open file "$file": $!/;
   my $content = do { local $/; <$fh> };
+  $content = d$content;
   
   return $content;
 }
