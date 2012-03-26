@@ -1,21 +1,21 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
-    <a href="<%= url_for('/projects')->query({project_dir => $project_dir}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $project}) %>"><%= $project %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $home %>) /
+    <a href="<%= url_for('/projects')->query({home => $home}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({home => $home, project => $project}) %>"><%= $project %></a> /
     Commit diff
   </div>
-  %= include '/include/page_navi', current => 'commitdiff', project_dir => $project_dir, project => $project;
+  %= include '/include/page_navi', current => 'commitdiff', home => $home, project => $project;
   <div class="page_nav">
-    <a href="<%= url_for('/commitdiff_plain')->query({project_dir => $project_dir, project => $project}) %>">Raw</a>
+    <a href="<%= url_for('/commitdiff_plain')->query({home => $home, project => $project}) %>">Raw</a>
   </div>
   <div class="header">
-    <a class="title" href="<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $cid}) %>">
+    <a class="title" href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $cid}) %>">
       <%= $commit->{title} %>
     </a>
   </div>
   <div class="title_text">
-    %= include 'include/refs', project_dir => $project_dir, project => $project, commit => $commit, ref_names => $ref_names;
+    %= include 'include/refs', home => $home, project => $project, commit => $commit, ref_names => $ref_names;
     <table class="object_header">
       <tr><td>Author</td><td><%= $commit->{author} %></td><td rowspan="2"></td></tr>
       <tr><td></td><td><%= $commit->{author_date} %></td></tr>

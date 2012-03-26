@@ -6,39 +6,39 @@
       <td><i><%= $tag->{age} %></i></td>
       <td>
         <a class="list name" href=
-          "<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $name}) %>"
+          "<%= url_for('/commit')->query({home => $home, project => $project, cid => $name}) %>"
         >
           %= $tag->{name};
         </a>
       </td>
       <td>
         <a class="list subject" href=
-          "<%= url_for('/commit')->query({project_dir => $project_dir, project => $project, cid => $name}) %>"
+          "<%= url_for('/commit')->query({home => $home, project => $project, cid => $name}) %>"
         >
           <%= $tag->{subject} || '' %>
         </a>
       </td>
       <td class="selflink">
         <a href=
-          "<%= url_for('/tag')->query({project_dir => $project_dir, project => $project, id => $tag->{id}}) %>"
+          "<%= url_for('/tag')->query({home => $home, project => $project, id => $tag->{id}}) %>"
         >
           tag
         </a>
       </td>
       <td class="link"> |
-        <a href="<%= url_for('/commit')->query({project_dir => $project_dir,
+        <a href="<%= url_for('/commit')->query({home => $home,
           project => $project, cid => $name}) %>"
         >
           commit
         </a>
         |
-        <a href="<%= url_for('/tag')->query({project_dir => $project_dir, project => $project,
+        <a href="<%= url_for('/tag')->query({home => $home, project => $project,
           name => $name}) %>"
         >
           shortlog
         </a>
         |
-        <a href="<%= url_for('/log')->query({project_dir => $project_dir, project => $project,
+        <a href="<%= url_for('/log')->query({home => $home, project => $project,
           cid => $name}) %>"
         >
           log
@@ -50,7 +50,7 @@
     % if (@$tags == stash('tag_count')) {
       <tr>
         <td>
-          <a href="<%= url_for('/tags')->query({project_dir => $project_dir, project => $project}) %>">
+          <a href="<%= url_for('/tags')->query({home => $home, project => $project}) %>">
             ...
           </a>
         </td>

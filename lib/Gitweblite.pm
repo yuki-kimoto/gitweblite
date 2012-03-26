@@ -16,7 +16,6 @@ sub startup {
   my $conf = $self->plugin('Config');
   my $projectroots = $conf->{projectroots};
   my $projectroot = $conf->{projectroots}->[0];
-  my $projects_list = $conf->{projects_list} ||= $projectroot;
 
   # Git
   my $git_bin = $conf->{git} ? $conf->{git} : '/usr/local/bin/git';
@@ -37,7 +36,7 @@ sub startup {
     my $r = $self->routes;
     
     # Top
-    $r = $r->waypoint('/')->via('get')->to('default#directories');
+    $r = $r->waypoint('/')->via('get')->to('default#homes');
     
     # Others
     $r->get('/projects')->to('#projects');

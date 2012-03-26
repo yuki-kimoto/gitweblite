@@ -1,0 +1,17 @@
+% layout 'common';
+  <div class="page_header">
+    <a href="/">Homes</a>
+  </div>
+  <table class="project_list">
+    <tr>
+      <th>Homes</th>
+    </tr>
+    % for my $home (@$homes) {
+      <tr class="dark">
+        <td>
+          <a class="list" href="<%= url_for('/projects')->query(home => $home) %>">
+            <%= $home %>
+          </a>
+        </td>
+    % }
+  </table>

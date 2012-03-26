@@ -1,12 +1,12 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
-    <a href="<%= url_for('/projects')->query({project_dir => $project_dir}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $project}) %>"><%= $project %></a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $home %>) /
+    <a href="<%= url_for('/projects')->query({home => $home}) %>">Projects</a> /<br>
+    <a href="<%= url_for('/summary')->query({home => $home, project => $project}) %>"><%= $project %></a> /
     Tags
   </div>
   %= include '/include/page_navi', current => 'tags';
   <div class="header">
-    <a class="title" href="<%= url_for('/tags')->query({project_dir => $project_dir, project => $project}) %>">Tags</a>
+    <a class="title" href="<%= url_for('/tags')->query({home => $home, project => $project}) %>">Tags</a>
   </div>
-  %= include '/include/tags', project_dir => $project_dir, project => $project, tags => $tags;
+  %= include '/include/tags', home => $home, project => $project, tags => $tags;

@@ -1,7 +1,7 @@
 % layout 'common';
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $project_dir %>) /
-    <a href="<%= url_for('projects')->query({project_dir => $project_dir}); %>">projects</a> /
+    <a href="<%= url_for '/' %>">Roots</a> (<%= $home %>) /
+    <a href="<%= url_for('projects')->query({home => $home}); %>">projects</a> /
   </div>
   <table class="project_list">
     <tr>
@@ -13,16 +13,16 @@
     </tr>
     % for my $project (@$projects) {
       <tr class="dark">
-        <td><a class="list" href="<%= url_for('/summary')->query(project_dir => param('project_dir'), project => $project->{path}) %>"><%= $project->{path} %></a></td>
-        <td><a class="list" title="<%= $project->{descr_long} %>" href="<%= url_for('/summary')->query(project_dir => param('project_dir'), project => $project->{path}) %>"><%= $project->{descr} %></a></td>
+        <td><a class="list" href="<%= url_for('/summary')->query(home => param('home'), project => $project->{path}) %>"><%= $project->{path} %></a></td>
+        <td><a class="list" title="<%= $project->{descr_long} %>" href="<%= url_for('/summary')->query(home => param('home'), project => $project->{path}) %>"><%= $project->{descr} %></a></td>
         <td><i><%= $project->{owner} %></i></td>
         <td class="age2"><%= $project->{age_string} %></td>
         <td class="link">
           % my $pname = $project->{path};
-          <a href="<%= url_for('/summary')->query({project_dir => $project_dir, project => $pname}) %>">summary</a> |
-          <a href="<%= url_for('/shortlog')->query({project_dir => $project_dir, project => $pname}) %>">shortlog</a> |
-          <a href="<%= url_for('/log')->query({project_dir => $project_dir, project => $pname}) %>">log</a> |
-          <a href="<%= url_for('/tree')->query({project_dir => $project_dir, project => $pname}) %>">tree</a>
+          <a href="<%= url_for('/summary')->query({home => $home, project => $pname}) %>">summary</a> |
+          <a href="<%= url_for('/shortlog')->query({home => $home, project => $pname}) %>">shortlog</a> |
+          <a href="<%= url_for('/log')->query({home => $home, project => $pname}) %>">log</a> |
+          <a href="<%= url_for('/tree')->query({home => $home, project => $pname}) %>">tree</a>
         </td>
       </tr>
     % }
