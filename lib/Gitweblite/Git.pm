@@ -202,24 +202,6 @@ sub get_last_activity {
   return (undef, undef);
 }
 
-sub get_projects {
-  my ($self, $root, %opt) = @_;
-  my $filter = $opt{filter};
-  
-  opendir my $dh, e$root
-    or croak qq/Can't open directory $root: $!/;
-  
-  my @projects;
-  while (my $project = readdir $dh) {
-    next unless $project =~ /\.git$/;
-    next unless $self->check_export_ok("$root/$project");
-    next if defined $filter && $project !~ /\Q$filter\E/;
-    push @projects, { path => $project };
-  }
-
-  return @projects;
-}
-
 sub get_project_description {
   my ($self, $root, $project) = @_;
   
@@ -251,6 +233,24 @@ sub get_project_urls {
   close $fd;
 
   return \@urls;
+}
+
+sub get_projects {
+  my ($self, $root, %opt) = @_;
+  my $filter = $opt{filter};
+  
+  opendir my $dh, e$root
+    or croak qq/Can't open directory $root: $!/;
+  
+  my @projects;
+  while (my $project = readdir $dh) {
+    next unless $project =~ /\.git$/;
+    next unless $self->check_export_ok("$root/$project");
+    next if defined $filter && $project !~ /\Q$filter\E/;
+    push @projects, { path => $project };
+  }
+
+  return @projects;
 }
 
 sub get_tags {
@@ -387,6 +387,156 @@ sub parse_ls_tree_line {
   }
 
   return wantarray ? %res : \%res;
+}
+
+sub parse_commit {
+  my ($self, $root, $project, $id) = @_;
+  
+  # Git rev-list
+  my @git_rev_list = (
+    $self->git($root, $project),
+    "rev-list",
+    "--parents",
+    "--header",
+    "--max-count=1",
+    $id,
+    "--"
+  );
+  open my $fd, "-|", @git_rev_list
+    or die "Open git-rev-list failed";
+  
+  # Parse rev-list result
+  local $/ = "\0";
+  my %commit = $self->parse_commit_text(<$fd>, 1);
+  close $fd;
+
+  return wantarray ? %commit : \%commit;
+}
+
+sub parse_commit_text {
+  my ($self, $commit_text, $withparents) = @_;
+  my @commit_lines = split '\n', $commit_text;
+  my %commit;
+
+  pop @commit_lines; # Remove '\0'
+
+  if (! @commit_lines) {
+    return;
+  }
+
+  my $header = shift @commit_lines;
+  if ($header !~ m/^[0-9a-fA-F]{40}/) {
+    return;
+  }
+  ($commit{'id'}, my @parents) = split ' ', $header;
+  while (my $line = shift @commit_lines) {
+    last if $line eq "\n";
+    if ($line =~ m/^tree ([0-9a-fA-F]{40})$/) {
+      $commit{'tree'} = $1;
+    } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
+      push @parents, $1;
+    } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
+      $commit{'author'} = $1;
+      $commit{'author_epoch'} = $2;
+      $commit{'author_tz'} = $3;
+      if ($commit{'author'} =~ m/^([^<]+) <([^>]*)>/) {
+        $commit{'author_name'}  = $1;
+        $commit{'author_email'} = $2;
+      } else {
+        $commit{'author_name'} = $commit{'author'};
+      }
+    } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
+      $commit{'committer'} = $1;
+      $commit{'committer_epoch'} = $2;
+      $commit{'committer_tz'} = $3;
+      if ($commit{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
+        $commit{'committer_name'}  = $1;
+        $commit{'committer_email'} = $2;
+      } else {
+        $commit{'committer_name'} = $commit{'committer'};
+      }
+    }
+  }
+  if (!defined $commit{'tree'}) {
+    return;
+  };
+  $commit{'parents'} = \@parents;
+  $commit{'parent'} = $parents[0];
+
+  for my $title (@commit_lines) {
+    $title =~ s/^    //;
+    if ($title ne "") {
+      $commit{'title'} = $self->_chop_str($title, 80, 5);
+      # remove leading stuff of merges to make the interesting part visible
+      if (length($title) > 50) {
+        $title =~ s/^Automatic //;
+        $title =~ s/^merge (of|with) /Merge ... /i;
+        if (length($title) > 50) {
+          $title =~ s/(http|rsync):\/\///;
+        }
+        if (length($title) > 50) {
+          $title =~ s/(master|www|rsync)\.//;
+        }
+        if (length($title) > 50) {
+          $title =~ s/kernel.org:?//;
+        }
+        if (length($title) > 50) {
+          $title =~ s/\/pub\/scm//;
+        }
+      }
+      $commit{'title_short'} = $self->_chop_str($title, 50, 5);
+      last;
+    }
+  }
+  if (! defined $commit{'title'} || $commit{'title'} eq "") {
+    $commit{'title'} = $commit{'title_short'} = '(no commit message)';
+  }
+  # remove added spaces
+  for my $line (@commit_lines) {
+    $line =~ s/^    //;
+  }
+  $commit{'comment'} = \@commit_lines;
+
+  my $age = time - $commit{'committer_epoch'};
+  $commit{'age'} = $age;
+  $commit{'age_string'} = $self->_age_string($age);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($commit{'committer_epoch'});
+  if ($age > 60*60*24*7*2) {
+    $commit{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{'age_string_age'} = $commit{'age_string'};
+  } else {
+    $commit{'age_string_date'} = $commit{'age_string'};
+    $commit{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+  }
+  return %commit;
+}
+
+sub parse_commits {
+  my ($self, $root, $project, $cid, $maxcount, $skip, $file, @args) = @_;
+
+  # git rev-list
+  $maxcount ||= 1;
+  $skip ||= 0;
+  open my $fd, "-|", $self->git($root, $project), "rev-list",
+    "--header",
+    @args,
+    ("--max-count=" . $maxcount),
+    ("--skip=" . $skip),
+    $cid,
+    "--",
+    ($file ? ($file) : ())
+    or die_error(500, "Open git-rev-list failed");
+
+  # Parse rev-list results
+  local $/ = "\0";
+  my @commits;
+  while (my $line = <$fd>) {
+    my %commit = $self->parse_commit_text($line);
+    push @commits, \%commit;
+  }
+  close $fd;
+
+  return \@commits;
 }
 
 sub parse_tag {

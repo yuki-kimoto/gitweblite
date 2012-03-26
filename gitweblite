@@ -108,7 +108,7 @@ get '/summary' => sub {
   # HEAd commit
   my $project_description = $git->get_project_description($root, $project);
   my $project_owner = $git->get_project_owner($root, $project);
-  my $head_commit = parse_commit($root, $project, "HEAD");
+  my $head_commit = $git->parse_commit($root, $project, "HEAD");
   my %committer_date = %$head_commit
     ? parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
@@ -118,7 +118,7 @@ get '/summary' => sub {
   
   # Commits
   my $commit_count = 20;
-  my $commits = $head_cid ? parse_commits($root, $project, $head_cid, $commit_count) : ();
+  my $commits = $head_cid ? $git->parse_commits($root, $project, $head_cid, $commit_count) : ();
   
   # Ref names
   my $ref_names = {};
@@ -173,7 +173,7 @@ get '/commit' => sub {
   # Project information
   my $project_description = $git->get_project_description($root, $project);
   my $project_owner = $git->get_project_owner($root, $project);
-  my %commit = parse_commit($root, $project, $cid);
+  my %commit = $git->parse_commit($root, $project, $cid);
   my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
   my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
   $commit{author_date} = $git->_timestamp(\%author_date);
@@ -229,7 +229,7 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $git = $self->app->git;
   
   # Commit
-  my $commit = parse_commit($root, $project, $cid)
+  my $commit = $git->parse_commit($root, $project, $cid)
     or die 404, "Unknown commit object";
   my %author_date = %$commit
     ? parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
@@ -346,7 +346,7 @@ get '/tree' => sub {
   my $dir = $params->{dir};
   my $tid = $params->{tid};
 
-  my $commit = parse_commit($root, $project, $cid);
+  my $commit = $git->parse_commit($root, $project, $cid);
   
   unless (defined $tid) {
     if (defined $dir) {
@@ -583,7 +583,7 @@ get '/blob' => sub {
   }
   
   # Commit
-  my %commit = parse_commit($root, $project, $cid);
+  my %commit = $git->parse_commit($root, $project, $cid);
 
   my @lines;
   while (my $line = <$fd>) {
@@ -753,7 +753,7 @@ get '/blobdiff(:suffix)' => {suffix => ''} => sub {
     die '404 Not Found', "Missing one of the blob diff parameters";
   }
   
-  my $commit = parse_commit($root, $project, $cid);
+  my $commit = $git->parse_commit($root, $project, $cid);
 
   if ($plain) {
     my $content = do { local $/; <$fd> };
@@ -820,13 +820,13 @@ sub _log {
   my $git = $self->app->git;
   
   # HEAD commit
-  my $head_commit = parse_commit($root, $project, "HEAD");
+  my $head_commit = $git->parse_commit($root, $project, "HEAD");
   my $head_cid = $head_commit->{id};
   my $base_cid ||= $head_cid;
   
   # Commits
   my $page_count = $short ? 50 : 20;
-  my $commits = parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
+  my $commits = $git->parse_commits($root, $project, $base_cid, $page_count, $page_count * $page);
   
   # Ref names
   my $ref_names = {};
@@ -849,20 +849,6 @@ sub _log {
     page_count => $page_count
   );
 };
-
-sub age_class {
-  my $age = shift;
-
-  if (!defined $age) {
-    return "noage";
-  } elsif ($age < 60*60*2) {
-    return "age0";
-  } elsif ($age < 60*60*24*2) {
-    return "age1";
-  } else {
-    return "age2";
-  }
-}
 
 sub quote_command {
   return join(' ',
@@ -945,34 +931,6 @@ sub get_id_by_path {
     return undef;
   }
   return $3;
-}
-
-sub parse_commits {
-  my ($root, $project, $cid, $maxcount, $skip, $file, @args) = @_;
-
-  # git rev-list
-  $maxcount ||= 1;
-  $skip ||= 0;
-  open my $fd, "-|", git($root, $project), "rev-list",
-    "--header",
-    @args,
-    ("--max-count=" . $maxcount),
-    ("--skip=" . $skip),
-    $cid,
-    "--",
-    ($file ? ($file) : ())
-    or die_error(500, "Open git-rev-list failed");
-
-  # Parse rev-list results
-  local $/ = "\0";
-  my @commits;
-  while (my $line = <$fd>) {
-    my %commit = parse_commit_text($line);
-    push @commits, \%commit;
-  }
-  close $fd;
-
-  return \@commits;
 }
 
 sub unquote {
@@ -1085,128 +1043,6 @@ sub parse_date {
                             1900+$year, $mon+1, $mday,
                             $hour, $min, $sec, $tz);
   return %date;
-}
-
-sub parse_commit {
-  my ($root, $project, $id) = @_;
-  
-  # Git rev-list
-  my @git_rev_list = (
-    git($root, $project),
-    "rev-list",
-    "--parents",
-    "--header",
-    "--max-count=1",
-    $id,
-    "--"
-  );
-  open my $fd, "-|", @git_rev_list
-    or die "Open git-rev-list failed";
-  
-  # Parse rev-list result
-  local $/ = "\0";
-  my %commit = parse_commit_text(<$fd>, 1);
-  close $fd;
-
-  return wantarray ? %commit : \%commit;
-}
-
-sub parse_commit_text {
-  my ($commit_text, $withparents) = @_;
-  my @commit_lines = split '\n', $commit_text;
-  my %commit;
-
-  pop @commit_lines; # Remove '\0'
-
-  if (! @commit_lines) {
-    return;
-  }
-
-  my $header = shift @commit_lines;
-  if ($header !~ m/^[0-9a-fA-F]{40}/) {
-    return;
-  }
-  ($commit{'id'}, my @parents) = split ' ', $header;
-  while (my $line = shift @commit_lines) {
-    last if $line eq "\n";
-    if ($line =~ m/^tree ([0-9a-fA-F]{40})$/) {
-      $commit{'tree'} = $1;
-    } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
-      push @parents, $1;
-    } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
-      $commit{'author'} = $1;
-      $commit{'author_epoch'} = $2;
-      $commit{'author_tz'} = $3;
-      if ($commit{'author'} =~ m/^([^<]+) <([^>]*)>/) {
-        $commit{'author_name'}  = $1;
-        $commit{'author_email'} = $2;
-      } else {
-        $commit{'author_name'} = $commit{'author'};
-      }
-    } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
-      $commit{'committer'} = $1;
-      $commit{'committer_epoch'} = $2;
-      $commit{'committer_tz'} = $3;
-      if ($commit{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
-        $commit{'committer_name'}  = $1;
-        $commit{'committer_email'} = $2;
-      } else {
-        $commit{'committer_name'} = $commit{'committer'};
-      }
-    }
-  }
-  if (!defined $commit{'tree'}) {
-    return;
-  };
-  $commit{'parents'} = \@parents;
-  $commit{'parent'} = $parents[0];
-
-  for my $title (@commit_lines) {
-    $title =~ s/^    //;
-    if ($title ne "") {
-      $commit{'title'} = chop_str($title, 80, 5);
-      # remove leading stuff of merges to make the interesting part visible
-      if (length($title) > 50) {
-        $title =~ s/^Automatic //;
-        $title =~ s/^merge (of|with) /Merge ... /i;
-        if (length($title) > 50) {
-          $title =~ s/(http|rsync):\/\///;
-        }
-        if (length($title) > 50) {
-          $title =~ s/(master|www|rsync)\.//;
-        }
-        if (length($title) > 50) {
-          $title =~ s/kernel.org:?//;
-        }
-        if (length($title) > 50) {
-          $title =~ s/\/pub\/scm//;
-        }
-      }
-      $commit{'title_short'} = chop_str($title, 50, 5);
-      last;
-    }
-  }
-  if (! defined $commit{'title'} || $commit{'title'} eq "") {
-    $commit{'title'} = $commit{'title_short'} = '(no commit message)';
-  }
-  # remove added spaces
-  for my $line (@commit_lines) {
-    $line =~ s/^    //;
-  }
-  $commit{'comment'} = \@commit_lines;
-
-  my $age = time - $commit{'committer_epoch'};
-  $commit{'age'} = $age;
-  $commit{'age_string'} = age_string($age);
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($commit{'committer_epoch'});
-  if ($age > 60*60*24*7*2) {
-    $commit{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
-    $commit{'age_string_age'} = $commit{'age_string'};
-  } else {
-    $commit{'age_string_date'} = $commit{'age_string'};
-    $commit{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
-  }
-  return %commit;
 }
 
 sub age_string {
