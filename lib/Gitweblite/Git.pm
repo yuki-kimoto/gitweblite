@@ -617,6 +617,36 @@ sub parse_tag {
   return \%tag
 }
 
+sub snapshot_name {
+  my ($self, $root, $project, $cid) = @_;
+
+  my $name = $project;
+  $name =~ s,([^/])/*\.git$,$1,;
+  $name = basename($name);
+  # sanitize name
+  $name =~ s/[[:cntrl:]]/?/g;
+
+  my $ver = $cid;
+  if ($cid =~ /^[0-9a-fA-F]+$/) {
+    my $full_hash = get_id($root, $project, $cid);
+    if ($full_hash =~ /^$cid/ && length($cid) > 7) {
+      $ver = get_short_id($root, $project, $cid);
+    }
+  } elsif ($cid =~ m!^refs/tags/(.*)$!) {
+    $ver = $1;
+  } else {
+    if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
+      $ver = $1;
+    }
+    $ver .= '-' . get_short_id($root, $project, $cid);
+  }
+  $ver =~ s!/!.!g;
+
+  $name = "$name-$ver";
+
+  return wantarray ? ($name, $name) : $name;
+}
+
 sub _age_string {
   my ($self, $age) = @_;
   my $age_str;
@@ -829,6 +859,19 @@ sub _timestamp {
                       $date->{'hour_local'}, $date->{'minute_local'}, $date->{'tz_local'});
 
   return $strtime;
+}
+
+sub _untabify {
+  my ($self, $line) = @_;
+
+  while ((my $pos = index($line, "\t")) != -1) {
+    if (my $count = (8 - ($pos % 8))) {
+      my $spaces = ' ' x $count;
+      $line =~ s/\t/$spaces/;
+    }
+  }
+
+  return $line;
 }
 
 1;

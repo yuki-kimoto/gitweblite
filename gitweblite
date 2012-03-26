@@ -411,7 +411,7 @@ get '/snapshot' => sub {
   if (!$type) { die 404, 'Object does not exist' }
   elsif ($type eq 'blob') { die 400, 'Object is not a tree-ish' }
 
-  my ($name, $prefix) = snapshot_name($root, $project, $cid);
+  my ($name, $prefix) = $git->snapshot_name($root, $project, $cid);
   my $file = "$name.tar.gz";
   my $cmd = quote_command(
     git($root, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
@@ -588,7 +588,7 @@ get '/blob' => sub {
   my @lines;
   while (my $line = <$fd>) {
     chomp $line;
-    $line = untabify($line);
+    $line = $git->_untabify($line);
     push @lines, $line;
   }
   
@@ -931,41 +931,6 @@ sub get_id_by_path {
     return undef;
   }
   return $3;
-}
-
-sub unquote {
-  my $str = shift;
-
-  sub unq {
-    my $seq = shift;
-    my %es = ( # character escape codes, aka escape sequences
-      't' => "\t",   # tab            (HT, TAB)
-      'n' => "\n",   # newline        (NL)
-      'r' => "\r",   # return         (CR)
-      'f' => "\f",   # form feed      (FF)
-      'b' => "\b",   # backspace      (BS)
-      'a' => "\a",   # alarm (bell)   (BEL)
-      'e' => "\e",   # escape         (ESC)
-      'v' => "\013", # vertical tab   (VT)
-    );
-
-    if ($seq =~ m/^[0-7]{1,3}$/) {
-      # octal char sequence
-      return chr(oct($seq));
-    } elsif (exists $es{$seq}) {
-      # C escape sequence, aka character escape code
-      return $es{$seq};
-    }
-    # quoted ordinary character
-    return $seq;
-  }
-
-  if ($str =~ m/^"(.*)"$/) {
-    # needs unquoting
-    $str = $1;
-    $str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
-  }
-  return $str;
 }
 
 sub untabify {
