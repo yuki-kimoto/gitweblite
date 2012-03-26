@@ -1,9 +1,12 @@
 % layout 'common';
+  % $home =~ s/^\///;
   <div class="page_header">
-    <a href="<%= url_for '/' %>">Roots</a> (<%= $home %>) /
-    <a href="<%= url_for('/projects')->query({home => $home}) %>">Projects</a> /<br>
-    <a href="<%= url_for('/summary')->query({home => $home, project => $project}) %>"><%= $project %></a> /
-    Summary
+    Summary:
+    <a href="<%= url_for('/summary')->query({home => $home, project => $project}) %>"><%= $project %></a>
+  </div>
+  <div>
+    <a href="<%= url_for '/' %>">home</a> &gt;
+    <a href="<%= url_for('projects', home => $home) %>">projects</a>
   </div>
   %= include '/include/page_navi', current => 'summary';
   <table class="projects_list">

@@ -51,17 +51,17 @@ sub summary {
   # Validation
   my $raw_params = _parse_params($self);
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $self->_fix_home($params->{home});
   my $project = $params->{project};
   
   # Git
   my $git = $self->app->git;
+  
+  my $home = '';
   
   # HEAd commit
   my $project_description = $git->get_project_description($home, $project);

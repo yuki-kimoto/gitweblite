@@ -40,7 +40,7 @@ sub startup {
     
     # Others
     $r->get('/projects/*home')->to('#projects')->name('projects');
-    $r->get('/summary')->to('#summary');
+    $r->get('/summary/*project')->to('#summary')->name('summary');
     $r->get('/shortlog')->to('#shortlog');
     $r->get('/log')->to('#log');
     $r->get('/commit')->to('#commit');

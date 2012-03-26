@@ -7,6 +7,7 @@
       <th>Homes</th>
     </tr>
     % for my $home (@$homes) {
+      % $home =~ s/^\///;
       <tr class="dark">
         <td>
           <a class="list" href="<%= url_for('projects', home => $home) %>">
