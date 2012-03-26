@@ -110,7 +110,7 @@ get '/summary' => sub {
   my $project_owner = $git->get_project_owner($root, $project);
   my $head_commit = $git->parse_commit($root, $project, "HEAD");
   my %committer_date = %$head_commit
-    ? parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
+    ? $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
   my $last_change = $git->_timestamp(\%committer_date);
   my $head_cid = $head_commit->{id};
@@ -174,8 +174,8 @@ get '/commit' => sub {
   my $project_description = $git->get_project_description($root, $project);
   my $project_owner = $git->get_project_owner($root, $project);
   my %commit = $git->parse_commit($root, $project, $cid);
-  my %committer_date = %commit ? parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
-  my %author_date = %commit ? parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
+  my %committer_date = %commit ? $git->parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
+  my %author_date = %commit ? $git->parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
   $commit{author_date} = $git->_timestamp(\%author_date);
   $commit{committer_date} = $git->_timestamp(\%committer_date);
   
@@ -232,10 +232,10 @@ get '/commitdiff(:suffix)' => {suffix => ''} => sub {
   my $commit = $git->parse_commit($root, $project, $cid)
     or die 404, "Unknown commit object";
   my %author_date = %$commit
-    ? parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
+    ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
     : ();
   my %committer_date = %$commit
-    ? parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'})
+    ? $git->parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'})
     : ();
   $commit->{author_date} = $git->_timestamp(\%author_date);
   $commit->{committer_date} = $git->_timestamp(\%committer_date);
@@ -464,7 +464,7 @@ get '/tag' => sub {
   # Ref names
   my $tag  = $git->parse_tag($root, $project, $id);
   my %author_date = %$tag
-    ? parse_date($tag->{author_epoch}, $tag->{author_tz})
+    ? $git->parse_date($tag->{author_epoch}, $tag->{author_tz})
     : ();
   my $author_date = $git->_timestamp(\%author_date);
   $tag->{author_date} = $author_date;
@@ -1009,117 +1009,6 @@ sub snapshot_name {
   $name = "$name-$ver";
 
   return wantarray ? ($name, $name) : $name;
-}
-
-sub parse_date {
-  my $epoch = shift;
-  my $tz = shift || "-0000";
-
-  my %date;
-  my @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-  my @days = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($epoch);
-  $date{'hour'} = $hour;
-  $date{'minute'} = $min;
-  $date{'mday'} = $mday;
-  $date{'day'} = $days[$wday];
-  $date{'month'} = $months[$mon];
-  $date{'rfc2822'}   = sprintf "%s, %d %s %4d %02d:%02d:%02d +0000",
-                       $days[$wday], $mday, $months[$mon], 1900+$year, $hour ,$min, $sec;
-  $date{'mday-time'} = sprintf "%d %s %02d:%02d",
-                       $mday, $months[$mon], $hour ,$min;
-  $date{'iso-8601'}  = sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ",
-                       1900+$year, 1+$mon, $mday, $hour ,$min, $sec;
-
-  my ($tz_sign, $tz_hour, $tz_min) =
-    ($tz =~ m/^([-+])(\d\d)(\d\d)$/);
-  $tz_sign = ($tz_sign eq '-' ? -1 : +1);
-  my $local = $epoch + $tz_sign*((($tz_hour*60) + $tz_min)*60);
-  ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($local);
-  $date{'hour_local'} = $hour;
-  $date{'minute_local'} = $min;
-  $date{'tz_local'} = $tz;
-  $date{'iso-tz'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d %s",
-                            1900+$year, $mon+1, $mday,
-                            $hour, $min, $sec, $tz);
-  return %date;
-}
-
-sub age_string {
-  my $age = shift;
-  my $age_str;
-
-  if ($age > 60*60*24*365*2) {
-    $age_str = (int $age/60/60/24/365);
-    $age_str .= " years ago";
-  } elsif ($age > 60*60*24*(365/12)*2) {
-    $age_str = int $age/60/60/24/(365/12);
-    $age_str .= " months ago";
-  } elsif ($age > 60*60*24*7*2) {
-    $age_str = int $age/60/60/24/7;
-    $age_str .= " weeks ago";
-  } elsif ($age > 60*60*24*2) {
-    $age_str = int $age/60/60/24;
-    $age_str .= " days ago";
-  } elsif ($age > 60*60*2) {
-    $age_str = int $age/60/60;
-    $age_str .= " hours ago";
-  } elsif ($age > 60*2) {
-    $age_str = int $age/60;
-    $age_str .= " min ago";
-  } elsif ($age > 2) {
-    $age_str = int $age;
-    $age_str .= " sec ago";
-  } else {
-    $age_str .= " right now";
-  }
-  return $age_str;
-}
-
-sub chop_str {
-  my $str = shift;
-  my $len = shift;
-  my $add_len = shift || 10;
-  my $where = shift || 'right'; # 'left' | 'center' | 'right'
-
-  if ($where eq 'center') {
-    return $str if ($len + 5 >= length($str)); # filler is length 5
-    $len = int($len/2);
-  } else {
-    return $str if ($len + 4 >= length($str)); # filler is length 4
-  }
-
-  # regexps: ending and beginning with word part up to $add_len
-  my $endre = qr/.{$len}\w{0,$add_len}/;
-  my $begre = qr/\w{0,$add_len}.{$len}/;
-
-  if ($where eq 'left') {
-    $str =~ m/^(.*?)($begre)$/;
-    my ($lead, $body) = ($1, $2);
-    if (length($lead) > 4) {
-      $lead = " ...";
-    }
-    return "$lead$body";
-
-  } elsif ($where eq 'center') {
-    $str =~ m/^($endre)(.*)$/;
-    my ($left, $str)  = ($1, $2);
-    $str =~ m/^(.*?)($begre)$/;
-    my ($mid, $right) = ($1, $2);
-    if (length($mid) > 5) {
-      $mid = " ... ";
-    }
-    return "$left$mid$right";
-
-  } else {
-    $str =~ m/^($endre)(.*)$/;
-    my $body = $1;
-    my $tail = $2;
-    if (length($tail) > 4) {
-      $tail = "... ";
-    }
-    return "$body$tail";
-  }
 }
 
 sub git {
