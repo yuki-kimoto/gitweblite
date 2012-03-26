@@ -356,6 +356,49 @@ sub parse_ls_tree_line {
   return wantarray ? %res : \%res;
 }
 
+sub parse_tag {
+  my ($self, $root, $project, $tag_id) = @_;
+  my %tag;
+  my @comment;
+  
+  my @git_cat_file = ($self->git($root, $project), "cat-file", "tag", $tag_id);
+  
+  open my $fd, "-|", @git_cat_file or return;
+  $tag{'id'} = $tag_id;
+  while (my $line = <$fd>) {
+    chomp $line;
+    if ($line =~ m/^object ([0-9a-fA-F]{40})$/) {
+      $tag{'object'} = $1;
+    } elsif ($line =~ m/^type (.+)$/) {
+      $tag{'type'} = $1;
+    } elsif ($line =~ m/^tag (.+)$/) {
+      $tag{'name'} = $1;
+    } elsif ($line =~ m/^tagger (.*) ([0-9]+) (.*)$/) {
+      $tag{'author'} = $1;
+      $tag{'author_epoch'} = $2;
+      $tag{'author_tz'} = $3;
+      if ($tag{'author'} =~ m/^([^<]+) <([^>]*)>/) {
+        $tag{'author_name'}  = $1;
+        $tag{'author_email'} = $2;
+      } else {
+        $tag{'author_name'} = $tag{'author'};
+      }
+    } elsif ($line =~ m/--BEGIN/) {
+      push @comment, $line;
+      last;
+    } elsif ($line eq "") {
+      last;
+    }
+  }
+  push @comment, <$fd>;
+  $tag{'comment'} = \@comment;
+  close $fd or return;
+  if (!defined $tag{'name'}) {
+    return
+  };
+  return \%tag
+}
+
 sub _age_string {
   my ($self, $age) = @_;
   my $age_str;
@@ -554,4 +597,5 @@ sub _S_ISGITLINK {
 
   return (($mode & S_IFMT) == S_IFGITLINK)
 }
+
 1;
