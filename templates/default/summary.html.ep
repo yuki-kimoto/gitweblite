@@ -40,19 +40,7 @@
           >
             %= $commit->{title_short};
           </a>
-          % for my $type (qw/head tag/) {
-            % if (my $name = $ref_names->{$type}{$cid}) {
-              <span class="refs">
-                <span class="<%= $type %>" title="<%= $type %>s/<%= $name %>">
-                  <a href="<%= url_for('/shortlog')->query({home => $home,
-                    project => $project, cid => $name}) %>"
-                  >
-                    <%= $name %>
-                  </a>
-                </span>
-              </span>
-            % }
-          % }
+          %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
         </td>
         <td class="link">
           <a href="<%= url_for('/commit')->query({home => $home,

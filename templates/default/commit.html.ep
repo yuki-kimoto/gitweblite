@@ -41,7 +41,7 @@
     </a>
   </div>
   <div class="title_text">
-    %= include 'include/refs_new', home => $home, project => $project, commit => $commit, refs => $refs;
+    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
     <table class="object_header">
       <tr>
         <td>author</td>

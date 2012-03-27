@@ -23,58 +23,54 @@
     </a>
   </div>
   <div class="page_body">
-    <span class="refs">
-      <span class="head" title="heads/blead"><a href="/perl.git/shortlog/refs/heads/blead">
-        blead
-      </a>
-    </span>
-    
-  <table class="tree">
-    % for (my $i = 0; $i <@$trees; $i++) {
-      % my $tree = $trees->[$i];
-      % my $type = $tree->{type};
-      % my $name = $tree->{name};
-      % my $child_dir = length $dir ? join('/', $dir, $tree->{name}) : $tree->{name};
-      <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
-        <td class="mode">
-          <%= $tree->{mode_str} %>
-        </td>
-        <td class="list">
-          % if ($type eq 'blob') {
-            <a class="list" href="<%= url_for('/blob')->query({home => $home,
-              project => $project, cid => $cid, file => $name}) %>"
-            >
-              <%= $tree->{name} %>
-            </a>
-          % } elsif ($tree) {
-            <a href="<%= url_for('/tree')->query({home => $home,
-              project => $project, cid => $cid, dir => $child_dir}) %>"
-            >
-              <%= $tree->{name} %>
-            </a>
-          % }
-        </td>
-        <td class="link">
-          % if ($type eq 'blob') {
-            <a href="<%= url_for('/blob')->query({home => $home,
-              project => $project, cid => $cid, file => $name}) %>"
-            >
-              blob
-            </a>
-            |
-            <a href="<%= url_for('/blob_plain')->query({home => $home,
+    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
+    <table class="tree">
+      % for (my $i = 0; $i <@$trees; $i++) {
+        % my $tree = $trees->[$i];
+        % my $type = $tree->{type};
+        % my $name = $tree->{name};
+        % my $child_dir = length $dir ? join('/', $dir, $tree->{name}) : $tree->{name};
+        <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
+          <td class="mode">
+            <%= $tree->{mode_str} %>
+          </td>
+          <td class="list">
+            % if ($type eq 'blob') {
+              <a class="list" href="<%= url_for('/blob')->query({home => $home,
                 project => $project, cid => $cid, file => $name}) %>"
-            >
-              raw
-            </a>
-          % } elsif ($type eq 'tree') {
-            <a href="<%= url_for('/tree')->query({home => $home,
-              project => $project, cid => $cid, dir => $child_dir}) %>"
-            >
-              tree
-            </a>
-          % }
-        </td>
-      </tr>
-    % }
-  </table>
+              >
+                <%= $tree->{name} %>
+              </a>
+            % } elsif ($tree) {
+              <a href="<%= url_for('/tree')->query({home => $home,
+                project => $project, cid => $cid, dir => $child_dir}) %>"
+              >
+                <%= $tree->{name} %>
+              </a>
+            % }
+          </td>
+          <td class="link">
+            % if ($type eq 'blob') {
+              <a href="<%= url_for('/blob')->query({home => $home,
+                project => $project, cid => $cid, file => $name}) %>"
+              >
+                blob
+              </a>
+              |
+              <a href="<%= url_for('/blob_plain')->query({home => $home,
+                  project => $project, cid => $cid, file => $name}) %>"
+              >
+                raw
+              </a>
+            % } elsif ($type eq 'tree') {
+              <a href="<%= url_for('/tree')->query({home => $home,
+                project => $project, cid => $cid, dir => $child_dir}) %>"
+              >
+                tree
+              </a>
+            % }
+          </td>
+        </tr>
+      % }
+    </table>
+  </div>

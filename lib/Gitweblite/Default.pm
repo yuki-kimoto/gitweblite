@@ -86,15 +86,17 @@ sub summary {
   # Commits
   my $commit_count = 20;
   my $commits = $head_cid ? $git->parse_commits($home, $project, $head_cid, $commit_count) : ();
+
+  # References
+  my $refs = $git->get_references($home, $project);
   
-  # Ref names
-  my $ref_names = {};
+  # Tags
   my $tag_count = 20;
   my $tags  = $git->get_tags($home, $project, $tag_count - 1);
-  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
+
+  # Heads
   my $head_count = 20;
   my $heads = $git->get_heads($home, $project, $head_count - 1);
-  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
   
   # Render
   $self->render(
@@ -108,7 +110,7 @@ sub summary {
     tags => $tags,
     head_cid => $head_cid,
     heads => $heads,
-    ref_names => $ref_names,
+    refs => $refs,
     commit_count => $commit_count,
     tag_count => $tag_count,
     head_count => $head_count
@@ -265,12 +267,8 @@ sub commitdiff {
       push @blobdiffs, {lines => \@lines};
     }
 
-    # Ref names
-    my $ref_names = {};
-    my $tags  = $git->get_tags($home, $project);
-    $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-    my $heads = $git->get_heads($home, $project);
-    $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
+    # References
+    my $refs = $git->get_references($home, $project);
     
     # Render
     $self->render(
@@ -281,7 +279,7 @@ sub commitdiff {
       commit => $commit,
       difftrees => $difftrees,
       blobdiffs => \@blobdiffs,
-      ref_names => $ref_names
+      refs => $refs
     );
   }
 }
@@ -342,6 +340,9 @@ sub tree {
     push @trees, \%tree;
   }
 
+  # References
+  my $refs = $git->get_references($home, $project);
+
   $self->render(
     home => $home,
     project => $project,
@@ -349,7 +350,8 @@ sub tree {
     cid => $cid,
     tid => $tid,
     commit => $commit,
-    trees => \@trees
+    trees => \@trees,
+    refs => $refs
   );
 }
 
@@ -801,12 +803,8 @@ sub _log {
   my $page_count = $short ? 50 : 20;
   my $commits = $git->parse_commits($home, $project, $base_commit->{id}, $page_count, $page_count * $page);
   
-  # Ref names
-  my $ref_names = {};
-  my $tags  = $git->get_tags($home, $project);
-  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = $git->get_heads($home, $project);
-  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
+  # References
+  my $refs = $git->get_references($home, $project);
 
   # Render
   my $template = $short ? 'shortlog' : 'log';
@@ -816,7 +814,7 @@ sub _log {
     project => $project,
     base_cid => $base_cid,
     commits => $commits,
-    ref_names => $ref_names,
+    refs => $refs,
     page => $page,
     page_count => $page_count
   );

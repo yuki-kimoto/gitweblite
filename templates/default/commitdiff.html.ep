@@ -16,7 +16,7 @@
     </a>
   </div>
   <div class="title_text">
-    %= include 'include/refs', home => $home, project => $project, commit => $commit, ref_names => $ref_names;
+    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
     <table class="object_header">
       <tr><td>Author</td><td><%= $commit->{author} %></td><td rowspan="2"></td></tr>
       <tr><td></td><td><%= $commit->{author_date} %></td></tr>
