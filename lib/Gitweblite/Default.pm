@@ -159,6 +159,9 @@ sub commit {
   my $parents = $commit{parents};
   my $difftrees = $git->get_difftree($home, $project, $cid, $parent, $parents);
   
+  warn $self->dumper($difftrees);
+  
+  # Render
   $self->render(
     home => $home,
     project => $project,
