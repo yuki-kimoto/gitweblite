@@ -33,7 +33,7 @@ Operation
 
   Start
   
-      ./run script/gitweblite
+      ./gitweblite
   
     Application start in back ground. Port is C<10010>.
     You can access the following URL.
@@ -44,7 +44,7 @@ Operation
   
   Stop
   
-      ./run --stop
+      ./gitweblite --stop
     
     You can stop application by C<--stop> option.
 
