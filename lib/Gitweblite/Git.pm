@@ -733,7 +733,7 @@ sub parse_tag {
   if (!defined $tag{'name'}) {
     return
   };
-  return \%tag
+  return \%tag;
 }
 
 sub snapshot_name {

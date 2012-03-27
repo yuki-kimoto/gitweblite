@@ -94,6 +94,8 @@ sub summary {
   my $tag_count = 20;
   my $tags  = $git->get_tags($home, $project, $tag_count - 1);
 
+  warn $self->dumper($tags);
+
   # Heads
   my $head_count = 20;
   my $heads = $git->get_heads($home, $project, $head_count - 1);
@@ -441,6 +443,8 @@ sub tag {
     : ();
   my $author_date = $git->_timestamp(\%author_date);
   $tag->{author_date} = $author_date;
+
+  warn $self->dumper($tag);
   
   # Render
   $self->render(
