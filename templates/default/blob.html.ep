@@ -29,6 +29,7 @@
   </a>
   </div>
   <div class="page_path">
+    [<%= $project %>]
     % my @parts = split('/', $file);
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
@@ -46,10 +47,19 @@
   </div>
 
   <div class="page_body">
-    % my $nr = 1;
-		% for my $line (@$lines) {
-		  % my $nr4 = sprintf("%4i", $nr);
-		  <div class="pre"><a id="l<%= $nr %>" href="<%#l<%= $nr %>" class="linenr"><%= $nr4 %></a> <%= $line %></div>
-		  % $nr++;
-		% }
+    % if ($mimetype =~ m#^image/#) {
+      <img type="<%= $mimetype %>
+        % if (defined $file) {
+          alt="<%= $file %>" title="<%= $file %>"
+        % }
+        src="<%= url_for('blob_plain')->query(home => $home, project => $project, cid => $cid, file => $file) %>"
+      />
+    % } else {
+      % my $nr = 1;
+      % for my $line (@$lines) {
+        % my $nr4 = sprintf("%4i", $nr);
+        <div class="pre"><a id="l<%= $nr %>" href="<%#l<%= $nr %>" class="linenr"><%= $nr4 %></a> <%= $line %></div>
+        % $nr++;
+      % }
+    % }
   </div>

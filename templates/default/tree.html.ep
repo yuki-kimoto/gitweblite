@@ -26,6 +26,7 @@
     %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
     <table class="tree">
       % for (my $i = 0; $i <@$trees; $i++) {
+        
         % my $tree = $trees->[$i];
         % my $type = $tree->{type};
         % my $name = $tree->{name};
@@ -36,8 +37,10 @@
           </td>
           <td class="list">
             % if ($type eq 'blob') {
-              <a class="list" href="<%= url_for('/blob')->query({home => $home,
-                project => $project, cid => $cid, file => $name}) %>"
+              % my $file = "$dir/$name";
+
+              <a class="list" href="<%= url_for('/blob')->query(home => $home,
+                project => $project, cid => $cid, file => $file) %>"
               >
                 <%= $tree->{name} %>
               </a>
@@ -51,8 +54,9 @@
           </td>
           <td class="link">
             % if ($type eq 'blob') {
-              <a href="<%= url_for('/blob')->query({home => $home,
-                project => $project, cid => $cid, file => $name}) %>"
+              % my $file = "$dir/$name";
+              <a href="<%= url_for('/blob')->query(home => $home,
+                project => $project, cid => $cid, file => $file) %>"
               >
                 blob
               </a>

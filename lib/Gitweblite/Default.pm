@@ -533,7 +533,7 @@ sub blob {
   
   # Git
   my $git = $self->app->git;
-
+  
   # Blob id
   my $bid = $git->get_id_by_path($home, $project, $cid, $file, "blob")
     or die "Cannot find file";
@@ -549,13 +549,12 @@ sub blob {
     or die "Couldn't cat $file, $bid";
   
   my $mimetype = $git->blob_mimetype($fd, $file);
-
   # Redirect to blob plane
   if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
     close $fd;
     my $url = $self->url_for('/blob_plain')->query([home => $home, project => $project,
       cid => $cid, file => $file]);
-    return $self->refirect_to($url);
+    return $self->redirect_to($url);
   }
   
   # Commit
@@ -575,7 +574,8 @@ sub blob {
     bid => $bid,
     file => $file,
     commit => \%commit,
-    lines => \@lines
+    lines => \@lines,
+    mimetype => $mimetype
   );
 }
 

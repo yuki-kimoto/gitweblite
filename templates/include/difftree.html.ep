@@ -73,8 +73,7 @@
               <a href="<%= url_for('/blob')->query({home => $home, project => $project,
                 cid => $from_cid, file => $from_file}) %>"
               >
-                <%= $difftree->{from_file} %>
-              </a>
+                <%= $difftree->{from_file} %></a>
               with <%= $difftree->{similarity} %>%
               <%= $mode_change %>
             ]
