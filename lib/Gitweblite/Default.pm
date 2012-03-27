@@ -160,6 +160,8 @@ sub commit {
   my $parents = $commit{parents};
   my $difftrees = $git->get_difftree($home, $project, $cid, $parent, $parents);
   
+  my $refs = $git->get_references($home, $project);
+  
   $self->render(
     home => $home,
     project => $project,

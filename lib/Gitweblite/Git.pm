@@ -179,6 +179,29 @@ sub get_object_type {
   return $type;
 }
 
+sub get_references {
+  my ($self, $home, $project, $type) = @_;
+  $type ||= '';
+  my %refs;
+  open my $fd, "-|", $self->git($home, $project), "show-ref", "--dereference",
+    ($type ? ("--", "refs/$type") : ())
+    or return;
+
+  while (my $line = <$fd>) {
+    $line = d$line;
+    chomp $line;
+    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
+      if (defined $refs{$1}) {
+        push @{$refs{$1}}, $2;
+      } else {
+        $refs{$1} = [ $2 ];
+      }
+    }
+  }
+  close $fd or return;
+  return \%refs;
+}
+
 sub id_set_multi {
   my ($self, $cid, $key, $value) = @_;
 

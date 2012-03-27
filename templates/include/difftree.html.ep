@@ -27,7 +27,7 @@
              with mode: <%= $mode_str %>
           % }
           ]
-        </span>";
+        </span>
       % } elsif ($status eq 'D') {
         <span class="file_status deleted">[deleted <%= $difftree->{from_file_type} %>]</span>
       % }
