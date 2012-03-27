@@ -26,7 +26,7 @@
   </div>
 
   <div class="page_path">
-    [<%= $project %>]
+    [<a href="<%= url_for('/tree')->query(home => $home, project => $project, cid => $cid) %>"><%= $project %></a>]
     % my @parts = split('/', $dir);
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
