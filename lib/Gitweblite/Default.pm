@@ -149,18 +149,13 @@ sub commit {
   $commit{author_date} = $git->_timestamp(\%author_date);
   $commit{committer_date} = $git->_timestamp(\%committer_date);
   
-  # Ref names
-  my $ref_names = {};
-  my $tags  = $git->get_tags($home, $project);
-  $ref_names->{tag}{$_->{id}} = $_->{name} for @$tags;
-  my $heads = $git->get_heads($home, $project);
-  $ref_names->{head}{$_->{id}} = $_->{name} for @$heads;
+  # References
+  my $refs = $git->get_references($home, $project);
   
+  # Diff tree
   my $parent = $commit{parent};
   my $parents = $commit{parents};
   my $difftrees = $git->get_difftree($home, $project, $cid, $parent, $parents);
-  
-  my $refs = $git->get_references($home, $project);
   
   $self->render(
     home => $home,
@@ -168,9 +163,8 @@ sub commit {
     project_owner => $project_owner,
     cid => $cid,
     commit => \%commit,
-    ref_names => $ref_names,
+    refs => $refs,
     difftrees => $difftrees,
-    ref_names => $ref_names
   );
 }
 
