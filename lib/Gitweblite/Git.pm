@@ -90,6 +90,8 @@ sub fill_projects {
 sub get_difftree {
   my ($self, $home, $project, $cid, $parent, $parents) = @_;
   
+  $parent = "--root" unless defined $parent;
+
   # Execute "git diff-tree"
   my @git_diff_tree = (
     $self->git($home, $project),
@@ -101,7 +103,7 @@ sub get_difftree {
     "--"
   );
   open my $fh, "-|", @git_diff_tree
-    or die "Open git-diff-tree failed";
+    or die 500, "Open git-diff-tree failed";
   my @difftree = map { chomp; d$_ } <$fh>;
   close $fh or die "Reading git-diff-tree failed";
   

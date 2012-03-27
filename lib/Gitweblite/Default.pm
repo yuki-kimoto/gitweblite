@@ -158,10 +158,6 @@ sub commit {
   
   my $parent = $commit{parent};
   my $parents = $commit{parents};
-  if (!defined $parent) {
-    $parent = "--home";
-  }
-  
   my $difftrees = $git->get_difftree($home, $project, $cid, $parent, $parents);
   
   $self->render(
