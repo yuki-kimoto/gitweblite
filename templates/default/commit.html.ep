@@ -9,13 +9,30 @@
   %= include '/include/page_navi', current => 'commit', home => $home, project => $project;
   
   <div class="page_nav">
-    % my $from_cid = $commit->{parent};
-    (
-      parent:
-      <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>">
-        <%= substr($from_cid, 0, 7) %>
-      </a>
-    ) |
+    % my $parent = $commit->{parent};
+    % my $parents = $commit->{parents};
+    % my $from_cid = $parent;
+    
+    % if (!defined $parent) {
+      (initial)
+    % }
+    % elsif (@$parents == 1) {
+      (
+        parent:
+        <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $parent}) %>">
+          <%= substr($parent, 0, 7) %>
+        </a>
+      )
+    % } else {
+      (
+        merge:
+        % for my $parent (@$parents) {
+          <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $parent}) %>">
+            <%= substr($parent, 0, 7) %>
+          </a>
+        % }
+      )
+    % }
   </div>
   
   <div class="header">
