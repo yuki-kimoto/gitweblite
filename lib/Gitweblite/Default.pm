@@ -94,8 +94,6 @@ sub summary {
   my $tag_count = 20;
   my $tags  = $git->get_tags($home, $project, $tag_count - 1);
 
-  warn $self->dumper($tags);
-
   # Heads
   my $head_count = 20;
   my $heads = $git->get_heads($home, $project, $head_count - 1);
@@ -147,11 +145,15 @@ sub commit {
   # Project information
   my $project_description = $git->get_project_description($home, $project);
   my $project_owner = $git->get_project_owner($home, $project);
+  
+  # Commit
   my %commit = $git->parse_commit($home, $project, $cid);
   my %committer_date = %commit ? $git->parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
   my %author_date = %commit ? $git->parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
   $commit{author_date} = $git->_timestamp(\%author_date);
   $commit{committer_date} = $git->_timestamp(\%committer_date);
+  
+  warn $self->dumper(\%commit);
   
   # References
   my $refs = $git->get_references($home, $project);
@@ -160,8 +162,6 @@ sub commit {
   my $parent = $commit{parent};
   my $parents = $commit{parents};
   my $difftrees = $git->get_difftree($home, $project, $cid, $parent, $parents);
-  
-  warn $self->dumper($difftrees);
   
   # Render
   $self->render(
@@ -443,8 +443,6 @@ sub tag {
     : ();
   my $author_date = $git->_timestamp(\%author_date);
   $tag->{author_date} = $author_date;
-
-  warn $self->dumper($tag);
   
   # Render
   $self->render(

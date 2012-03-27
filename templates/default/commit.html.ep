@@ -28,17 +28,22 @@
         merge:
         % for my $parent (@$parents) {
           <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $parent}) %>">
-            <%= substr($parent, 0, 7) %>
-          </a>
+            <%= substr($parent, 0, 7) %></a>
         % }
       )
     % }
   </div>
   
   <div class="header">
-    <a class="title" href="<%= url_for('/commitdiff')->query({home => $home, project => $project, cid => $cid}) %>">
-      <%= $commit->{title} %>
-    </a>
+    % if (defined $parent) {
+      <a class="title" href="<%= url_for('/commitdiff')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+        <%= $commit->{title} %>
+      </a>
+    % } else {
+      <a class="title" href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+        <%= $commit->{title} %>
+      </a>
+    % }
   </div>
   <div class="title_text">
     %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
@@ -63,50 +68,53 @@
       </tr>
       <tr>
         <td>commit</td>
-        <td class="sha1"><%= $cid %></td>
+        <td class="sha1"><%= $commit->{id} %></td>
       </tr>
       <tr>
         <td>tree</td>
         <td class="sha1">
-          <a class="list" href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $cid}) %>">
-            <%= $cid %>
+          <a class="list" href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+            <%= $commit->{id} %>
           </a>
         </td>
         <td class="link">
-          <a href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $cid}) %>">
+          <a href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow"
-            href="<%= url_for('/snapshot')->query({home => $home, project => $project, cid => $cid}) %>"
+            href="<%= url_for('/snapshot')->query({home => $home, project => $project, cid => $commit->{id}}) %>"
           >
             snapshot
           </a>
         </td>
       </tr>
-      <tr>
-        <td>
-          parent
-        </td>
-        <td class="sha1">
-          <a class="list"
-            href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>"
-          >
-            <%= $from_cid %>
-          </a>
-        </td>
-        <td class="link">
-          <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>">
-            commit
-          </a>
-          |
-          <a href="<%= url_for('/commitdiff')->query({home => $home, project => $project,
-            cid => $commit->{id}, from_cid => $from_cid}) %>"
-          >
-            diff
-          </a>
-        </td>
-      </tr>
+      % for my $parent (@$parents) {
+        % my $from_cid = $parent;
+        <tr>
+          <td>
+            parent
+          </td>
+          <td class="sha1">
+            <a class="list"
+              href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>"
+            >
+              <%= $from_cid %>
+            </a>
+          </td>
+          <td class="link">
+            <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>">
+              commit
+            </a>
+            |
+            <a href="<%= url_for('/commitdiff')->query({home => $home, project => $project,
+              cid => $commit->{id}, from_cid => $from_cid}) %>"
+            >
+              diff
+            </a>
+          </td>
+        </tr>
+      % }
     </table>
   </div>
   <div class="page_body">
@@ -119,5 +127,5 @@
   </div>
   <div class="list_head">
   </div>
-  <%= include '/include/difftree', cid => $cid, from_cid => $from_cid,
+  <%= include '/include/difftree', cid => $commit->{id}, from_cid => $from_cid,
     difftrees => $difftrees, parents => $commit->{parents} %>
