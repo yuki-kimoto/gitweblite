@@ -27,12 +27,13 @@
 
   <div class="page_path">
     [<a href="<%= url_for('/tree')->query(home => $home, project => $project, cid => $cid) %>"><%= $project %></a>]
-    % my @parts = split('/', $dir);
+    % my @parts;
+    % @parts = split('/', $dir) if defined $dir;
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
       % my $part = $parts[$i];
       % $path .= "$part";
-      <a title="tree home" href=
+      <a href=
         "<%= url_for('/tree')->query({home => $home, project => $project, cid => $cid, dir => $path}) %>"
       >
        <%= $part %>
@@ -59,7 +60,7 @@
           </td>
           <td class="list">
             % if ($type eq 'blob') {
-              % my $file = "$dir/$name";
+              % my $file = defined $dir ? "$dir/$name" : $name;
 
               <a class="list" href="<%= url_for('/blob')->query(home => $home,
                 project => $project, cid => $cid, file => $file) %>"
@@ -76,7 +77,7 @@
           </td>
           <td class="link">
             % if ($type eq 'blob') {
-              % my $file = "$dir/$name";
+              % my $file = defined $dir ? "$dir/$name" : $name;
               <a href="<%= url_for('/blob')->query(home => $home,
                 project => $project, cid => $cid, file => $file) %>"
               >
