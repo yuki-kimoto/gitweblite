@@ -2,53 +2,61 @@
   % for (my $i = 0; $i < @$tags; $i++) {
     % my $tag = $tags->[$i];
     % my $name = $tag->{name};
+    % my $reftype = $tag->{reftype};
+    % my $comment = $tag->{comment_short};
+    
     <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
       <td><i><%= $tag->{age} %></i></td>
       <td>
         <a class="list name" href=
-          "<%= url_for('/commit')->query({home => $home, project => $project, cid => $name}) %>"
+          "<%= url_for("/$reftype")->query({home => $home, project => $project, cid => $tag->{refid}}) %>"
         >
           %= $tag->{name};
         </a>
-      </td>
-      <td>
-        <a class="list subject" href=
-          "<%= url_for('/commit')->query({home => $home, project => $project, cid => $name}) %>"
-        >
-          <%= $tag->{subject} || '' %>
-        </a>
+        % if (defined $comment) {
+          <a class="list subject" href=
+            "<%= url_for("/tag")->query({home => $home, project => $project, id => $tag->{id}}) %>"
+          >
+            <%= $comment %>
+          </a>
+        % }
       </td>
       <td class="selflink">
-        <a href=
-          "<%= url_for('/tag')->query({home => $home, project => $project, id => $tag->{id}}) %>"
-        >
-          tag
-        </a>
+        % if ($tag->{type} eq 'tag') {
+          <a href=
+            "<%= url_for('/tag')->query({home => $home, project => $project, id => $tag->{id}}) %>"
+          >
+            tag
+          </a>
+          |
+        % }
       </td>
-      <td class="link"> |
-        <a href="<%= url_for('/commit')->query({home => $home,
-          project => $project, cid => $name}) %>"
+      <td class="link">
+        <a href=
+          "<%= url_for("/$reftype")->query({home => $home, project => $project, cid => $tag->{refid}}) %>"
         >
-          commit
+          %= $reftype;
         </a>
-        |
-        <a href="<%= url_for('/shortlog')->query({home => $home, project => $project,
-          base_cid => $name}) %>"
-        >
-          shortlog
-        </a>
-        |
-        <a href="<%= url_for('/log')->query({home => $home, project => $project,
-          base_cid => $name}) %>"
-        >
-          log
-        </a>
-        |
-        <a href="<%= url_for('/tree')->query({home => $home, project => $project,
-          cid => $name}) %>"
-        >
-          tree
-        </a>
+        % if ($reftype eq 'commit') {
+          |
+          <a href="<%= url_for('/shortlog')->query({home => $home, project => $project,
+            base_cid => $name}) %>"
+          >
+            shortlog
+          </a>
+          |
+          <a href="<%= url_for('/log')->query({home => $home, project => $project,
+            base_cid => $name}) %>"
+          >
+            log
+          </a>
+        % } elsif ($reftype eq 'blob') {
+          <a href="<%= url_for('/blob_plain')->query({home => $home, project => $project,
+            bid => $tag->{refid}}) %>"
+          >
+            row
+          </a>          
+        % }
       </td>
     </tr>
   % }

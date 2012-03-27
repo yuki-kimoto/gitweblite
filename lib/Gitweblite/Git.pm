@@ -377,38 +377,41 @@ sub get_tags {
   while (my $line = <$fh>) {
     $line = d$line;
     
-    my %ref_item;
+    my %tag;
 
     chomp $line;
     my ($refinfo, $creatorinfo) = split(/\0/, $line);
     my ($id, $type, $name, $refid, $reftype, $title) = split(' ', $refinfo, 6);
     my ($creator, $epoch, $tz) =
       ($creatorinfo =~ /^(.*) ([0-9]+) (.*)$/);
-    $ref_item{'fullname'} = $name;
+    $tag{'fullname'} = $name;
     $name =~ s!^refs/tags/!!;
 
-    $ref_item{'type'} = $type;
-    $ref_item{'id'} = $id;
-    $ref_item{'name'} = $name;
+    $tag{'type'} = $type;
+    $tag{'id'} = $id;
+    $tag{'name'} = $name;
     if ($type eq "tag") {
-      $ref_item{'subject'} = $title;
-      $ref_item{'reftype'} = $reftype;
-      $ref_item{'refid'}   = $refid;
+      $tag{'subject'} = $title;
+      $tag{'reftype'} = $reftype;
+      $tag{'refid'}   = $refid;
     } else {
-      $ref_item{'reftype'} = $type;
-      $ref_item{'refid'}   = $id;
+      $tag{'reftype'} = $type;
+      $tag{'refid'}   = $id;
     }
 
     if ($type eq "tag" || $type eq "commit") {
-      $ref_item{'epoch'} = $epoch;
+      $tag{'epoch'} = $epoch;
       if ($epoch) {
-        $ref_item{'age'} = $self->_age_string(time - $ref_item{'epoch'});
+        $tag{'age'} = $self->_age_string(time - $tag{'epoch'});
       } else {
-        $ref_item{'age'} = "unknown";
+        $tag{'age'} = "unknown";
       }
     }
+    
+    $tag{comment_short} = $self->_chop_str($tag{subject}, 30, 5)
+      if $tag{subject};
 
-    push @tags, \%ref_item;
+    push @tags, \%tag;
   }
   close $fh;
 
