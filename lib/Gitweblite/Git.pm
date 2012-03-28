@@ -67,6 +67,52 @@ sub check_head_link {
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
+sub fill_from_file_info {
+	my ($self, $home, $project, $diff, $parents) = @_;
+
+	$diff->{'from_file'} = [];
+	$diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
+	for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
+		if ($diff->{'status'}[$i] eq 'R' ||
+		    $diff->{'status'}[$i] eq 'C') {
+			$diff->{'from_file'}[$i] =
+				$self->get_path_by_id($home, $project, $parents->[$i], $diff->{'from_id'}[$i]);
+		}
+	}
+
+	return $diff;
+}
+
+sub get_path_by_id {
+  my $self = shift;
+  my $home = shift;
+  my $project = shift;
+	my $base = shift || return;
+	my $hash = shift || return;
+
+	local $/ = "\0";
+
+	open my $fd, "-|", $self->git($home, $project), "ls-tree", '-r', '-t', '-z', $base
+		or return undef;
+	while (my $line = <$fd>) {
+	  $line = d$line;
+		chomp $line;
+
+		if ($line =~ m/(?:[0-9]+) (?:.+) $hash\t(.+)$/) {
+			close $fd;
+			return $1;
+		}
+	}
+	close $fd;
+	return undef;
+}
+
+sub is_deleted {
+	my ($self, $diffinfo) = @_;
+
+	return $diffinfo->{'to_id'} eq ('0' x 40);
+}
+
 sub fill_projects {
   my ($self, $home, $ps) = @_;
 
@@ -119,6 +165,14 @@ sub get_difftree {
   for my $line (@difftree) {
     my $diff = $self->parsed_difftree_line($line);
 
+		if (exists $diff->{'nparents'}) {
+
+			$self->fill_from_file_info($home, $project, $diff, $parents)
+				unless exists $diff->{'from_file'};
+
+      $diff->{is_deleted} = 1 if $self->is_deleted($diff);
+    }
+        
     my ($to_mode_oct, $to_mode_str, $to_file_type);
     my ($from_mode_oct, $from_mode_str, $from_file_type);
     if ($diff->{'to_mode'} ne ('0' x 6)) {
