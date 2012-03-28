@@ -153,15 +153,13 @@ sub commit {
   $commit{author_date} = $git->_timestamp(\%author_date);
   $commit{committer_date} = $git->_timestamp(\%committer_date);
   
-  warn $self->dumper(\%commit);
-  
   # References
   my $refs = $git->get_references($home, $project);
   
   # Diff tree
   my $parent = $commit{parent};
   my $parents = $commit{parents};
-  my $difftrees = $git->get_difftree($home, $project, $cid, $parent, $parents);
+  my $difftrees = $git->get_difftree($home, $project, $commit{id}, $parent, $parents);
   
   # Render
   $self->render(

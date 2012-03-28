@@ -27,7 +27,7 @@
   <div class="page_body">
     <div class="list_head"></div>
 
-    <%= include '/include/difftree', cid => $cid, from_cid => $commit->{parent},
+    <%= include '/include/difftree', cid => $commit->{id}, from_cid => $commit->{parent},
       difftrees => $difftrees, parents => $commit->{parents} %>
 
     <a name="patchset" ></a>

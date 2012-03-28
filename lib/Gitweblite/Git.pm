@@ -102,6 +102,8 @@ sub get_difftree {
     $cid,
     "--"
   );
+  warn join(' ', @git_diff_tree);
+  
   open my $fh, "-|", @git_diff_tree
     or die 500, "Open git-diff-tree failed";
   my @difftree = map { chomp; d$_ } <$fh>;
@@ -110,6 +112,10 @@ sub get_difftree {
   # Parse "git diff-tree" output
   my $diffs = [];
   my @parents = @$parents;
+  
+  use Data::Dumper;
+  warn Dumper(\@difftree);
+  
   for my $line (@difftree) {
     my $diff = $self->parsed_difftree_line($line);
 
