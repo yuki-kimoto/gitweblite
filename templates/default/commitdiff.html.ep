@@ -30,11 +30,10 @@
     <%= include '/include/difftree', cid => $commit->{id}, from_cid => $commit->{parent},
       difftrees => $difftrees, parents => $commit->{parents} %>
 
-    <a name="patchset" ></a>
     <div class="patchset">
       % for (my $i = 0; $i < @$blobdiffs; $i++) {
         % my $blobdiff = $blobdiffs->[$i];
-        <div class="patch" id="<%= $i %>">
+        <div class="patch" id="<%= $i + 1 %>">
           % for my $line (@{$blobdiff->{lines}}) {
             % my $class;
             % if ($line =~ /^diff \-\-git /) { $class = 'diff header' }

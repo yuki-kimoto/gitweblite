@@ -5,7 +5,6 @@
 	  <thead>
 	    <tr>
   		  <th></th>
-  		  <th></th>
     		% for (my $i = 0; $i < @$parents; $i++) {
     			% my $parent = $parents->[$i];
     			% my $from_cid = $parent;
@@ -23,7 +22,6 @@
 	% }
 	<tbody>
 	  % my $toggle = 0;
-	  % my $patch_num = 0;
     % for my $difftree (@$difftrees) {
     
       <tr class="<%= $toggle++ % 2 ? 'light' : 'dark' %>">
@@ -42,16 +40,6 @@
     				    <%= $file %>
     				  </a>
     		    </td>
-    			% }
-
-    			% if ($action eq 'commitdiff') {
-    				% $patch_num++;
-    				<td class="link">
-    				  <a href="#<%= "patch$patch_num" %>">
-    				    patch
-    				  </a>
-    				  |
-			      </td>
     			% }
 
     			% my $not_deleted = 0;
@@ -177,15 +165,6 @@
             % }
           </td>
           <td class="link">
-      			% if ($action eq 'commitdiff') {
-      				% $patch_num++;
-      				<td class="link">
-      				  <a href="#<%= "patch$patch_num" %>">
-      				    patch
-      				  </a>
-      				</td>
-      			% }
-
             % if ($status ne 'A') {
               <a href="<%= url_for('/blobdiff')->query({home => $home, project => $project,
                 from_cid => $from_cid, cid => $cid, file => $file}) %>"
