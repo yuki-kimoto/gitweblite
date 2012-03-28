@@ -28,22 +28,8 @@
     <%= $commit->{title} %>
   </a>
   </div>
-  <div class="page_path">
-    % my @parts = split('/', $file);
-    % my $path;
-    % for (my $i = 0; $i < @parts; $i++) {
-      % my $part = $parts[$i];
-      % $path .= "/$part";
-      <a title="tree home" href=
-        "<%= url_for('/tree')->query({home => $home, project => $project, cid => $cid, dir => $path}) %>"
-      >
-       <%= $part %>
-      </a>
-      % unless ($i == @parts - 1) {
-        /
-      % }
-    % }
-  </div>
+
+  %= include '/include/pagepath', home => $home, project => $project, cid => $cid, file => $file;
 
   <div class="page_body">
     % for my $line (@$lines) {
