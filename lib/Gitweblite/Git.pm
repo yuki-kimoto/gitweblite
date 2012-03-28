@@ -159,9 +159,6 @@ sub get_difftree {
   my $diffs = [];
   my @parents = @$parents;
   
-  use Data::Dumper;
-  warn Dumper(\@difftree);
-  
   for my $line (@difftree) {
     my $diff = $self->parsed_difftree_line($line);
 
@@ -171,33 +168,35 @@ sub get_difftree {
 				unless exists $diff->{'from_file'};
 
       $diff->{is_deleted} = 1 if $self->is_deleted($diff);
+      push @$diffs, $diff;
     }
-        
-    my ($to_mode_oct, $to_mode_str, $to_file_type);
-    my ($from_mode_oct, $from_mode_str, $from_file_type);
-    if ($diff->{'to_mode'} ne ('0' x 6)) {
-      $to_mode_oct = oct $diff->{'to_mode'};
-      if (S_ISREG($to_mode_oct)) { # only for regular file
-        $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
+    else {
+      my ($to_mode_oct, $to_mode_str, $to_file_type);
+      my ($from_mode_oct, $from_mode_str, $from_file_type);
+      if ($diff->{'to_mode'} ne ('0' x 6)) {
+        $to_mode_oct = oct $diff->{'to_mode'};
+        if (S_ISREG($to_mode_oct)) { # only for regular file
+          $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
+        }
+        $to_file_type = $self->file_type($diff->{'to_mode'});
       }
-      $to_file_type = $self->file_type($diff->{'to_mode'});
-    }
-    if ($diff->{'from_mode'} ne ('0' x 6)) {
-      $from_mode_oct = oct $diff->{'from_mode'};
-      if (S_ISREG($from_mode_oct)) { # only for regular file
-        $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
+      if ($diff->{'from_mode'} ne ('0' x 6)) {
+        $from_mode_oct = oct $diff->{'from_mode'};
+        if (S_ISREG($from_mode_oct)) { # only for regular file
+          $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
+        }
+        $from_file_type = $self->file_type($diff->{'from_mode'});
       }
-      $from_file_type = $self->file_type($diff->{'from_mode'});
-    }
-    
-    $diff->{to_mode_str} = $to_mode_str;
-    $diff->{to_mode_oct} = $to_mode_oct;
-    $diff->{to_file_type} = $to_file_type;
-    $diff->{from_mode_str} = $from_mode_str;
-    $diff->{from_mode_oct} = $from_mode_oct;
-    $diff->{from_file_type} = $from_file_type;
+      
+      $diff->{to_mode_str} = $to_mode_str;
+      $diff->{to_mode_oct} = $to_mode_oct;
+      $diff->{to_file_type} = $to_file_type;
+      $diff->{from_mode_str} = $from_mode_str;
+      $diff->{from_mode_oct} = $from_mode_oct;
+      $diff->{from_file_type} = $from_file_type;
 
-    push @$diffs, $diff;
+      push @$diffs, $diff;
+    }
   }
   
   return $diffs;
