@@ -48,6 +48,12 @@ Operation
     
     You can stop application by C<--stop> option.
 
+Description
+
+  by default, /home and /git/pub directory is searched recursively.
+  if xxx.git directory is found and it is git repository,
+  the repository display on top page.
+
 Config
 
   You can set config in gitweblite.conf
