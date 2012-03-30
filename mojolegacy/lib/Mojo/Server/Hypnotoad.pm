@@ -149,6 +149,7 @@ sub _config {
   $c->{workers}         ||= 4;
 
   # Daemon settings
+  no warnings 'uninitialized';
   $ENV{MOJO_REVERSE_PROXY} = $c->{proxy};
   my $daemon = $self->{daemon};
   $daemon->backlog($c->{backlog}) if defined $c->{backlog};
