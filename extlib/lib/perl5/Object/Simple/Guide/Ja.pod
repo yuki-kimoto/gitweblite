@@ -1,0 +1,356 @@
+=encoding utf8
+
+=head1 NAME
+
+Object::Simple::Guide::Ja - Object::Simpleのガイドブック
+
+=head1 ガイドブック
+
+=head2 1. 属性メソッドの生成
+
+最初にC<-base>フラグを使ってL<Object::Simple>を継承したクラスを作成します
+
+    package MyClass;
+    use Object::Simple -base;
+
+L<Object::Simple>はC<new>メソッドを持っています。
+C<new>はコンストラクタであり
+ハッシュあるいはハッシュのリファレンスを受け取ることができます。
+    
+    my $obj = MyClass->new;
+    my $obj = MyClass->new(foo => 1, bar => 2);
+    my $obj = MyClass->new({foo => 1, bar => 2});
+
+属性メソッドを生成するにはC<has>関数を使用します。
+C<has>関数はC<-base>フラグを指定したときに
+自動的にインポートされます。
+
+    has 'foo';
+
+生成された属性メソッドを使って属性値を設定したり取得することができます。
+
+    # 属性値の設定
+    $obj->foo(1);
+    
+    # 属性値の取得
+    my $foo = $obj->foo;
+
+属性メソッドのためのデフォルト値を指定することもできます。
+
+    has foo => 1;
+
+属性値が設定されていない場合は最初に属性メソッドが呼び出されたときに
+デフォルト値が属性値に設定されます。
+
+    my $default_value = $obj->foo;
+
+もしリファレンスやオブジェクトをデフォルト値として指定したい場合は
+サブルーチンのリファレンスの戻り値にする必要があります。
+これはデフォルト値を他のオブジェクトと共有しないためです。
+
+    has foo => sub { [] };
+    has foo => sub { {} };
+    has foo => sub { MyClass->new };
+
+複数の属性メソッドを一度に生成することができます。
+
+    has [qw/foo bar baz/];
+    has [qw/foo bar baz/] => 0;
+
+すべての属性メソッドを一度に生成することもできます。
+
+    has [qw/foo bar baz/],
+        some => 1,
+        other => sub { 5 };
+
+引数が奇数個の場合には、一つ目の引数に渡された値は、
+デフォルト値を持たない属性メソッドです。
+それ以降は、デフォルト値を持つ属性メソッドの定義になります。
+
+=head2 クラスの作成
+
+L<Object::Simple>を継承してクラスを作成してみましょう。
+PointクラスとPoint3Dクラスを作成してみます。
+
+B<Pointクラス:>
+
+C<Point>は点を表すクラスです。
+C<x>とC<y>という属性メソッドと、
+C<x>とC<y>の値を0にクリアする<clear>というメソッドを持ちます。
+
+    package Point;
+    use Object::Simple -base;
+
+    has x => 0;
+    has y => 0;
+    
+    sub clear {
+        my $self = shift;
+        
+        $self->x(0);
+        $self->y(0);
+    }
+
+Pointクラスは以下のように使用することができます。
+
+    use Point;
+    my $point = Point->new(x => 3, y => 5);
+    print $point->x;
+    $point->y(9);
+    $point->clear;
+
+B<Point3Dクラス:>
+
+C<Point3D>は3次元の点を表すクラスです。
+C<x>,C<y>,C<z>という属性メソッドと、
+C<x>,C<y>,C<z>の値を0にクリアする<clear>というメソッドを持ちます。
+
+C<Point3D>はC<Point>を継承して作成されています。
+C<clear>メソッドはC<x>とC<y>とC<z>の値をクリアするために
+オーバーライドされています。
+    
+    package Point3D;
+    
+    use strict;
+    use warnings;
+    
+    use base 'Point';
+    
+    __PACKAGE__->attr(z => 0);
+    
+    sub clear {
+        my $self = shift;
+        
+        $self->SUPER::clear;
+        
+        $self->z(0);
+    }
+
+Point3Dクラスは以下のように利用することができます。
+
+    use Point3D;
+    my $point = Point->new(x => 3, y => 5, z => 8);
+    print $point->z;
+    $point->z(9);
+    $point->clear;
+
+=head2 2. オブジェクト指向プログラミングの概念
+
+=head3 継承
+
+L<Object::Simple>をよく理解するために、
+オブジェクト指向の概念を解説したいと思います。
+
+オブジェクト指向の一つ目の概念は「継承」です。
+「継承」とは「クラスQがクラスPを継承していたら、
+クラスQはクラスPのすべてのメソッドを呼び出すことができる」
+ということを意味します。
+
+    +---+
+    | P | Base class
+    +---+   having method1 and method2
+      |
+    +---+
+    | Q | Sub class
+    +---+   having method3
+
+クラスQはクラスPを継承しているので、
+クラスQはクラスQのメソッドに加えて、クラスPのすべてのメソッド
+を呼び出すことができます。
+言い換えれば、クラスQは
+C<method1>, C<method2>とC<method3>
+を呼び出すことができます。
+
+継承を行うには、L<base>モジュールを使用します。
+
+    package P;
+    
+    sub method1 { ... }
+    sub method2 { ... }
+    
+    package Q;
+    
+    use base 'P';
+    
+    sub method3 { ... }
+
+Perlはオブジェクト指向プログラミングを助ける
+便利な関数とメソッドを持っています。
+
+オブジェクトがどのクラスに属しているかを知るには、
+C<ref>関数を使用します。
+
+    my $class = ref $obj;
+
+オブジェクトが特定のクラスを継承しているかどうかを調べるには、
+C<isa>メソッドを使用します。
+
+    $obj->isa('MyClass');
+
+オブジェクト（あるいはクラス)が特定のメソッドを呼び出す
+ことができるかどうかを知るには、
+C<can>メソッドを使用します。
+
+    MyClass->can('method1');
+    $obj->can('method1');
+
+=head3 カプセル化
+
+オブジェクト指向プログラミングのふたつ目の概念は
+カプセル化です。
+「カプセル化」は「内部的にデータに直接アクセスしてはいけない」
+ということを意味します。
+ドキュメントに記述された公開されたメソッドを使用しなければ
+なりません。
+このルールを守ることによって、すべてのことがシンプルになります。
+
+このルールを守るためには
+値を取得や設定を行うための属性メソッドを生成する
+必要があります。
+
+    my $value = $obj->foo;
+    $obj->foo(1);
+
+直接データにアクセスするのは良くない習慣です。
+
+    my $value = $obj->{foo}; # Bad manner!
+    $obj->{foo} = 1;         # Bad manner!
+
+=head3 ポリモーフィズム
+
+オブジェクト指向プログラミングの三つ目の概念は
+「ポリモーフィズム」です。
+「ポリモーフィズム」は、
+「オーバーロード」と「オーバーライド」のふたつの概念に
+分割されます。
+
+Perlプログラマはオーバーロードを気にする必要はありません。
+Perlは動的な言語なので、
+サブルーチンはどのような値でも受け取ることができます。
+オーバーロードはC++やJavaなどの
+静的な型を持つ言語にとって価値があります。
+
+「オーバーライド」は「サブクラスにおいて、基底クラスのメソッドを
+変更することができる」ということを意味します。
+
+    package P;
+    
+    sub method1 { return 1 }
+    
+    package Q;
+    
+    use base 'P';
+    
+    sub method1 { return 2 }
+
+クラスPのC<method1>は1という値を返却します。
+クラスQのC<method1>は2という値を返却します。
+つまり、クラスQにおいて、C<method1>はオーバーライド
+されたということです。
+
+    my $obj_a = P->new;
+    $obj_p->method1; # Return value is 1
+    
+    my $obj_b = Q->new;
+    $obj_q->method1; # Return value is 2
+
+もし基底クラスのメソッドをサブクラスから呼び出したい場合は
+SUPER擬似クラスを使用します。
+
+    package Q;
+    
+    sub method1 {
+        my $self = shift;
+        
+        my $value = $self->SUPER::method1; # return value is 1
+        
+        return 2 + $value;
+    }
+
+これらの三つの概念だけを理解するならば、
+十分強力なオブジェクト指向プログラムができ、
+ソースコードは他の言語のユーザから見ても
+読みやすいものになるでしょう。
+
+=head2 3. よく利用するテクニック
+
+=head3 newのオーバーライド
+
+C<new>はオーバーライドすることができます。
+
+=head4 オブジェクトの初期化
+
+オブジェクトの初期化処理を行いたい場合は、
+newをオーバーライドすることができます。
+
+    sub new {
+        my $self = shift->SUPER::new(@_);
+        
+        # 初期化処理
+        
+        return $self;
+    }
+
+=head4 newの引数の変更
+
+newの引数を変更したい場合は、
+newをオーバーライドすることができます。
+    
+    sub new {
+        my $self = shift;
+        
+        $self->SUPER::new(x => $_[0], y => $_[1]);
+        
+        return $self;
+    }
+
+C<new>メソッドをオーバーライドすることによって、
+C<new>に配列を渡すことができるようになりました。
+
+    my $point = Point->new(4, 5);
+
+=head3 メソッドのインポート
+
+L<Object::Simple>のメソッドをインポートすることもできます。
+
+    package MyClass;
+    
+    use Object::Simple qw/new attr/;
+    
+    __PACKAGE__->attr('foo');
+
+C<new>はクラスにインポートされるのであって、
+基底クラスから継承したわけではないので、
+C<new>メソッドをオーバーライドすることはできない
+ということに注意してください。
+
+=head3 メソッドチェーン
+
+属性メソッドは、値を設定するために呼ばれたときに、
+自分自分のオブジェクトを返却するので、メソッドチェーンを
+行うことができます。
+
+    $obj->foo(1)->bar(4)->baz(6);
+
+=head3 オブジェクトからのC<attr>の呼び出し
+
+オブジェクトからC<attr>を呼び出すこともできます。
+
+    $obj->attr(foo => 1);
+
+対象のオブジェクトが属するクラスに属性メソッドが追加されます。
+
+=head2 安定性
+
+(2011/2/23)
+
+L<Object::Simple>はとても安定しています。
+L<Object::Simple>は後方互換性を維持することに努めます。
+
+ドキュメントに記述されているメソッドについては
+名前を変更したり、取り除いたりすることはないでしょう。
+
+=cut
+ 
+1;
+

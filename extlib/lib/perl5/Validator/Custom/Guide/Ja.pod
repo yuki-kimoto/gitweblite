@@ -1,0 +1,385 @@
+=encoding utf8
+
+=head1 NAME
+
+Validator::Custom::Guide::Ja - Validator::Customの日本語ガイド
+
+=head1 ガイド
+
+=head2 1. 基本
+
+B<1. 新しいL<Validator::Custom>オブジェクトの生成>
+
+  use Validator::Custom;
+  my $vc = Validator::Custom->new;
+
+B<2. バリデーションのためのデータの準備>
+
+  my $data = {age => 19, name => 'Ken Suzuki'};
+
+
+データはハッシュリファレンスでなければなりません。
+
+B<3. バリデーションのためのルールの準備>
+
+  my $rule = [
+    age => {message => 'age must be integer'} => [
+      'not_blank',
+      'int'
+    ],
+    name => {message => 'name must be string. the length 1 to 5'} => [
+      'not_blank',
+      {length => [1, 5]}
+    ],
+    price => [
+      'not_blank',
+      'int'
+    ]
+  ];
+
+データが完全に正しいものであるかどうかを調べるには、
+C<is_ok()>を使用します。
+C<is_ok()>は「不正なパラメータの値が存在しない」かつ
+「ルールで指定されたすべてのパラメータ名がデータの中に存在する」
+ときに真の値を返します。
+
+ルールの中で指定されたパラメータ名のうち少なくともひとつが
+データの中にない場合は、C<has_missing()>は真の値を返します。
+
+発見できなかったパラメータ名を取得するには、C<missing_params()>
+を使用します。このサンプルの場合は戻り値は以下になります。
+
+  ['price']
+
+パラメータの値のうち少なくともひとつが不正なものであった場合は、
+C<has_invalid()>は真の値を返します。この例では
+戻り値は以下になります。
+
+  {
+    name => 'name must be string. the length 1 to 5'
+  }
+
+L<Validator::Custom::Result>の詳細は
+L</"2. バリデーションの結果">で解説されています。
+
+=head2 2. バリデーションの結果
+
+C<validate()>はL<Validator::Custom::Result>オブジェクトを返します。
+さまざまなメソッドを使って結果を扱うことができます。
+
+C<is_ok()>, C<has_missing()>, C<has_invalid()>, C<missing_params()>,
+C<messages_to_hash()>はすでにL</"1. 基本">で解説しました。
+
+次のものはよく使うメソッドです。
+
+B<data()>
+
+  my $data = $result->data;
+
+最終状態のデータを取得します。L<Validator::Custom>はフィルタリングの
+機能を持っています。C<validate()>に渡されたデータのパラメータの値は
+フィルターによって他のデータに変換されているかもしれません。
+C<data()>によってフィルタ後のデータを取得することができます。
+
+B<messages()>
+
+  my $messages = $result->messages;
+
+パラメータの値が不正であったパラメータ名に対応するメッセージ(すべて)を
+取得します。メッセージはルールで指定されたパラメータ名の順序を保持して
+います。
+
+B<message()>
+
+  my $message = $result->message('name');
+
+パラメータの値が不正であったパラメータ名に対応するメッセージ(ひとつ)を
+取得します。
+
+L<Validator::Custom::Result>のすべてのAPIは
+L<Validator::Custom::Result>のPODの中で解説されています。
+
+=head2 3. ルールの文法
+
+=head3 C<基本>
+
+ルールは特定の構造を持ちます。
+
+「ルール」は配列のリファレンスでなければなりません。
+
+  my $rule = [
+  
+  ];
+
+これは不正なパラメータ名の順序を維持するためです。
+
+ルールはパラメータ名と(ひとつあるいは複数の)制約関数のペアを持ちます。
+
+  my $rule = [
+    age =>  [            # paramter name1        
+      'not_blank',       #   constraint function1
+      'int'              #   constraint function2
+    ],                                                   
+                                                         
+    name => [            # parameter name2       
+      'not_blank',       #   constraint function1
+      {length => [1, 5]} #   constraint function2
+    ]
+  ];
+
+制約関数は、ハッシュを使うと、引数を受け取ることができます。
+
+  my $rule = [
+    name => [
+      {'length' => [1, 5]}
+    ]
+  ];
+
+それぞれの制約関数ごとにメッセージを設定するができます。
+
+  my $rule = [
+    name => [
+      ['not_blank', 'name must be not blank'],
+      [{'length' => [1, 5]}, 'name must be 1 to 5 length']
+    ]
+  ];
+
+=head3 C<オプション>
+
+ルールにはオプションを設定することができます。
+
+  my $rule = [
+    price => {default => 1000, message => 'price must be integer'} => [
+      'int'
+    ]
+  ];
+
+You can set options for each paramter name.
+
+  my $rule = [
+           # Option
+    age => {message => 'age must be integer'} => [
+      'not_blank',
+    ]
+  ];
+
+Option is located after the paramter name,
+and option must be hash reference.
+
+The following options is available.
+
+=over 4
+
+=item 1. message
+
+  {message => "This is invalid"}
+
+パラメータの値が不正なパラメータ名に対応するメッセージを指定します。
+
+=item 2. default
+
+  {default => 5}
+
+デフォルト値。パラメータの値が不正な場合、あるいは
+ルールで指定されたパラメータ名がデータの中に見つからない場合
+に、自動的にデータに設定されます。
+
+=item 3. copy
+
+  {copy => 0}
+
+この値が0の場合は結果のデータにパラメータの値がコピーされません。
+
+デフォルトは1で、パラメータの値はコピーされます。
+
+=item 4. require
+
+この値が0の場合には、パラメータが見つからなかった場合でも
+見つからないパラメータに追加されません。
+
+デフォルトは1です。
+
+=back
+
+=head3 C<マルチパラメータバリデーション>
+
+複数のパラメータのバリデーションを行うことができます。
+
+  my $data = {password1 => 'xxx', password2 => 'xxx'};
+  my $rule = [
+    {password_check => [qw/password1 password2/]} => [
+      'duplication'
+    ]
+  ];
+
+このサンプルでは、'password1' と 'password2' が同じことを
+確認しています。
+制約関数C<duplication>には
+
+  ['xxx', 'xxx']
+  
+という値が渡されます。
+
+C<password_check>のような新しいキーを指定しなければなりません。
+これはL<Validator::Result>オブジェクトによって利用されます。
+
+必要であれば正規表現のリファレンスを使うことも可能です。
+
+  my $data = {person1 => 'Taro', person2 => 'Rika', person3 => 'Ken'};
+  my $rule = [
+    {merged_person => qr/^person;/} => [
+      'merge', # TaroRikaKen
+    ]
+  ];
+
+マッチしたパラメータ名のすべての値が配列のリファレンスとして
+制約関数にわたされます。この例では以下の値が渡されます。
+
+  ['Taro', 'Rika', 'Ken']
+
+=head3 C<制約関数の否定> 
+
+制約関数の真偽を反転させることができます。
+
+  my $rule = [
+    age => [
+      '!int'
+    ]
+  ];
+
+制約関数の真偽を反転させるには、
+「!」を制約関数名の先頭に追加します。
+「!int」は「intではない」という意味になります。
+
+=head3 C<制約関数の論理和>
+
+制約関数の論理和を作成することができます。
+
+  my $rule = [
+    email => [
+      'blank || email'
+    ]
+  ];
+
+論理和を作成するには「||」を使用します。
+「blank あるいは email」という意味になります。
+
+「||」と「!」を組み合わせることもできます。
+
+  my $rule = [
+    email => [
+      'blank || !int'
+    ]
+  ];
+
+=head3 C<配列のバリデーション>
+
+配列のすべての要素が正しいかどうかをチェックすることができます。
+
+  my $data = {
+    nums => [1, 2, 3]
+  };
+  
+  my $rule = [
+    'nums' => [
+      '@int'
+    ]
+  ];
+
+配列のすべての要素のバリデーションを行うには、
+制約関数名の前に「@」を追加します。
+
+=head2 4. 制約関数
+
+=head3 制約関数の登録
+
+L<Validator::Custom>はさまざまな制約関数を持ちます。
+デフォルトで登録されている制約関数は
+L<Validator::Custom/"CONSTRAINTS">で見ることができます。
+
+また必要であれば制約関数を登録することができます。
+
+  $vc->register_constraint(
+    telephone => sub {
+      my $value = shift;
+      
+      my $is_valid;
+      if ($value =~ /^[\d-]+$/) {
+        $is_valid = 1;
+      }
+      return $is_valid;
+    }
+  );
+
+電話番号のための制約関数を登録しました。
+
+制約関数は第一引数としてスカラ値を受け取り、
+その値が正しいかどうかを示す真偽値を返します。
+
+制約関数は第二引数として制約関数の引数、第三引数として
+L<Validator::Custom>オブジェクトを受け取ります。
+
+  $vc->register_constraint(
+    telephone => sub {
+      my ($value, $arg, $vc) = @_;
+      
+      return $is_valid;
+    }
+  );
+
+制約関数の実装を知りたい場合はL<Validator::Custom::Constraint>
+のソースコードを参考にしてみてください。
+
+=head3 フィルタ関数の登録
+
+C<register_constraint()>はフィルタ関数を登録するためにも
+利用することができます。
+
+フィルタ関数は戻り値を除いて制約関数と同じです。
+
+  $vc->register_constraint(
+    to_upper_case => sub {
+      my $value = shift;
+      
+      $value = uc $value;
+                  
+      return [1, $value];
+    }
+  );
+
+フィルタ関数の戻り値は配列のリファレンスである必要があります。
+最初の要素は値が正しいかどうかを示す真偽値です。
+ふたつめの要素はファイルタリングされた値です。
+
+このサンプルでは、
+この関数はフィルタリングをことだけを意図しているので、
+配列のリファレンスのひとつ目の要素に1を設定しています。
+
+=head2 5. 継承
+
+L<Validator::Custom>を継承してユーザクラスを定義するのは簡単です。
+コンストラクタの中でC<register_constraint>を使って、
+制約関数を登録してください。
+
+use C<register_constraint> in constructor to register constarint.
+
+  package Validator::Custom::Your;
+  use base 'Validator::Custom';
+  
+  sub new {
+    my $self = shift->SUPER::new(@_);
+    $self->register_constraint(
+      telephone => sub { ... }
+    );
+    return $self;
+  }
+  
+  1;
+  
+L<Validator::Custom::HTMLForm>は継承のよいサンプルになっています。
+
+=head1 サンプル
+
+L<Validator::Custom Wiki|https://github.com/yuki-kimoto/Validator-Custom/wiki>をご覧に
+なってみてください。たくさんのサンプルが掲載されています。
+

@@ -1,0 +1,12 @@
+Installation
+
+  Install required moudles.
+
+    perl cpanm -l extlib Module::CoreList
+    perl t/module.t list | perl -Iextlib/lib/perl5 cpanm -n -L extlib
+
+  Check if installation is successed.
+  
+    prove t
+
+  All tests is successed, module installation is success.

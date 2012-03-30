@@ -1,0 +1,406 @@
+=head1 NAME
+
+Validator::Custom::Guide - Validator::Custom Guide
+
+=head1 GUIDE
+
+=head2 1. Basic
+
+B<1. Create a new Validator::Custom object>
+
+  use Validator::Custom;
+  my $vc = Validator::Custom->new;
+
+B<2. Prepare data for validation>
+
+  my $data = {age => 19, name => 'Ken Suzuki'};
+
+Data must be hash reference.
+
+B<3. Prepare a rule for validation>
+
+  my $rule = [
+    age => {message => 'age must be integer'} => [
+      'not_blank',
+      'int'
+    ],
+    name => {message => 'name must be string. the length 1 to 5'} => [
+      'not_blank',
+      {length => [1, 5]}
+    ],
+    price => [
+      'not_blank',
+      'int'
+    ]
+  ];
+
+Rule has specific structure.
+which consists of several parts, such as 
+C<parameter name>, C<option>, C<constraint function>, C<constraint argument>
+
+  my $rule = [
+    PARAMETER_NAME => \%OPTION => [
+      CONSTRAINT_NAME1
+      {CONSTRAINT_NAME2 => CONSTAINT_ARGUMENT}
+    ],
+    ...
+  ]
+
+You can use many constraint function,
+such as C<int>, C<not_blank>, C<length>  by default.
+See L<Validator::Custom/"CONSTRAINTS"> to know all constraint functions.
+
+Rule details is explanined in L</"3. Rule syntax"> section.
+
+B<4. Validate data>
+  
+  my $result = $vc->validate($data, $rule);
+
+use C<validate()> to validate the data applying the rule.
+C<validate()> return L<Validator::Custom::Result> object.
+
+B<5. Manipulate the validation result>
+
+  unless ($result->is_ok) {
+    if ($result->has_missing) {
+      my $missing_params = $result->missing_params;
+    }
+    
+    if ($result->has_invalid) {
+      my $messages = $result->messages_to_hash;
+    }
+  }
+
+If you check the data is completely valid, use C<is_ok()>.
+C<is_ok()> return true value
+if invalid parameter values is not found and all parameter
+names specified in the rule is found in the data.
+
+If at least one of parameter names specified in the rule
+is not found in the data,
+C<has_missing()> return true value.
+
+You can get missing parameter names using C<missing_params()>.
+In this example, return value is the following one.
+
+  ['price']
+
+If at least one of parameter value is invalid,
+C<has_invalid()> return true value.
+
+You can get the pairs of invalid parameter name and message
+using C<messages_to_hash()>.
+In this example, return value is the following one.
+
+  {
+    name => 'name must be string. the length 1 to 5'
+  }
+
+L<Validator::Custom::Result> details is explained
+in L</"2. Validation result">.
+
+=head2 2. Validation result
+
+C<validate()> return L<Validator::Custom::Result> object.
+You can manipulate the result by variouse methods.
+
+C<is_ok()>, C<has_missing()>, C<has_invalid()>, C<missing_params()>,
+C<messages_to_hash()> is already explained in L</"1. Basic">
+
+The following ones is offten used methods.
+
+B<data()>
+
+  my $data = $result->data;
+
+Get the data in the end state. L<Validator::Custom> has filtering ability.
+The parameter values in data passed to C<validate()>
+is maybe converted to other data by filter.
+You can get filtered data using C<data()>.
+
+B<messages()>
+
+  my $messages = $result->messages;
+
+Get messages corresponding to the parameter names which value is invalid.
+Messages keep the order of parameter names of the rule.
+
+B<message()>
+
+  my $message = $result->message('name');
+
+Get a message corresponding to the parameter name which value is invalid.
+
+All L<Validator::Custom::Result>'s APIs is explained
+in the POD of L<Validator::Custom::Result>
+
+=head2 3. Rule syntax
+
+=head3 C<Basic>
+
+Rule has specified structure.
+
+Rule must be array reference. 
+
+  my $rule = [
+  
+  ];
+
+This is for keeping the order of
+parameter names.
+
+Rule has pairs of parameter name and constraint functions.
+
+  my $rule = [
+    age =>  [            # paramter name1
+      'not_blank',       #   constraint function1
+      'int'              #   constraint function2
+    ],                                                   
+                                                         
+    name => [              # parameter name2       
+      'not_blank',         #   constraint function1
+      {'length' => [1, 5]} #   constraint function2
+    ]
+  ];
+
+Constraint function can receive arguments using hash reference.
+
+  my $rule = [
+    name => [
+        {'length' => [1, 5]}
+    ]
+  ];
+
+You can set message for each constraint function
+
+  my $rule = [
+    name => [
+        ['not_blank', 'name must be not blank'],
+        [{length => [1, 5]}, 'name must be 1 to 5 length']
+    ]
+  ];
+
+=head3 C<Option>
+
+You can set options for each paramter name.
+
+  my $rule = [
+           # Option
+    age => {message => 'age must be integer'} => [
+        'not_blank',
+    ]
+  ];
+
+Option is located after the paramter name,
+and option must be hash reference.
+
+The following options is available.
+
+=over 4
+
+=item 1. message
+
+ {message => "This is invalid"}
+
+Message corresponding to the parameter name which value is invalid. 
+
+=item 2. default
+
+  {default => 5}
+
+Default value. This value is automatically set to result data
+if the paramter value is invalid or the paramter name specified in rule is missing in the data.
+
+=item 3. copy
+
+  {copy => 0}
+
+If this value is 0, The parameter value is not copied to result data. 
+
+Default to 1. Parameter value is copied to the data.
+
+=item 4. require
+
+If this value is 0 and parameter value is not found,
+the parameter is not added to missing paramter list.
+
+Default to 1.
+
+=back
+
+=head3 C<Multiple parameters validation>
+
+Multiple parameters validation is available.
+
+  my $data = {password1 => 'xxx', password2 => 'xxx'};
+  my $rule = [
+    {password_check => [qw/password1 password2/]} => [
+        'duplication'
+    ]
+  ];
+
+In this example, We check if 'password1' and 'password2' is same.
+The following value is passed to constraint function C<duplication>.
+
+  ['xxx', 'xxx']
+
+You must specify new key, such as C<password_check>.
+This is used by L<Validator::Result> object.
+
+You can also use the reference of regular expression if you need.
+
+  my $data = {person1 => 'Taro', person2 => 'Rika', person3 => 'Ken'};
+  my $rule = [
+    {merged_person => qr/^person;/} => [
+      'merge', # TaroRikaKen
+    ]
+  ];
+
+All matched value is passed to constraint function as array reference.
+In this example, the following value is passed.
+
+  ['Taro', 'Rika', 'Ken']
+
+=head3 C<Negative constraint function> 
+
+You can negative a constraint function
+
+  my $rule = [
+    age => [
+      '!int'
+    ]
+  ];
+
+"!" is added to the head of the constraint name
+if you negative a constrint function.
+'!int' means not 'int'.
+
+In this example, 
+
+=head3 C<"OR" of constraint functions>
+
+You can create "OR" of constraint functions
+
+  my $rule = [
+    email => [
+      'blank || email'
+    ]
+  ];
+
+Use "||" to create "OR" of constraint functions.
+'blank || email' means 'blank' or 'email'.
+
+You can combine "||" and "!".
+
+  my $rule = [
+    email => [
+      'blank || !int'
+    ]
+  ];
+
+=head3 C<Array validation>
+
+You can check if all the elements of array is valid.
+
+  my $data = {
+    nums => [1, 2, 3]
+  };
+  
+  my $rule = [
+    'nums' => [
+      '@int'
+    ]
+  ];
+
+"@" is added to the head of constraint function name
+to validate all the elements of array.
+
+=head2 4. Constraint functions
+
+=head3 Register constraint function
+
+L<Validator::Custom> has various constraint functions.
+You can see constraint functions registered by default
+L<Validator::Custom/"CONSTRAINTS">.
+
+and you can register your constraint function if you need.
+
+  $vc->register_constraint(
+    telephone => sub {
+      my $value = shift;
+      
+      my $is_valid;
+      if ($value =~ /^[\d-]+$/) {
+        $is_valid = 1;
+      }
+      return $is_valid;
+    }
+  );
+
+Constraint function for telephone number is registered.
+
+Constraint function receive a scalar value as first argument and
+return boolean value which check if the value is valid.
+
+Constraint function receive argument of constraint function as second argument
+and L<Validator::Custom> object as third argument.
+
+  $vc->register_constraint(
+    telephone => sub {
+      my ($value, $arg, $vc) = @_;
+      
+      return $is_valid;
+    }
+  );
+
+If you know the implementations of constraint functions,
+see the soruce of L<Validator::Custom::Constraint>.
+
+=head3 Register filter function
+
+C<register_constraint()> is also used to register filter function.
+
+Filter function is same as constraint function except for return value;
+
+  $vc->register_constraint(
+    to_upper_case => sub {
+      my $value = shift;
+      
+      $value = uc $value;
+                  
+      return [1, $value];
+    }
+  );
+
+Return value of filter function must be array reference.
+First element is boolean value which chekc if the value is valid.
+Second element is filtered value.
+
+In this example, First element of array reference is set to 1
+because this function intend to do only filtering.
+
+=head2 5. Extending
+
+It is easy to define your class extending L<Validator::Custom>.
+Register constraint function using C<register_constraint>
+in the constructor.
+
+  package Validator::Custom::Your;
+  use base 'Validator::Custom';
+  
+  sub new {
+    my $self = shift->SUPER::new(@_);
+    $self->register_constraint(
+      telephone => sub { ... }
+    );
+    return $self;
+  }
+  
+  1;
+  
+L<Validator::Custom::HTMLForm> is good extending examples.
+
+=head1 EXAMPLES
+
+See L<Validator::Custom Wiki|https://github.com/yuki-kimoto/Validator-Custom/wiki>.
+There are many examples.

@@ -148,7 +148,6 @@ sub get_difftree {
     $cid,
     "--"
   );
-  warn join(' ', @git_diff_tree);
   
   open my $fh, "-|", @git_diff_tree
     or die 500, "Open git-diff-tree failed";

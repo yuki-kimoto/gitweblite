@@ -47,7 +47,7 @@ sub main {
   my $version_ok;
   my $version;
   
-  plan tests => 6;
+  plan tests => 4;
 
   # Object::Simple
   $require_ok = require_ok('Object::Simple');
@@ -60,12 +60,6 @@ sub main {
   $version_ok = is($Validator::Custom::VERSION, '0.1426', 'Validator::Custom version: 0.1426');
   push @$modules, ['Validator::Custom' => '0.1426'];
   push @$failed, ['Validator::Custom' => '0.1426'] unless $require_ok && $version_ok;
-
-  # Mojolicious
-  $require_ok = require_ok('Mojolicious');
-  $version_ok = is($Mojolicious::VERSION, '2.65', 'Mojolicious version: 2.65');
-  push @$modules, ['Mojolicious' => '2.65'];
-  push @$failed, ['Mojolicious' => '2.65'] unless $require_ok && $version_ok;
 
   # Print module URLs
   if (defined $command) {

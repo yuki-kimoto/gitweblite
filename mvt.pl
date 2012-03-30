@@ -20,8 +20,7 @@ EOS
 $tm->lib(['../extlib/lib/perl5']);
 $tm->modules([
   ['Object::Simple' => '3.0625'],
-  ['Validator::Custom' => '0.1426'],
-  [Mojolicious => '2.65'],
+  ['Validator::Custom' => '0.1426']
 ]);
 $tm->test_script(output => "$FindBin::Bin/t/module.t");
 

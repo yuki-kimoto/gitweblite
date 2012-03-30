@@ -1,33 +1,26 @@
 Gitweb Lite
 
-  (Alpha release)
+  (Beta release)
   gitweb.cgi clone. Serve git repository.
 
 Features
 
   This is gitweb.cgi clone, and has the following features.
 
+  - gitweb.cgi default features
   - Written by Perl and Mojolicious web framework.
-  - Prerequisite is Perl 5.10.1+
-    (or Perl 5.8.7+ for gitweblite5008(not yet implemented))
+  - Prerequisite is Perl 5.8.7+
   - Having HTTP server. You can run gitweblite,
     even if "apache" is not installed.
   - Multiple project homes.
   - Zero configuration.
-  - having gitweb.cgi default features(but merge logic is incomplete).
+  - don't work on Windows
 
-Installation
+Test
 
-  Install required moudles.
-
-    perl cpanm -l extlib Module::CoreList
-    perl t/module.t list | perl -Iextlib/lib/perl5 cpanm -n -L extlib
-
-  Check if installation is successed.
-  
     prove t
 
-  All tests is successed, module installation is success.
+  If all tests is passed, Gitweb Lite work on your system.
 
 Operation
 
