@@ -84,3 +84,5 @@ Config
         hypnotoad => {
           listen => ['http://*:10010']
         }
+
+  See also gitweblite.conf.example.

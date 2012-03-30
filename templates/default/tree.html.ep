@@ -53,7 +53,7 @@
         % my $tree = $trees->[$i];
         % my $type = $tree->{type};
         % my $name = $tree->{name};
-        % my $child_dir = length $dir ? join('/', $dir, $tree->{name}) : $tree->{name};
+        % my $child_dir = defined $dir && length $dir ? join('/', $dir, $tree->{name}) : $tree->{name};
         <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
           <td class="mode">
             <%= $tree->{mode_str} %>

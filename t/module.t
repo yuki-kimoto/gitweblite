@@ -1,6 +1,6 @@
 use FindBin;
 use lib "$FindBin::Bin/../extlib/lib/perl5";
-use 5.010001;
+use 5.008007;
 
 =pod
 

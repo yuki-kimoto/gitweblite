@@ -6,7 +6,7 @@ use FindBin;
 # Create module test
 my $tm = Test::ModuleVersion->new;
 $tm->before(<<'EOS');
-use 5.010001;
+use 5.008007;
 
 =pod
 
