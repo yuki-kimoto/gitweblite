@@ -16,10 +16,7 @@ sub d($) { decode('UTF-8', shift) }
 has 'bin';
 
 my $conf = {};
-my $export_ok = $conf->{export_ok} || '';
-my $export_auth_hook = $conf->{export_ok} || undef;
 my @diff_opts = ('-M');
-my $default_text_plain_charset  = undef;
 
 sub blob_mimetype {
   my ($self, $fh, $file) = @_;
@@ -46,18 +43,11 @@ sub blob_contenttype {
   my ($self, $fh, $file, $type) = @_;
 
   $type ||= $self->blob_mimetype($fh, $file);
-  if ($type eq 'text/plain' && defined $default_text_plain_charset) {
-    $type .= "; charset=$default_text_plain_charset";
+  if ($type eq 'text/plain') {
+    $type .= "; charset=UTF-8";
   }
 
   return $type;
-}
-
-sub check_export_ok {
-  my ($self, $dir) = @_;
-  return ($self->check_head_link($dir) &&
-    (!$export_ok || -e "$dir/$export_ok") &&
-    (!$export_auth_hook || $export_auth_hook->($dir)));
 }
 
 sub check_head_link {
@@ -68,49 +58,50 @@ sub check_head_link {
 }
 
 sub fill_from_file_info {
-	my ($self, $home, $project, $diff, $parents) = @_;
+  my ($self, $home, $project, $diff, $parents) = @_;
 
-	$diff->{'from_file'} = [];
-	$diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
-	for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
-		if ($diff->{'status'}[$i] eq 'R' ||
-		    $diff->{'status'}[$i] eq 'C') {
-			$diff->{'from_file'}[$i] =
-				$self->get_path_by_id($home, $project, $parents->[$i], $diff->{'from_id'}[$i]);
-		}
-	}
+  $diff->{'from_file'} = [];
+  $diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
+  for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
+    if ($diff->{'status'}[$i] eq 'R' ||
+        $diff->{'status'}[$i] eq 'C') {
+      $diff->{'from_file'}[$i] =
+        $self->get_path_by_id($home, $project, $parents->[$i], $diff->{'from_id'}[$i]);
+    }
+  }
 
-	return $diff;
+  return $diff;
 }
 
 sub get_path_by_id {
   my $self = shift;
   my $home = shift;
   my $project = shift;
-	my $base = shift || return;
-	my $hash = shift || return;
+  my $base = shift || return;
+  my $hash = shift || return;
 
-	local $/ = "\0";
 
-	open my $fd, "-|", $self->git($home, $project), "ls-tree", '-r', '-t', '-z', $base
-		or return undef;
-	while (my $line = <$fd>) {
-	  $line = d$line;
-		chomp $line;
+  open my $fh, "-|", $self->git($home, $project), "ls-tree", '-r', '-t', '-z', $base
+    or return undef;
 
-		if ($line =~ m/(?:[0-9]+) (?:.+) $hash\t(.+)$/) {
-			close $fd;
-			return $1;
-		}
-	}
-	close $fd;
-	return undef;
+  local $/ = "\0";
+  while (my $line = <$fh>) {
+    $line = d$line;
+    chomp $line;
+
+    if ($line =~ m/(?:[0-9]+) (?:.+) $hash\t(.+)$/) {
+      close $fh;
+      return $1;
+    }
+  }
+  close $fh;
+  return undef;
 }
 
 sub is_deleted {
-	my ($self, $diffinfo) = @_;
+  my ($self, $diffinfo) = @_;
 
-	return $diffinfo->{'to_id'} eq ('0' x 40);
+  return $diffinfo->{'to_id'} eq ('0' x 40);
 }
 
 sub fill_projects {
@@ -161,10 +152,10 @@ sub get_difftree {
   for my $line (@difftree) {
     my $diff = $self->parsed_difftree_line($line);
 
-		if (exists $diff->{'nparents'}) {
+    if (exists $diff->{'nparents'}) {
 
-			$self->fill_from_file_info($home, $project, $diff, $parents)
-				unless exists $diff->{'from_file'};
+      $self->fill_from_file_info($home, $project, $diff, $parents)
+        unless exists $diff->{'from_file'};
 
       $diff->{is_deleted} = 1 if $self->is_deleted($diff);
       push @$diffs, $diff;
@@ -241,11 +232,11 @@ sub get_references {
   my ($self, $home, $project, $type) = @_;
   $type ||= '';
   my %refs;
-  open my $fd, "-|", $self->git($home, $project), "show-ref", "--dereference",
+  open my $fh, "-|", $self->git($home, $project), "show-ref", "--dereference",
     ($type ? ("--", "refs/$type") : ())
     or return;
 
-  while (my $line = <$fd>) {
+  while (my $line = <$fh>) {
     $line = d$line;
     chomp $line;
     if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
@@ -256,7 +247,7 @@ sub get_references {
       }
     }
   }
-  close $fd or return;
+  close $fh or return;
   return \%refs;
 }
 
@@ -414,7 +405,7 @@ sub get_projects {
   my @projects;
   while (my $project = readdir $dh) {
     next unless $project =~ /\.git$/;
-    next unless $self->check_export_ok("$home/$project");
+    next unless $self->check_head_link("$home/$project");
     next if defined $filter && $project !~ /\Q$filter\E/;
     push @projects, { path => $project };
   }
@@ -982,6 +973,17 @@ sub _slurp {
     or die qq/Can't open file "$file": $!/;
   my $content = do { local $/; <$fh> };
   $content = d$content;
+  close $fh;
+  
+  return $content;
+}
+
+sub _slurp_fh {
+  my ($self, $fh) = @_;
+  
+  my $content = do { local $/; <$fh> };
+  $content = d$content;
+  close $fh;
   
   return $content;
 }

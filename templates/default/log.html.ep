@@ -30,7 +30,7 @@
         |
         <a href="<%= url_for('/tree')->query({home => $home, project => $project, id => $commit->{id}}) %>">tree</a><br/>
       </div>
-      <span class="author_date"><%= $commit->{author_name} %> [<%= $commit->{last_change} %>]</span>
+      <span class="author_date"><%= $commit->{author_name} %> [<%= $commit->{author_date} %>]</span>
       <br/>
     </div>
     <div class="log_body">

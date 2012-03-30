@@ -1,6 +1,10 @@
 package Gitweblite::Default;
 use Mojo::Base 'Mojolicious::Controller';
 use Mojo::Cache;
+use Encode qw/encode decode/;
+
+sub e($) { encode('UTF-8', shift) }
+sub d($) { decode('UTF-8', shift) }
 
 has diff_opts => sub { ['-M'] };
 has prevent_xss => 0;
@@ -220,28 +224,30 @@ sub commitdiff {
   # Plain text
   if ($plain) {
     # git diff-tree plain output
-    open my $fd, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fh, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
         '-p', $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
+    
 
-    my $content = do { local $/; <$fd> };
+    my $content = do { local $/; <$fh> };
     my $content_disposition .= "inline; filename=$cid";
     $self->res->headers->content_disposition($content_disposition);
-    $self->res->headers->content_type("text/plain");
+    $self->res->headers->content_type("text/plain;charset=UTF-8");
     $self->render_data($content);
   }
   
   # HTML
   else {
     # git diff-tree output
-    open my $fd, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fh, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
         "--no-commit-id", "--patch-with-raw", "--full-index",
         $from_cid, $cid, "--"
       or die 500, "Open git-diff-tree failed";
 
     # Parse output
     my @diffinfos;
-    while (my $line = <$fd>) {
+    while (my $line = <$fh>) {
+      $line = d$line;
       chomp $line;
       last unless $line;
       push @diffinfos, scalar $git->parse_difftree_raw_line($line);
@@ -262,11 +268,11 @@ sub commitdiff {
         @{$self->diff_opts}, '-p', (!$plain ? "--full-index" : ()), $from_cid, $cid,
         "--", (defined $from_file ? $from_file : ()), $file
       );
-      open $fd, "-|", @git_diff_tree
+      open $fh, "-|", @git_diff_tree
         or die 500, "Open git-diff-tree failed";
       
-      my @lines = map { chomp $_; $_ } <$fd>;
-      close $fd;
+      my @lines = map { chomp $_; d$_ } <$fh>;
+      close $fh;
       push @blobdiffs, {lines => \@lines};
     }
 
@@ -327,12 +333,12 @@ sub tree {
   my @entries = ();
   my $show_sizes = 0;
   {
-    local $/ = "\0";
-    open my $fd, "-|", $git->git($home, $project), "ls-tree", '-z',
+    open my $fh, "-|", $git->git($home, $project), "ls-tree", '-z',
       ($show_sizes ? '-l' : ()), $tid
       or die 500, "Open git-ls-tree failed";
-    @entries = map { chomp; $_ } <$fd>;
-    close $fd
+    local $/ = "\0";
+    @entries = map { chomp; d$_ } <$fh>;
+    close $fh
       or die 404, "Reading tree failed";
   }
   
@@ -393,7 +399,7 @@ sub snapshot {
 
   $file =~ s/(["\\])/\\$1/g;
 
-  open my $fd, "-|", $cmd
+  open my $fh, "-|", $cmd
     or die 500, "Execute git-archive failed";
   
   # Write chunk
@@ -403,9 +409,9 @@ sub snapshot {
   $cb = sub {
     my $c = shift;
     my $size = 500 * 1024;
-    my $length = sysread($fd, my $buffer, $size);
+    my $length = sysread($fh, my $buffer, $size);
     unless (defined $length) {
-      close $fd;
+      close $fh;
       undef $cb;
       return;
     }
@@ -541,13 +547,13 @@ sub blob {
     "blob",
     $bid
   );
-  open my $fd, "-|", @git_cat_file
+  open my $fh, "-|", @git_cat_file
     or die "Couldn't cat $file, $bid";
   
-  my $mimetype = $git->blob_mimetype($fd, $file);
+  my $mimetype = $git->blob_mimetype($fh, $file);
   # Redirect to blob plane
-  if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fd) {
-    close $fd;
+  if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fh) {
+    close $fh;
     my $url = $self->url_for('/blob_plain')->query([home => $home, project => $project,
       cid => $cid, file => $file]);
     return $self->redirect_to($url);
@@ -556,13 +562,16 @@ sub blob {
   # Commit
   my %commit = $git->parse_commit($home, $project, $cid);
 
+  # Parse line
   my @lines;
-  while (my $line = <$fd>) {
+  while (my $line = <$fh>) {
+    $line = d$line;
     chomp $line;
     $line = $git->_untabify($line);
     push @lines, $line;
   }
   
+  # Render
   $self->render(
     home => $home,
     project => $project,
@@ -600,11 +609,11 @@ sub blob_plain {
   # Blob id
   my $bid = $git->get_id_by_path($home, $project, $cid, $file, "blob")
     or die "Cannot find file";
-  open my $fd, "-|", $git->git($home, $project), "cat-file", "blob", $bid
+  open my $fh, "-|", $git->git($home, $project), "cat-file", "blob", $bid
     or die "Open git-cat-file blob '$bid' failed";
 
   # content-type (can include charset)
-  my $type = $git->blob_contenttype($fd, $file);
+  my $type = $git->blob_contenttype($fh, $file);
 
   # "save as" filename, even when no $file is given
   my $save_as = "$cid";
@@ -620,13 +629,13 @@ sub blob_plain {
   # serve text/* as text/plain
   if ($self->prevent_xss &&
       ($type =~ m!^text/[a-z]+\b(.*)$! ||
-       ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fd))) {
+       ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fh))) {
     my $rest = $1;
     $rest = defined $rest ? $rest : '';
     $type = "text/plain$rest";
   }
   
-  my $content = do { local $/ = undef; <$fd> };
+  my $content = do { local $/; <$fh> };
   my $content_disposition = $sandbox ? 'attachment' : 'inline';
   $content_disposition .= "; filename=$save_as";
   $self->res->headers->content_disposition($content_disposition);
@@ -668,7 +677,7 @@ sub blobdiff {
   }
   else { $plain = 0 }
 
-  my $fd;
+  my $fh;
   my @difftree;
   my %diffinfo;
   
@@ -683,10 +692,10 @@ sub blobdiff {
         (defined $from_file ? $from_file : ()), $file
       );
       
-      open $fd, "-|", @git_diff_tree
+      open $fh, "-|", @git_diff_tree
         or die 500, "Open git-diff-tree failed";
-      @difftree = map { chomp; $_ } <$fd>;
-      close $fd
+      @difftree = map { chomp; d$_ } <$fh>;
+      close $fh
         or die 404, "Reading git-diff-tree failed";
       @difftree
         or die 404, "Blob diff not found";
@@ -694,13 +703,13 @@ sub blobdiff {
     } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
 
       # read filtered raw output
-      open $fd, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
+      open $fh, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
           $from_cid, $cid, "--"
         or die "Open git-diff-tree failed";
       @difftree =
         grep { /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} $bid/ }
-        map { chomp; $_ } <$fd>;
-      close $fd
+        map { chomp; d$_ } <$fh>;
+      close $fh
         or die("Reading git-diff-tree failed");
       @difftree
         or die("Blob diff not found");
@@ -721,7 +730,7 @@ sub blobdiff {
     $bid        ||= $diffinfo{'to_id'};
 
     # open patch output
-    open $fd, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
+    open $fh, "-|", $git->git($home, $project), "diff-tree", '-r', @{$self->diff_opts},
       '-p', (!$plain ? "--full-index" : ()),
       $from_cid, $cid,
       "--", (defined $from_file ? $from_file : ()), $file
@@ -735,7 +744,7 @@ sub blobdiff {
   my $commit = $git->parse_commit($home, $project, $cid);
 
   if ($plain) {
-    my $content = do { local $/; <$fd> };
+    my $content = $git->_slurp_fh($fh);
     my $content_disposition .= "inline; filename=$file";
     $self->res->headers->content_disposition($content_disposition);
     $self->res->headers->content_type("text/plain");
@@ -744,7 +753,8 @@ sub blobdiff {
   else {
     # patch
     my @lines;
-    while (my $line = <$fd>) {
+    while (my $line = <$fh>) {
+      $line = d$line;
       chomp $line;
       my $class;
       
@@ -756,7 +766,7 @@ sub blobdiff {
       else { $class = 'diff' }
       push @lines, {value => $line, class => $class};
     }
-    close $fd;
+    close $fh;
 
     $self->render(
       '/blobdiff',
@@ -805,6 +815,13 @@ sub _log {
   # Commits
   my $page_count = $short ? 50 : 20;
   my $commits = $git->parse_commits($home, $project, $base_commit->{id}, $page_count, $page_count * $page);
+
+  for my $commit (@$commits) {
+    my %author_date = %$commit
+      ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
+      : ();
+    $commit->{author_date} = $git->_timestamp(\%author_date);
+  }
   
   # References
   my $refs = $git->get_references($home, $project);
