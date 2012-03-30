@@ -15,6 +15,7 @@ MYMETA.json
 MYMETA.yml
 gitweb.development.conf
 log/*
+!log/.gitignore
 script/hypnotoad.pid
 !public/.gitignore
 script/hypnotoad.pid
