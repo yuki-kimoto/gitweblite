@@ -14,5 +14,5 @@ Installation
 Creat tar ball
   
   APP_NAME=gitweblite
-  VERSION=0.01
+  VERSION=0.02
   git archive --format=tar --prefix=$APP_NAME-$VERSION/ v$VERSION | gzip > $APP_NAME-$VERSION.tar.gz

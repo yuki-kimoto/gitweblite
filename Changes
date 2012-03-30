@@ -1,2 +1,4 @@
+0.02
+  - fixed blob, blog_plain, commitdiff, commitdiff_plain encoding bug
 0.01
-  first beta release.
+  - first beta release.
