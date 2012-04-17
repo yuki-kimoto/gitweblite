@@ -100,13 +100,10 @@ sub startup {
   $self->validator($validator);
 
   # Route
+  my $r = $self->routes;
   {
-    my $r = $self->routes;
-    
-    # Top
-    $r = $r->waypoint('/')->via('get')->to('default#homes');
-    
-    # Others
+    my $r = $r->route->to('default#');
+    $r->get('/')->to('#homes');
     $r->get('/projects')->to('#projects');
     $r->get('/summary')->to('#summary');
     $r->get('/shortlog')->to('#shortlog');

@@ -49,7 +49,7 @@ Description
 
 Config
 
-  You can set config in gitweblite.conf
+  You can set config in gitweblite.conf. Config is written by Perl data structure.
 
     search_dirs => [$dir, ...]
     
