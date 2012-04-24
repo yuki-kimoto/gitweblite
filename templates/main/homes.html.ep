@@ -9,7 +9,7 @@
     % for my $home (@$homes) {
       <tr class="dark">
         <td>
-          <a class="list" href="<%= url_for('/project')->query(home => $home); %>">
+          <a class="list" href="<%= url_for('project', home => gitweblite_rel($home)); %>">
             <%= $home %>
           </a>
         </td>

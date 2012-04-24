@@ -98,13 +98,25 @@ sub startup {
     $value =~ /^[0-9a-fA-F]+$/ ? 1 : 0;
   });
   $self->validator($validator);
+  
+  # Helper
+  {
+    # Remove top slash
+    $self->helper('gitweblite_rel' => sub {
+      my ($self, $path) = @_;
+      
+      $path =~ s/^\///;
+      
+      return $path;
+    });
+  }
 
   # Route
   my $r = $self->routes;
   {
     my $r = $r->route->to('main#');
     $r->get('/')->to('#homes');
-    $r->get('/project')->to('#project');
+    $r->get('/project/(*home)')->to('#project')->name('project');
     $r->get('/summary')->to('#summary');
     $r->get('/shortlog')->to('#shortlog');
     $r->get('/log')->to('#log');

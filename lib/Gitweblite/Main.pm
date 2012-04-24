@@ -6,6 +6,7 @@ use Encode qw/encode decode/;
 sub e($) { encode('UTF-8', shift) }
 sub d($) { decode('UTF-8', shift) }
 
+
 has diff_opts => sub { ['-M'] };
 has prevent_xss => 0;
 
@@ -37,7 +38,7 @@ sub project {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
 
   # Git
   my $git = $self->app->git;
