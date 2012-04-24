@@ -177,8 +177,7 @@ sub startup {
       ->to('#blobdiff', suffix => '')->name('blobdiff');
     
     # Snapshot
-    $r->get('/(*home)/(.project)/snapshot')
-      ->to('#snapshot')->name('snapshot');
+    $r->get('/(*home)/(.project)/snapshot/:cid')->to('#snapshot')->name('snapshot');
   }
 }
 

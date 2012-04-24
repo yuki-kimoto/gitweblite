@@ -1,5 +1,5 @@
 <div class="page_nav">
-  % $cid ||= gitweblite_get_head_id($home, $project);
+  % my $cid = stash('cid') || gitweblite_get_head_id($home, $project);
   % if ($current eq 'summary') {
     Summary
   % } else {
@@ -36,6 +36,6 @@
   % if ($current eq 'tree') {
     Tree
   % } else {
-    <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid) %>">Tree</a>
+    <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid, dir => '/') %>">Tree</a>
   % }
 </div>

@@ -308,21 +308,18 @@ sub tree {
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
-  my $dir = $params->{dir};
+  my $dir = $self->gitweblite_rel($params->{dir});
   my $tid = $params->{tid};
   
   # Git
   my $git = $self->app->git;
 
   my $commit = $git->parse_commit($home, $project, $cid);
-  
   unless (defined $tid) {
-    if (defined $dir) {
+    if (defined $dir && $dir ne '') {
       $tid = $git->get_id_by_path($home, $project, $cid, $dir, "tree");
     }
-    else {
-      $tid = $commit->{tree};
-    }
+    else { $tid = $commit->{tree} }
   }
   die 404, "No such tree" unless defined $tid;
 
