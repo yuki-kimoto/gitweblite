@@ -162,11 +162,14 @@ sub startup {
     $r->get('/(*home)/(.project)/tree')->to('#tree')->name('tree');
     
     # Blob
-    $r->get('/(*home)/(.project)/blob')->to('#blob')->name('blob');
+    $r->get('/(*home)/(.project)/blob/:cid/(*file)', [cid => qr/[0-9a-fA-F]{40}/])
+      ->to('#blob')->name('blob');
+    $r->get('/(*home)/(.project)/blob/:bid')->to('#blob')->name('blob_bid');
     
     # Blob plain
-    $r->get('/(*home)/(.project)/blob_plain')
+    $r->get('/(*home)/(.project)/blob_plain/:cid/(*file)', [cid => qr/[0-9a-fA-F]{40}/])
       ->to('#blob_plain')->name('blob_plain');
+    $r->get('/(*home)/(.project)/blob_plain/:bid')->to('#blob_plain')->name('blob_plain');
     
     # Blob diff
     $r->get('/(*home)/(.project)/blobdiff(:suffix)')

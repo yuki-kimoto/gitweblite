@@ -48,8 +48,8 @@
             log
           </a>
         % } elsif ($reftype eq 'blob') {
-          <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project)
-              ->query(bid => $tag->{refid}) %>">
+          <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project,
+              bid => $tag->{refid}) %>">
             row
           </a>          
         % }

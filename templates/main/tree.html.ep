@@ -58,8 +58,8 @@
             % if ($type eq 'blob') {
               % my $file = defined $dir ? "$dir/$name" : $name;
 
-              <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
-                  ->query(cid => $cid, file => $file) %>">
+              <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+                  cid => $cid, file => $file) %>">
                 <%= $tree->{name} %>
               </a>
             % } elsif ($tree) {
@@ -72,8 +72,8 @@
           <td class="link">
             % if ($type eq 'blob') {
               % my $file = defined $dir ? "$dir/$name" : $name;
-              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
-                  ->query(cid => $cid, file => $file) %>">
+              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+                  cid => $cid, file => $file) %>">
                 blob
               </a>
               |

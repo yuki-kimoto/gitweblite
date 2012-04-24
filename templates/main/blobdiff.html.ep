@@ -13,7 +13,8 @@
       Raw
     </a>
     |
-    <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)->query(cid => 'HEAD', file => $file) %>">
+    <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+        cid => gitweblite_get_head_id($home, $project), file => $file) %>">
       HEAD
     </a>
     <br/>

@@ -8,7 +8,7 @@
     
     % if ($i eq @parts - 1) {
       <a title="tree home" href=
-        "<%= url_for('blob', home => gitweblite_rel($home), project => $project)->query(cid => $cid, file => $path) %>"
+        "<%= url_for('blob', home => gitweblite_rel($home), project => $project, cid => $cid, file => $path) %>"
       >
        <%= $part %>
       </a>
