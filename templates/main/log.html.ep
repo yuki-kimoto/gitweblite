@@ -28,7 +28,10 @@
           commitdiff
         </a>
         |
-        <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(id => $commit->{id}) %>">tree</a><br/>
+        <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project,
+            cid => $commit->{id}, dir => '/') %>">
+          tree
+        </a><br/>
       </div>
       <span class="author_date"><%= $commit->{author_name} %> [<%= $commit->{author_date} %>]</span>
       <br/>

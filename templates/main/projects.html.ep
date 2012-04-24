@@ -32,7 +32,10 @@
           <a href="<%= url_for('summary', home => gitweblite_rel($home), project => $pname) %>">summary</a> |
           <a href="<%= url_for('shortlog', home => gitweblite_rel($home), project => $pname) %>">shortlog</a> |
           <a href="<%= url_for('log', home => gitweblite_rel($home), project => $pname) %>">log</a> |
-          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $pname) %>">tree</a>
+          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $pname,
+              cid => $project->{head_cid}, dir => '/') %>">
+            tree
+          </a>
         </td>
       </tr>
     % }

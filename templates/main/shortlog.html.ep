@@ -39,12 +39,12 @@
             commitdiff
           </a>
           |
-          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">
+          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid, dir => '/') %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('snapshot', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>
+            <%= url_for('snapshot', home => gitweblite_rel($home), project => $project, cid => $cid) %>
           >
             snapshot
           </a>

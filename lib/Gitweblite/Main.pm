@@ -47,9 +47,11 @@ sub projects {
   my @projects = $git->get_projects($home);
   @projects = $git->fill_projects($home, \@projects);
   
-  # Fill owner
+  # Fill owner and HEAD commit id
   for my $project (@projects) {
     $project->{owner} = $git->get_project_owner($home, $project->{path});
+    my $head_commit = $git->parse_commit($home, $project->{path}, "HEAD");
+    $project->{head_cid} = $head_commit->{id}
   }
   
   # Render
