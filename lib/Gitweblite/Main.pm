@@ -1,4 +1,4 @@
-package Gitweblite::Default;
+package Gitweblite::Main;
 use Mojo::Base 'Mojolicious::Controller';
 use Mojo::Cache;
 use Encode qw/encode decode/;

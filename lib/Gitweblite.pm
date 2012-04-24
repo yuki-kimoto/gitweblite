@@ -102,7 +102,7 @@ sub startup {
   # Route
   my $r = $self->routes;
   {
-    my $r = $r->route->to('default#');
+    my $r = $r->route->to('main#');
     $r->get('/')->to('#homes');
     $r->get('/projects')->to('#projects');
     $r->get('/summary')->to('#summary');
