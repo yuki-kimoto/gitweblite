@@ -4,7 +4,7 @@
   </div>
   <table class="project_list">
     <a href="<%= url_for '/' %>">homes</a> &gt;
-    <a href="<%= url_for('/projects')->query(home => $home) %>"><%= $home %></a>
+    <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
     <tr>
       <th>Project</th>
       <th>Description</th>

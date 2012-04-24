@@ -26,7 +26,7 @@ sub homes {
   $self->render(homes => [keys %$homes]);
 }
 
-sub projects {
+sub project {
   my $self = shift;
   
   # Validation

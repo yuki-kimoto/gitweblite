@@ -4,7 +4,7 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">homes</a> &gt;
-    <a href="<%= url_for('/projects')->query(home => $home) %>"><%= $home %></a>
+    <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'heads';
   <div class="header">
