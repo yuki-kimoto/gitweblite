@@ -115,7 +115,7 @@ sub startup {
   my $r = $self->routes;
   {
     my $r = $r->route->to('main#');
-    $r->get('/')->to('#homes');
+    $r->get('/')->to('#home');
     $r->get('/project/(*home)')->to('#project')->name('project');
     $r->get('/summary')->to('#summary');
     $r->get('/shortlog')->to('#shortlog');

@@ -10,7 +10,7 @@ sub d($) { decode('UTF-8', shift) }
 has diff_opts => sub { ['-M'] };
 has prevent_xss => 0;
 
-sub homes {
+sub home {
   my $self = shift;
 
   # Search git repositories

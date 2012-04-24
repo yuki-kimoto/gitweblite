@@ -1,10 +1,10 @@
 % layout 'common';
   <div class="page_header">
-    <a href="#">Projects</a>
+    <a href="#">Project</a>
   </div>
   <table class="project_list">
-    <a href="<%= url_for '/' %>">homes</a> &gt;
-    <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
+    <a href="<%= url_for '/' %>">home</a> &gt;
+    <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
     <tr>
       <th>Project</th>
       <th>Description</th>

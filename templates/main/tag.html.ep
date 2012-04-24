@@ -3,7 +3,7 @@
     <a href="#">Tag</a> # <%= $project %>
   </div>
   <div>
-    <a href="<%= url_for '/' %>">homes</a> &gt;
+    <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'commit', home => $home, project => $project;
