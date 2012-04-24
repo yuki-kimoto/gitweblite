@@ -24,7 +24,7 @@
     <div class="title_text">
       <div class="log_link">
         <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">commit</a> |
-        <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)->query(id => $commit->{id}) %>">
+        <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">
           commitdiff
         </a>
         |

@@ -35,7 +35,7 @@
         <td class="link">
           <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">commit</a>
           |
-          <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">
+          <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
             commitdiff
           </a>
           |

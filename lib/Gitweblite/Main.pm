@@ -214,13 +214,8 @@ sub commitdiff {
   $from_cid = $commit->{parent} unless defined $from_cid;
   
   # Check plain
-  my $plain;
-  my $suffix = $self->param('suffix');
-  if ($suffix) {
-    if ($suffix eq '_plain') { $plain = 1 }
-    else { return $self->render('not_found') }
-  }
-  else { $plain = 0 }
+  my $type = $self->param('type');
+  my $plain = defined $type && $type eq 'plain' ? 1 : 0;
   
   # Plain text
   if ($plain) {

@@ -8,7 +8,10 @@
   </div>
   %= include '/include/page_navi', current => 'commitdiff', home => $home, project => $project;
   <div class="page_nav">
-    <a href="<%= url_for('commitdiff', suffix => '_plain', home => gitweblite_rel($home), project => $project) %>">Raw</a>
+    <a href="<%= url_for('commitdiff', suffix => '_plain', home => gitweblite_rel($home), project => $project,
+        cid => $commit->{id})->query(type => 'plain') %>">
+      Raw
+    </a>
   </div>
   <div class="header">
     <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">

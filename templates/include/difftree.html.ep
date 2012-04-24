@@ -9,8 +9,8 @@
           % my $parent = $parents->[$i];
           % my $from_cid = $parent;
           <th>
-            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)
-                ->query(cid => $cid, from_cid => $from_cid) %>"
+            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project,
+                cid => $cid, from_cid => $from_cid) %>"
                 title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_cid, 0, 7) %>">
               <%= $i + 1 %>
             </a>

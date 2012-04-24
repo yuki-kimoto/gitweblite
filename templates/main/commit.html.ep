@@ -36,7 +36,7 @@
   
   <div class="header">
     % if (defined $parent) {
-      <a class="title" href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)->query(cid => $commit->{id}) %>">
+      <a class="title" href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">
         <%= $commit->{title} %>
       </a>
     % } else {
@@ -106,8 +106,8 @@
               commit
             </a>
             |
-            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)
-                ->query(cid => $commit->{id}, from_cid => $from_cid) %>">
+            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project,
+                cid => $commit->{id}, from_cid => $from_cid) %>">
               diff
             </a>
           </td>

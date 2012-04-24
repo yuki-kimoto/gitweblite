@@ -146,8 +146,8 @@ sub startup {
     $r->get('/(*home)/(.project)/commit/:cid')->to('#commit')->name('commit');
     
     # Commit diff
-    $r->get('/(*home)/(.project)/commitdiff(:suffix)')
-      ->to('#commitdiff', suffix => '')->name('commitdiff');
+    $r->get('/(*home)/(.project)/commitdiff/:cid')
+      ->to('#commitdiff')->name('commitdiff');
     
     # Tag
     $r->get('/(*home)/(.project)/tag')->to('#tag')->name('tag');

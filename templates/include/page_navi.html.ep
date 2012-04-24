@@ -1,4 +1,5 @@
 <div class="page_nav">
+  % my $head_cid =  gitweblite_get_head_id($home, $project);
   % if ($current eq 'summary') {
     Summary
   % } else {
@@ -21,7 +22,7 @@
     Commit
   % } else {
     <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project,
-        cid => gitweblite_get_head_id($home, $project)) %>">
+        cid => $head_cid) %>">
       Commit
     </a>
   % }
@@ -29,7 +30,7 @@
   % if ($current eq 'commitdiff') {
     Commitdiff
   % } else {
-    <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project) %>">Commitdiff</a>
+    <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project, cid => $head_cid) %>">Commitdiff</a>
   % }
   |
   % if ($current eq 'tree') {
