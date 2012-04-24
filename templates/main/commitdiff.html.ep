@@ -6,17 +6,17 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'commitdiff', home => gitweblite_rel($home), project => $project;
+  %= include '/include/page_navi', current => 'commitdiff', home => $home, project => $project;
   <div class="page_nav">
     <a href="<%= url_for('commitdiff', suffix => '_plain', home => gitweblite_rel($home), project => $project) %>">Raw</a>
   </div>
   <div class="header">
-    <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">
+    <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
       <%= $commit->{title} %>
     </a>
   </div>
   <div class="title_text">
-    %= include 'include/refs', home => gitweblite_rel($home), project => $project, commit => $commit, refs => $refs;
+    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
     <table class="object_header">
       <tr><td>Author</td><td><%= $commit->{author} %></td><td rowspan="2"></td></tr>
       <tr><td></td><td><%= $commit->{author_date} %></td></tr>

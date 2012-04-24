@@ -6,7 +6,7 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'shortlog', home => gitweblite_rel($home), project => $project;
+  %= include '/include/page_navi', current => 'shortlog', home => $home, project => $project;
   <%= include '/include/page_navi2', current => 'shortlog', base_cid => $base_cid,
     page => $page, page_count => $page_count,commits => $commits;
   %>
@@ -26,14 +26,14 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>"
+            "<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>"
           >
             <%= $commit->{title_short} %>
           </a>
-          %= include 'include/refs', home => gitweblite_rel($home), project => $project, commit => $commit, refs => $refs;
+          %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
         </td>
         <td class="link">
-          <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">commit</a>
+          <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">commit</a>
           |
           <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">
             commitdiff

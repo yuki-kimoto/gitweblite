@@ -7,7 +7,7 @@
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
 
-  %= include '/include/page_navi', current => 'tree', home => gitweblite_rel($home), project => $project;
+  %= include '/include/page_navi', current => 'tree', home => $home, project => $project;
 
   <div class="page_nav">
     <a title="in format: tar.gz" rel="nofollow"
@@ -18,7 +18,7 @@
   </div>
 
   <div class="header">
-    <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">
+    <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
       <%= $commit->{title} %>
     </a>
   </div>
@@ -42,7 +42,7 @@
   </div>
 
   <div class="page_body">
-    %= include 'include/refs', home => gitweblite_rel($home), project => $project, commit => $commit, refs => $refs;
+    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
     <table class="tree">
       % for (my $i = 0; $i <@$trees; $i++) {
         

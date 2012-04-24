@@ -109,6 +109,16 @@ sub startup {
       
       return $path;
     });
+    
+    # Get head commit id
+    $self->helper('gitweblite_get_head_id' => sub {
+      my ($self, $home, $project) = @_;
+      
+      my $head_commit = $self->app->git->parse_commit($home, $project, "HEAD");
+      my $head_cid = $head_commit->{id};
+      
+      return $head_cid;
+    });
   }
 
   # Route
@@ -133,7 +143,7 @@ sub startup {
     $r->get('/(*home)/(.project)/log')->to('#log')->name('log');
     
     # Commit
-    $r->get('/(*home)/(.project)/commit')->to('#commit')->name('commit');
+    $r->get('/(*home)/(.project)/commit/:cid')->to('#commit')->name('commit');
     
     # Commit diff
     $r->get('/(*home)/(.project)/commitdiff(:suffix)')

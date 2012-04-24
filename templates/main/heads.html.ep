@@ -10,4 +10,4 @@
   <div class="header">
     <a class="title" href="<%= url_for('heads', home => gitweblite_rel($home), project => $project) %>">Heads</a>
   </div>
-  %= include '/include/heads', home => gitweblite_rel($home), project => $project, heads => $heads;
+  %= include '/include/heads', home => $home, project => $project, heads => $heads;

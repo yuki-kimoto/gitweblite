@@ -20,7 +20,10 @@
   % if ($current eq 'commit') {
     Commit
   % } else {
-    <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project) %>">Commit</a>
+    <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project,
+        cid => gitweblite_get_head_id($home, $project)) %>">
+      Commit
+    </a>
   % }
   |
   % if ($current eq 'commitdiff') {

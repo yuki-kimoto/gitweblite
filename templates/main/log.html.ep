@@ -6,14 +6,14 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'log', home => gitweblite_rel($home), project => $project;
+  %= include '/include/page_navi', current => 'log', home => $home, project => $project;
   <%= include '/include/page_navi2', current => 'log', base_cid => $base_cid,
     page => $page, page_count => $page_count, commits => $commits;
   %>
   
   % for my $commit (@$commits) {
     <div class="header">
-      <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(id => $commit->{id}) %>">
+      <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">
         <span class="age" style="font-size:70%">
           <%= $commit->{age_string} %>
         </span>
@@ -23,7 +23,7 @@
     </div>
     <div class="title_text">
       <div class="log_link">
-        <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(id => $commit->{id}) %>">commit</a> |
+        <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">commit</a> |
         <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)->query(id => $commit->{id}) %>">
           commitdiff
         </a>
@@ -34,7 +34,7 @@
       <br/>
     </div>
     <div class="log_body">
-      %= include 'include/refs', home => gitweblite_rel($home), project => $project, commit => $commit, refs => $refs;
+      %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
       <%= $commit->{title} %><br/>
     <br/>
     </div>

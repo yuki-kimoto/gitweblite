@@ -6,7 +6,8 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'summary';
+  
+  %= include '/include/page_navi', current => 'summary', home => $home, project => $project;
   <table class="projects_list">
     <tr id="metadata_desc"><td><b>Description:</b></td><td><%= $project_description %></td></tr>
     <tr id="metadata_owner"><td><b>Owner:</b></td><td><%= $project_owner %></td></tr>
@@ -39,15 +40,14 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>"
+            "<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>"
           >
             %= $commit->{title_short};
           </a>
-          %= include 'include/refs', home => gitweblite_rel($home), project => $project, commit => $commit, refs => $refs;
+          %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
         </td>
         <td class="link">
-          <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>"
-          >
+          <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
             commit
           </a>
           |
@@ -81,7 +81,7 @@
   <div class="header">
     <a class="title" href="<%= url_for('tags', home => gitweblite_rel($home), project => $project) %>">Tags</a>
   </div>
-  <%= include '/include/tags', home => gitweblite_rel($home), project => $project,
+  <%= include '/include/tags', home => $home, project => $project,
     tags => $tags, tag_count => $tag_count, summary => 1; %>
   
   <!-- Heads -->
@@ -90,5 +90,5 @@
       Heads
     </a>
   </div>
-  <%= include '/include/heads', home => gitweblite_rel($home), project => $project,
+  <%= include '/include/heads', home => $home, project => $project,
     tags => $tags, head_count => $head_count, summary => 1; %>

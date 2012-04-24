@@ -6,7 +6,7 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'blobdiff', head_cid => $cid, home => gitweblite_rel($home), project => $project;
+  %= include '/include/page_navi', current => 'blobdiff', head_cid => $cid, home => $home, project => $project;
   <div class="page_nav">
     <a href="<%= url_for('blobdiff_plain', home => gitweblite_rel($home), project => $project)
         ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
@@ -20,12 +20,12 @@
   </div>
   <div class="header">
   <a class="title" href=
-    "<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>">
+    "<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
     <%= $commit->{title} %>
   </a>
   </div>
 
-  %= include '/include/pagepath', home => gitweblite_rel($home), project => $project, cid => $cid, file => $file;
+  %= include '/include/pagepath', home => $home, project => $project, cid => $cid, file => $file;
 
   <div class="page_body">
     % for my $line (@$lines) {
