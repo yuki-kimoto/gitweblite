@@ -9,13 +9,13 @@
       <td><i><%= $tag->{age} %></i></td>
       <td>
         <a class="list name" href=
-          "<%= url_for("$reftype", home => gitweblite_rel($home), project => $project)->query(cid => $tag->{refid}) %>"
+          "<%= url_for("$reftype", home => gitweblite_rel($home), project => $project, cid => $tag->{refid}) %>"
         >
           %= $tag->{name};
         </a>
         % if (defined $comment) {
           <a class="list subject" href=
-            "<%= url_for('tag', home => gitweblite_rel($home), project => $project)->query(id => $tag->{id}) %>"
+            "<%= url_for('tag', home => gitweblite_rel($home), project => $project, id => $tag->{id}) %>"
           >
             <%= $comment %>
           </a>
@@ -24,7 +24,7 @@
       <td class="selflink">
         % if ($tag->{type} eq 'tag') {
           <a href=
-            "<%= url_for('tag', home => gitweblite_rel($home), project => $project)->query(id => $tag->{id}) %>"
+            "<%= url_for('tag', home => gitweblite_rel($home), project => $project, id => $tag->{id}) %>"
           >
             tag
           </a>
@@ -33,7 +33,7 @@
       </td>
       <td class="link">
         <a href=
-          "<%= url_for("$reftype", home => gitweblite_rel($home), project => $project)->query(cid => $tag->{refid}) %>"
+          "<%= url_for("$reftype", home => gitweblite_rel($home), project => $project, cid => $tag->{refid}) %>"
         >
           %= $reftype;
         </a>

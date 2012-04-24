@@ -148,12 +148,12 @@ sub startup {
     # Commit diff
     $r->get('/(*home)/(.project)/commitdiff/:cid')
       ->to('#commitdiff')->name('commitdiff');
-    
-    # Tag
-    $r->get('/(*home)/(.project)/tag')->to('#tag')->name('tag');
-    
+
     # Tags
     $r->get('/(*home)/(.project)/tags')->to('#tags')->name('tags');
+    
+    # Tag
+    $r->get('/(*home)/(.project)/tag/:id')->to('#tag')->name('tag');
     
     # Heads
     $r->get('/(*home)/(.project)/heads')->to('#heads')->name('heads');
