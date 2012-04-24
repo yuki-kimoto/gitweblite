@@ -8,7 +8,7 @@
   </div>
   %= include '/include/page_navi', current => 'blob', head_cid => $cid, home => gitweblite_rel($home), project => $project;
   <div class="page_nav">
-    <a href="<%= url_for('blob_plain, home => gitweblite_rel($home), project => $project)->query(cid => $cid, file => $file) %>"
+    <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project)->query(cid => $cid, file => $file) %>"
     >
       Raw
     </a>

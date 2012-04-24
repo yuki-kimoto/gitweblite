@@ -9,7 +9,7 @@
   %= include '/include/page_navi', current => 'blobdiff', head_cid => $cid, home => gitweblite_rel($home), project => $project;
   <div class="page_nav">
     <a href="<%= url_for('blobdiff_plain', home => gitweblite_rel($home), project => $project)
-        ->query(from_cid => $from_cid, cid => $cid, file => $file}) %>">
+        ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
       Raw
     </a>
     |

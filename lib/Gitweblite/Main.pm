@@ -74,8 +74,6 @@ sub summary {
   my $home = '/' . $params->{home};
   my $project = $params->{project};
   
-  warn $self->dumper($home, $project);
-  
   # Git
   my $git = $self->app->git;
   
@@ -436,7 +434,7 @@ sub tag {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   my $id = $params->{id};
   
@@ -471,7 +469,7 @@ sub tags {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   
   # Git
@@ -500,7 +498,7 @@ sub heads {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   
   # Git
@@ -531,7 +529,7 @@ sub blob {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -601,7 +599,7 @@ sub blob_plain {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
@@ -662,7 +660,7 @@ sub blobdiff {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   my $file = $params->{file};
