@@ -130,7 +130,7 @@ sub startup {
     $r->get('/')->to('#home');
     
     # Project
-    $r->get('/(*home)/project')->to('#project')->name('project');
+    $r->get('/(*home)/projects')->to('#projects')->name('projects');
     
     # Summary
     $r->get('/(*home)/(.project)/summary')->to('#summary')->name('summary');

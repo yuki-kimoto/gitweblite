@@ -1,0 +1,40 @@
+% layout 'common';
+  <div class="page_header">
+    <a href="#">Projects</a>
+  </div>
+  <table class="project_list">
+    <a href="<%= url_for '/' %>">home</a> &gt;
+    <a href="<%= url_for('projects', home => gitweblite_rel($home)) %>"><%= $home %></a>
+    <tr>
+      <th>Project</th>
+      <th>Description</th>
+      <th>Owner</th>
+      <th>Last Change</th>
+      <th></th>
+    </tr>
+    % for my $project (@$projects) {
+      <tr class="dark">
+        <td>
+          <a class="list" href="<%= url_for('summary', home => gitweblite_rel($home), project => $project->{path}) %>">
+            <%= $project->{path} %>
+          </a>
+        </td>
+        <td>
+          <a class="list" title="<%= $project->{descr_long} %>" 
+              href="<%= url_for('summary', home => gitweblite_rel($home), project => $project->{path}) %>">
+            <%= $project->{descr} %>
+          </a>
+        </td>
+        <td><i><%= $project->{owner} %></i></td>
+        <td class="age2"><%= $project->{age_string} %></td>
+        <td class="link">
+          % my $pname = $project->{path};
+          <a href="<%= url_for('summary', home => gitweblite_rel($home), project => $pname) %>">summary</a> |
+          <a href="<%= url_for('shortlog', home => gitweblite_rel($home), project => $pname) %>">shortlog</a> |
+          <a href="<%= url_for('log', home => gitweblite_rel($home), project => $pname) %>">log</a> |
+          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $pname) %>">tree</a>
+        </td>
+      </tr>
+    % }
+  </table>
+  <div class="page_footer"></div>

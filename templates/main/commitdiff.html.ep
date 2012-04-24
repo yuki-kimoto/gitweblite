@@ -4,7 +4,7 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
+    <a href="<%= url_for('projects', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'commitdiff', home => $home, project => $project;
   <div class="page_nav">

@@ -1,12 +1,13 @@
 % layout 'common';
   <div class="page_header">
-    <a href="/">Home</a>
+    <a href="/">Gitweb Lite</a>
   </div>
   <table class="project_list">
+    <th>Home Directory</th>
     % for my $home (@$homes) {
       <tr class="dark">
         <td>
-          <a class="list" href="<%= url_for('project', home => gitweblite_rel($home)); %>">
+          <a class="list" href="<%= url_for('projects', home => gitweblite_rel($home)); %>">
             <%= $home %>
           </a>
         </td>
