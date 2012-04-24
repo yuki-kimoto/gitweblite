@@ -60,8 +60,7 @@
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('/snapshot', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>
-          >
+              <%= url_for('snapshot', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>>
             snapshot
           </a>
         </td>
