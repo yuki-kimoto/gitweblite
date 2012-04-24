@@ -31,7 +31,7 @@ sub project {
   my $self = shift;
   
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank']
   ];
@@ -63,7 +63,7 @@ sub summary {
   my $self = shift;
   
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank']
@@ -124,15 +124,15 @@ sub summary {
   );
 }
 
-sub shortlog { _log(shift, short => 1) }
+sub shortlog { shift->_log(short => 1) }
 
-sub log { _log(shift) }
+sub log { shift->_log }
 
 sub commit {
   my $self = shift;
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -184,7 +184,7 @@ sub commitdiff {
   my $self = shift;
   
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -300,7 +300,7 @@ sub tree {
   my $self = shift;
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -371,7 +371,7 @@ sub snapshot {
   my $self = shift;
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -395,10 +395,10 @@ sub snapshot {
 
   my ($name, $prefix) = $git->snapshot_name($home, $project, $cid);
   my $file = "$name.tar.gz";
-  my $cmd = _quote_command(
+  my $cmd = $self->_quote_command(
     $git->git($home, $project), 'archive', "--format=tar", "--prefix=$prefix/", $cid
   );
-  $cmd .= ' | ' . _quote_command('gzip', '-n');
+  $cmd .= ' | ' . $self->_quote_command('gzip', '-n');
 
   $file =~ s/(["\\])/\\$1/g;
 
@@ -427,7 +427,7 @@ sub tag {
   my $self = shift;
   
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -463,7 +463,7 @@ sub tags {
   my $self = shift;
   
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank']
@@ -492,7 +492,7 @@ sub heads {
   my $self = shift;
   
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank']
@@ -521,7 +521,7 @@ sub blob {
   my $self = shift;
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -591,7 +591,7 @@ sub blob_plain {
   my $self = shift;
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -651,7 +651,7 @@ sub blobdiff {
   my $self = shift;
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -791,7 +791,7 @@ sub _log {
   my $short = $opt{short};
 
   # Validation
-  my $raw_params = _parse_params($self);
+  my $raw_params = $self->_parse_params;
   my $rule = [
     home => ['not_blank'],
     project => ['not_blank'],
@@ -844,12 +844,13 @@ sub _log {
 };
 
 sub _parse_params {
-  my $c = shift;
-  my $params = {map { $_ => scalar $c->param($_) } $c->param};
+  my $self = shift;
+  my $params = {map { $_ => scalar $self->param($_) } $self->param};
   return $params;
 }
 
 sub _quote_command {
+  my $self = shift;
   return join(' ',
     map { my $a = $_; $a =~ s/(['!])/'\\$1'/g; "'$a'" } @_ );
 }
