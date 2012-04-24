@@ -1,90 +1,85 @@
 <table class="<%= @$parents > 1 ? 'combined' : 'diff_tree' %>"">
 
-	% my $has_header = @$difftrees && @$parents > 1 && stash('action') eq 'commitdiff';
-	% if ($has_header) {
-	  <thead>
-	    <tr>
-  		  <th></th>
-    		% for (my $i = 0; $i < @$parents; $i++) {
-    			% my $parent = $parents->[$i];
-    			% my $from_cid = $parent;
-    			<th>
-    			  <a href="<%= url_for('/commitdiff')->query(home => $home, project => $project,
-    			    cid => $cid, from_cid => $from_cid) %>"
-    			    title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_cid, 0, 7) %>"
-    			  >
-    			    <%= $i + 1 %>
-    			  </a>
-    	    </th>
-    		% }
-  		</tr>
+  % my $has_header = @$difftrees && @$parents > 1 && stash('action') eq 'commitdiff';
+  % if ($has_header) {
+    <thead>
+      <tr>
+        <th></th>
+        % for (my $i = 0; $i < @$parents; $i++) {
+          % my $parent = $parents->[$i];
+          % my $from_cid = $parent;
+          <th>
+            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)
+                ->query(cid => $cid, from_cid => $from_cid) %>"
+                title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_cid, 0, 7) %>">
+              <%= $i + 1 %>
+            </a>
+          </th>
+        % }
+      </tr>
     </thead>
-	% }
-	<tbody>
-	  % my $toggle = 0;
+  % }
+  <tbody>
+    % my $toggle = 0;
     % for my $difftree (@$difftrees) {
     
       <tr class="<%= $toggle++ % 2 ? 'light' : 'dark' %>">
         % if (exists $difftree->{'nparents'}) {
           % my $file = $difftree->{to_file};
           
-    			% if ($difftree->{is_deleted}) {
-    				<td>
-    				  <%= $file %>
-    				</td>
-    			% } else {
-    				<td>
-    				  <a class="list" href="<%= url_for('/blob')->query(home => $home, project => $project,
-    				    cid => $cid, file => $file) %>"
-    				  >
-    				    <%= $file %>
-    				  </a>
-    		    </td>
-    			% }
+          % if ($difftree->{is_deleted}) {
+            <td>
+              <%= $file %>
+            </td>
+          % } else {
+            <td>
+              <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                  ->query(cid => $cid, file => $file) %>">
+                <%= $file %>
+              </a>
+            </td>
+          % }
 
-    			% my $not_deleted = 0;
-    			% for (my $i = 0; $i < $difftree->{'nparents'}; $i++) {
-    				% my $from_cid = $parents->[$i];
-    				% my $from_bid = $difftree->{'from_id'}[$i];
-    				% my $from_file = $difftree->{'from_file'}[$i];
-    				% my $status = $difftree->{'status'}[$i];
-    				% $not_deleted ||= ($status ne 'D');
+          % my $not_deleted = 0;
+          % for (my $i = 0; $i < $difftree->{'nparents'}; $i++) {
+            % my $from_cid = $parents->[$i];
+            % my $from_bid = $difftree->{'from_id'}[$i];
+            % my $from_file = $difftree->{'from_file'}[$i];
+            % my $status = $difftree->{'status'}[$i];
+            % $not_deleted ||= ($status ne 'D');
 
-    				% if ($status eq 'A') {
-    					<td  class=\"link\" align=\"right\"> | </td>
-    				% } elsif ($status eq 'D') {
-    					<td class="link">
-      				  <a class="list" href="<%= url_for('/blob')->query(home => $home, project => $project,
-      				    cid => $from_cid, file => $from_file) %>"
-      				  >
-      				    blob<%= $i + 1 %>
-      				  </a>
-    					  |
-    					</td>
-    				% } else {
-    					% if ($difftree->{'to_id'} eq $from_bid) {
-    						<td class="link nochange">
-    					% } else {
-    						<td class="link">
-    					% }
-    				  <a href="<%= url_for('/blobdiff')->query(home => $home, project => $project,
-    				    from_cid => $from_cid, cid => $cid, file => $file) %>"
-    				  >
-    				    diff<%= $i + 1 %>
-    				  </a>
-				      | </td>
-    				% }
-    			% }
+            % if ($status eq 'A') {
+              <td  class=\"link\" align=\"right\"> | </td>
+            % } elsif ($status eq 'D') {
+              <td class="link">
+                <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                    ->query(cid => $from_cid, file => $from_file) %>">
+                  blob<%= $i + 1 %>
+                </a>
+                |
+              </td>
+            % } else {
+              % if ($difftree->{'to_id'} eq $from_bid) {
+                <td class="link nochange">
+              % } else {
+                <td class="link">
+              % }
+              <a href="<%= url_for('blobdiff', home => gitweblite_rel($home), project => $project)
+                  ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
+                diff<%= $i + 1 %>
+              </a>
+              | </td>
+            % }
+          % }
 
-    			<td class="link">
-      			% if ($not_deleted) {
-    				  <a href="<%= url_for('/blob')->query(home => $home, project => $project,
-    				    cid => $cid, file => $file) %>"
-    				  >
-    				    blob
-    				  </a>
-      			% }
-    			</td>
+          <td class="link">
+            % if ($not_deleted) {
+              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                  ->query(cid => $cid, file => $file) %>">
+                blob
+              </a>
+            % }
+          </td>
         % } else {
           % my $status = $difftree->{status};
           % my $file = $difftree->{to_file};
@@ -98,15 +93,13 @@
           % my $from_mode_str = $difftree->{from_mode_str};
           % my $from_mode_oct = $difftree->{from_mode_oct};
           <td>
-            <a class="list" href="<%= url_for('/blob')->query({home => $home, project => $project,
-              cid => $cid, file => $file}) %>"
-            >
+            <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                ->query(cid => $cid, file => $file) %>">
               % if ($status eq 'D') {
                 <%= $file %>
               % } else {
-                <a class="list" href="<%= url_for('/blob')->query({home => $home, project => $project,
-                  cid => $cid, file => $file}) %>"
-                >
+                <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                    ->query(cid => $cid, file => $file) %>">
                   <%= $file %>
                 </a>
               % }
@@ -154,9 +147,8 @@
               <span class="file_status <%= $status_name %>">
                 [
                   <%= $status_name %> from
-                  <a href="<%= url_for('/blob')->query({home => $home, project => $project,
-                    cid => $from_cid, file => $from_file}) %>"
-                  >
+                  <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                      ->query(cid => $from_cid, file => $from_file) %>">
                     <%= $difftree->{from_file} %></a>
                   with <%= $difftree->{similarity} %>%
                   <%= $mode_change %>
@@ -166,17 +158,15 @@
           </td>
           <td class="link">
             % if ($status ne 'A') {
-              <a href="<%= url_for('/blobdiff')->query({home => $home, project => $project,
-                from_cid => $from_cid, cid => $cid, file => $file}) %>"
-              >
+              <a href="<%= url_for('blobdiff', home => gitweblite_rel($home), project => $project)
+                  ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
                 diff
               </a>
               |
             % }
             % if ($status ne 'D') {
-              <a href="<%= url_for('/blob')->query({home => $home, project => $project,
-                cid => $cid, file => $file}) %>"
-              >
+              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project)
+                ->query(cid => $cid, file => $file) %>">
                 blob
               </a>
             % }

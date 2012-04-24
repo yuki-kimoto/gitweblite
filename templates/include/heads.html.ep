@@ -5,24 +5,20 @@
     <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
       <td><i><%= $head->{age} %></i></td>
       <td class="current_head">
-        <a class="list name" href="<%= url_for('/log')->query({home => $home,
-          project => $project, cid => $name}) %>"
+        <a class="list name" href="<%= url_for('log', home => $home, project => $project)->query(cid => $name) %>"
         >
           <%= $head->{name} %>
         </a>
       </td>
       <td class="link">
-        <a href="<%= url_for('/shortlog')->query({home => $home,
-          project => $project, base_cid => $name}) %>"
+        <a href="<%= url_for('shortlog', home => $home, project => $project)->query(base_cid => $name) %>"
         >
           shortlog
         </a> |
-      <a href="<%= url_for('/log')->query({home => $home, project => $project, base_cid => $name}) %>">
+      <a href="<%= url_for('log', home => $home, project => $project)->query(base_cid => $name) %>">
         log
       </a> |
-        <a href="<%= url_for('/tree')->query({home => $home, project => $project,
-          cid => $name}) %>"
-        >
+        <a href="<%= url_for('tree', home => $home, project => $project)->query(cid => $name) %>">
           tree
         </a>
       </td>
@@ -32,7 +28,7 @@
     % if (@$heads == stash('head_count')) {
       <tr>
         <td>
-          <a href="<%= url_for('/heads')->query({home => $home, project => $project}) %>">
+          <a href="<%= url_for('heads', home => $home, project => $project) %>">
             ...
           </a>
         </td>

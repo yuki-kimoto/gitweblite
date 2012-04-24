@@ -1,5 +1,5 @@
 <div class="page_path">
-  [<a href="<%= url_for('/tree')->query(home => $home, project => $project, cid => $cid) %>"><%= $project %></a>]
+  [<a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid) %>"><%= $project %></a>]
   % my @parts = split('/', $file);
   % my $path;
   % for (my $i = 0; $i < @parts; $i++) {
@@ -8,13 +8,13 @@
     
     % if ($i eq @parts - 1) {
       <a title="tree home" href=
-        "<%= url_for('/blob')->query(home => $home, project => $project, cid => $cid, file => $path) %>"
+        "<%= url_for('blob', home => gitweblite_rel($home), project => $project)->query(cid => $cid, file => $path) %>"
       >
        <%= $part %>
       </a>
     % } else {
       <a title="tree home" href=
-        "<%= url_for('/tree')->query(home => $home, project => $project, cid => $cid, dir => $path) %>"
+        "<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $cid, dir => $path) %>"
       >
        <%= $part %>
       </a>      

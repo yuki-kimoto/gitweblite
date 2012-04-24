@@ -1,7 +1,7 @@
 <div class="page_nav">
   % if ($page != 0) {
     <a title="Alt-n" accesskey="n" href=
-      "<%= url_for("/$current")->query($self->req->params->clone)->query([base_cid => $base_cid, page => 0]) %>"
+      "<%= url_for("$current", home => gitweblite_rel($home), project => $project)->query([base_cid => $base_cid, page => 0]) %>"
     >
       HEAD
     </a>
@@ -11,7 +11,7 @@
   &sdot;
   % if ($page != 0) {
     <a title="Alt-n" accesskey="n" href=
-      "<%= url_for("/$current")->query($self->req->params->clone)->query([base_cid => $base_cid, page => $page - 1]) %>"
+      "<%= url_for("$current", home => gitweblite_rel($home), project => $project)->query([base_cid => $base_cid, page => $page - 1]) %>"
     >
       Prev
     </a>
@@ -21,7 +21,7 @@
   &sdot;
   % if (@$commits == $page_count) {
     <a title="Alt-n" accesskey="n" href=
-      "<%= url_for("/$current")->query($self->req->params->clone)->query([base_cid => $base_cid, page => $page + 1]) %>"
+      "<%= url_for("$current", home => gitweblite_rel($home), project => $project)->query([base_cid => $base_cid, page => $page + 1]) %>"
     >
       Next
     </a>

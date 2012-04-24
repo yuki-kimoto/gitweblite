@@ -4,10 +4,10 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
+    <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'heads';
   <div class="header">
-    <a class="title" href="<%= url_for('/heads')->query({home => $home, project => $project}) %>">Heads</a>
+    <a class="title" href="<%= url_for('heads', home => gitweblite_rel($home), project => $project) %>">Heads</a>
   </div>
-  %= include '/include/heads', home => $home, project => $project, heads => $heads;
+  %= include '/include/heads', home => gitweblite_rel($home), project => $project, heads => $heads;

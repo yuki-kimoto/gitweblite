@@ -4,12 +4,12 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
+    <a href="<%= url_for('/project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'commit', home => $home, project => $project;
+  %= include '/include/page_navi', current => 'commit', home => gitweblite_rel($home), project => $project;
 
   <div class="header">
-    <a class="title" href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $tag->{id}}) %>">
+    <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $tag->{id}) %>">
       <%= $tag->{name} %>
     </a>
   </div>
@@ -18,15 +18,14 @@
     <tr>
       <td>object</td>
       <td>
-        <a class="list" href="<%= url_for('/commit')->query({home => $home,
-          project => $project, cid => $tag->{object}}) %>"
+        <a class="list" href="<%= url_for('commit'. home => gitweblite_rel($home), project => $project)
+            ->query(cid => $tag->{object}) %>"
         >
           <%= $tag->{object} %>
         </a>
       </td>
       <td class="link">
-        <a href="<%= url_for('/commit')->query({home => $home,
-          project => $project, cid => $tag->{object}}) %>"
+        <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $tag->{object}) %>"
         >
           commit
         </a>

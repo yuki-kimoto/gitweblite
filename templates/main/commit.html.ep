@@ -4,9 +4,9 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('/project')->query(home => $home) %>"><%= $home %></a>
+    <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'commit', home => $home, project => $project;
+  %= include '/include/page_navi', current => 'commit', home => gitweblite_rel($home), project => $project;
   
   <div class="page_nav">
     % my $parent = $commit->{parent};
@@ -19,7 +19,7 @@
     % elsif (@$parents == 1) {
       (
         parent:
-        <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $parent}) %>">
+        <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $parent) %>">
           <%= substr($parent, 0, 7) %>
         </a>
       )
@@ -27,7 +27,7 @@
       (
         merge:
         % for my $parent (@$parents) {
-          <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $parent}) %>">
+          <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $parent) %>">
             <%= substr($parent, 0, 7) %></a>
         % }
       )
@@ -36,17 +36,17 @@
   
   <div class="header">
     % if (defined $parent) {
-      <a class="title" href="<%= url_for('/commitdiff')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+      <a class="title" href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)->query(cid => $commit->{id}) %>">
         <%= $commit->{title} %>
       </a>
     % } else {
-      <a class="title" href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+      <a class="title" href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $commit->{id}) %>">
         <%= $commit->{title} %>
       </a>
     % }
   </div>
   <div class="title_text">
-    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
+    %= include 'include/refs', home => gitweblite_rel($home), project => $project, commit => $commit, refs => $refs;
     <table class="object_header">
       <tr>
         <td>author</td>
@@ -73,18 +73,17 @@
       <tr>
         <td>tree</td>
         <td class="sha1">
-          <a class="list" href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+          <a class="list" href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $commit->{id}) %>">
             <%= $commit->{id} %>
           </a>
         </td>
         <td class="link">
-          <a href="<%= url_for('/tree')->query({home => $home, project => $project, cid => $commit->{id}}) %>">
+          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $commit->{id}) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow"
-            href="<%= url_for('/snapshot')->query({home => $home, project => $project, cid => $commit->{id}}) %>"
-          >
+              href="<%= url_for('snapshot', home => gitweblite_rel($home), project => $project)->query(cid => $commit->{id}) %>">
             snapshot
           </a>
         </td>
@@ -97,19 +96,18 @@
           </td>
           <td class="sha1">
             <a class="list"
-              href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>"
+              href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $from_cid) %>"
             >
               <%= $from_cid %>
             </a>
           </td>
           <td class="link">
-            <a href="<%= url_for('/commit')->query({home => $home, project => $project, cid => $from_cid}) %>">
+            <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project)->query(cid => $from_cid) %>">
               commit
             </a>
             |
-            <a href="<%= url_for('/commitdiff')->query({home => $home, project => $project,
-              cid => $commit->{id}, from_cid => $from_cid}) %>"
-            >
+            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project)
+                ->query(cid => $commit->{id}, from_cid => $from_cid) %>">
               diff
             </a>
           </td>
