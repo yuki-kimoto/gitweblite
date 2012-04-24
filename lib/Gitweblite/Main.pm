@@ -71,8 +71,10 @@ sub summary {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
+  
+  warn $self->dumper($home, $project);
   
   # Git
   my $git = $self->app->git;
@@ -309,7 +311,7 @@ sub tree {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
@@ -799,7 +801,7 @@ sub _log {
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   die unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = $params->{home};
+  my $home = '/' . $params->{home};
   my $project = $params->{project};
   my $base_cid = defined $params->{base_cid}
     ? $params->{base_cid}

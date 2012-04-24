@@ -115,21 +115,56 @@ sub startup {
   my $r = $self->routes;
   {
     my $r = $r->route->to('main#');
+    
+    # Home
     $r->get('/')->to('#home');
-    $r->get('/project/(*home)')->to('#project')->name('project');
-    $r->get('/summary')->to('#summary');
-    $r->get('/shortlog')->to('#shortlog');
-    $r->get('/log')->to('#log');
-    $r->get('/commit')->to('#commit');
-    $r->get('/commitdiff(:suffix)')->to('#commitdiff', suffix => '');
-    $r->get('/tag')->to('#tag');
-    $r->get('/tags')->to('#tags');
-    $r->get('/heads')->to('#heads');
-    $r->get('/tree')->to('#tree');
-    $r->get('/blob')->to('#blob');
-    $r->get('/blob_plain')->to('#blob_plain');
-    $r->get('/blobdiff(:suffix)')->to('#blobdiff', suffix => '');
-    $r->get('/snapshot')->to('#snapshot');
+    
+    # Project
+    $r->get('/(*home)/project')->to('#project')->name('project');
+    
+    # Summary
+    $r->get('/(*home)/(.project)/summary')->to('#summary')->name('summary');
+    
+    # Short log
+    $r->get('/(*home)/(.project)/shortlog')
+      ->to('#shortlog')->name('shortlog');
+    
+    # Log
+    $r->get('/(*home)/(.project)/log')->to('#log')->name('log');
+    
+    # Commit
+    $r->get('/(*home)/(.project)/commit')->to('#commit')->name('commit');
+    
+    # Commit diff
+    $r->get('/(*home)/(.project)/commitdiff(:suffix)')
+      ->to('#commitdiff', suffix => '')->name('commitdiff');
+    
+    # Tag
+    $r->get('/(*home)/(.project)/tag')->to('#tag')->name('tag');
+    
+    # Tags
+    $r->get('/(*home)/(.project)/tags')->to('#tags')->name('tags');
+    
+    # Heads
+    $r->get('/(*home)/(.project)/heads')->to('#heads')->name('heads');
+    
+    # Tree
+    $r->get('/(*home)/(.project)/tree')->to('#tree')->name('tree');
+    
+    # Blob
+    $r->get('/(*home)/(.project)/blob')->to('#blob')->name('blob');
+    
+    # Blob plain
+    $r->get('/(*home)/(.project)/blob_plain')
+      ->to('#blob_plain')->name('blob_plain');
+    
+    # Blob diff
+    $r->get('/(*home)/(.project)/blobdiff(:suffix)')
+      ->to('#blobdiff', suffix => '')->name('blobdiff');
+    
+    # Snapshot
+    $r->get('/(*home)/(.project)/snapshot')
+      ->to('#snapshot')->name('snapshot');
   }
 }
 
