@@ -159,7 +159,8 @@ sub startup {
     $r->get('/(*home)/(.project)/heads')->to('#heads')->name('heads');
     
     # Tree
-    $r->get('/(*home)/(.project)/tree')->to('#tree')->name('tree');
+    $r->get('/(*home)/(.project)/tree/:cid(*dir)', [cid => qr/[0-9a-fA-F]{40}/])
+      ->to('#tree')->name('tree');
     
     # Blob
     $r->get('/(*home)/(.project)/blob/:cid/(*file)', [cid => qr/[0-9a-fA-F]{40}/])

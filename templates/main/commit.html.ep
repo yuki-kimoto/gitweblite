@@ -6,7 +6,7 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('project', home => gitweblite_rel($home)) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'commit', home => $home, project => $project;
+  %= include '/include/page_navi', current => 'commit', home => $home, project => $project, cid => $commit->{id};
   
   <div class="page_nav">
     % my $parent = $commit->{parent};
