@@ -24,14 +24,14 @@
   </div>
 
   <div class="page_path">
-    [<a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $cid) %>"><%= $project %></a>]
+    [<a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid) %>"><%= $project %></a>]
     % my @parts;
     % @parts = split('/', $dir) if defined $dir;
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
       % my $part = $parts[$i];
       % $path .= "$part";
-      <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)->query(cid => $cid, dir => $path) %>">
+      <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid, dir => '/' . $path) %>">
         <%= $part %>
       % $path .= '/' if $i ne @parts - 1;
       </a>
@@ -63,8 +63,8 @@
                 <%= $tree->{name} %>
               </a>
             % } elsif ($tree) {
-              <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)
-                  ->query(cid => $cid, dir => $child_dir) %>">
+              <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project,
+                  cid => $cid, dir => '/' . $child_dir) %>">
                 <%= $tree->{name} %>
               </a>
             % }
@@ -72,18 +72,19 @@
           <td class="link">
             % if ($type eq 'blob') {
               % my $file = defined $dir ? "$dir/$name" : $name;
+              % $file =~ s/^\///;
               <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
                   cid => $cid, file => $file) %>">
                 blob
               </a>
               |
-              <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project)
-                  ->query(cid => $cid, file => $file) %>">
+              <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project,
+                  cid => $cid, file => $file) %>">
                 raw
               </a>
             % } elsif ($type eq 'tree') {
-              <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project)
-                  ->query(cid => $cid, dir => $child_dir) %>">
+              <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project,
+                  cid => $cid, dir => '/' . $child_dir) %>">
                 tree
               </a>
             % }
