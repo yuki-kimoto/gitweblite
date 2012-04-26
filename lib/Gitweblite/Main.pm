@@ -48,8 +48,6 @@ sub projects {
   # Fill project information
   my @projects = $git->get_projects($home);
   @projects = $git->fill_projects($home, \@projects);
-  warn $self->dumper(["$home", \@projects]);
-  
   
   # Fill owner and HEAD commit id
   for my $project (@projects) {
@@ -315,8 +313,7 @@ sub tree {
   my $rule = [
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
-    dir => {require => 0 } => ['not_blank'],
-    tid => {require => 0 } => ['not_blank']
+    id_dir => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   return $self->render('not_found') unless $vresult->is_ok;
@@ -325,18 +322,38 @@ sub tree {
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $cid = $params->{cid};
-  $cid = "HEAD" unless defined $cid;
-  my $dir = $self->gitweblite_rel($params->{dir});
-  my $tid = $params->{tid};
-  
+  my $id_dir = $params->{id_dir};
+
   # Git
   my $git = $self->app->git;
-
-  my $commit = $git->parse_commit($project, $cid);
+  
+  # References
+  my $refs = $git->get_references($project);
+  my $id;
+  my $dir;
+  for my $rs (values %$refs) {
+    for my $ref (@$rs) {
+      $ref =~ s#^heads/##;
+      $ref =~ s#^tags/##;
+      if ($id_dir =~ s#^\Q$ref(/|$)##) {
+        $id = $ref;
+        $dir = $id_dir;
+        last;
+      }      
+    }
+  }
+  unless (defined $id) {
+    if ($id_dir =~ s#(^[^/]+)(/|$)##) {
+      $id = $1;
+      $dir = $id_dir;
+    }
+  }
+  
+  my $tid;
+  my $commit = $git->parse_commit($project, $id);
   unless (defined $tid) {
     if (defined $dir && $dir ne '') {
-      $tid = $git->get_id_by_path($project, $cid, $dir, "tree");
+      $tid = $git->get_id_by_path($project, $id, $dir, "tree");
     }
     else { $tid = $commit->{tree} }
   }
@@ -361,16 +378,13 @@ sub tree {
     push @trees, \%tree;
   }
 
-  # References
-  my $refs = $git->get_references($project);
-
   $self->render(
     home => $home,
     home_ns => $home_ns,
     project => $project,
     project_ns => $project_ns,
     dir => $dir,
-    cid => $cid,
+    cid => $id,
     tid => $tid,
     commit => $commit,
     trees => \@trees,

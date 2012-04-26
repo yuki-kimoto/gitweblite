@@ -39,7 +39,7 @@
             commitdiff
           </a>
           |
-          <a href="<%= url_for('tree', project => $project_ns, cid => $cid, dir => '/') %>">
+          <a href="<%= url_for('tree', project => $project_ns, id_dir => $cid) %>">
             tree
           </a>
           |

@@ -14,7 +14,7 @@
       </a>
     % } else {
       <a title="tree home" href=
-        "<%= url_for('tree', project => $project_ns)->query(cid => $cid, dir => $path) %>"
+        "<%= url_for('tree', project => $project_ns, id_dir => "$cid/$path") %>"
       >
        <%= $part %>
       </a>      

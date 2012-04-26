@@ -40,7 +40,7 @@
         <%= $commit->{title} %>
       </a>
     % } else {
-      <a class="title" href="<%= url_for('tree', project => $project_ns, cid => $commit->{id}) %>">
+      <a class="title" href="<%= url_for('tree', project => $project_ns, id_dir => $commit->{id}) %>">
         <%= $commit->{title} %>
       </a>
     % }
@@ -73,12 +73,12 @@
       <tr>
         <td>tree</td>
         <td class="sha1">
-          <a class="list" href="<%= url_for('tree', project => $project_ns, cid => $commit->{id}) %>">
+          <a class="list" href="<%= url_for('tree', project => $project_ns, id_dir => $commit->{id}) %>">
             <%= $commit->{id} %>
           </a>
         </td>
         <td class="link">
-          <a href="<%= url_for('tree', project => $project_ns, cid => $commit->{id}) %>">
+          <a href="<%= url_for('tree', project => $project_ns, id_dir => $commit->{id}) %>">
             tree
           </a>
           |

@@ -24,14 +24,14 @@
   </div>
 
   <div class="page_path">
-    [<a href="<%= url_for('tree', project => $project_ns, cid => $cid) %>"><%= $project %></a>]
+    [<a href="<%= url_for('tree', project => $project_ns, id_dir => $cid) %>"><%= $project %></a>]
     % my @parts;
     % @parts = split('/', $dir) if defined $dir;
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
       % my $part = $parts[$i];
       % $path .= "$part";
-      <a href="<%= url_for('tree', project => $project_ns, cid => $cid, dir => '/' . $path) %>">
+      <a href="<%= url_for('tree', project => $project_ns, id_dir => $cid, dir => '/' . $path) %>">
         <%= $part %>
       % $path .= '/' if $i ne @parts - 1;
       </a>
@@ -64,7 +64,7 @@
               </a>
             % } elsif ($tree) {
               <a href="<%= url_for('tree', project => $project_ns,
-                  cid => $cid, dir => '/' . $child_dir) %>">
+                  id_dir => "$cid/$child_dir") %>">
                 <%= $tree->{name} %>
               </a>
             % }
@@ -84,7 +84,7 @@
               </a>
             % } elsif ($type eq 'tree') {
               <a href="<%= url_for('tree', project => $project_ns,
-                  cid => $cid, dir => '/' . $child_dir) %>">
+                  id_dir => "$cid/$child_dir") %>">
                 tree
               </a>
             % }

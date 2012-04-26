@@ -166,7 +166,7 @@ sub startup {
       ->to('#heads')->name('heads');
     
     # Tree
-    $r->get('/(*project)/tree/:cid(*dir)', {dir => '/'}, [project => $project_re])
+    $r->get('/(*project)/tree/(*id_dir)', [project => $project_re])
       ->to('#tree')->name('tree');
     
     # Blob

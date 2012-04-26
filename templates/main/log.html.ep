@@ -29,7 +29,7 @@
         </a>
         |
         <a href="<%= url_for('tree', project => $project_ns,
-            cid => $commit->{id}, dir => '/') %>">
+            id_dir => $commit->{id}) %>">
           tree
         </a><br/>
       </div>

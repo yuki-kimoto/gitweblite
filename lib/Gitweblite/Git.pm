@@ -289,11 +289,6 @@ sub get_id_by_path {
   return $3;
 }
 
-
-
-
-
-
 sub get_heads {
   my ($self, $project, $limit, @classes) = @_;
   @classes = ('heads') unless @classes;
