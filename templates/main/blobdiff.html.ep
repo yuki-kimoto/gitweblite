@@ -4,16 +4,16 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', home => gitweblite_rel($home)) %>"><%= $home %></a>
+    <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'blobdiff', head_cid => $cid, home => $home, project => $project;
+  %= include '/include/page_navi', current => 'blobdiff', head_cid => $cid, project_ns => $project_ns;
   <div class="page_nav">
-    <a href="<%= url_for('blobdiff_plain', home => gitweblite_rel($home), project => $project)
+    <a href="<%= url_for('blobdiff_plain', project => $project_ns)
         ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
       Raw
     </a>
     |
-    <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+    <a href="<%= url_for('blob', project => $project_ns,
         cid => gitweblite_get_head_id($home, $project), file => $file) %>">
       HEAD
     </a>
@@ -21,12 +21,12 @@
   </div>
   <div class="header">
   <a class="title" href=
-    "<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
+    "<%= url_for('commit', project => $project_ns, cid => $cid) %>">
     <%= $commit->{title} %>
   </a>
   </div>
 
-  %= include '/include/pagepath', home => $home, project => $project, cid => $cid, file => $file;
+  %= include '/include/pagepath', project_ns => $project_ns, cid => $cid, file => $file;
 
   <div class="page_body">
     % for my $line (@$lines) {

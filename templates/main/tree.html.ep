@@ -4,34 +4,34 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', home => gitweblite_rel($home)) %>"><%= $home %></a>
+    <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
   </div>
 
-  %= include '/include/page_navi', current => 'tree', home => $home, project => $project;
+  %= include '/include/page_navi', current => 'tree', home_ns => $home_ns, project_ns => $project_ns;
 
   <div class="page_nav">
     <a title="in format: tar.gz" rel="nofollow"
-      href="<%= url_for('snapshot', home => gitweblite_rel($home), project => $project) %>"
+      href="<%= url_for('snapshot', project => $project_ns) %>"
     >
       snapshot
     </a>
   </div>
 
   <div class="header">
-    <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
+    <a class="title" href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">
       <%= $commit->{title} %>
     </a>
   </div>
 
   <div class="page_path">
-    [<a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid) %>"><%= $project %></a>]
+    [<a href="<%= url_for('tree', project => $project_ns, cid => $cid) %>"><%= $project %></a>]
     % my @parts;
     % @parts = split('/', $dir) if defined $dir;
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
       % my $part = $parts[$i];
       % $path .= "$part";
-      <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid, dir => '/' . $path) %>">
+      <a href="<%= url_for('tree', project => $project_ns, cid => $cid, dir => '/' . $path) %>">
         <%= $part %>
       % $path .= '/' if $i ne @parts - 1;
       </a>
@@ -42,7 +42,7 @@
   </div>
 
   <div class="page_body">
-    %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
+    %= include 'include/refs', project => $project_ns, commit => $commit, refs => $refs;
     <table class="tree">
       % for (my $i = 0; $i <@$trees; $i++) {
         
@@ -58,12 +58,12 @@
             % if ($type eq 'blob') {
               % my $file = defined $dir ? "$dir/$name" : $name;
 
-              <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+              <a class="list" href="<%= url_for('blob', project => $project_ns,
                   cid => $cid, file => $file) %>">
                 <%= $tree->{name} %>
               </a>
             % } elsif ($tree) {
-              <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project,
+              <a href="<%= url_for('tree', project => $project_ns,
                   cid => $cid, dir => '/' . $child_dir) %>">
                 <%= $tree->{name} %>
               </a>
@@ -73,17 +73,17 @@
             % if ($type eq 'blob') {
               % my $file = defined $dir ? "$dir/$name" : $name;
               % $file =~ s/^\///;
-              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+              <a href="<%= url_for('blob', project => $project_ns,
                   cid => $cid, file => $file) %>">
                 blob
               </a>
               |
-              <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project,
+              <a href="<%= url_for('blob_plain', project => $project_ns,
                   cid => $cid, file => $file) %>">
                 raw
               </a>
             % } elsif ($type eq 'tree') {
-              <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project,
+              <a href="<%= url_for('tree', project => $project_ns,
                   cid => $cid, dir => '/' . $child_dir) %>">
                 tree
               </a>

@@ -7,7 +7,7 @@
     <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
   </div>
   
-  %= include '/include/page_navi', current => 'summary', project => $project_ns;
+  %= include '/include/page_navi', current => 'summary', project_ns => $project_ns;
   <table class="projects_list">
     <tr id="metadata_desc"><td><b>Description:</b></td><td><%= $project_description %></td></tr>
     <tr id="metadata_owner"><td><b>Owner:</b></td><td><%= $project_owner %></td></tr>
@@ -43,7 +43,7 @@
           >
             %= $commit->{title_short};
           </a>
-          %= include 'include/refs', project => $project_ns, commit => $commit, refs => $refs;
+          %= include 'include/refs', project_ns => $project_ns, commit => $commit, refs => $refs;
         </td>
         <td class="link">
           <a href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">
@@ -80,7 +80,7 @@
   <div class="header">
     <a class="title" href="<%= url_for('tags', project => $project_ns) %>">Tags</a>
   </div>
-  <%= include '/include/tags', project => $project_ns,
+  <%= include '/include/tags', project_ns => $project_ns,
     tags => $tags, tag_count => $tag_count, summary => 1; %>
   
   <!-- Heads -->
@@ -89,5 +89,5 @@
       Heads
     </a>
   </div>
-  <%= include '/include/heads', project => $project_ns,
+  <%= include '/include/heads', project_ns => $project_ns,
     tags => $tags, head_count => $head_count, summary => 1; %>

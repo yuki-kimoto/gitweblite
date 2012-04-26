@@ -9,13 +9,13 @@
       <td><i><%= $tag->{age} %></i></td>
       <td>
         <a class="list name" href=
-          "<%= url_for("$reftype", home => gitweblite_rel($home), project => $project, cid => $tag->{refid}) %>"
+          "<%= url_for("$reftype", project => $project_ns, cid => $tag->{refid}) %>"
         >
           %= $tag->{name};
         </a>
         % if (defined $comment) {
           <a class="list subject" href=
-            "<%= url_for('tag', home => gitweblite_rel($home), project => $project, id => $tag->{id}) %>"
+            "<%= url_for('tag', project => $project_ns, id => $tag->{id}) %>"
           >
             <%= $comment %>
           </a>
@@ -24,7 +24,7 @@
       <td class="selflink">
         % if ($tag->{type} eq 'tag') {
           <a href=
-            "<%= url_for('tag', home => gitweblite_rel($home), project => $project, id => $tag->{id}) %>"
+            "<%= url_for('tag', project => $project_ns, id => $tag->{id}) %>"
           >
             tag
           </a>
@@ -33,22 +33,22 @@
       </td>
       <td class="link">
         <a href=
-          "<%= url_for("$reftype", home => gitweblite_rel($home), project => $project, cid => $tag->{refid}) %>"
+          "<%= url_for("$reftype", project => $project_ns, cid => $tag->{refid}) %>"
         >
           %= $reftype;
         </a>
         % if ($reftype eq 'commit') {
           |
-          <a href="<%= url_for('shortlog', home => gitweblite_rel($home), project => $project)->query(base_cid => $name) %>"
+          <a href="<%= url_for('shortlog', project => $project_ns)->query(base_cid => $name) %>"
           >
             shortlog
           </a>
           |
-          <a href="<%= url_for('log', home => gitweblite_rel($home), project => $project)->query(base_cid => $name) %>">
+          <a href="<%= url_for('log', project => $project_ns)->query(base_cid => $name) %>">
             log
           </a>
         % } elsif ($reftype eq 'blob') {
-          <a href="<%= url_for('blob_plain', home => gitweblite_rel($home), project => $project,
+          <a href="<%= url_for('blob_plain', project => $project_ns,
               bid => $tag->{refid}) %>">
             row
           </a>          
@@ -60,7 +60,7 @@
     % if (@$tags == stash('tag_count')) {
       <tr>
         <td>
-          <a href="<%= url_for('tags', home => gitweblite_rel($home), project => $project) %>">
+          <a href="<%= url_for('tags',project => $project_ns) %>">
             ...
           </a>
         </td>

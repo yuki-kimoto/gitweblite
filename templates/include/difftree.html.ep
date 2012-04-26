@@ -9,7 +9,7 @@
           % my $parent = $parents->[$i];
           % my $from_cid = $parent;
           <th>
-            <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project,
+            <a href="<%= url_for('commitdiff', project => $project_ns,
                 cid => $cid, from_cid => $from_cid) %>"
                 title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_cid, 0, 7) %>">
               <%= $i + 1 %>
@@ -33,7 +33,7 @@
             </td>
           % } else {
             <td>
-              <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+              <a class="list" href="<%= url_for('blob', project => $project_ns,
                   cid => $cid, file => $file) %>">
                 <%= $file %>
               </a>
@@ -52,7 +52,7 @@
               <td  class=\"link\" align=\"right\"> | </td>
             % } elsif ($status eq 'D') {
               <td class="link">
-                <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+                <a class="list" href="<%= url_for('blob', project => $project_ns,
                     ,cid => $from_cid, file => $from_file) %>">
                   blob<%= $i + 1 %>
                 </a>
@@ -64,7 +64,7 @@
               % } else {
                 <td class="link">
               % }
-              <a href="<%= url_for('blobdiff', home => gitweblite_rel($home), project => $project)
+              <a href="<%= url_for('blobdiff',project => $project_ns)
                   ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
                 diff<%= $i + 1 %>
               </a>
@@ -74,7 +74,7 @@
 
           <td class="link">
             % if ($not_deleted) {
-              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+              <a href="<%= url_for('blob', project => $project_ns,
                   cid => $cid, file => $file) %>">
                 blob
               </a>
@@ -93,12 +93,12 @@
           % my $from_mode_str = $difftree->{from_mode_str};
           % my $from_mode_oct = $difftree->{from_mode_oct};
           <td>
-            <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+            <a class="list" href="<%= url_for('blob', project => $project_ns,
                 cid => $cid, file => $file) %>">
               % if ($status eq 'D') {
                 <%= $file %>
               % } else {
-                <a class="list" href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+                <a class="list" href="<%= url_for('blob', project => $project_ns,
                     cid => $cid, file => $file) %>">
                   <%= $file %>
                 </a>
@@ -147,7 +147,7 @@
               <span class="file_status <%= $status_name %>">
                 [
                   <%= $status_name %> from
-                  <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+                  <a href="<%= url_for('blob', project => $project_ns,
                       cid => $from_cid, file => $from_file) %>">
                     <%= $difftree->{from_file} %></a>
                   with <%= $difftree->{similarity} %>%
@@ -158,14 +158,14 @@
           </td>
           <td class="link">
             % if ($status ne 'A') {
-              <a href="<%= url_for('blobdiff', home => gitweblite_rel($home), project => $project)
+              <a href="<%= url_for('blobdiff', project => $project_ns)
                   ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
                 diff
               </a>
               |
             % }
             % if ($status ne 'D') {
-              <a href="<%= url_for('blob', home => gitweblite_rel($home), project => $project,
+              <a href="<%= url_for('blob', project => $project_ns,
                   cid => $cid, file => $file) %>">
                 blob
               </a>

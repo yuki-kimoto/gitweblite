@@ -4,16 +4,16 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', home => gitweblite_rel($home)) %>"><%= $home %></a>
+    <a href="<%= url_for('projects', $home_ns) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'log', home => $home, project => $project;
+  %= include '/include/page_navi', current => 'log',project_ns => $project_ns;
   <%= include '/include/page_navi2', current => 'log', base_cid => $base_cid,
     page => $page, page_count => $page_count, commits => $commits;
   %>
   
   % for my $commit (@$commits) {
     <div class="header">
-      <a class="title" href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">
+      <a class="title" href="<%= url_for('commit', project => $project_ns, cid => $commit->{id}) %>">
         <span class="age" style="font-size:70%">
           <%= $commit->{age_string} %>
         </span>
@@ -23,12 +23,12 @@
     </div>
     <div class="title_text">
       <div class="log_link">
-        <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">commit</a> |
-        <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project, cid => $commit->{id}) %>">
+        <a href="<%= url_for('commit', project => $project_ns, cid => $commit->{id}) %>">commit</a> |
+        <a href="<%= url_for('commitdiff', project => $project_ns, cid => $commit->{id}) %>">
           commitdiff
         </a>
         |
-        <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project,
+        <a href="<%= url_for('tree', project => $project_ns,
             cid => $commit->{id}, dir => '/') %>">
           tree
         </a><br/>
@@ -37,7 +37,7 @@
       <br/>
     </div>
     <div class="log_body">
-      %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
+      %= include 'include/refs', project_ns => $project_ns, commit => $commit, refs => $refs;
       <%= $commit->{title} %><br/>
     <br/>
     </div>

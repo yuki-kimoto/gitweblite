@@ -4,7 +4,7 @@
     
     <span class="refs">
       <span class="<%= $type %>" title="<%= $full_name %>">
-        <a href="<%= url_for('shortlog', home => gitweblite_rel($home), project => $project)->query(cid => $name) %>">
+        <a href="<%= url_for('shortlog', project => $project_ns)->query(cid => $name) %>">
           <%= $name %>
         </a>
       </span>

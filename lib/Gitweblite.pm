@@ -112,9 +112,9 @@ sub startup {
     
     # Get head commit id
     $self->helper('gitweblite_get_head_id' => sub {
-      my ($self, $home, $project) = @_;
+      my ($self, $project) = @_;
       
-      my $head_commit = $self->app->git->parse_commit($home, $project, "HEAD");
+      my $head_commit = $self->app->git->parse_commit($project, "HEAD");
       my $head_cid = $head_commit->{id};
       
       return $head_cid;
@@ -166,7 +166,7 @@ sub startup {
       ->to('#heads')->name('heads');
     
     # Tree
-    $r->get('/(*project)/tree/:cid(*dir)', [project => $project_re])
+    $r->get('/(*project)/tree/:cid(*dir)', {dir => '/'}, [project => $project_re])
       ->to('#tree')->name('tree');
     
     # Blob
