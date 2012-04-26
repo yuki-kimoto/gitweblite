@@ -192,21 +192,20 @@ sub get_difftree {
 }
 
 sub get_head_id {
-  my ($self, $home, $project) = (shift, shift, shift);
-  return get_id($home, $project, 'HEAD', @_);
+  my ($self, $project) = (shift, shift, shift);
+  return get_id($project, 'HEAD', @_);
 };
 
 sub get_short_id {
-  my ($self, $home, $project) = (shift, shift, shift);
-  return $self->get_id($home, $project, @_, '--short=7');
+  my ($self, $project) = (shift, shift, shift);
+  return $self->get_id($project, @_, '--short=7');
 }
 
 sub get_id {
-  my ($self, $home, $project, $ref, @options) = @_;
+  my ($self, $project, $ref, @options) = @_;
   
   my $id;
-  my $git_dir = "$home/$project";
-  if (open my $fh, '-|', $self->git($home, $project), 'rev-parse',
+  if (open my $fh, '-|', $self->git($project), 'rev-parse',
       '--verify', '-q', @options, $ref) {
     $id = <$fh>;
     $id = d$id;
@@ -217,9 +216,9 @@ sub get_id {
 }
 
 sub get_object_type {
-  my ($self, $home, $project, $cid) = @_;
+  my ($self, $project, $cid) = @_;
 
-  open my $fh, "-|", $self->git($home, $project), "cat-file", '-t', $cid or return;
+  open my $fh, "-|", $self->git($project), "cat-file", '-t', $cid or return;
   my $type = <$fh>;
   $type = d$type;
   close $fh or return;
@@ -263,12 +262,12 @@ sub id_set_multi {
 }
 
 sub get_id_by_path {
-  my ($self, $home, $project, $id, $path, $type) = @_;
+  my ($self, $project, $id, $path, $type) = @_;
 
   $path =~ s,/+$,,;
   
   my @git_ls_tree = (
-    $self->git($home, $project), "ls-tree", $id, "--", $path
+    $self->git($project), "ls-tree", $id, "--", $path
   );
   
   open my $fh, "-|", @git_ls_tree
@@ -738,11 +737,11 @@ sub parse_date {
 }
 
 sub parse_tag {
-  my ($self, $home, $project, $tag_id) = @_;
+  my ($self, $project, $tag_id) = @_;
   my %tag;
   my @comment;
   
-  my @git_cat_file = ($self->git($home, $project), "cat-file", "tag", $tag_id);
+  my @git_cat_file = ($self->git($project), "cat-file", "tag", $tag_id);
   
   open my $fh, "-|", @git_cat_file or return;
   $tag{'id'} = $tag_id;
@@ -784,7 +783,7 @@ sub parse_tag {
 }
 
 sub snapshot_name {
-  my ($self, $home, $project, $cid) = @_;
+  my ($self, $project, $cid) = @_;
 
   my $name = $project;
   $name =~ s,([^/])/*\.git$,$1,;
@@ -794,9 +793,9 @@ sub snapshot_name {
 
   my $ver = $cid;
   if ($cid =~ /^[0-9a-fA-F]+$/) {
-    my $full_hash = $self->get_id($home, $project, $cid);
+    my $full_hash = $self->get_id($project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
-      $ver = $self->get_short_id($home, $project, $cid);
+      $ver = $self->get_short_id($project, $cid);
     }
   } elsif ($cid =~ m!^refs/tags/(.*)$!) {
     $ver = $1;
@@ -804,7 +803,7 @@ sub snapshot_name {
     if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
       $ver = $1;
     }
-    $ver .= '-' . $self->get_short_id($home, $project, $cid);
+    $ver .= '-' . $self->get_short_id($project, $cid);
   }
   $ver =~ s!/!.!g;
 
