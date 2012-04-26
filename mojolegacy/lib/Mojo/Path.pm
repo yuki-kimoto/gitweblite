@@ -34,23 +34,19 @@ sub canonicalize {
     push @parts, $part;
   }
   $self->trailing_slash(undef) unless @parts;
-  $self->parts(\@parts);
 
-  return $self;
+  return $self->parts(\@parts);
 }
 
 # "Homer, the plant called.
 #  They said if you don't show up tomorrow don't bother showing up on Monday.
 #  Woo-hoo. Four-day weekend."
 sub clone {
-  my $self = shift;
-
+  my $self  = shift;
   my $clone = Mojo::Path->new;
-  $clone->parts([@{$self->parts}]);
   $clone->leading_slash($self->leading_slash);
   $clone->trailing_slash($self->trailing_slash);
-
-  return $clone;
+  return $clone->parts([@{$self->parts}]);
 }
 
 sub contains {
@@ -73,9 +69,8 @@ sub parse {
   utf8::decode $path;
   $path =~ s|^/|| ? $self->leading_slash(1)  : $self->leading_slash(undef);
   $path =~ s|/$|| ? $self->trailing_slash(1) : $self->trailing_slash(undef);
-  $self->parts([split '/', $path, -1]);
 
-  return $self;
+  return $self->parts([split '/', $path, -1]);
 }
 
 sub to_abs_string {
@@ -92,10 +87,8 @@ sub to_string {
   my $self = shift;
 
   # Escape
-  my @parts = map {
-    url_escape(encode('UTF-8', $_),
-      "$Mojo::URL::UNRESERVED$Mojo::URL::SUBDELIM\:\@")
-  } @{$self->parts};
+  my $chars = "^$Mojo::URL::UNRESERVED$Mojo::URL::SUBDELIM\:\@";
+  my @parts = map { url_escape(encode('UTF-8', $_), $chars) } @{$self->parts};
 
   # Format
   my $path = join '/', @parts;

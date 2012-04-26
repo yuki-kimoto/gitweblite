@@ -45,8 +45,7 @@ L<Mojo::Upload> implements the following attributes.
   my $asset = $upload->asset;
   $upload   = $upload->asset(Mojo::Asset::File->new);
 
-Asset containing the uploaded data, defaults to a L<Mojo::Asset::File>
-object.
+Asset containing the uploaded data, defaults to a L<Mojo::Asset::File> object.
 
 =head2 C<filename>
 
@@ -78,19 +77,19 @@ following new ones.
 
   $upload->move_to('/foo/bar/baz.txt');
 
-Move uploaded data to a specific file.
+Alias for L<Mojo::Asset::File/"move_to">.
 
 =head2 C<size>
 
   my $size = $upload->size;
 
-Size of upload in bytes.
+Alias for L<Mojo::Asset::File/"size">.
 
 =head2 C<slurp>
 
   my $string = $upload->slurp;
 
-Read all upload data at once.
+Alias for L<Mojo::Asset::File/"slurp">.
 
 =head1 SEE ALSO
 

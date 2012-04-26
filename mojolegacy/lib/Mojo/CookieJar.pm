@@ -16,8 +16,10 @@ sub add {
 
   # Add cookies
   for my $cookie (@cookies) {
-    my ($name, $value, $domain, $path) =
-      ($cookie->name, $cookie->value, $cookie->domain, $cookie->path);
+    my $name   = $cookie->name;
+    my $value  = $cookie->value;
+    my $domain = $cookie->domain;
+    my $path   = $cookie->path;
 
     # Convert max age to expires
     $cookie->expires($cookie->max_age + time) if $cookie->max_age;
@@ -30,10 +32,8 @@ sub add {
 
     # Replace cookie
     $domain =~ s/^\.//;
-    my @new =
-      grep { $_->path ne $path || $_->name ne $name }
-      @{$self->{jar}->{$domain} || []};
-    $self->{jar}->{$domain} = [@new, $cookie];
+    my $jar = $self->{jar}{$domain} ||= [];
+    @$jar = (grep({$_->path ne $path || $_->name ne $name} @$jar), $cookie);
   }
 
   return $self;
@@ -63,33 +63,34 @@ sub find {
   my $path = $url->path->to_string || '/';
   my @found;
   while ($domain =~ /[^\.]+\.[^\.]+|localhost$/) {
-    next unless my $jar = $self->{jar}->{$domain};
+    next unless my $jar = $self->{jar}{$domain};
 
     # Grab cookies
     my @new;
     for my $cookie (@$jar) {
 
       # Check if cookie has expired
-      my $session = defined $cookie->max_age && $cookie->max_age > 0 ? 1 : 0;
       my $expires = $cookie->expires;
+      my $session = defined $cookie->max_age && $cookie->max_age > 0 ? 1 : 0;
       next if $expires && !$session && time > ($expires->epoch || 0);
       push @new, $cookie;
 
       # Taste cookie
       next if $cookie->secure && $url->scheme ne 'https';
       my $cpath = $cookie->path;
-      push @found,
-        Mojo::Cookie::Request->new(
+      next unless $path =~ /^\Q$cpath/;
+      my $result = Mojo::Cookie::Request->new(
         name  => $cookie->name,
         value => $cookie->value
-        ) if $path =~ /^\Q$cpath/;
+      );
+      push @found, $result;
     }
 
-    $self->{jar}->{$domain} = \@new;
+    $self->{jar}{$domain} = \@new;
   }
 
   # Remove another part
-  continue { $domain =~ s/^(?:[^\.](?>\.?))// }
+  continue { $domain =~ s/^[^\.]+\.?// }
 
   return @found;
 }

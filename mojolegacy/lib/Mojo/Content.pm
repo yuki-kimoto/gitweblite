@@ -24,51 +24,8 @@ sub boundary {
 }
 
 # "Operator! Give me the number for 911!"
-sub build_body {
-  my $self = shift;
-
-  # Concatenate all chunks in memory
-  my $body   = '';
-  my $offset = 0;
-  while (1) {
-    my $chunk = $self->get_body_chunk($offset);
-
-    # No content yet, try again
-    next unless defined $chunk;
-
-    # End of content
-    last unless length $chunk;
-
-    # Content
-    $offset += length $chunk;
-    $body .= $chunk;
-  }
-
-  return $body;
-}
-
-sub build_headers {
-  my $self = shift;
-
-  # Concatenate all chunks in memory
-  my $headers = '';
-  my $offset  = 0;
-  while (1) {
-    my $chunk = $self->get_header_chunk($offset);
-
-    # No headers yet, try again
-    next unless defined $chunk;
-
-    # End of headers
-    last unless length $chunk;
-
-    # Headers
-    $offset += length $chunk;
-    $headers .= $chunk;
-  }
-
-  return $headers;
-}
+sub build_body    { shift->_build('body') }
+sub build_headers { shift->_build('header') }
 
 sub charset {
   (shift->headers->content_type || '') =~ /charset="?([^"\s;]+)"?/i
@@ -108,8 +65,8 @@ sub get_header_chunk {
 
   unless (defined $self->{header_buffer}) {
     my $headers = $self->headers->to_string;
-    $self->{header_buffer} =
-      $headers ? "$headers\x0d\x0a\x0d\x0a" : "\x0d\x0a";
+    $self->{header_buffer}
+      = $headers ? "$headers\x0d\x0a\x0d\x0a" : "\x0d\x0a";
   }
 
   return substr $self->{header_buffer}, $offset, CHUNK_SIZE;
@@ -148,8 +105,7 @@ sub parse {
     my $connection = $headers->connection || '';
     my $len        = defined $headers->content_length ? $headers->content_length : '';
     $self->relaxed(1)
-      if !length $len
-        && ($connection =~ /close/i || $headers->content_type);
+      if !length $len && ($connection =~ /close/i || $headers->content_type);
   }
 
   # Parse chunked content
@@ -171,8 +127,7 @@ sub parse {
   # Chunked or relaxed content
   if ($self->is_chunked || $self->relaxed) {
     $self->{size} += length($self->{buffer} = defined $self->{buffer} ? $self->{buffer} : '');
-    $self->emit(read => $self->{buffer});
-    $self->{buffer} = '';
+    $self->emit(read => $self->{buffer})->{buffer} = '';
   }
 
   # Normal content
@@ -198,7 +153,7 @@ sub parse {
 sub parse_body {
   my $self = shift;
   $self->{state} = 'body';
-  $self->parse(@_);
+  return $self->parse(@_);
 }
 
 sub parse_body_once {
@@ -250,10 +205,7 @@ sub write {
   $self->{dynamic} = 1;
 
   # Add chunk
-  if (defined $chunk) {
-    $self->{body_buffer} = defined $self->{body_buffer} ? $self->{body_buffer} : '';
-    $self->{body_buffer} .= $chunk;
-  }
+  if (defined $chunk) { $self->{body_buffer} .= $chunk }
 
   # Delay
   else { $self->{delay} = 1 }
@@ -282,6 +234,30 @@ sub write_chunk {
 sub _body {
   my $self = shift;
   $self->emit('body') unless $self->{body}++;
+}
+
+sub _build {
+  my ($self, $part) = @_;
+
+  # Build part from chunks
+  my $method = "get_${part}_chunk";
+  my $buffer = '';
+  my $offset = 0;
+  while (1) {
+    my $chunk = $self->$method($offset);
+
+    # No chunk yet, try again
+    next unless defined $chunk;
+
+    # End of part
+    last unless length $chunk;
+
+    # Part
+    $offset += length $chunk;
+    $buffer .= $chunk;
+  }
+
+  return $buffer;
 }
 
 sub _build_chunk {
@@ -482,8 +458,8 @@ value of the C<MOJO_MAX_LEFTOVER_SIZE> environment variable or C<262144>.
   my $relaxed = $content->relaxed;
   $content    = $content->relaxed(1);
 
-Activate relaxed parsing for HTTP 0.9 and responses that are terminated with
-a connection close.
+Activate relaxed parsing for HTTP 0.9 and responses that are terminated with a
+connection close.
 
 =head1 METHODS
 
@@ -494,13 +470,14 @@ implements the following new ones.
 
   my $success = $content->body_contains('foo bar baz');
 
-Check if content contains a specific string.
+Check if content contains a specific string. Meant to be overloaded in a
+subclass.
 
 =head2 C<body_size>
 
   my $size = $content->body_size;
 
-Content size in bytes.
+Content size in bytes. Meant to be overloaded in a subclass.
 
 =head2 C<boundary>
 
@@ -542,7 +519,8 @@ Generate dynamic content.
 
   my $chunk = $content->get_body_chunk(0);
 
-Get a chunk of content starting from a specfic position.
+Get a chunk of content starting from a specfic position. Meant to be
+overloaded in a subclass.
 
 =head2 C<get_header_chunk>
 

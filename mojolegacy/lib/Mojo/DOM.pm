@@ -33,8 +33,7 @@ sub DESTROY { }
 sub new {
   my $class = shift;
   my $self = bless [Mojo::DOM::HTML->new], ref $class || $class;
-  $self->parse(@_) if @_;
-  return $self;
+  return @_ ? $self->parse(@_) : $self;
 }
 
 sub all_text {
@@ -76,7 +75,7 @@ sub attrs {
 
 sub charset {
   my $self = shift;
-  return $self->[0]->charset if @_ == 0;
+  return $self->[0]->charset unless @_;
   $self->[0]->charset(shift);
   return $self;
 }
@@ -129,8 +128,8 @@ sub find {
   my $results = Mojo::DOM::CSS->new(tree => $self->tree)->select($selector);
 
   # Upgrade results
-  @$results =
-    map { $self->new->charset($self->charset)->tree($_)->xml($self->xml) }
+  @$results
+    = map { $self->new->charset($self->charset)->tree($_)->xml($self->xml) }
     @$results;
 
   return Mojo::Collection->new(@$results);
@@ -289,7 +288,7 @@ sub to_xml { shift->[0]->render }
 
 sub tree {
   my $self = shift;
-  return $self->[0]->tree if @_ == 0;
+  return $self->[0]->tree unless @_;
   $self->[0]->tree(shift);
   return $self;
 }
@@ -312,7 +311,7 @@ sub type {
 # "I want to set the record straight, I thought the cop was a prostitute."
 sub xml {
   my $self = shift;
-  return $self->[0]->xml if @_ == 0;
+  return $self->[0]->xml unless @_;
   $self->[0]->xml(shift);
   return $self;
 }
@@ -470,8 +469,8 @@ are lowercased and selectors need to be lowercase as well.
   say $dom->at('p')->text;
   say $dom->p->{id};
 
-If XML processing instructions are found, the parser will automatically
-switch into XML mode and everything becomes case sensitive.
+If XML processing instructions are found, the parser will automatically switch
+into XML mode and everything becomes case sensitive.
 
   my $dom = Mojo::DOM->new('<?xml version="1.0"?><P ID="greeting">Hi!</P>');
   say $dom->at('P')->text;
@@ -569,11 +568,11 @@ Render content of this element to XML.
 
   my $collection = $dom->find('html title');
 
-Find elements with CSS3 selectors and return a L<Mojo::Collection> object.
-All selectors from L<Mojo::DOM::CSS> are supported.
+Find elements with CSS3 selectors and return a L<Mojo::Collection> object. All
+selectors from L<Mojo::DOM::CSS> are supported.
 
   # Find a specific element and extract information
-  my $id = $dom->find('div')->[23]->{id};
+  my $id = $dom->find('div')->[23]{id};
 
   # Extract information from multiple elements
   my @headers = $dom->find('h1, h2, h3')->map(sub { shift->text })->each;
@@ -724,7 +723,7 @@ L<Mojo::Collection> object, depending on number of children.
 
 =head1 ELEMENT ATTRIBUTES
 
-Direct hash access to element attributes is also possible.
+Direct hash reference access to element attributes is also possible.
 
   say $dom->{foo};
   say $dom->div->{id};

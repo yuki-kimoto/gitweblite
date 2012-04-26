@@ -1,6 +1,7 @@
 package Mojo::UserAgent::Transactor;
 use Mojo::Base -base;
 
+use File::Spec::Functions 'splitpath';
 use Mojo::Asset::File;
 use Mojo::Asset::Memory;
 use Mojo::Content::MultiPart;
@@ -11,11 +12,24 @@ use Mojo::Transaction::WebSocket;
 use Mojo::URL;
 use Mojo::Util qw/encode url_escape/;
 
+sub endpoint {
+  my ($self, $tx) = @_;
+
+  # Basic endpoint
+  my $req    = $tx->req;
+  my $url    = $req->url;
+  my $scheme = $url->scheme || 'http';
+  my $host   = $url->ihost;
+  my $port   = $url->port || ($scheme eq 'https' ? 443 : 80);
+
+  # Proxy for normal HTTP requests
+  return $scheme eq 'http' && lc($req->headers->upgrade || '') ne 'websocket'
+    ? $self->_proxy($tx, $scheme, $host, $port)
+    : ($scheme, $host, $port);
+}
+
 sub form {
   my ($self, $url) = (shift, shift);
-
-  # Callback
-  my $cb = pop @_ if (ref $_[-1] || '') eq 'CODE';
 
   # Form
   my $encoding = shift;
@@ -23,138 +37,67 @@ sub form {
   $encoding = undef if ref $encoding;
 
   # Parameters
-  my $params = Mojo::Parameters->new;
-  $params->charset($encoding) if defined $encoding;
+  my $p = Mojo::Parameters->new;
+  $p->charset($encoding) if defined $encoding;
   my $multipart;
   for my $name (sort keys %$form) {
+    my $value = $form->{$name};
 
     # Array
-    if (ref $form->{$name} eq 'ARRAY') {
-      $params->append($name, $_) for @{$form->{$name}};
-    }
+    if (ref $value eq 'ARRAY') { $p->append($name, $_) for @$value }
 
     # Hash
-    elsif (ref $form->{$name} eq 'HASH') {
-      my $hash = $form->{$name};
+    elsif (ref $value eq 'HASH') {
 
       # Enforce "multipart/form-data"
       $multipart = 1;
 
       # File
-      if (my $file = $hash->{file}) {
-
-        # Upgrade
-        $file = $hash->{file} = Mojo::Asset::File->new(path => $file)
-          unless ref $file;
-
-        # Filename
-        $hash->{filename} ||= $file->path if $file->can('path');
+      if (my $file = $value->{file}) {
+        $value->{file} = Mojo::Asset::File->new(path => $file) if !ref $file;
+        $value->{filename} ||= (splitpath($value->{file}->path))[2]
+          if $value->{file}->isa('Mojo::Asset::File');
       }
 
       # Memory
-      elsif (defined(my $content = delete $hash->{content})) {
-        $hash->{file} = Mojo::Asset::Memory->new->add_chunk($content);
+      elsif (defined(my $content = delete $value->{content})) {
+        $value->{file} = Mojo::Asset::Memory->new->add_chunk($content);
       }
 
-      $hash->{'Content-Type'} ||= 'application/octet-stream';
-      push @{$params->params}, $name, $hash;
+      push @{$p->params}, $name, $value;
     }
 
     # Single value
-    else { $params->append($name, $form->{$name}) }
+    else { $p->append($name, $value) }
   }
 
   # New transaction
   my $tx      = $self->tx(POST => $url);
   my $req     = $tx->req;
-  my $headers = $req->headers;
-  $headers->from_hash(ref $_[0] eq 'HASH' ? $_[0] : {@_});
+  my $headers = $req->headers->from_hash(ref $_[0] eq 'HASH' ? $_[0] : {@_});
 
   # Multipart
   $headers->content_type('multipart/form-data') if $multipart;
-  my $type = $headers->content_type || '';
-  if ($type eq 'multipart/form-data') {
-    my $form = $params->to_hash;
-
-    # Parts
-    my @parts;
-    foreach my $name (sort keys %$form) {
-      my $part = Mojo::Content::Single->new;
-      my $h    = $part->headers;
-      my $f    = $form->{$name};
-
-      # File
-      my $filename;
-      if (ref $f eq 'HASH') {
-        $filename = delete $f->{filename} || $name;
-        $filename = encode $encoding, $filename if $encoding;
-        $filename = url_escape $filename, $Mojo::URL::UNRESERVED;
-        $part->asset(delete $f->{file});
-        $h->from_hash($f);
-        push @parts, $part;
-      }
-
-      # Fields
-      else {
-        my $type = 'text/plain';
-        $type .= qq/;charset=$encoding/ if $encoding;
-        $h->content_type($type);
-
-        # Values
-        for my $value (ref $f ? @$f : ($f)) {
-          $part = Mojo::Content::Single->new(headers => $h);
-          $value = encode $encoding, $value if $encoding;
-          $part->asset->add_chunk($value);
-          push @parts, $part;
-        }
-      }
-
-      # Content-Disposition
-      $name = encode $encoding, $name if $encoding;
-      $name = url_escape $name, $Mojo::URL::UNRESERVED;
-      my $disposition = qq/form-data; name="$name"/;
-      $disposition .= qq/; filename="$filename"/ if $filename;
-      $h->content_disposition($disposition);
-    }
-
-    # Multipart content
-    my $content = Mojo::Content::MultiPart->new;
-    $headers->content_type('multipart/form-data');
-    $content->headers($headers);
-    $content->parts(\@parts);
-
-    # Add content to transaction
-    $req->content($content);
+  if (($headers->content_type || '') eq 'multipart/form-data') {
+    my $parts = $self->_multipart($encoding, $p->to_hash);
+    $req->content(
+      Mojo::Content::MultiPart->new(headers => $headers, parts => $parts));
   }
 
   # Urlencoded
   else {
     $headers->content_type('application/x-www-form-urlencoded');
-    $req->body($params->to_string);
+    $req->body($p->to_string);
   }
 
-  return wantarray ? ($tx, $cb) : $tx;
+  return $tx;
 }
 
 # "This kid's a wonder!
 #  He organized all the law suits against me into one class action suit."
 sub peer {
   my ($self, $tx) = @_;
-
-  # Peer for transaction
-  my $req    = $tx->req;
-  my $url    = $req->url;
-  my $scheme = $url->scheme || 'http';
-  my $host   = $url->ihost;
-  my $port   = $url->port;
-  if (my $proxy = $req->proxy) {
-    $scheme = $proxy->scheme;
-    $host   = $proxy->ihost;
-    $port   = $proxy->port;
-  }
-  $port ||= $scheme eq 'https' ? 443 : 80;
-
-  return $scheme, $host, $port;
+  return $self->_proxy($tx, $self->endpoint($tx));
 }
 
 # "America's health care system is second only to Japan...
@@ -168,13 +111,13 @@ sub proxy_connect {
   return unless my $proxy = $req->proxy;
 
   # WebSocket and/or HTTPS
-  my $url = $req->url;
-  return
-    unless lc($req->headers->upgrade || '') eq 'websocket'
-      || ($url->scheme || '') eq 'https';
+  my $url     = $req->url;
+  my $upgrade = lc($req->headers->upgrade || '');
+  my $scheme  = $url->scheme;
+  return unless $upgrade eq 'websocket' || $scheme eq 'https';
 
   # CONNECT request
-  my $new = $self->tx(CONNECT => $url->clone);
+  my $new = $self->tx(CONNECT => $url->clone->userinfo(undef));
   $new->req->proxy($proxy);
 
   return $new;
@@ -202,16 +145,11 @@ sub redirect {
   if (grep {$_ eq $code} (301, 307)) {
     return unless $req = $req->clone;
     $new->req($req);
-    my $headers = $req->headers;
-    $headers->remove('Host');
-    $headers->remove('Cookie');
-    $headers->remove('Referer');
+    $req->headers->remove('Host')->remove('Cookie')->remove('Referer');
   }
   else { $method = 'GET' unless grep {$_ eq $method} qw/GET HEAD/ }
   $new->req->method($method)->url($location);
-  $new->previous($old);
-
-  return $new;
+  return $new->previous($old);
 }
 
 # "If he is so smart, how come he is dead?"
@@ -226,17 +164,14 @@ sub tx {
   $url = "http://$url" unless $url =~ m#^/|\://#;
   ref $url ? $req->url($url) : $req->url->parse($url);
 
-  # Callback
-  my $cb = pop @_ if (ref $_[-1] || '') eq 'CODE';
-
   # Body
-  $req->body(pop @_)
+  $req->body(pop)
     if @_ & 1 == 1 && ref $_[0] ne 'HASH' || ref $_[-2] eq 'HASH';
 
   # Headers
   $req->headers->from_hash(ref $_[0] eq 'HASH' ? $_[0] : {@_});
 
-  return wantarray ? ($tx, $cb) : $tx;
+  return $tx;
 }
 
 # "She found my one weakness... that I'm weak!"
@@ -244,7 +179,7 @@ sub websocket {
   my $self = shift;
 
   # New WebSocket
-  my ($tx, $cb) = $self->tx(GET => @_);
+  my $tx  = $self->tx(GET => @_);
   my $req = $tx->req;
   my $abs = $req->url->to_abs;
   if (my $scheme = $abs->scheme) {
@@ -255,7 +190,60 @@ sub websocket {
   Mojo::Transaction::WebSocket->new(handshake => $tx, masked => 1)
     ->client_handshake;
 
-  return wantarray ? ($tx, $cb) : $tx;
+  return $tx;
+}
+
+sub _multipart {
+  my ($self, $encoding, $form) = @_;
+
+  # Parts
+  my @parts;
+  for my $name (sort keys %$form) {
+    my $values = $form->{$name};
+    my $part   = Mojo::Content::Single->new;
+
+    # File
+    my $filename;
+    my $headers = $part->headers;
+    if (ref $values eq 'HASH') {
+      $filename = delete $values->{filename} || $name;
+      $filename = encode $encoding, $filename if $encoding;
+      $filename = url_escape $filename, "^$Mojo::URL::UNRESERVED";
+      push @parts, $part->asset(delete $values->{file});
+      $headers->from_hash($values);
+    }
+
+    # Fields
+    else {
+      for my $value (ref $values ? @$values : ($values)) {
+        push @parts, $part = Mojo::Content::Single->new(headers => $headers);
+        $value = encode $encoding, $value if $encoding;
+        $part->asset->add_chunk($value);
+      }
+    }
+
+    # Content-Disposition
+    $name = encode $encoding, $name if $encoding;
+    $name = url_escape $name, "^$Mojo::URL::UNRESERVED";
+    my $disposition = qq/form-data; name="$name"/;
+    $disposition .= qq/; filename="$filename"/ if $filename;
+    $headers->content_disposition($disposition);
+  }
+
+  return \@parts;
+}
+
+sub _proxy {
+  my ($self, $tx, $scheme, $host, $port) = @_;
+
+  # Update with proxy information
+  if (my $proxy = $tx->req->proxy) {
+    $scheme = $proxy->scheme;
+    $host   = $proxy->ihost;
+    $port   = $proxy->port || ($scheme eq 'https' ? 443 : 80);
+  }
+
+  return $scheme, $host, $port;
 }
 
 1;
@@ -282,51 +270,47 @@ framework used by L<Mojo::UserAgent>.
 L<Mojo::UserAgent::Transactor> inherits all methods from L<Mojo::Base> and
 implements the following new ones.
 
+=head2 C<endpoint>
+
+  my ($scheme, $host, $port) = $t->endpoint($tx);
+
+Actual endpoint for transaction.
+
 =head2 C<form>
 
-  my $tx = $t->form('http://kraih.com/foo' => {test => 123});
-  my $tx = $t->form(
-    'http://kraih.com/foo',
-    'UTF-8',
-    {test => 123}
-  );
-  my $tx = $t->form(
-    'http://kraih.com/foo',
-    {test => 123},
-    {Accept => '*/*'}
-  );
-  my $tx = $t->form(
-    'http://kraih.com/foo',
-    'UTF-8',
-    {test => 123},
-    {Accept => '*/*'}
-  );
-  my $tx = $t->form(
-    'http://kraih.com/foo',
-    {mytext => {file => '/foo/bar.txt'}}
-  );
-  my $tx = $t->form(
-    'http://kraih.com/foo',
-    {mytext => {content => 'lalala'}}
-  );
-  my $tx = $t->form(
-    'http://kraih.com/foo',
-    {myzip => {file => $asset, filename => 'foo.zip'}}
-  );
+  my $tx = $t->form('kraih.com' => {a => 'b'});
+  my $tx = $t->form('http://kraih.com' => {a => 'b'});
+  my $tx = $t->form('http://kraih.com' => {a => ['b', 'c', 'd']});
+  my $tx = $t->form('http://kraih.com' => {mytext => {file => '/foo.txt'}});
+  my $tx = $t->form('http://kraih.com' => {mytext => {content => 'lalala'}});
+  my $tx = $t->form('http://kraih.com' => {
+    myzip => {
+      file     => Mojo::Asset::Memory->new->add_chunk('lalala'),
+      filename => 'foo.zip',
+      DNT      => 1
+    }
+  });
+  my $tx = $t->form('http://kraih.com' => 'UTF-8' => {a => 'b'});
+  my $tx = $t->form('http://kraih.com' => {a => 'b'} => {DNT => 1});
+  my $tx = $t->form('http://kraih.com', 'UTF-8', {a => 'b'}, {DNT => 1});
 
-Versatile L<Mojo::Transaction::HTTP> builder for form requests.
+Versatile L<Mojo::Transaction::HTTP> builder for C<POST> requests with form
+data.
 
-  my $tx = $t->form('http://kraih.com/foo' => {test => 123});
-  $tx->res->body(sub { say $_[1] });
-  $ua->start($tx);
+  # Inspect generated request
+  say $t->form('mojolicio.us' => {a => [1, 2, 3]})->req->to_string;
+
+  # Streaming multipart file upload
+  my $tx = $t->form('mojolicio.us' => {fun => {file => '/etc/passwd'}});
 
 While the "multipart/form-data" content type will be automatically used
 instead of "application/x-www-form-urlencoded" when necessary, you can also
 enforce it by setting the header manually.
 
+  # Force multipart
   my $tx = $t->form(
     'http://kraih.com/foo',
-    {test => 123},
+    {a => 'b'},
     {'Content-Type' => 'multipart/form-data'}
   );
 
@@ -352,29 +336,29 @@ or C<307> redirect response if possible.
 
 =head2 C<tx>
 
-  my $tx = $t->tx(GET  => 'mojolicio.us');
-  my $tx = $t->tx(POST => 'http://mojolicio.us');
-  my $tx = $t->tx(GET  => 'http://kraih.com' => {Accept => '*/*'});
+  my $tx = $t->tx(GET  => 'kraih.com');
+  my $tx = $t->tx(POST => 'http://kraih.com');
+  my $tx = $t->tx(GET  => 'http://kraih.com' => {DNT => 1});
   my $tx = $t->tx(PUT  => 'http://kraih.com' => 'Hi!');
-  my $tx = $t->tx(POST => 'http://kraih.com' => {Accept => '*/*'} => 'Hi!');
+  my $tx = $t->tx(POST => 'http://kraih.com' => {DNT => 1} => 'Hi!');
 
 Versatile general purpose L<Mojo::Transaction::HTTP> builder for requests.
+
+  # Inspect generated request
+  say $t->tx(GET => 'mojolicio.us' => {DNT => 1} => 'Bye!')->req->to_string;
 
   # Streaming response
   my $tx = $t->tx(GET => 'http://mojolicio.us');
   $tx->res->body(sub { say $_[1] });
-  $ua->start($tx);
 
   # Custom socket
   my $tx = $t->tx(GET => 'http://mojolicio.us');
   $tx->connection($sock);
-  $ua->start($tx);
 
 =head2 C<websocket>
 
   my $tx = $t->websocket('ws://localhost:3000');
-  my $tx =
-    $t->websocket('ws://localhost:3000' => {'User-Agent' => 'Agent 1.0'});
+  my $tx = $t->websocket('ws://localhost:3000' => {DNT => 1});
 
 Versatile L<Mojo::Transaction::WebSocket> builder for WebSocket handshake
 requests.

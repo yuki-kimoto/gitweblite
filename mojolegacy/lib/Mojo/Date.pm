@@ -23,10 +23,12 @@ sub new { shift->SUPER::new->parse(@_) }
 #  at you?"
 sub parse {
   my ($self, $date) = @_;
+
+  # Invalid
   return $self unless defined $date;
 
   # epoch (784111777)
-  $self->epoch($date) and return $self if $date =~ /^\d+$/;
+  return $self->epoch($date) if $date =~ /^\d+$/;
 
   # RFC 822/1123 (Sun, 06 Nov 1994 08:49:37 GMT)
   my ($day, $month, $year, $h, $m, $s);
@@ -82,8 +84,8 @@ Mojo::Date - HTTP 1.1 date container
 
 =head1 DESCRIPTION
 
-L<Mojo::Date> implements HTTP 1.1 date and time functions according to
-RFC 2616.
+L<Mojo::Date> implements HTTP 1.1 date and time functions according to RFC
+2616.
 
   Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
   Sunday, 06-Nov-94 08:49:37 GMT ; RFC 850, obsoleted by RFC 1036

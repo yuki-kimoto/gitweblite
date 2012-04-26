@@ -17,8 +17,7 @@ $ENV{MOJO_LOG_LEVEL} ||= $ENV{HARNESS_IS_VERBOSE} ? 'debug' : 'fatal';
 #  How come you guys can go to the moon but can't make my shoes smell good?"
 sub new {
   my $self = shift->SUPER::new;
-  $self->app(shift) if @_;
-  return $self;
+  return @_ ? $self->app(shift) : $self;
 }
 
 sub app {
@@ -67,16 +66,16 @@ sub content_unlike {
 sub content_type_is {
   my ($self, $type) = @_;
   local $Test::Builder::Level = $Test::Builder::Level + 1;
-  Test::More::is $self->tx->res->headers->content_type,
-    $type, "Content-Type: $type";
+  Test::More::is $self->tx->res->headers->content_type, $type,
+    "Content-Type: $type";
   return $self;
 }
 
 sub content_type_isnt {
   my ($self, $type) = @_;
   local $Test::Builder::Level = $Test::Builder::Level + 1;
-  Test::More::isnt $self->tx->res->headers->content_type,
-    $type, "not Content-Type: $type";
+  Test::More::isnt $self->tx->res->headers->content_type, $type,
+    "not Content-Type: $type";
   return $self;
 }
 
@@ -134,16 +133,16 @@ sub head_ok { shift->_request_ok(head => @_) }
 sub header_is {
   my ($self, $name, $value) = @_;
   local $Test::Builder::Level = $Test::Builder::Level + 1;
-  Test::More::is scalar $self->tx->res->headers->header($name),
-    $value, "$name: " . ($value ? $value : '');
+  Test::More::is scalar $self->tx->res->headers->header($name), $value,
+    "$name: " . ($value ? $value : '');
   return $self;
 }
 
 sub header_isnt {
   my ($self, $name, $value) = @_;
   local $Test::Builder::Level = $Test::Builder::Level + 1;
-  Test::More::isnt scalar $self->tx->res->headers->header($name),
-    $value, "not $name: " . ($value ? $value : '');
+  Test::More::isnt scalar $self->tx->res->headers->header($name), $value,
+    "not $name: " . ($value ? $value : '');
   return $self;
 }
 
@@ -174,8 +173,8 @@ sub json_content_is {
 sub json_is {
   my ($self, $p, $data, $desc) = @_;
   local $Test::Builder::Level = $Test::Builder::Level + 1;
-  Test::More::is_deeply $self->tx->res->json($p),
-    $data, $desc || qq/exact match for JSON Pointer "$p"/;
+  Test::More::is_deeply $self->tx->res->json($p), $data,
+    $desc || qq/exact match for JSON Pointer "$p"/;
   return $self;
 }
 
@@ -196,15 +195,6 @@ sub json_hasnt {
     !Mojo::JSON::Pointer->contains($self->tx->res->json, $p),
     $desc || qq/has no value for JSON Pointer "$p"/
   );
-  return $self;
-}
-
-# DEPRECATED in Leaf Fluttering In Wind!
-sub max_redirects {
-  warn "Test::Mojo->max_redirects is DEPRECATED!\n";
-  my $self = shift;
-  return $self->ua->max_redirects unless @_;
-  $self->ua->max_redirects(@_);
   return $self;
 }
 
@@ -424,6 +414,14 @@ Current transaction, usually a L<Mojo::Transaction::HTTP> object.
 
   # More specific tests
   is $t->tx->res->json->{foo}, 'bar', 'right value';
+  ok $t->tx->res->is_multipart, 'multipart content';
+
+  # Test custom transaction
+  my $tx = $t->ua->build_form_tx('/user/99' => {name => 'sri'});
+  $tx->req->method('PUT');
+  $t->tx($t->ua->start($tx))
+    ->status_is(200)
+    ->text_is('div#message' => 'User has been replaced.');
 
 =head2 C<ua>
 
@@ -432,6 +430,16 @@ Current transaction, usually a L<Mojo::Transaction::HTTP> object.
 
 User agent used for testing, defaults to a L<Mojo::UserAgent> object.
 
+  # Allow redirects
+  $t->ua->max_redirects(10);
+
+  # Customize all transactions (including followed redirects)
+  $t->ua->on(start => sub {
+    my ($ua, $tx) = @_;
+    $tx->req->headers->accept_language('en-US');
+  });
+
+  # Request with Basic authentication
   $t->get_ok($t->ua->app_url->userinfo('sri:secr3t')->path('/secrets'));
 
 =head1 METHODS
@@ -456,6 +464,17 @@ Alias for L<Mojo::UserAgent/"app">.
 
   # Change log level
   $t->app->log->level('fatal');
+
+  # Test application directly
+  is $t->app->defaults->{foo}, 'bar', 'right value';
+  ok $t->app->routes->find('echo')->is_websocket, 'WebSocket route';
+
+  # Change application behavior
+  $t->app->hook(before_dispatch => sub {
+    my $self = shift;
+    $self->render(text => 'This request did not reach the router.')
+      if $self->req->url->path->contains('/user');
+  });
 
 =head2 C<content_is>
 
@@ -514,6 +533,7 @@ Opposite of C<content_type_like>.
 =head2 C<delete_ok>
 
   $t = $t->delete_ok('/foo');
+  $t = $t->delete_ok('/foo' => {DNT => 1} => 'Hi!');
 
 Perform a C<DELETE> request and check for transport errors, takes the exact
 same arguments as L<Mojo::UserAgent/"delete">.
@@ -543,6 +563,7 @@ Finish C<WebSocket> connection.
 =head2 C<get_ok>
 
   $t = $t->get_ok('/foo');
+  $t = $t->get_ok('/foo' => {DNT => 1} => 'Hi!');
 
 Perform a C<GET> request and check for transport errors, takes the exact same
 arguments as L<Mojo::UserAgent/"get">.
@@ -550,9 +571,10 @@ arguments as L<Mojo::UserAgent/"get">.
 =head2 C<head_ok>
 
   $t = $t->head_ok('/foo');
+  $t = $t->head_ok('/foo' => {DNT => 1} => 'Hi!');
 
-Perform a C<HEAD> request and check for transport errors, takes the exact
-same arguments as L<Mojo::UserAgent/"head">.
+Perform a C<HEAD> request and check for transport errors, takes the exact same
+arguments as L<Mojo::UserAgent/"head">.
 
 =head2 C<header_is>
 
@@ -594,16 +616,16 @@ Check response content for JSON data.
   $t = $t->json_is('/foo/bar' => [1, 2, 3]);
   $t = $t->json_is('/foo/bar/1' => 2, 'right value');
 
-Check the value extracted from JSON response using the given JSON Pointer
-with L<Mojo::JSON::Pointer>.
+Check the value extracted from JSON response using the given JSON Pointer with
+L<Mojo::JSON::Pointer>.
 
 =head2 C<json_has>
 
   $t = $t->json_has('/foo');
   $t = $t->json_has('/minibar', 'has a minibar');
 
-Check if JSON response contains a value that can be identified using the
-given JSON Pointer with L<Mojo::JSON::Pointer>.
+Check if JSON response contains a value that can be identified using the given
+JSON Pointer with L<Mojo::JSON::Pointer>.
 
 =head2 C<json_hasnt>
 
@@ -643,6 +665,7 @@ Opposite of C<message_like>.
 =head2 C<options_ok>
 
   $t = $t->options_ok('/foo');
+  $t = $t->options_ok('/foo' => {DNT => 1} => 'Hi!');
 
 Perform a C<OPTIONS> request and check for transport errors, takes the exact
 same arguments as L<Mojo::UserAgent/"options">.
@@ -650,6 +673,7 @@ same arguments as L<Mojo::UserAgent/"options">.
 =head2 C<patch_ok>
 
   $t = $t->patch_ok('/foo');
+  $t = $t->patch_ok('/foo' => {DNT => 1} => 'Hi!');
 
 Perform a C<PATCH> request and check for transport errors, takes the exact
 same arguments as L<Mojo::UserAgent/"patch">.
@@ -657,13 +681,15 @@ same arguments as L<Mojo::UserAgent/"patch">.
 =head2 C<post_ok>
 
   $t = $t->post_ok('/foo');
+  $t = $t->post_ok('/foo' => {DNT => 1} => 'Hi!');
 
-Perform a C<POST> request and check for transport errors, takes the exact
-same arguments as L<Mojo::UserAgent/"post">.
+Perform a C<POST> request and check for transport errors, takes the exact same
+arguments as L<Mojo::UserAgent/"post">.
 
 =head2 C<post_form_ok>
 
-  $t = $t->post_form_ok('/foo' => {test => 123});
+  $t = $t->post_form_ok('/foo' => {a => 'b'});
+  $t = $t->post_form_ok('/foo' => 'UTF-8' => {a => 'b'} => {DNT => 1});
 
 Submit a C<POST> form and check for transport errors, takes the exact same
 arguments as L<Mojo::UserAgent/"post_form">.
@@ -671,6 +697,7 @@ arguments as L<Mojo::UserAgent/"post_form">.
 =head2 C<put_ok>
 
   $t = $t->put_ok('/foo');
+  $t = $t->put_ok('/foo' => {DNT => 1} => 'Hi!');
 
 Perform a C<PUT> request and check for transport errors, takes the exact same
 arguments as L<Mojo::UserAgent/"put">.
@@ -736,6 +763,7 @@ Opposite of C<text_like>.
 =head2 C<websocket_ok>
 
   $t = $t->websocket_ok('/echo');
+  $t = $t->websocket_ok('/echo' => {DNT => 1});
 
 Open a C<WebSocket> connection with transparent handshake, takes the exact
 same arguments as L<Mojo::UserAgent/"websocket">.

@@ -32,11 +32,9 @@ These options are available:
   -c, --content <content>     Content to send with request.
   -H, --header <name:value>   Additional HTTP header.
   -M, --method <method>       HTTP method to use, defaults to "GET".
-  -r, --redirect              Follow up to 5 redirects.
+  -r, --redirect              Follow up to 10 redirects.
   -v, --verbose               Print request and response headers to STDERR.
 EOF
-
-sub say(@) {print @_, "\n"}
 
 # "Objection.
 #  In the absence of pants, defense's suspenders serve no purpose.
@@ -59,10 +57,10 @@ sub run {
   $verbose = 1 if $method eq 'HEAD';
 
   # Headers
-  my $headers = {};
+  my %headers;
   for my $header (@headers) {
     next unless $header =~ /^\s*([^\:]+)\s*:\s*([^\:]+)\s*$/;
-    $headers->{$1} = $2;
+    $headers{$1} = $2;
   }
 
   # URL and selector
@@ -73,7 +71,7 @@ sub run {
 
   # Fresh user agent
   my $ua = Mojo::UserAgent->new(ioloop => Mojo::IOLoop->singleton);
-  $ua->max_redirects(5) if $redirect;
+  $ua->max_redirects(10) if $redirect;
 
   # Absolute URL
   if ($url !~ m#/#) { $ua->detect_proxy }
@@ -108,8 +106,8 @@ sub run {
         my $version = $res->version;
         my $code    = $res->code;
         my $message = $res->message;
-        warn "HTTP/$version $code $message\n",
-          $res->headers->to_string, "\n\n";
+        warn "HTTP/$version $code $message\n", $res->headers->to_string,
+          "\n\n";
 
         # Finished
         $v = 0;
@@ -135,7 +133,7 @@ sub run {
   );
 
   # Get
-  my $tx = $ua->build_tx($method, $url, $headers, $content);
+  my $tx = $ua->build_tx($method, $url, \%headers, $content);
   STDOUT->autoflush(1);
   $tx = $ua->start($tx);
 
@@ -158,8 +156,7 @@ sub _json {
   my $json = Mojo::JSON->new;
   return unless my $data = $json->decode($buffer);
   return unless $data = Mojo::JSON::Pointer->get($data, $pointer);
-  ref $data eq 'HASH'
-    || ref $data eq 'ARRAY' ? say($json->encode($data)) : _say($data);
+  (ref $data eq 'HASH' || ref $data eq 'ARRAY') ? say($json->encode($data)) : _say($data);
 }
 
 sub _say {

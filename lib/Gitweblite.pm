@@ -133,51 +133,61 @@ sub startup {
     $r->get('/(*home)/projects')->to('#projects')->name('projects');
     
     # Summary
-    $r->get('/(*home)/(.project)/summary')->to('#summary')->name('summary');
+    my $project_re = qr/.+?\.git/;
+    $r->get('/(*project)/summary', [project => $project_re])
+      ->to('#summary')->name('summary');
     
     # Short log
-    $r->get('/(*home)/(.project)/shortlog')
+    $r->get('/(*project)/shortlog', [project => $project_re])
       ->to('#shortlog')->name('shortlog');
     
     # Log
-    $r->get('/(*home)/(.project)/log')->to('#log')->name('log');
+    $r->get('/(*project)/log', [project => $project_re])
+      ->to('#log')->name('log');
     
     # Commit
-    $r->get('/(*home)/(.project)/commit/:cid')->to('#commit')->name('commit');
+    $r->get('/(*project)/commit/:cid', [project => $project_re])
+      ->to('#commit')->name('commit');
     
     # Commit diff
-    $r->get('/(*home)/(.project)/commitdiff/:cid')
+    $r->get('/(*project)/commitdiff/:cid', [project => $project_re])
       ->to('#commitdiff')->name('commitdiff');
 
     # Tags
-    $r->get('/(*home)/(.project)/tags')->to('#tags')->name('tags');
+    $r->get('/(*project)/tags', [project => $project_re])
+      ->to('#tags')->name('tags');
     
     # Tag
-    $r->get('/(*home)/(.project)/tag/:id')->to('#tag')->name('tag');
+    $r->get('/(*project)/tag/:id', [project => $project_re])
+      ->to('#tag')->name('tag');
     
     # Heads
-    $r->get('/(*home)/(.project)/heads')->to('#heads')->name('heads');
+    $r->get('/(*project)/heads', [project => $project_re])
+      ->to('#heads')->name('heads');
     
     # Tree
-    $r->get('/(*home)/(.project)/tree/:cid(*dir)', [cid => qr/[0-9a-fA-F]{40}/])
+    $r->get('/(*project)/tree/:cid(*dir)', [project => $project_re])
       ->to('#tree')->name('tree');
     
     # Blob
-    $r->get('/(*home)/(.project)/blob/:cid/(*file)', [cid => qr/[0-9a-fA-F]{40}/])
+    $r->get('/(*project)/blob/:cid/(*file)', [project => $project_re])
       ->to('#blob')->name('blob');
-    $r->get('/(*home)/(.project)/blob/:bid')->to('#blob')->name('blob_bid');
+    $r->get('/(*project)/blob/:bid', [project => $project_re])
+      ->to('#blob')->name('blob_bid');
     
     # Blob plain
-    $r->get('/(*home)/(.project)/blob_plain/:cid/(*file)', [cid => qr/[0-9a-fA-F]{40}/])
+    $r->get('/(*project)/blob_plain/:cid/(*file)', [project => $project_re])
       ->to('#blob_plain')->name('blob_plain');
-    $r->get('/(*home)/(.project)/blob_plain/:bid')->to('#blob_plain')->name('blob_plain');
+    $r->get('/(*project)/blob_plain/:bid', [project => $project_re])
+      ->to('#blob_plain')->name('blob_plain');
     
     # Blob diff
-    $r->get('/(*home)/(.project)/blobdiff(:suffix)')
+    $r->get('/(*project)/blobdiff(:suffix)', [project => $project_re])
       ->to('#blobdiff', suffix => '')->name('blobdiff');
     
     # Snapshot
-    $r->get('/(*home)/(.project)/snapshot/:cid')->to('#snapshot')->name('snapshot');
+    $r->get('/(*project)/snapshot/:cid', [project => $project_re])
+      ->to('#snapshot')->name('snapshot');
   }
 }
 

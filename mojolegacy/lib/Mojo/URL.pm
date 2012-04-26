@@ -15,7 +15,7 @@ has base => sub { Mojo::URL->new };
 # Characters (RFC 3986)
 our $UNRESERVED = 'A-Za-z0-9\-\.\_\~';
 our $SUBDELIM   = '!\$\&\'\(\)\*\+\,\;\=';
-our $PCHAR      = "$UNRESERVED$SUBDELIM\%\:\@";
+my $PCHAR = "$UNRESERVED$SUBDELIM\%\:\@";
 
 # "Homer, it's easy to criticize.
 #  Fun, too."
@@ -43,14 +43,12 @@ sub authority {
 
     # Host
     $host = url_unescape $host;
-    return $host =~ /[^\x00-\x7f]/
-      ? $self->ihost($host)
-      : $self->host($host);
+    return $host =~ /[^\x00-\x7f]/ ? $self->ihost($host) : $self->host($host);
   }
 
   # Format
   my $userinfo = $self->userinfo;
-  $authority .= url_escape($userinfo, "$UNRESERVED$SUBDELIM\:") . '@'
+  $authority .= url_escape($userinfo, "^$UNRESERVED$SUBDELIM\:") . '@'
     if $userinfo;
   $authority .= lc($self->ihost || '');
   my $port = $self->port;
@@ -74,34 +72,21 @@ sub clone {
 }
 
 sub ihost {
-  my ($self, $host) = @_;
+  my $self = shift;
 
-  # Generate host
-  if (defined $host) {
+  # Decode
+  return $self->host(join '.',
+    map { /^xn--(.+)$/ ? punycode_decode($_) : $_ } split /\./, shift)
+    if @_;
 
-    # Decode parts
-    my @decoded;
-    for my $part (split /\./, $_[1]) {
-      $part = punycode_decode $1 if $part =~ /^xn--(.+)$/;
-      push @decoded, $part;
-    }
-    $self->host(join '.', @decoded);
-
-    return $self;
-  }
-
-  # Host
-  return unless $host = $self->host;
+  # Check if host needs to be encoded
+  return unless my $host = $self->host;
   return $host unless $host =~ /[^\x00-\x7f]/;
 
-  # Encode parts
-  my @encoded;
-  for my $part (split /\./, $host || '') {
-    $part = 'xn--' . punycode_encode $part if $part =~ /[^\x00-\x7f]/;
-    push @encoded, $part;
-  }
-
-  return join '.', @encoded;
+  # Encode
+  return join '.',
+    map { /[^\x00-\x7f]/ ? ('xn--' . punycode_encode $_) : $_ } split /\./,
+    $host;
 }
 
 sub is_abs { shift->scheme }
@@ -111,13 +96,12 @@ sub parse {
   return $self unless $url;
 
   # Official regex
-  my ($scheme, $authority, $path, $query, $fragment) = $url
-    =~ m|(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?|;
-  $self->scheme($scheme);
-  $self->authority($authority);
-  $self->path->parse($path);
-  $self->query($query);
-  $self->fragment($fragment);
+  $url =~ m|(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\?([^#]*))?(?:#(.*))?|;
+  $self->scheme($1);
+  $self->authority($2);
+  $self->path->parse($3);
+  $self->query($4);
+  $self->fragment($5);
 
   return $self;
 }
@@ -125,44 +109,40 @@ sub parse {
 sub path {
   my ($self, $path) = @_;
 
+  # Old path
+  return $self->{path} ||= Mojo::Path->new unless $path;
+
   # New path
-  if ($path) {
-    if (!ref $path) {
+  if (!ref $path) {
 
-      # Absolute path
-      if ($path =~ m#^/#) { $path = Mojo::Path->new($path) }
+    # Absolute path
+    if ($path =~ m#^/#) { $path = Mojo::Path->new($path) }
 
-      # Relative path
-      else {
-        my $new = Mojo::Path->new($path);
-        $path = $self->{path} || Mojo::Path->new;
-        pop @{$path->parts} unless $path->trailing_slash;
-        push @{$path->parts}, @{$new->parts};
-        $path->leading_slash(1);
-        $path->trailing_slash($new->trailing_slash);
-      }
+    # Relative path
+    else {
+      my $new = Mojo::Path->new($path);
+      $path = $self->{path} || Mojo::Path->new;
+      pop @{$path->parts} unless $path->trailing_slash;
+      push @{$path->parts}, @{$new->parts};
+      $path->leading_slash(1)->trailing_slash($new->trailing_slash);
     }
-    $self->{path} = $path;
-
-    return $self;
   }
+  $self->{path} = $path;
 
-  return $self->{path} ||= Mojo::Path->new;
+  return $self;
 }
 
 sub query {
   my $self = shift;
 
-  # Get parameters
+  # Old parameters
   return $self->{query} ||= Mojo::Parameters->new unless @_;
 
   # Replace with list
-  if (@_ > 1) {
-    $self->{query} = Mojo::Parameters->new(ref $_[0] ? @{$_[0]} : @_);
-  }
+  if (@_ > 1) { $self->{query} = Mojo::Parameters->new(@_) }
 
   # Merge with array
-  elsif ((ref $_[0] || '') eq 'ARRAY') {
+  elsif (ref $_[0] eq 'ARRAY') {
     my $q = $self->{query} ||= Mojo::Parameters->new;
     while (my $name = shift @{$_[0]}) {
       my $value = shift @{$_[0]};
@@ -171,7 +151,7 @@ sub query {
   }
 
   # Append hash
-  elsif ((ref $_[0] || '') eq 'HASH') {
+  elsif (ref $_[0] eq 'HASH') {
     ($self->{query} ||= Mojo::Parameters->new)->append(%{$_[0]});
   }
 
@@ -201,18 +181,17 @@ sub to_abs {
   # Inherit path
   my $base_path = $base->path;
   if (!@{$path->parts}) {
-    $path =
-      $abs->path($base_path->clone)->path->trailing_slash(0)->canonicalize;
+    $path
+      = $abs->path($base_path->clone)->path->trailing_slash(0)->canonicalize;
 
     # Query
-    return $abs if length($abs->query->to_string);
+    return $abs if length $abs->query->to_string;
     $abs->query($base->query->clone);
   }
 
   # Merge paths
   else {
-    my $new = $base_path->clone;
-    $new->leading_slash(1);
+    my $new = $base_path->clone->leading_slash(1);
 
     # Characters after the right-most '/' need to go
     pop @{$new->parts} if @{$path->parts} && !$new->trailing_slash;
@@ -229,23 +208,22 @@ sub to_rel {
   my $base = shift || $self->base->clone;
 
   # Scheme and authority
-  my $rel = $self->clone->base($base);
-  $rel->scheme(undef);
+  my $rel = $self->clone->base($base)->scheme(undef);
   $rel->userinfo(undef)->host(undef)->port(undef) if $base->authority;
 
   # Path
-  my @rel_parts  = @{$rel->path->parts};
+  my @parts      = @{$rel->path->parts};
   my $base_path  = $base->path;
   my @base_parts = @{$base_path->parts};
   pop @base_parts unless $base_path->trailing_slash;
-  while (@rel_parts && @base_parts && $rel_parts[0] eq $base_parts[0]) {
-    shift @rel_parts;
+  while (@parts && @base_parts && $parts[0] eq $base_parts[0]) {
+    shift @parts;
     shift @base_parts;
   }
-  my $rel_path = $rel->path(Mojo::Path->new)->path;
-  $rel_path->leading_slash(1) if $rel->authority;
-  $rel_path->parts([('..') x @base_parts, @rel_parts]);
-  $rel_path->trailing_slash(1) if $self->path->trailing_slash;
+  my $path = $rel->path(Mojo::Path->new)->path;
+  $path->leading_slash(1) if $rel->authority;
+  $path->parts([('..') x @base_parts, @parts]);
+  $path->trailing_slash(1) if $self->path->trailing_slash;
 
   return $rel;
 }
@@ -273,7 +251,7 @@ sub to_string {
 
   # Fragment
   if (my $fragment = $self->fragment) {
-    $url .= '#' . url_escape $fragment, "$PCHAR\/\?";
+    $url .= '#' . url_escape $fragment, "^$PCHAR\/\?";
   }
 
   return $url;

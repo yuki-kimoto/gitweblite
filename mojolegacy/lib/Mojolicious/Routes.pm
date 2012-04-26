@@ -64,10 +64,8 @@ sub dispatch {
   # Check cache
   my $cache = $self->cache;
   if ($cache && (my $cached = $cache->get("$method:$path:$websocket"))) {
-    $m->root($self);
-    $m->stack($cached->{stack});
-    $m->captures($cached->{captures});
-    $m->endpoint($cached->{endpoint});
+    $m->root($self)->endpoint($cached->{endpoint});
+    $m->stack($cached->{stack})->captures($cached->{captures});
   }
 
   # Check routes
@@ -90,7 +88,7 @@ sub dispatch {
   return unless $m && @{$m->stack};
 
   # Dispatch
-  return if $self->_walk_stack($c);
+  return if $self->_walk($c);
   $self->auto_render($c);
   return 1;
 }
@@ -98,13 +96,10 @@ sub dispatch {
 sub hide { push @{shift->hidden}, @_ }
 
 sub route {
-  my $self  = shift;
-  my $route = Mojolicious::Routes::Route->new(@_);
-  $self->add_child($route);
-  return $route;
+  shift->add_child(Mojolicious::Routes::Route->new(@_))->children->[-1];
 }
 
-sub _dispatch_callback {
+sub _callback {
   my ($self, $c, $field, $staging) = @_;
   $c->stash->{'mojo.routed'}++;
   $c->app->log->debug(qq/Routing to a callback./);
@@ -112,85 +107,90 @@ sub _dispatch_callback {
   return !$staging || $continue ? 1 : undef;
 }
 
-sub _dispatch_controller {
+sub _class {
+  my ($self, $field, $c) = @_;
+
+  # Namespace and class
+  my $namespace = $field->{namespace};
+  my $class = camelize $field->{controller} || '';
+  return unless $class || $namespace;
+  $class = length $class ? "${namespace}::$class" : $namespace
+    if length($namespace = defined $namespace ? $namespace : $self->namespace);
+
+  # Check if it looks like a class
+  return $class =~ /^[a-zA-Z0-9_:]+$/ ? $class : undef;
+}
+
+sub _controller {
   my ($self, $c, $field, $staging) = @_;
 
-  # Class and method
-  return 1
-    unless my $app = $field->{app} || $self->_generate_class($field, $c);
-  my $method = $self->_generate_method($field, $c);
-  my $target = (ref $app || $app) . ($method ? "->$method" : '');
-  $c->app->log->debug(qq/Routing to "$target"./);
-
-  # Controller or application
-  return unless $self->_load_class($c, $app);
+  # Load and instantiate controller/application
+  return 1 unless my $app = $field->{app} || $self->_class($field, $c);
+  return unless $self->_load($c, $app);
   $app = $app->new($c) unless ref $app;
 
-  # Action
+  # Application
   my $continue;
-  if ($method) {
+  my $class = ref $app;
+  if (my $sub = $app->can('handler')) {
+    $c->app->log->debug(qq/Routing to application "$class"./);
 
-    # Call action
+    # Try to connect routes
+    if (my $sub = $app->can('routes')) {
+      my $r = $app->$sub;
+      weaken $r->parent($c->match->endpoint)->{parent} unless $r->parent;
+    }
+    $app->$sub($c);
+  }
+
+  # Action
+  elsif (my $method = $self->_method($field, $c)) {
+    my $log = $c->app->log;
+    $log->debug(qq/Routing to controller "$class" and action "$method"./);
+
+    # Try to call action
     my $stash = $c->stash;
     if (my $sub = $app->can($method)) {
       $stash->{'mojo.routed'}++ unless $staging;
       $continue = $app->$sub;
     }
 
-    # Render
-    else {
-      $c->app->log->debug(
-        qq/Action "$target" not found, assuming template without action./);
-    }
-  }
-
-  # Application
-  else {
-    if (my $sub = $app->can('routes')) {
-      my $r = $app->$sub;
-      weaken $r->parent($c->match->endpoint)->{parent} unless $r->parent;
-    }
-    $app->handler($c);
+    # Action not found
+    else { $log->debug('Action not found in controller.') }
   }
 
   return !$staging || $continue ? 1 : undef;
 }
 
-sub _generate_class {
-  my ($self, $field, $c) = @_;
+sub _load {
+  my ($self, $c, $app) = @_;
 
-  # DEPRECATED in Leaf Fluttering In Wind!
-  warn "The class stash value is DEPRECATED in favor of controller!\n"
-    if $field->{class};
-  my $class = camelize $field->{class} || $field->{controller} || '';
+  # Load unless already loaded or application
+  return 1 if $self->{loaded}{$app} || ref $app;
+  if (my $e = Mojo::Loader->load($app)) {
 
-  # Namespace
-  my $namespace = $field->{namespace};
-  return unless $class || $namespace;
-  $namespace = defined $namespace ? $namespace : $self->namespace;
-  $class = length $class ? "${namespace}::$class" : $namespace
-    if length $namespace;
+    # Doesn't exist
+    $c->app->log->debug(qq/Controller "$app" does not exist./) and return
+      unless ref $e;
 
-  # Invalid
-  return unless $class =~ /^[a-zA-Z0-9_:]+$/;
+    # Error
+    die $e;
+  }
 
-  return $class;
+  # Check base classes
+  $c->app->log->debug(qq/Class "$app" is not a controller./) and return
+    unless first { $app->isa($_) } @{$self->base_classes};
+  return ++$self->{loaded}{$app};
 }
 
-sub _generate_method {
+sub _method {
   my ($self, $field, $c) = @_;
 
-  # Prepare hidden
-  $self->{hiding} = {map { $_ => 1 } @{$self->hidden}} unless $self->{hiding};
-
-  # DEPRECATED in Leaf Fluttering In Wind!
-  warn "The method stash value is DEPRECATED in favor of action!\n"
-    if $field->{method};
-  return unless my $method = $field->{method} || $field->{action};
-
   # Hidden
+  $self->{hiding} = {map { $_ => 1 } @{$self->hidden}} unless $self->{hiding};
+  return unless my $method = $field->{action};
   $c->app->log->debug(qq/Action "$method" is not allowed./) and return
-    if $self->{hiding}->{$method} || index($method, '_') == 0;
+    if $self->{hiding}{$method} || index($method, '_') == 0;
 
   # Invalid
   $c->app->log->debug(qq/Action "$method" is invalid./) and return
@@ -199,27 +199,7 @@ sub _generate_method {
   return $method;
 }
 
-sub _load_class {
-  my ($self, $c, $app) = @_;
-
-  # Load unless already loaded or application
-  return 1 if $self->{loaded}->{$app} || ref $app;
-  if (my $e = Mojo::Loader->load($app)) {
-
-    # Doesn't exist
-    $c->app->log->debug("$app does not exist, maybe a typo?") and return
-      unless ref $e;
-
-    # Error
-    die $e;
-  }
-
-  # Check base classes
-  return unless first { $app->isa($_) } @{$self->base_classes};
-  return ++$self->{loaded}->{$app};
-}
-
-sub _walk_stack {
+sub _walk {
   my ($self, $c) = @_;
 
   # Walk the stack
@@ -235,10 +215,10 @@ sub _walk_stack {
     @{$stash}{@keys} = @{$stash->{'mojo.captures'}}{@keys} = values %$field;
 
     # Dispatch
-    my $continue =
-        $field->{cb}
-      ? $self->_dispatch_callback($c, $field, $staging)
-      : $self->_dispatch_controller($c, $field, $staging);
+    my $continue
+      = $field->{cb}
+      ? $self->_callback($c, $field, $staging)
+      : $self->_controller($c, $field, $staging);
 
     # Break the chain
     return 1 if $staging && !$continue;
@@ -285,11 +265,6 @@ Mojolicious::Routes - Always find your destination with routes
   $r->bridge->to(controller => 'foo', action =>'auth')
     ->route('/blog')->to(action => 'list');
 
-  # Waypoints are similar to bridges and nested routes but can also match
-  # if they are not the actual endpoint of the whole route
-  my $b = $r->waypoint('/books')->to(controller => 'books', action => 'list');
-  $b->route('/:id', id => qr/\d+/)->to(action => 'view');
-
   # Simplified Mojolicious::Lite style route generation is also possible
   $r->get('/')->to(controller => 'blog', action => 'welcome');
   my $blog = $r->under('/blog');
@@ -320,6 +295,9 @@ L<Mojolicious::Controller> and L<Mojo>.
   $r        = $r->cache(Mojo::Cache->new);
 
 Routing cache, defaults to a L<Mojo::Cache> object.
+
+  # Disable caching
+  $r->cache(0);
 
 =head2 C<conditions>
 
@@ -381,9 +359,9 @@ Match routes with L<Mojolicious::Routes::Match> and dispatch.
 
 =head2 C<hide>
 
-  $r = $r->hide('new');
+  $r = $r->hide(qw/foo bar/);
 
-Hide controller method or attribute from routes.
+Hide controller methods and attributes from routes.
 
 =head2 C<route>
 

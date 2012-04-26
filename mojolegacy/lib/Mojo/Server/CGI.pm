@@ -3,7 +3,7 @@ use Mojo::Base 'Mojo::Server';
 
 use constant CHUNK_SIZE => $ENV{MOJO_CHUNK_SIZE} || 131072;
 
-has nph => 0;
+has 'nph';
 
 # "Lisa, you're a Buddhist, so you believe in reincarnation.
 #  Eventually, Snowball will be reborn as a higher lifeform...
@@ -13,18 +13,15 @@ sub run {
 
   # Environment
   my $tx  = $self->build_tx;
-  my $req = $tx->req;
-  $req->parse(\%ENV);
+  my $req = $tx->req->parse(\%ENV);
 
   # Store connection information
-  $tx->remote_address($ENV{REMOTE_ADDR});
-  $tx->local_port($ENV{SERVER_PORT});
+  $tx->local_port($ENV{SERVER_PORT})->remote_address($ENV{REMOTE_ADDR});
 
   # Request body
   binmode STDIN;
-  while (!$req->is_finished) {
-    my $read = STDIN->read(my $buffer, CHUNK_SIZE, 0);
-    last unless $read;
+  until ($req->is_finished) {
+    last unless my $read = STDIN->read(my $buffer, CHUNK_SIZE, 0);
     $req->parse($buffer);
   }
 
@@ -36,21 +33,19 @@ sub run {
   binmode STDOUT;
   my $res    = $tx->res;
   my $offset = 0;
-  if ($self->nph) {
-    while (1) {
-      my $chunk = $res->get_start_line_chunk($offset);
+  while ($self->nph) {
+    my $chunk = $res->get_start_line_chunk($offset);
 
-      # No start line yet, try again
-      sleep 1 and next unless defined $chunk;
+    # No start line yet, try again
+    sleep 1 and next unless defined $chunk;
 
-      # End of start line
-      last unless length $chunk;
+    # End of start line
+    last unless length $chunk;
 
-      # Start line
-      return unless STDOUT->opened;
-      print STDOUT $chunk;
-      $offset += length $chunk;
-    }
+    # Start line
+    return unless STDOUT->opened;
+    print STDOUT $chunk;
+    $offset += length $chunk;
   }
 
   # Response headers
@@ -151,8 +146,8 @@ Activate non parsed header mode.
 
 =head1 METHODS
 
-L<Mojo::Server::CGI> inherits all methods from L<Mojo::Server> and
-implements the following new ones.
+L<Mojo::Server::CGI> inherits all methods from L<Mojo::Server> and implements
+the following new ones.
 
 =head2 C<run>
 

@@ -51,7 +51,7 @@ Mojolicious::Plugin::HeaderCondition - Header condition plugin
 
   # Mojolicious
   $self->plugin('HeaderCondition');
-  $self->routes->route('/:controller/:action')
+  $self->routes->get('/:controller/:action')
     ->over(headers => {Referer => qr/example\.com/});
 
   # Mojolicious::Lite
@@ -59,7 +59,7 @@ Mojolicious::Plugin::HeaderCondition - Header condition plugin
   get '/' => (headers => {Referer => qr/example\.com/}) => sub {...};
 
   # All headers need to match
-  $self->routes->route('/:controller/:action')->over(headers => {
+  $self->routes->get('/:controller/:action')->over(headers => {
     'X-Secret-Header' => 'Foo',
     Referer => qr/example\.com/
   });
@@ -68,14 +68,13 @@ Mojolicious::Plugin::HeaderCondition - Header condition plugin
   get '/' => (agent => qr/Firefox/) => sub {...};
 
   # The "host" condition is a shortcut for the detected host
-  # (usually the "Host" or "X-Forwarded-Host" header)
   get '/' => (host => qr/mojolicio\.us/) => sub {...};
 
 =head1 DESCRIPTION
 
-L<Mojolicious::Plugin::HeaderCondition> is a routes condition for header
-based routes. This is a core plugin, that means it is always enabled and its
-code a good example for learning to build new plugins.
+L<Mojolicious::Plugin::HeaderCondition> is a routes condition for header based
+routes. This is a core plugin, that means it is always enabled and its code a
+good example for learning to build new plugins.
 
 =head1 METHODS
 

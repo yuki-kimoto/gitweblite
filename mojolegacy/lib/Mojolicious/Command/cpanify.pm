@@ -16,15 +16,13 @@ These options are available:
   -u, --user <name>           PAUSE username.
 EOF
 
-sub say(@) {print @_, "\n"}
-
 # "Hooray! A happy ending for the rich people!"
 sub run {
   my $self = shift;
 
   # Options
   local @ARGV = @_;
-  my ($password, $user) = '';
+  my $password = my $user = '';
   GetOptions(
     'p|password=s' => sub { $password = $_[1] },
     'u|user=s'     => sub { $user     = $_[1] }
@@ -74,8 +72,8 @@ L<Mojolicious::Command::cpanify> uploads files to CPAN.
 
 =head1 ATTRIBUTES
 
-L<Mojolicious::Command::cpanify> inherits all attributes from
-L<Mojo::Command> and implements the following new ones.
+L<Mojolicious::Command::cpanify> inherits all attributes from L<Mojo::Command>
+and implements the following new ones.
 
 =head2 C<description>
 

@@ -51,16 +51,15 @@ sub parse {
   # Parse headers
   $self->parse_until_body(@_);
 
-  # Content needs to be upgraded to multipart
-  if ($self->auto_upgrade && defined($self->boundary)) {
-    $self->unsubscribe(read => $self->{read});
-    my $multi = Mojo::Content::MultiPart->new($self);
-    $self->emit(upgrade => $multi);
-    return $multi->parse;
-  }
-
   # Parse body
-  return $self->SUPER::parse;
+  return $self->SUPER::parse
+    unless $self->auto_upgrade && defined($self->boundary);
+
+  # Content needs to be upgraded to multipart
+  $self->unsubscribe(read => $self->{read});
+  my $multi = Mojo::Content::MultiPart->new($self);
+  $self->emit(upgrade => $multi);
+  return $multi->parse;
 }
 
 1;
@@ -132,8 +131,8 @@ implements the following new ones.
 
   my $single = Mojo::Content::Single->new;
 
-Construct a new L<Mojo::Content::Single> object and subscribe to C<read>
-event with default content parser.
+Construct a new L<Mojo::Content::Single> object and subscribe to C<read> event
+with default content parser.
 
 =head2 C<body_contains>
 

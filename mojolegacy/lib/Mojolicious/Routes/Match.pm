@@ -45,7 +45,7 @@ sub match {
 
   # Conditions
   if (my $over = $r->over) {
-    my $conditions = $self->{conditions} ||= $r->root->conditions;
+    my $conditions = $self->{conditions} ||= $self->root->conditions;
     for (my $i = 0; $i < @$over; $i += 2) {
       return unless my $condition = $conditions->{$over->[$i]};
       return if !$condition->($r, $c, $captures, $over->[$i + 1]);
@@ -72,7 +72,7 @@ sub match {
     delete $captures->{app};
   }
 
-  # Waypoint
+  # DEPRECATED in Leaf Fluttering In Wind!
   return $self->endpoint($r) if $r->block && $empty;
 
   # Endpoint
@@ -88,26 +88,22 @@ sub match {
 
     # Reset
     $self->{path} = $path;
-    if   ($r->parent) { $self->stack([@$snapshot]) }
+    if   ($r->parent) { $self->captures($captures)->stack([@$snapshot]) }
     else              { $self->captures({})->stack([]) }
   }
 
   return $self;
 }
 
-# "I'm not a robot!
-#  I don't like having discs crammed into me, unless they're Oreos.
-#  And then, only in the mouth."
 sub path_for {
   my $self = shift;
 
   # Single argument
-  my $values = {};
-  my $name;
+  my (%values, $name);
   if (@_ == 1) {
 
     # Hash
-    $values = shift if ref $_[0] eq 'HASH';
+    %values = %{shift()} if ref $_[0] eq 'HASH';
 
     # Name
     $name = $_[0] if $_[0];
@@ -117,16 +113,16 @@ sub path_for {
   elsif (@_ > 1) {
 
     # Odd
-    if (@_ % 2) { ($name, $values) = (shift, {@_}) }
+    if (@_ % 2) { ($name, %values) = (shift, @_) }
 
     # Even
     else {
 
-      # Name and hashref
-      if (ref $_[1] eq 'HASH') { ($name, $values) = (shift, shift) }
+      # Name and hash
+      if (ref $_[1] eq 'HASH') { ($name, %values) = (shift, %{shift()}) }
 
       # Just values
-      else { $values = {@_} }
+      else { %values = @_ }
 
     }
   }
@@ -142,16 +138,16 @@ sub path_for {
 
   # Merge values
   my $captures = $self->captures;
-  $values = {%$captures, format => undef, %$values};
+  %values = (%$captures, format => undef, %values);
   my $pattern = $endpoint->pattern;
-  $values->{format} =
-    defined $captures->{format}
+  $values{format}
+    = defined $captures->{format}
     ? $captures->{format}
     : $pattern->defaults->{format}
     if $pattern->reqs->{format};
 
   # Render
-  my $path = $endpoint->render('', $values);
+  my $path = $endpoint->render('', \%values);
   utf8::downgrade $path, 1;
   return wantarray ? ($path, $endpoint->has_websocket) : $path;
 }
@@ -170,11 +166,11 @@ Mojolicious::Routes::Match - Routes visitor
 
   # Routes
   my $r = Mojolicious::Routes->new;
-  $r->route('/foo')->to(action => 'foo');
-  $r->route('/bar')->to(action => 'bar');
+  $r->get('/foo')->to(action => 'foo');
+  $r->put('/bar')->to(action => 'bar');
 
   # Match
-  my $m = Mojolicious::Routes::Match->new(GET => '/bar');
+  my $m = Mojolicious::Routes::Match->new(PUT => '/bar');
   $m->match($r);
   say $m->captures->{action};
 

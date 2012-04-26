@@ -36,9 +36,10 @@ sub projects {
     home => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
+  my $home_ns = $params->{home};
+  my $home = "/$home_ns";
 
   # Git
   my $git = $self->app->git;
@@ -46,19 +47,35 @@ sub projects {
   # Fill project information
   my @projects = $git->get_projects($home);
   @projects = $git->fill_projects($home, \@projects);
+  warn $self->dumper(["$home", \@projects]);
+  
   
   # Fill owner and HEAD commit id
   for my $project (@projects) {
-    $project->{owner} = $git->get_project_owner($home, $project->{path});
-    my $head_commit = $git->parse_commit($home, $project->{path}, "HEAD");
+    my $pname = "$home/$project->{path}";
+    $project->{path_abs_ns} = "$home_ns/$project->{path}";
+    $project->{owner} = $git->get_project_owner($pname);
+    my $head_commit = $git->parse_commit($pname, "HEAD");
     $project->{head_cid} = $head_commit->{id}
   }
   
   # Render
   $self->render(
     home => $home,
+    home_ns => $home_ns,
     projects => \@projects
   );
+}
+
+use File::Basename qw/dirname basename/;
+sub _parse_project {
+  my ($self, $project_abs) = @_;
+  
+  $project_abs = '/' . $project_abs;
+  my $home = dirname $project_abs;
+  my $project = basename $project_abs;
+  
+  return [$home, $project];
 }
 
 sub summary {
@@ -67,48 +84,51 @@ sub summary {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my $project_ns = $params->{project};
+  my $project = "/$project_ns";
+  my $home_ns = dirname $project_ns;
+  my $home = "/$home_ns";
   
   # Git
   my $git = $self->app->git;
   
   # HEAd commit
-  my $project_description = $git->get_project_description($home, $project);
-  my $project_owner = $git->get_project_owner($home, $project);
-  my $head_commit = $git->parse_commit($home, $project, "HEAD");
+  my $project_description = $git->get_project_description($project);
+  my $project_owner = $git->get_project_owner($project);
+  my $head_commit = $git->parse_commit($project, "HEAD");
   my %committer_date = %$head_commit
     ? $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
   my $last_change = $git->_timestamp(\%committer_date);
   my $head_cid = $head_commit->{id};
-  my $urls = $git->get_project_urls($home, $project);
+  my $urls = $git->get_project_urls($project);
   
   # Commits
   my $commit_count = 20;
-  my $commits = $head_cid ? $git->parse_commits($home, $project, $head_cid, $commit_count) : ();
+  my $commits = $head_cid ? $git->parse_commits($project, $head_cid, $commit_count) : ();
 
   # References
-  my $refs = $git->get_references($home, $project);
+  my $refs = $git->get_references($project);
   
   # Tags
   my $tag_count = 20;
-  my $tags  = $git->get_tags($home, $project, $tag_count - 1);
+  my $tags  = $git->get_tags($project, $tag_count - 1);
 
   # Heads
   my $head_count = 20;
-  my $heads = $git->get_heads($home, $project, $head_count - 1);
+  my $heads = $git->get_heads($project, $head_count - 1);
   
   # Render
   $self->render(
     home => $home,
+    home_ns => $home_ns,
     project => $project,
+    project_ns => $project_ns,
     project_description => $project_description,
     project_owner => $project_owner,
     last_change => $last_change,
@@ -134,15 +154,13 @@ sub commit {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0} => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = $params->{cid};
   $cid = 'HEAD' unless defined $cid;
   
@@ -150,8 +168,8 @@ sub commit {
   my $git = $self->app->git;
 
   # Project information
-  my $project_description = $git->get_project_description($home, $project);
-  my $project_owner = $git->get_project_owner($home, $project);
+  my $project_description = $git->get_project_description($project);
+  my $project_owner = $git->get_project_owner($project);
   
   # Commit
   my %commit = $git->parse_commit($home, $project, $cid);
@@ -161,12 +179,12 @@ sub commit {
   $commit{committer_date} = $git->_timestamp(\%committer_date);
   
   # References
-  my $refs = $git->get_references($home, $project);
+  my $refs = $git->get_references($project);
   
   # Diff tree
   my $parent = $commit{parent};
   my $parents = $commit{parents};
-  my $difftrees = $git->get_difftree($home, $project, $commit{id}, $parent, $parents);
+  my $difftrees = $git->get_difftree($project, $commit{id}, $parent, $parents);
   
   # Render
   $self->render(
@@ -186,16 +204,14 @@ sub commitdiff {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
     from_cid => {require => 0} => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = defined $params->{cid} ? $params->{cid} : 'HEAD';
   my $from_cid = $params->{from_cid};
   
@@ -297,17 +313,15 @@ sub tree {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
     dir => {require => 0 } => ['not_blank'],
     tid => {require => 0 } => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
   my $dir = $self->gitweblite_rel($params->{dir});
@@ -365,15 +379,13 @@ sub snapshot {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => {require => 0 } => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = $params->{cid};
   $cid = "HEAD" unless defined $cid;
   
@@ -421,15 +433,13 @@ sub tag {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     id => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $id = $params->{id};
   
   # Git
@@ -457,14 +467,12 @@ sub tags {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   
   # Git
   my $git = $self->app->git;
@@ -486,14 +494,12 @@ sub heads {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   
   # Git
   my $git = $self->app->git;
@@ -515,16 +521,14 @@ sub blob {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => ['not_blank'],
     file => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = $params->{cid};
   my $file = $params->{file};
   
@@ -585,16 +589,14 @@ sub blob_plain {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => ['not_blank'],
     file => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = $params->{cid};
   my $file = $params->{file};
 
@@ -645,17 +647,15 @@ sub blobdiff {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     cid => ['any'],
     file => ['any'],
     from_cid => ['any'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $cid = $params->{cid};
   my $file = $params->{file};
   my $from_cid = $params->{from_cid};
@@ -785,16 +785,14 @@ sub _log {
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
-    home => ['not_blank'],
     project => ['not_blank'],
     page => {require => 0} => ['int'],
     base_cid => {require => 0} => ['any']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  die unless $vresult->is_ok;
+  return $self->render('not_found') unless $vresult->is_ok;
   my $params = $vresult->data;
-  my $home = '/' . $params->{home};
-  my $project = $params->{project};
+  my ($home, $project) = @{$self->_parse_project($params->{project})};
   my $base_cid = defined $params->{base_cid}
     ? $params->{base_cid}
     :"HEAD";

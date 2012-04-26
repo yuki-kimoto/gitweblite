@@ -79,33 +79,33 @@ sub register {
   );
 
   # Add "memorize" helper
-  my $memorize = {};
+  my %memorize;
   $app->helper(
     memorize => sub {
       shift;
       my $cb = pop;
-      return '' unless (ref $cb || '') eq 'CODE';
+      return '' unless ref $cb eq 'CODE';
       my $name = shift;
       my $args;
-      if ((ref $name || '') eq 'HASH') { ($args, $name) = ($name, undef) }
-      else                             { $args = shift || {} }
+      if (ref $name eq 'HASH') { ($args, $name) = ($name, undef) }
+      else                     { $args = shift || {} }
 
       # Default name
       $name ||= join '', map { $_ || '' } (caller(1))[0 .. 3];
 
       # Expire
       my $expires = $args->{expires} || 0;
-      delete $memorize->{$name}
-        if exists $memorize->{$name}
+      delete $memorize{$name}
+        if exists $memorize{$name}
           && $expires > 0
-          && $memorize->{$name}->{expires} < time;
+          && $memorize{$name}{expires} < time;
 
       # Memorized
-      return $memorize->{$name}->{content} if exists $memorize->{$name};
+      return $memorize{$name}{content} if exists $memorize{$name};
 
       # Memorize
-      $memorize->{$name}->{expires} = $expires;
-      $memorize->{$name}->{content} = $cb->();
+      $memorize{$name}{expires} = $expires;
+      $memorize{$name}{content} = $cb->();
     }
   );
 
@@ -135,9 +135,9 @@ Mojolicious::Plugin::DefaultHelpers - Default helpers plugin
 
 =head1 DESCRIPTION
 
-L<Mojolicious::Plugin::DefaultHelpers> is a collection of renderer helpers
-for L<Mojolicious>. This is a core plugin, that means it is always enabled
-and its code a good example for learning to build new plugins.
+L<Mojolicious::Plugin::DefaultHelpers> is a collection of renderer helpers for
+L<Mojolicious>. This is a core plugin, that means it is always enabled and its
+code a good example for learning to build new plugins.
 
 =head1 HELPERS
 

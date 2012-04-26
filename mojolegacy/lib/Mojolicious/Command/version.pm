@@ -9,8 +9,6 @@ use Mojolicious;
 has description => "Show versions of installed modules.\n";
 has usage       => "usage: $0 version\n";
 
-sub say(@) {print @_, "\n"}
-
 # "It's so cold, my processor is running at peak efficiency!"
 sub run {
   my $self = shift;
@@ -19,16 +17,16 @@ sub run {
   my $ev = eval 'use Mojo::Reactor::EV; 1' ? $EV::VERSION : 'not installed';
 
   # IPv6
-  my $ipv6 =
-    Mojo::IOLoop::Server::IPV6() ? $IO::Socket::IP::VERSION : 'not installed';
+  my $ipv6
+    = Mojo::IOLoop::Server::IPV6 ? $IO::Socket::IP::VERSION : 'not installed';
 
   # TLS
-  my $tls =
-    Mojo::IOLoop::Server::TLS() ? $IO::Socket::SSL::VERSION : 'not installed';
+  my $tls
+    = Mojo::IOLoop::Server::TLS ? $IO::Socket::SSL::VERSION : 'not installed';
 
   # Bonjour
-  my $bonjour =
-    eval 'Mojo::Server::Daemon::BONJOUR()'
+  my $bonjour
+    = Mojo::Server::Daemon::BONJOUR
     ? $Net::Rendezvous::Publish::VERSION
     : 'not installed';
 
@@ -46,20 +44,18 @@ OPTIONAL
 EOF
 
   # Latest version
-  my ($current) = $Mojolicious::VERSION =~ /^([^_]+)/;
-  my $latest = $current;
-  eval {
-    Mojo::UserAgent->new->max_redirects(3)
-      ->get('search.cpan.org/dist/Mojolicious')->res->dom('.version')
-      ->each(sub { $latest = $_->text if $_->text =~ /^[\d\.]+$/ });
+  my $latest = eval {
+    my $ua = Mojo::UserAgent->new(max_redirects => 10)->detect_proxy;
+    $ua->get('api.metacpan.org/v0/release/Mojolicious')->res->json->{version};
   };
 
   # Message
+  return unless $latest;
   my $message = 'This version is up to date, have fun!';
   $message = 'Thanks for testing a development release, you are awesome!'
-    if $latest < $current;
+    if $latest < $Mojolicious::VERSION;
   $message = "You might want to update your Mojolicious to $latest."
-    if $latest > $current;
+    if $latest > $Mojolicious::VERSION;
   say $message;
 }
 

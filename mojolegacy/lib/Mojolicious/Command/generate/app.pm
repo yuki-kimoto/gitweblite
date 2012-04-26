@@ -2,7 +2,7 @@ package Mojolicious::Command::generate::app;
 use Mojo::Base 'Mojo::Command';
 
 has description => "Generate Mojolicious application directory structure.\n";
-has usage       => "usage: $0 generate app [CLASS]\n";
+has usage       => "usage: $0 generate app [NAME]\n";
 
 # "I say, you've damaged our servants quarters... and our servants."
 sub run {
@@ -68,11 +68,8 @@ Please visit http://mojolicio.us for detailed installation instructions.
 
 EOF
 
-# Application
-$ENV{MOJO_APP} ||= '<%= $class %>';
-
-# Start commands
-Mojolicious::Commands->start;
+# Start commands for application
+Mojolicious::Commands->start_app('<%= $class %>');
 
 @@ appclass
 % my $class = shift;
@@ -90,7 +87,7 @@ sub startup {
   my $r = $self->routes;
 
   # Normal route to controller
-  $r->route('/')->to('example#welcome');
+  $r->get('/')->to('example#welcome');
 }
 
 1;

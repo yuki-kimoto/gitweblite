@@ -26,24 +26,17 @@ my @HEADERS = (
 }
 
 # Lower case headers
-my %NORMALCASE_HEADERS;
-for my $name (@HEADERS) {
-  my $lowercase = lc $name;
-  $NORMALCASE_HEADERS{$lowercase} = $name;
-}
+my %NORMALCASE = map { lc($_) => $_ } @HEADERS;
 
 sub add {
   my ($self, $name) = (shift, shift);
 
   # Make sure we have a normal case entry for name
   my $lcname = lc $name;
-  $NORMALCASE_HEADERS{$lcname} = $name
-    unless exists $NORMALCASE_HEADERS{$lcname};
-  $name = $lcname;
+  $NORMALCASE{$lcname} = defined $NORMALCASE{$lcname} ? $NORMALCASE{$lcname} : $name;
 
   # Add lines
-  push @{$self->{headers}->{$name}}, (ref $_ || '') eq 'ARRAY' ? $_ : [$_]
-    for @_;
+  push @{$self->{headers}{$lcname}}, map { ref $_ eq 'ARRAY' ? $_ : [$_] } @_;
 
   return $self;
 }
@@ -51,7 +44,7 @@ sub add {
 sub clone {
   my $self  = shift;
   my $clone = $self->new;
-  $clone->{headers}->{$_} = [@{$self->{headers}->{$_}}]
+  $clone->{headers}{$_} = [@{$self->{headers}{$_}}]
     for keys %{$self->{headers}};
   return $clone;
 }
@@ -60,10 +53,7 @@ sub from_hash {
   my ($self, $hash) = (shift, shift);
 
   # Empty hash deletes all headers
-  if (keys %{$hash} == 0) {
-    $self->{headers} = {};
-    return $self;
-  }
+  delete $self->{headers} if keys %{$hash} == 0;
 
   # Merge
   while (my ($header, $value) = each %$hash) {
@@ -81,7 +71,7 @@ sub header {
   return $self->remove($name)->add($name, @_) if @_;
 
   # String
-  return unless my $headers = $self->{headers}->{lc $name};
+  return unless my $headers = $self->{headers}{lc $name};
   return join ', ', map { join ', ', @$_ } @$headers unless wantarray;
 
   # Array
@@ -95,9 +85,7 @@ sub is_limit_exceeded { shift->{limit} }
 sub leftovers { delete shift->{buffer} }
 
 sub names {
-  my @headers;
-  push @headers, $NORMALCASE_HEADERS{$_} || $_ for keys %{shift->{headers}};
-  return \@headers;
+  [map { $NORMALCASE{$_} || $_ } keys %{shift->{headers}}];
 }
 
 sub parse {
@@ -113,8 +101,7 @@ sub parse {
 
     # Check line size limit
     if (length $line > $max) {
-      $self->{state} = 'finished';
-      $self->{limit} = 1;
+      $self->{limit} = $self->{state} = 'finished';
       return $self;
     }
 
@@ -133,10 +120,8 @@ sub parse {
   }
 
   # Check line size limit
-  if (length $self->{buffer} > $max) {
-    $self->{state} = 'finished';
-    $self->{limit} = 1;
-  }
+  $self->{limit} = $self->{state} = 'finished'
+    if length $self->{buffer} > $max;
 
   return $self;
 }
@@ -145,32 +130,31 @@ sub referrer { scalar shift->header(Referer => @_) }
 
 sub remove {
   my ($self, $name) = @_;
-  delete $self->{headers}->{lc $name};
+  delete $self->{headers}{lc $name};
   return $self;
 }
 
 sub to_hash {
-  my $self   = shift;
-  my %params = @_;
+  my ($self, $multi) = @_;
 
   # Build
-  my $hash = {};
-  foreach my $header (@{$self->names}) {
+  my %hash;
+  for my $header (@{$self->names}) {
     my @headers = $self->header($header);
 
-    # Nested arrayrefs
-    if ($params{arrayref}) { $hash->{$header} = [@headers] }
+    # Multi line
+    if ($multi) { $hash{$header} = [@headers] }
 
-    # Flat arrayref
+    # Flat
     else {
 
-      # Turn single value arrayrefs into strings
-      foreach my $h (@headers) { $h = $h->[0] if @$h == 1 }
-      $hash->{$header} = @headers > 1 ? [@headers] : $headers[0];
+      # Turn single value arrays into strings
+      @$_ == 1 and $_ = $_->[0] for @headers;
+      $hash{$header} = @headers > 1 ? [@headers] : $headers[0];
     }
   }
 
-  return $hash;
+  return \%hash;
 }
 
 sub to_string {
@@ -179,18 +163,11 @@ sub to_string {
   # Format multiline values
   my @headers;
   for my $name (@{$self->names}) {
-    push @headers, "$name: " . join("\x0d\x0a ", @$_)
-      for $self->header($name);
+    push @headers, "$name: " . join("\x0d\x0a ", @$_) for $self->header($name);
   }
 
   # Format headers
   return join "\x0d\x0a", @headers;
-}
-
-# DEPRECATED in Leaf Fluttering In Wind!
-sub x_forwarded_for {
-  warn "Mojo::Headers->x_forwarded_for is DEPRECATED!\n";
-  shift->header('X-Forwarded-For' => @_);
 }
 
 1;
@@ -364,7 +341,7 @@ Shortcut for the C<Expires> header.
 
   $headers = $headers->from_hash({'Content-Type' => 'text/html'});
 
-Parse headers from a hash.
+Parse headers from a hash reference.
 
 =head2 C<header>
 
@@ -535,17 +512,17 @@ Shortcut for the C<Status> header.
 
 =head2 C<to_hash>
 
-  my $hash = $headers->to_hash;
-  my $hash = $headers->to_hash(arrayref => 1);
+  my $single = $headers->to_hash;
+  my $multi  = $headers->to_hash(1);
 
-Format headers as a hash. Nested arrayrefs to represent multi line values are
-optional.
+Turn headers into hash reference, nested array references to represent multi
+line values are disabled by default.
 
 =head2 C<to_string>
 
   my $string = $headers->to_string;
 
-Format headers suitable for HTTP 1.1 messages.
+Turn headers into a string, suitable for HTTP 1.1 messages.
 
 =head2 C<trailer>
 

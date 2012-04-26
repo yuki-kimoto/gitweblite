@@ -38,11 +38,11 @@ sub is_writing {
 }
 
 sub remote_address {
-  my ($self, $address) = @_;
+  my $self = shift;
 
   # New address
-  if ($address) {
-    $self->{remote_address} = $address;
+  if (@_) {
+    $self->{remote_address} = shift;
     return $self;
   }
 
@@ -196,13 +196,13 @@ Transaction closed.
 
   $tx->client_read($chunk);
 
-Read and process client data.
+Read and process client data. Meant to be overloaded in a subclass.
 
 =head2 C<client_write>
 
   my $chunk = $tx->client_write;
 
-Write client data.
+Write client data. Meant to be overloaded in a subclass.
 
 =head2 C<connection>
 
@@ -213,8 +213,8 @@ Connection identifier or socket.
 
 =head2 C<error>
 
-  my $message          = $message->error;
-  my ($message, $code) = $message->error;
+  my $message          = $tx->error;
+  my ($message, $code) = $tx->error;
 
 Parser errors and codes.
 
@@ -252,13 +252,13 @@ Transaction closed.
 
   $tx->server_read($chunk);
 
-Read and process server data.
+Read and process server data. Meant to be overloaded in a subclass.
 
 =head2 C<server_write>
 
   my $chunk = $tx->server_write;
 
-Write server data.
+Write server data. Meant to be overloaded in a subclass.
 
 =head2 C<success>
 

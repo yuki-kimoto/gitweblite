@@ -18,7 +18,6 @@ my $START_LINE_RE = qr|
   (?:\s+HTTP/(\d+\.\d+))?                                       # Version
   $
 |x;
-my $HOST_RE = qr/^([^\:]*)\:?(.*)$/;
 
 sub clone {
   my $self = shift;
@@ -57,29 +56,30 @@ sub cookies {
 
 sub fix_headers {
   my $self = shift;
-  $self->SUPER::fix_headers(@_);
+  $self->{fix} ? return $self : $self->SUPER::fix_headers(@_);
 
-  # Host header is required in HTTP 1.1 requests
+  # Basic authentication
   my $url     = $self->url;
   my $headers = $self->headers;
-  if ($self->at_least_version('1.1')) {
-    my $host = $url->ihost;
-    my $port = $url->port;
-    $host .= ":$port" if $port;
-    $headers->host($host) unless $headers->host;
+  if ((my $userinfo = $url->userinfo) && !$headers->authorization) {
+    $headers->authorization('Basic ' . b64_encode($userinfo, ''));
   }
 
-  # Basic authorization
-  if ((my $u = $url->userinfo) && !$headers->authorization) {
-    $headers->authorization('Basic ' . b64_encode($u, ''));
-  }
-
-  # Basic proxy authorization
+  # Proxy
   if (my $proxy = $self->proxy) {
-    if ((my $u = $proxy->userinfo) && !$headers->proxy_authorization) {
-      $headers->proxy_authorization('Basic ' . b64_encode($u, ''));
-    }
+    $url = $proxy if $self->method eq 'CONNECT';
+
+    # Basic proxy authentication
+    my $userinfo = $proxy->userinfo;
+    $headers->proxy_authorization('Basic ' . b64_encode($userinfo, ''))
+      if $userinfo && !$headers->proxy_authorization;
   }
+
+  # Host
+  my $host = $url->ihost;
+  my $port = $url->port;
+  $host .= ":$port" if $port;
+  $headers->host($host) unless $headers->host;
 
   return $self;
 }
@@ -99,10 +99,9 @@ sub param {
 }
 
 sub params {
-  my $self   = shift;
-  my $params = Mojo::Parameters->new;
-  $params->merge($self->body_params, $self->query_params);
-  return $params;
+  my $self = shift;
+  my $p    = Mojo::Parameters->new;
+  return $p->merge($self->body_params, $self->query_params);
 }
 
 sub parse {
@@ -134,55 +133,33 @@ sub parse {
       $base->authority($host);
     }
 
-    # Basic authorization
+    # Basic authentication
     if (my $auth = $headers->authorization) {
       if (my $userinfo = $self->_parse_basic_auth($auth)) {
         $base->userinfo($userinfo);
       }
     }
 
-    # Basic proxy authorization
+    # Basic proxy authentication
     if (my $auth = $headers->proxy_authorization) {
       if (my $userinfo = $self->_parse_basic_auth($auth)) {
         $self->proxy(Mojo::URL->new->userinfo($userinfo));
       }
     }
 
-    # Reverse proxy
-    if ($ENV{MOJO_REVERSE_PROXY}) {
-
-      # "X-Forwarded-Host"
-      if (my $host = $headers->header('X-Forwarded-Host')) {
-        if ($host =~ $HOST_RE) {
-          $base->host($1);
-          $base->port($2) if defined $2;
-        }
-      }
-
-      # "X-Forwarded-HTTPS"
-      $base->scheme('https') if $headers->header('X-Forwarded-HTTPS');
-    }
+    # "X-Forwarded-HTTPS"
+    $base->scheme('https')
+      if $ENV{MOJO_REVERSE_PROXY} && $headers->header('X-Forwarded-HTTPS');
   }
 
   return $self;
 }
 
 sub proxy {
-  my ($self, $url) = @_;
-
-  # Mojo::URL object
-  if (ref $url) {
-    $self->{proxy} = $url;
-    return $self;
-  }
-
-  # String
-  elsif ($url) {
-    $self->{proxy} = Mojo::URL->new($url);
-    return $self;
-  }
-
-  return $self->{proxy};
+  my $self = shift;
+  return $self->{proxy} unless @_;
+  $self->{proxy} = !$_[0] || ref $_[0] ? shift : Mojo::URL->new(shift);
+  return $self;
 }
 
 sub query_params { shift->url->query }
@@ -250,7 +227,7 @@ sub _parse_env {
     if ($name eq 'HOST') {
       my $host = $value;
       my $port;
-      ($host, $port) = ($1, $2) if $host =~ $HOST_RE;
+      ($host, $port) = ($1, $2) if $host =~ /^([^\:]*)\:?(.*)$/;
       $base->host($host)->port($port);
     }
   }
@@ -370,14 +347,20 @@ implements the following new ones.
   my $env = $req->env;
   $req    = $req->env({});
 
-Direct access to the environment hash if available.
+Direct access to the C<CGI> or C<PSGI> environment hash if available.
+
+  # Check CGI version
+  my $version = $req->env->{GATEWAY_INTERFACE};
+
+  # Check PSGI version
+  my $version = $req->env->{'psgi.version'};
 
 =head2 C<method>
 
   my $method = $req->method;
-  $req       = $req->method('GET');
+  $req       = $req->method('POST');
 
-HTTP request method.
+HTTP request method, defaults to C<GET>.
 
 =head2 C<url>
 
@@ -385,6 +368,8 @@ HTTP request method.
   $req    = $req->url(Mojo::URL->new);
 
 HTTP request URL, defaults to a L<Mojo::URL> object.
+
+  my $foo = $req->url->query->to_hash->{foo};
 
 =head1 METHODS
 
@@ -435,7 +420,7 @@ Access C<GET> and C<POST> parameters.
 
 =head2 C<params>
 
-  my $params = $req->params;
+  my $p = $req->params;
 
 All C<GET> and C<POST> parameters, usually a L<Mojo::Parameters> object.
 
@@ -457,13 +442,16 @@ Parse HTTP request chunks or environment hash.
 
 Proxy URL for message.
 
+  # Disable proxy
+  $req->proxy(0);
+
 =head2 C<query_params>
 
-  my $params = $req->query_params;
+  my $p = $req->query_params;
 
 All C<GET> parameters, usually a L<Mojo::Parameters> object.
 
-  say $req->query_params->param('foo');
+  say $req->query_params->to_hash->{'foo'};
 
 =head1 SEE ALSO
 

@@ -1,7 +1,6 @@
 package Mojolicious::Plugin::PODRenderer;
 use Mojo::Base 'Mojolicious::Plugin';
 
-use IO::File;
 use Mojo::Asset::File;
 use Mojo::ByteStream 'b';
 use Mojo::DOM;
@@ -10,18 +9,18 @@ BEGIN {eval {require Pod::Simple::HTML; import Pod::Simple::HTML}}
 BEGIN {eval {require Pod::Simple::Search; import Pod::Simple::Search}}
 
 # Paths
-our @PATHS = map { $_, "$_/pods" } @INC;
+my @PATHS = map { $_, "$_/pods" } @INC;
 
 # Bundled files
-our $PERLDOC = $Mojolicious::Controller::H->slurp_rel_file('perldoc.html.ep');
+my $PERLDOC = $Mojolicious::Controller::H->slurp_rel_file('perldoc.html.ep');
 
 # "This is my first visit to the Galaxy of Terror and I'd like it to be a
 #  pleasant one."
 sub register {
   my ($self, $app, $conf) = @_;
+  $conf ||= {};
 
   # Config
-  $conf ||= {};
   my $name       = $conf->{name}       || 'pod';
   my $preprocess = $conf->{preprocess} || 'ep';
 
@@ -54,7 +53,7 @@ sub register {
         unless $path && -r $path;
 
       # Turn POD into HTML
-      my $file = IO::File->new("< $path");
+      open my $file, '<', $path;
       my $html = _pod_to_html(join '', <$file>);
 
       # Rewrite links
@@ -69,30 +68,30 @@ sub register {
         }
       );
 
-      # Rewrite code sections for syntax highlighting
+      # Rewrite code blocks for syntax highlighting
       $dom->find('pre')->each(
         sub {
           my $e = shift;
           return if $e->all_text =~ /^\s*\$\s+/m;
           my $attrs = $e->attrs;
           my $class = $attrs->{class};
-          $attrs->{class} =
-            defined $class ? "$class prettyprint" : 'prettyprint';
+          $attrs->{class}
+            = defined $class ? "$class prettyprint" : 'prettyprint';
         }
       );
 
       # Rewrite headers
-      my $url      = $self->req->url->clone;
-      my $sections = [];
+      my $url = $self->req->url->clone;
+      my @parts;
       $dom->find('h1, h2, h3')->each(
         sub {
           my $e = shift;
           my $anchor = my $text = $e->all_text;
           $anchor =~ s/\s+/_/g;
-          $anchor = url_escape $anchor, 'A-Za-z0-9_';
+          $anchor = url_escape $anchor, '^A-Za-z0-9_';
           $anchor =~ s/\%//g;
-          push @$sections, [] if $e->type eq 'h1' || !@$sections;
-          push @{$sections->[-1]}, $text, $url->fragment($anchor)->to_abs;
+          push @parts, [] if $e->type eq 'h1' || !@parts;
+          push @{$parts[-1]}, $text, $url->fragment($anchor)->to_abs;
           $e->replace_content(
             $self->link_to(
               $text => $url->fragment('toc')->to_abs,
@@ -109,11 +108,7 @@ sub register {
 
       # Combine everything to a proper response
       $self->content_for(perldoc => "$dom");
-      $self->render(
-        inline   => $PERLDOC,
-        title    => $title,
-        sections => $sections
-      );
+      $self->render(inline => $PERLDOC, title => $title, parts => \@parts);
       $self->res->headers->content_type('text/html;charset="UTF-8"');
     }
   ) unless $conf->{no_perldoc};
@@ -172,8 +167,8 @@ Mojolicious::Plugin::PODRenderer - POD renderer plugin
 
 =head1 DESCRIPTION
 
-L<Mojolicious::Plugin::PODRenderer> is a renderer for true Perl hackers,
-rawr!
+L<Mojolicious::Plugin::PODRenderer> is a renderer for true Perl hackers, rawr!
+The code of this plugin is a good example for learning to build new plugins.
 
 =head1 OPTIONS
 
@@ -198,7 +193,7 @@ Disable perldoc browser.
   # Mojolicious::Lite
   plugin PODRenderer => {preprocess => 'epl'};
 
-Handler name of preprocessor.
+Name of handler used to preprocess POD.
 
 =head1 HELPERS
 

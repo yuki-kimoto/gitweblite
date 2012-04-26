@@ -1,12 +1,10 @@
 package Mojo::Server::Hypnotoad;
 use Mojo::Base -base;
 
-use Carp 'croak';
 use Cwd 'abs_path';
 use Fcntl ':flock';
 use File::Basename 'dirname';
 use File::Spec::Functions qw/catfile tmpdir/;
-use IO::File;
 use IO::Poll 'POLLIN';
 use List::Util 'shuffle';
 use Mojo::Server::Daemon;
@@ -21,8 +19,8 @@ sub DESTROY {
   return unless $self->{finished};
 
   # Manager
-  if (my $file = $self->{config}->{pid_file})  { unlink $file if -w $file }
-  if (my $file = $self->{config}->{lock_file}) { unlink $file if -w $file }
+  if (my $file = $self->{config}{pid_file})  { unlink $file if -w $file }
+  if (my $file = $self->{config}{lock_file}) { unlink $file if -w $file }
 }
 
 # "Marge? Since I'm not talking to Lisa,
@@ -59,7 +57,7 @@ sub run {
   $0 = $ENV{HYPNOTOAD_APP};
 
   # Clean start
-  exec $ENV{HYPNOTOAD_EXE} unless $ENV{HYPNOTOAD_REV}++;
+  die "Can't exec: $!" if !$ENV{HYPNOTOAD_REV}++ && !exec $ENV{HYPNOTOAD_EXE};
 
   # Preload application and configure server
   my $daemon = $self->{daemon} = Mojo::Server::Daemon->new;
@@ -95,8 +93,7 @@ sub run {
   $daemon->start;
 
   # Pipe for worker communication
-  pipe($self->{reader}, $self->{writer})
-    or croak "Can't create pipe: $!";
+  pipe($self->{reader}, $self->{writer}) or die "Can't create pipe: $!";
   $self->{poll} = IO::Poll->new;
   $self->{poll}->mask($self->{reader}, POLLIN);
 
@@ -110,9 +107,8 @@ sub run {
   $SIG{USR2} = sub { $self->{upgrade} ||= time };
   $SIG{TTIN} = sub { $c->{workers}++ };
   $SIG{TTOU} = sub {
-    return unless $c->{workers};
-    $c->{workers}--;
-    $self->{workers}->{shuffle keys %{$self->{workers}}}->{graceful} ||= time;
+    return unless $c->{workers} && $c->{workers}--;
+    $self->{workers}{shuffle keys %{$self->{workers}}}{graceful} ||= time;
   };
 
   # Mainloop
@@ -131,7 +127,7 @@ sub _config {
     unless ($c = do $file) {
       die qq/Can't load config file "$file": $@/ if $@;
       die qq/Can't load config file "$file": $!/ unless defined $c;
-      die qq/Config file "$file" did not return a hashref.\n/
+      die qq/Config file "$file" did not return a hash reference.\n/
         unless ref $c eq 'HASH';
     }
   }
@@ -140,7 +136,7 @@ sub _config {
   $self->{config} = $c;
   $c->{graceful_timeout}   ||= 30;
   $c->{heartbeat_interval} ||= 5;
-  $c->{heartbeat_timeout}  ||= 10;
+  $c->{heartbeat_timeout}  ||= 20;
   $c->{lock_file}          ||= catfile tmpdir, 'hypnotoad.lock';
   $c->{lock_file} .= ".$$";
   $c->{lock_timeout} ||= 0.5;
@@ -149,22 +145,17 @@ sub _config {
   $c->{workers}         ||= 4;
 
   # Daemon settings
-  no warnings 'uninitialized';
-  $ENV{MOJO_REVERSE_PROXY} = $c->{proxy};
+  $ENV{MOJO_REVERSE_PROXY} = $c->{proxy} if defined $c->{proxy};
   my $daemon = $self->{daemon};
   $daemon->backlog($c->{backlog}) if defined $c->{backlog};
   $daemon->max_clients($c->{clients} || 1000);
-  $daemon->group($c->{group}) if $c->{group};
-  $daemon->max_requests($c->{keep_alive_requests}      || 25);
-  $daemon->inactivity_timeout($c->{inactivity_timeout} || 15);
-  $daemon->user($c->{user}) if $c->{user};
-  $daemon->ioloop->max_accepts($c->{accepts} || 1000);
-  my $listen = $c->{listen} || ['http://*:8080'];
-  $listen = [$listen] unless ref $listen;
-  $daemon->listen($listen);
+  $daemon->group($c->{group}) if defined $c->{group};
+  $daemon->max_requests($c->{keep_alive_requests} || 25);
+  $daemon->inactivity_timeout(defined $c->{inactivity_timeout} ? $c->{inactivity_timeout} : 15);
+  $daemon->user($c->{user}) if defined $c->{user};
+  $daemon->ioloop->max_accepts(defined $c->{accepts} ? $c->{accepts} : 1000);
+  $daemon->listen($c->{listen} || ['http://*:8080']);
 }
-
-sub say(@) {print @_, "\n"}
 
 sub _exit { say shift and exit 0 }
 
@@ -178,10 +169,8 @@ sub _heartbeat {
   return unless $self->{reader}->sysread(my $chunk, 4194304);
 
   # Update heartbeats
-  while ($chunk =~ /(\d+)\n/g) {
-    my $pid = $1;
-    $self->{workers}->{$pid}->{time} = time if $self->{workers}->{$pid};
-  }
+  $self->{workers}{$1} and $self->{workers}{$1}{time} = time
+    while $chunk =~ /(\d+)\n/g;
 }
 
 sub _hot_deploy {
@@ -229,8 +218,8 @@ sub _manage {
     # Fresh start
     unless ($self->{new}) {
       $self->{log}->info('Starting zero downtime software upgrade.');
-      croak "Can't fork: $!" unless defined(my $pid = fork);
-      $self->{new} = $pid ? $pid : exec($ENV{HYPNOTOAD_EXE});
+      die "Can't fork: $!" unless defined(my $pid = $self->{new} = fork);
+      exec($ENV{HYPNOTOAD_EXE}) or die("Can't exec: $!") unless $pid;
     }
 
     # Timeout
@@ -266,8 +255,7 @@ sub _manage {
 }
 
 sub _pid {
-  my $self = shift;
-  return unless my $file = IO::File->new($self->{config}->{pid_file}, '<');
+  return unless open my $file, '<', shift->{config}{pid_file};
   my $pid = <$file>;
   chomp $pid;
   return $pid;
@@ -280,12 +268,13 @@ sub _pid_file {
   return if $self->{finished};
 
   # Check if PID file already exists
-  return if -e (my $file = $self->{config}->{pid_file});
+  return if -e (my $file = $self->{config}{pid_file});
 
   # Create PID file
   $self->{log}->info(qq/Creating process id file "$file"./);
-  croak qq/Can't create process id file "$file": $!/
-    unless my $pid = IO::File->new($file, '>', 0644);
+  die qq/Can't create process id file "$file": $!/
+    unless open my $pid, '>', $file;
+  chmod 0644, $pid;
   print $pid $$;
 }
 
@@ -305,7 +294,7 @@ sub _reap {
   # Clean up worker
   else {
     $self->{log}->debug("Worker $pid stopped.");
-    delete $self->{workers}->{$pid};
+    delete $self->{workers}{$pid};
   }
 }
 
@@ -314,18 +303,16 @@ sub _spawn {
   my $self = shift;
 
   # Manager
-  croak "Can't fork: $!" unless defined(my $pid = fork);
-  return $self->{workers}->{$pid} = {time => time} if $pid;
-
-  # Worker
-  my $daemon = $self->{daemon};
-  my $loop   = $daemon->ioloop;
-  my $c      = $self->{config};
+  die "Can't fork: $!" unless defined(my $pid = fork);
+  return $self->{workers}{$pid} = {time => time} if $pid;
 
   # Prepare lock file
+  my $c    = $self->{config};
   my $file = $c->{lock_file};
-  my $lock = IO::File->new("> $file")
-    or croak qq/Can't open lock file "$file": $!/;
+  die qq/Can't open lock file "$file": $!/ unless open my $lock, '>', $file;
+
+  # Change user/group
+  my $loop = $self->{daemon}->setuidgid->ioloop;
 
   # Accept mutex
   $loop->lock(
@@ -340,10 +327,7 @@ sub _spawn {
           $l = flock $lock, LOCK_EX;
           ualarm $old;
         };
-        if ($@) {
-          die $@ unless $@ eq "alarm\n";
-          $l = 0;
-        }
+        if ($@) { $l = $@ eq "alarm\n" ? 0 : die($@) }
       }
 
       # Non blocking
@@ -364,12 +348,11 @@ sub _spawn {
   );
 
   # Clean worker environment
-  $SIG{INT} = $SIG{TERM} = $SIG{CHLD} = $SIG{USR2} = $SIG{TTIN} = $SIG{TTOU} =
-    'DEFAULT';
+  $SIG{INT} = $SIG{TERM} = $SIG{CHLD} = $SIG{USR2} = $SIG{TTIN} = $SIG{TTOU}
+    = 'DEFAULT';
   $SIG{QUIT} = sub { $loop->max_connections(0) };
   delete $self->{reader};
   delete $self->{poll};
-  $daemon->setuidgid;
 
   # Start
   $self->{log}->debug("Worker $$ started.");
@@ -418,9 +401,9 @@ For L<Mojolicious> and L<Mojolicious::Lite> applications it will default to
 C<production> mode.
 
 Optional modules L<EV>, L<IO::Socket::IP>, L<IO::Socket::SSL> and
-L<Net::Rendezvous::Publish> are supported transparently and used if
-installed. Individual features can also be disabled with the
-C<MOJO_NO_BONJOUR>, C<MOJO_NO_IPV6> and C<MOJO_NO_TLS> environment variables.
+L<Net::Rendezvous::Publish> are supported transparently and used if installed.
+Individual features can also be disabled with the C<MOJO_NO_BONJOUR>,
+C<MOJO_NO_IPV6> and C<MOJO_NO_TLS> environment variables.
 
 See L<Mojolicious::Guides::Cookbook> for deployment recipes.
 
@@ -459,11 +442,11 @@ incoming connections.
   |- Worker [2]
   |- Worker [3]
   |- Worker [4]
-  `- Manager (new)
+  +- Manager (new)
      |- Worker [1]
      |- Worker [2]
      |- Worker [3]
-     `- Worker [4]
+     +- Worker [4]
 
 The new manager will automatically send a C<QUIT> signal to the old manager
 and take over serving requests after starting up successfully.
@@ -508,16 +491,16 @@ Listen backlog size, defaults to C<SOMAXCONN>.
   clients => 100
 
 Maximum number of parallel client connections per worker process, defaults to
-C<1000>. Note that depending on how much your application may block, you
-might want to decrease this value and increase C<workers> instead for better
+C<1000>. Note that depending on how much your application may block, you might
+want to decrease this value and increase C<workers> instead for better
 performance.
 
 =head2 C<graceful_timeout>
 
   graceful_timeout => 15
 
-Maximum amount of time in seconds a graceful worker stop may take before
-being forced, defaults to C<30>.
+Maximum amount of time in seconds a graceful worker stop may take before being
+forced, defaults to C<30>.
 
 =head2 C<group>
 
@@ -536,15 +519,15 @@ Heartbeat interval in seconds, defaults to C<5>.
   heartbeat_timeout => 2
 
 Maximum amount of time in seconds before a worker without a heartbeat will be
-stopped, defaults to C<10>.
+stopped, defaults to C<20>.
 
 =head2 C<inactivity_timeout>
 
   inactivity_timeout => 10
 
 Maximum amount of time in seconds a connection can be inactive before getting
-closed, defaults to C<15>. Setting the value to C<0> will allow connections
-to be inactive indefinitely.
+closed, defaults to C<15>. Setting the value to C<0> will allow connections to
+be inactive indefinitely.
 
 =head2 C<keep_alive_requests>
 
@@ -585,7 +568,8 @@ the server has been stopped.
 
   proxy => 1
 
-Activate reverse proxy support.
+Activate reverse proxy support, defaults to the value of the
+C<MOJO_REVERSE_PROXY> environment variable.
 
 =head2 C<upgrade_timeout>
 

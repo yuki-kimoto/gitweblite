@@ -4,10 +4,10 @@
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', home => gitweblite_rel($home)) %>"><%= $home %></a>
+    <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
   </div>
   
-  %= include '/include/page_navi', current => 'summary', home => $home, project => $project;
+  %= include '/include/page_navi', current => 'summary', project => $project_ns;
   <table class="projects_list">
     <tr id="metadata_desc"><td><b>Description:</b></td><td><%= $project_description %></td></tr>
     <tr id="metadata_owner"><td><b>Owner:</b></td><td><%= $project_owner %></td></tr>
@@ -25,7 +25,7 @@
   
   <!-- Shortlog -->
   <div class="header">
-    <a class="title" href="<%= url_for('shortlog', home => gitweblite_rel($home), project => $project) %>">
+    <a class="title" href="<%= url_for('shortlog', project => $project_ns) %>">
       Shortlog
     </a>
   </div>
@@ -39,27 +39,27 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>"
+            "<%= url_for('commit', project => $project_ns, cid => $cid) %>"
           >
             %= $commit->{title_short};
           </a>
-          %= include 'include/refs', home => $home, project => $project, commit => $commit, refs => $refs;
+          %= include 'include/refs', project => $project_ns, commit => $commit, refs => $refs;
         </td>
         <td class="link">
-          <a href="<%= url_for('commit', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
+          <a href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">
             commit
           </a>
           |
-          <a href="<%= url_for('commitdiff', home => gitweblite_rel($home), project => $project, cid => $cid) %>">
+          <a href="<%= url_for('commitdiff', project => $project_ns, cid => $cid) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('tree', home => gitweblite_rel($home), project => $project, cid => $cid, dir => '/') %>">
+          <a href="<%= url_for('tree', project => $project_ns, cid => $cid, dir => '/') %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-              <%= url_for('snapshot', home => gitweblite_rel($home), project => $project, cid => $cid) %>>
+              <%= url_for('snapshot', project => $project_ns, cid => $cid) %>>
             snapshot
           </a>
         </td>
@@ -68,7 +68,7 @@
     % if (@$commits == $commit_count) {
       <tr>
         <td>
-          <a href="<%= url_for('shortlog', home => gitweblite_rel($home), project => $project) %>">
+          <a href="<%= url_for('shortlog', project => $project_ns) %>">
             ...
           </a>
         </td>
@@ -78,16 +78,16 @@
   
   <!-- Tags -->
   <div class="header">
-    <a class="title" href="<%= url_for('tags', home => gitweblite_rel($home), project => $project) %>">Tags</a>
+    <a class="title" href="<%= url_for('tags', project => $project_ns) %>">Tags</a>
   </div>
-  <%= include '/include/tags', home => $home, project => $project,
+  <%= include '/include/tags', project => $project_ns,
     tags => $tags, tag_count => $tag_count, summary => 1; %>
   
   <!-- Heads -->
   <div class="header">
-    <a class="title" href="<%= url_for('heads', home => gitweblite_rel($home), project => $project) %>">
+    <a class="title" href="<%= url_for('heads', project => $project_ns) %>">
       Heads
     </a>
   </div>
-  <%= include '/include/heads', home => $home, project => $project,
+  <%= include '/include/heads', project => $project_ns,
     tags => $tags, head_count => $head_count, summary => 1; %>

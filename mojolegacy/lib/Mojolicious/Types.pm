@@ -37,22 +37,22 @@ sub detect {
 
   # Detect extensions from MIME type
   return [] unless (($accept || '') =~ /^([^,]+?)(?:\;[^,]*)*$/);
-  my $pattern = $1;
+  my $type = lc $1;
   my @exts;
   my $types = $self->types;
   for my $ext (sort keys %$types) {
-    my $type = quotemeta $types->{$ext};
-    $type =~ s/\\\;.*$//;
-    push @exts, $ext if $pattern =~ /^$type$/i;
+    my @types = ref $types->{$ext} ? @{$types->{$ext}} : ($types->{$ext});
+    $type eq $_ and push @exts, $ext for map { s/\;.*$//; lc $_ } @types;
   }
 
   return \@exts;
 }
 
 sub type {
-  my ($self, $ext, $type) = @_;
-  return $self->types->{$ext || ''} unless $type;
-  $self->types->{$ext} = $type;
+  my ($self, $ext) = (shift, shift);
+  my $types = $self->types;
+  return ref $types->{$ext} ? $types->{$ext}[0] : $types->{$ext} unless @_;
+  $types->{$ext} = shift;
   return $self;
 }
 
@@ -91,16 +91,20 @@ the following ones.
 
 =head2 C<detect>
 
-  my $extensions = $types->detect('application/json;q=9');
+  my $ext = $types->detect('application/json;q=9');
 
-Detect file extensions from C<Accept> header value.
+Detect file extensions from C<Accept> header value. Unspecific values that
+contain more than one MIME type are currently ignored, since browsers often
+don't really know what they actually want.
 
 =head2 C<type>
 
   my $type = $types->type('png');
   $types   = $types->type(png => 'image/png');
+  $types   = $types->type(json => ['application/json', 'text/x-json']);
 
-Get or set MIME type for file extension.
+Get or set MIME types for file extension, alternatives are only used for
+detection.
 
 =head1 SEE ALSO
 

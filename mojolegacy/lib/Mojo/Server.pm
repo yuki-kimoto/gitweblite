@@ -28,8 +28,7 @@ sub load_app {
 
   # Clean up environment
   local $ENV{MOJO_APP_LOADER} = 1;
-  local $ENV{MOJO_APP};
-  local $ENV{MOJO_EXE};
+  local ($ENV{MOJO_APP}, $ENV{MOJO_EXE});
 
   # Try to load application from script into sandbox
   my $class = 'Mojo::Server::SandBox::' . md5_sum($file . $$);
@@ -47,8 +46,7 @@ package $class;
 EOF
   die qq/"$file" is not a valid application.\n/
     unless blessed $app && $app->isa('Mojo');
-  $self->app($app);
-  return $app;
+  return $self->app($app)->app;
 }
 
 # "Are you saying you're never going to eat any animal again? What about
@@ -129,8 +127,8 @@ C<MOJO_APP> environment variable or L<Mojo::HelloWorld>.
 
 =head1 METHODS
 
-L<Mojo::Server> inherits all methods from L<Mojo::EventEmitter> and
-implements the following new ones.
+L<Mojo::Server> inherits all methods from L<Mojo::EventEmitter> and implements
+the following new ones.
 
 =head2 C<new>
 
@@ -157,7 +155,7 @@ Load application from script.
 
   $server->run;
 
-Run server.
+Run server. Meant to be overloaded in a subclass.
 
 =head1 SEE ALSO
 

@@ -1,12 +1,9 @@
 package Mojo::Server::Morbo;
 use Mojo::Base -base;
 
-use Carp 'croak';
 use Mojo::Home;
 use Mojo::Server::Daemon;
 use POSIX 'WNOHANG';
-
-use constant DEBUG => $ENV{MORBO_DEBUG} || 0;
 
 has watch => sub { [qw/lib templates/] };
 
@@ -24,14 +21,11 @@ sub check_file {
   my $cache = $self->{cache} ||= {};
   my $stats = $cache->{$file} ||= [$^T, $size];
   return if $mtime <= $stats->[0] && $size == $stats->[1];
-  $cache->{$file} = [$mtime, $size];
-
-  return 1;
+  return $cache->{$file} = [$mtime, $size];
 }
 
 sub run {
   my ($self, $app) = @_;
-  warn "MANAGER STARTED $$\n" if DEBUG;
 
   # Watch files and manage worker
   $SIG{CHLD} = sub { $self->_reap };
@@ -45,8 +39,6 @@ sub run {
   exit 0;
 }
 
-sub say(@) {print @_, "\n"}
-
 # "And so with two weeks left in the campaign, the question on everyone’s
 #  mind is, who will be the president of Earth?
 #  Jack Johnson or bitter rival John Jackson.
@@ -56,7 +48,6 @@ sub _manage {
   my $self = shift;
 
   # Discover files
-  warn "DISCOVERING NEW FILES\n" if DEBUG;
   my @files;
   for my $watch (@{$self->watch}) {
     if (-d $watch) {
@@ -68,9 +59,7 @@ sub _manage {
 
   # Check files
   for my $file (@files) {
-    warn "CHECKING $file\n" if DEBUG;
     next unless $self->check_file($file);
-    warn "MODIFIED $file\n" if DEBUG;
     say qq/File "$file" changed, restarting./ if $ENV{MORBO_VERBOSE};
     kill 'TERM', $self->{running} if $self->{running};
     $self->{modified} = 1;
@@ -85,10 +74,7 @@ sub _manage {
 
 sub _reap {
   my $self = shift;
-  while ((my $pid = waitpid -1, WNOHANG) > 0) {
-    warn "WORKER STOPPED $pid\n" if DEBUG;
-    delete $self->{running};
-  }
+  while ((my $pid = waitpid -1, WNOHANG) > 0) { delete $self->{running} }
 }
 
 # "Morbo cannot read his teleprompter.
@@ -101,13 +87,12 @@ sub _spawn {
   # Fork
   my $manager = $$;
   $ENV{MORBO_REV}++;
-  croak "Can't fork: $!" unless defined(my $pid = fork);
+  die "Can't fork: $!" unless defined(my $pid = fork);
 
   # Manager
   return $self->{running} = $pid if $pid;
 
   # Worker
-  warn "WORKER STARTED $$\n" if DEBUG;
   $SIG{CHLD} = 'DEFAULT';
   $SIG{INT} = $SIG{TERM} = $SIG{QUIT} = sub { $self->{finished} = 1 };
   my $daemon = Mojo::Server::Daemon->new;
@@ -139,8 +124,8 @@ Mojo::Server::Morbo - DOOOOOOOOOOOOOOOOOOM!
 
 L<Mojo::Server::Morbo> is a full featured self-restart capable non-blocking
 I/O HTTP 1.1 and WebSocket server built around the very well tested and
-reliable L<Mojo::Server::Daemon> with C<IPv6>, C<TLS>, C<Bonjour> and
-C<libev> support.
+reliable L<Mojo::Server::Daemon> with C<IPv6>, C<TLS>, C<Bonjour> and C<libev>
+support.
 
 To start applications with it you can use the L<morbo> script.
 
@@ -148,9 +133,9 @@ To start applications with it you can use the L<morbo> script.
   Server available at http://127.0.0.1:3000.
 
 Optional modules L<EV>, L<IO::Socket::IP>, L<IO::Socket::SSL> and
-L<Net::Rendezvous::Publish> are supported transparently and used if
-installed. Individual features can also be disabled with the
-C<MOJO_NO_BONJOUR>, C<MOJO_NO_IPV6> and C<MOJO_NO_TLS> environment variables.
+L<Net::Rendezvous::Publish> are supported transparently and used if installed.
+Individual features can also be disabled with the C<MOJO_NO_BONJOUR>,
+C<MOJO_NO_IPV6> and C<MOJO_NO_TLS> environment variables.
 
 =head1 ATTRIBUTES
 
@@ -161,9 +146,9 @@ L<Mojo::Server::Morbo> implements the following attributes.
   my $watch = $morbo->watch;
   $morbo    = $morbo->watch(['/home/sri/myapp']);
 
-Files and directories to watch for changes, defaults to the application
-script as well as the C<lib> and C<templates> directories in the current
-working directory.
+Files and directories to watch for changes, defaults to the application script
+as well as the C<lib> and C<templates> directories in the current working
+directory.
 
 =head1 METHODS
 
@@ -181,13 +166,6 @@ Check if file has been modified since last check.
   $morbo->run('script/myapp');
 
 Run server for application.
-
-=head1 DEBUGGING
-
-You can set the C<MORBO_DEBUG> environment variable to get some advanced
-diagnostics information printed to C<STDERR>.
-
-  MORBO_DEBUG=1
 
 =head1 SEE ALSO
 

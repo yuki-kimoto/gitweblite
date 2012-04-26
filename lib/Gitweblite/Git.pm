@@ -58,7 +58,7 @@ sub check_head_link {
 }
 
 sub fill_from_file_info {
-  my ($self, $home, $project, $diff, $parents) = @_;
+  my ($self, $project, $diff, $parents) = @_;
 
   $diff->{'from_file'} = [];
   $diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
@@ -66,7 +66,7 @@ sub fill_from_file_info {
     if ($diff->{'status'}[$i] eq 'R' ||
         $diff->{'status'}[$i] eq 'C') {
       $diff->{'from_file'}[$i] =
-        $self->get_path_by_id($home, $project, $parents->[$i], $diff->{'from_id'}[$i]);
+        $self->get_path_by_id($project, $parents->[$i], $diff->{'from_id'}[$i]);
     }
   }
 
@@ -75,13 +75,12 @@ sub fill_from_file_info {
 
 sub get_path_by_id {
   my $self = shift;
-  my $home = shift;
   my $project = shift;
   my $base = shift || return;
   my $hash = shift || return;
 
 
-  open my $fh, "-|", $self->git($home, $project), "ls-tree", '-r', '-t', '-z', $base
+  open my $fh, "-|", $self->git($project), "ls-tree", '-r', '-t', '-z', $base
     or return undef;
 
   local $/ = "\0";
@@ -109,11 +108,11 @@ sub fill_projects {
 
   my @projects;
   for my $project (@$ps) {
-    my (@activity) = $self->get_last_activity($home, $project->{'path'});
+    my (@activity) = $self->get_last_activity("$home/$project->{path}");
     next unless @activity;
     ($project->{'age'}, $project->{'age_string'}) = @activity;
     if (!defined $project->{'descr'}) {
-      my $descr = $self->get_project_description($home, $project->{'path'}) || "";
+      my $descr = $self->get_project_description("$home/$project->{path}") || "";
       $project->{'descr_long'} = $descr;
       $project->{'descr'} = $self->_chop_str($descr, 25, 5);
     }
@@ -125,13 +124,13 @@ sub fill_projects {
 }
 
 sub get_difftree {
-  my ($self, $home, $project, $cid, $parent, $parents) = @_;
+  my ($self, $project, $cid, $parent, $parents) = @_;
   
   $parent = "--root" unless defined $parent;
 
   # Execute "git diff-tree"
   my @git_diff_tree = (
-    $self->git($home, $project),
+    $self->git($project),
     "diff-tree", '-r',
     "--no-commit-id",
     @diff_opts,
@@ -154,7 +153,7 @@ sub get_difftree {
 
     if (exists $diff->{'nparents'}) {
 
-      $self->fill_from_file_info($home, $project, $diff, $parents)
+      $self->fill_from_file_info($project, $diff, $parents)
         unless exists $diff->{'from_file'};
 
       $diff->{is_deleted} = 1 if $self->is_deleted($diff);
@@ -229,10 +228,10 @@ sub get_object_type {
 }
 
 sub get_references {
-  my ($self, $home, $project, $type) = @_;
+  my ($self, $project, $type) = @_;
   $type ||= '';
   my %refs;
-  open my $fh, "-|", $self->git($home, $project), "show-ref", "--dereference",
+  open my $fh, "-|", $self->git($project), "show-ref", "--dereference",
     ($type ? ("--", "refs/$type") : ())
     or return;
 
@@ -297,12 +296,12 @@ sub get_id_by_path {
 
 
 sub get_heads {
-  my ($self, $home, $project, $limit, @classes) = @_;
+  my ($self, $project, $limit, @classes) = @_;
   @classes = ('heads') unless @classes;
   my @patterns = map { "refs/$_" } @classes;
   my @heads;
 
-  open my $fh, '-|', $self->git($home, $project), 'for-each-ref',
+  open my $fh, '-|', $self->git($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
     '--format=%(objectname) %(refname) %(subject)%00%(committer)',
     @patterns
@@ -337,11 +336,11 @@ sub get_heads {
 }
 
 sub get_last_activity {
-  my ($self, $home, $project) = @_;
+  my ($self, $project) = @_;
 
   my $fh;
   my @git_command = (
-    $self->git($home, $project),
+    $self->git($project),
     'for-each-ref',
     '--format=%(committer)',
     '--sort=-committerdate',
@@ -363,10 +362,9 @@ sub get_last_activity {
 }
 
 sub get_project_description {
-  my ($self, $home, $project) = @_;
+  my ($self, $project) = @_;
   
-  my $git_dir = "$home/$project";
-  my $description_file = "$git_dir/description";
+  my $description_file = "$project/description";
   
   my $description = $self->_slurp($description_file) || '';
   
@@ -374,20 +372,18 @@ sub get_project_description {
 }
 
 sub get_project_owner {
-  my ($self, $home, $project) = @_;
+  my ($self, $project) = @_;
   
-  my $git_dir = "$home/$project";
-  my $user_id = (stat $git_dir)[4];
+  my $user_id = (stat $project)[4];
   my $user = getpwuid($user_id);
   
   return $user;
 }
 
 sub get_project_urls {
-  my ($self, $home, $project) = @_;
+  my ($self, $project) = @_;
 
-  my $git_dir = "$home/$project";
-  open my $fh, '<', "$git_dir/cloneurl"
+  open my $fh, '<', "$project/cloneurl"
     or return;
   my @urls = map { chomp; d$_ } <$fh>;
   close $fh;
@@ -414,10 +410,10 @@ sub get_projects {
 }
 
 sub get_tags {
-  my ($self, $home, $project, $limit) = @_;
+  my ($self, $project, $limit) = @_;
   my @tags;
 
-  open my $fh, '-|', $self->git($home, $project), 'for-each-ref',
+  open my $fh, '-|', $self->git($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
@@ -468,10 +464,9 @@ sub get_tags {
 }
 
 sub git {
-  my ($self, $home, $project) = @_;
-  my $git_dir = "$home/$project";
+  my ($self, $project) = @_;
   
-  return ($self->bin, "--git-dir=$git_dir");
+  return ($self->bin, "--git-dir=$project");
 }
 
 sub parse_difftree_raw_line {
@@ -555,11 +550,11 @@ sub parse_ls_tree_line {
 }
 
 sub parse_commit {
-  my ($self, $home, $project, $id) = @_;
+  my ($self, $project, $id) = @_;
   
   # Git rev-list
   my @git_rev_list = (
-    $self->git($home, $project),
+    $self->git($project),
     "rev-list",
     "--parents",
     "--header",
@@ -679,12 +674,12 @@ sub parse_commit_text {
 }
 
 sub parse_commits {
-  my ($self, $home, $project, $cid, $maxcount, $skip, $file, @args) = @_;
+  my ($self, $project, $cid, $maxcount, $skip, $file, @args) = @_;
 
   # git rev-list
   $maxcount ||= 1;
   $skip ||= 0;
-  open my $fh, "-|", $self->git($home, $project), "rev-list",
+  open my $fh, "-|", $self->git($project), "rev-list",
     "--header",
     @args,
     ("--max-count=" . $maxcount),

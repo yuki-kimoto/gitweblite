@@ -19,7 +19,7 @@ has max_accepts     => 0;
 has max_connections => 1000;
 has reactor         => sub {
   my $class = Mojo::Reactor::Poll->detect;
-  warn "MAINLOOP ($class)\n" if DEBUG;
+  warn "-- Mainloop ($class)\n" if DEBUG;
   return $class->new;
 };
 has server_class => 'Mojo::IOLoop::Server';
@@ -35,15 +35,14 @@ sub client {
   my $self = shift;
   $self = $self->singleton unless ref $self;
   my $cb = pop;
-  my $args = ref $_[0] ? $_[0] : {@_};
 
   # Make sure garbage gets collected
   $self->_cleaner;
 
   # New client
   my $client = $self->client_class->new;
-  my $id     = $args->{id} || $self->_id;
-  my $c      = $self->{connections}->{$id} ||= {};
+  my $id     = $self->_id;
+  my $c      = $self->{connections}{$id} ||= {};
   $c->{client} = $client;
   weaken $client->reactor($self->reactor)->{reactor};
 
@@ -54,10 +53,10 @@ sub client {
       my $handle = pop;
 
       # New stream
-      my $c = $self->{connections}->{$id};
+      my $c = $self->{connections}{$id};
       delete $c->{client};
       my $stream = $c->{stream} = $self->stream_class->new($handle);
-      $self->stream($stream => $id);
+      $self->_stream($stream => $id);
 
       # Connected
       $self->$cb(undef, $stream);
@@ -65,13 +64,13 @@ sub client {
   );
   $client->on(
     error => sub {
-      delete $self->{connections}->{$id};
+      delete $self->{connections}{$id};
       $self->$cb(pop, undef);
     }
   );
 
   # Connect
-  $client->connect($args);
+  $client->connect(@_);
 
   return $id;
 }
@@ -114,7 +113,7 @@ sub recurring {
 sub remove {
   my ($self, $id) = @_;
   $self = $self->singleton unless ref $self;
-  if (my $c = $self->{connections}->{$id}) { return $c->{finish} = 1 }
+  if (my $c = $self->{connections}{$id}) { return $c->{finish} = 1 }
   $self->_remove($id);
 }
 
@@ -131,7 +130,7 @@ sub server {
   # New server
   my $server = $self->server_class->new;
   my $id     = $self->_id;
-  $self->{servers}->{$id} = $server;
+  $self->{servers}{$id} = $server;
   weaken $server->reactor($self->reactor)->{reactor};
 
   # Events
@@ -179,28 +178,13 @@ sub stream {
   my $self = shift;
   $self = $self->singleton unless ref $self;
 
-  # Make sure garbage gets collected
-  $self->_cleaner;
+  # Connect stream with reactor
+  my $stream = shift;
+  return $self->_stream($stream, $self->_id) if blessed $stream;
 
   # Find stream for id
-  my $stream = shift;
-  unless (blessed $stream) {
-    return unless my $c = $self->{connections}->{$stream};
-    return $c->{stream};
-  }
-
-  # Connect stream with reactor
-  my $id = shift || $self->_id;
-  my $c = $self->{connections}->{$id} ||= {};
-  $c->{stream} = $stream;
-  weaken $stream->reactor($self->reactor)->{reactor};
-
-  # Events
-  weaken $self;
-  $stream->on(close => sub { $self->{connections}->{$id}->{finish} = 1 });
-  $stream->start;
-
-  return $id;
+  return unless my $c = $self->{connections}{$stream};
+  return $c->{stream};
 }
 
 sub timer {
@@ -236,7 +220,7 @@ sub _id {
   my $self = shift;
   my $id;
   do { $id = md5_sum('c' . time . rand 999) }
-    while $self->{connections}->{$id} || $self->{servers}->{$id};
+    while $self->{connections}{$id} || $self->{servers}{$id};
   return $id;
 }
 
@@ -277,13 +261,31 @@ sub _remove {
   return if $reactor->remove($id);
 
   # Listen socket
-  if (delete $self->{servers}->{$id}) { delete $self->{listening} }
+  if (delete $self->{servers}{$id}) { delete $self->{listening} }
 
   # Connection (stream needs to be deleted first)
   else {
-    delete(($self->{connections}->{$id} || {})->{stream});
-    delete $self->{connections}->{$id};
+    delete(($self->{connections}{$id} || {})->{stream});
+    delete $self->{connections}{$id};
   }
+}
+
+sub _stream {
+  my ($self, $stream, $id) = @_;
+
+  # Make sure garbage gets collected
+  $self->_cleaner;
+
+  # Connect stream with reactor
+  $self->{connections}{$id}{stream} = $stream;
+  weaken $stream->reactor($self->reactor)->{reactor};
+
+  # Events
+  weaken $self;
+  $stream->on(close => sub { $self->{connections}{$id}{finish} = 1 });
+  $stream->start;
+
+  return $id;
 }
 
 1;
@@ -342,14 +344,13 @@ L<Mojo::IOLoop> is a very minimalistic reactor based on L<Mojo::Reactor>, it
 has been reduced to the absolute minimal feature set required to build solid
 and scalable non-blocking TCP clients and servers.
 
-Optional modules L<EV>, L<IO::Socket::IP> and L<IO::Socket::SSL> are
-supported transparently and used if installed. Individual features can also
-be disabled with the C<MOJO_NO_IPV6> and C<MOJO_NO_TLS> environment
-variables.
+Optional modules L<EV>, L<IO::Socket::IP> and L<IO::Socket::SSL> are supported
+transparently and used if installed. Individual features can also be disabled
+with the C<MOJO_NO_IPV6> and C<MOJO_NO_TLS> environment variables.
 
-A TLS certificate and key are also built right in to make writing test
-servers as easy as possible. Also note that for convenience the C<PIPE>
-signal will be set to C<IGNORE> when L<Mojo::IOLoop> is loaded.
+A TLS certificate and key are also built right in to make writing test servers
+as easy as possible. Also note that for convenience the C<PIPE> signal will be
+set to C<IGNORE> when L<Mojo::IOLoop> is loaded.
 
 =head1 ATTRIBUTES
 
@@ -368,10 +369,9 @@ defaults to L<Mojo::IOLoop::Client>.
   my $cb = $loop->lock;
   $loop  = $loop->lock(sub {...});
 
-A locking callback that decides if this loop is allowed to accept new
-incoming connections, used to sync multiple server processes. The callback
-should return true or false. Note that exceptions in this callback are not
-captured.
+A locking callback that decides if this loop is allowed to accept new incoming
+connections, used to sync multiple server processes. The callback should
+return true or false. Note that exceptions in this callback are not captured.
 
   $loop->lock(sub {
     my ($loop, $blocking) = @_;
@@ -398,8 +398,7 @@ connections indefinitely.
 The maximum number of parallel connections this loop is allowed to handle
 before stopping to accept new incoming connections, defaults to C<1000>.
 Setting the value to C<0> will make this loop stop accepting new connections
-and allow it to shutdown gracefully without interrupting existing
-connections.
+and allow it to shutdown gracefully without interrupting existing connections.
 
 =head2 C<reactor>
 
@@ -408,6 +407,12 @@ connections.
 
 Low level event reactor, usually a L<Mojo::Reactor::Poll> or
 L<Mojo::Reactor::EV> object.
+
+  # Watch handle for I/O events
+  $loop->reactor->io($handle => sub {
+    my ($reactor, $writable) = @_;
+    say $writable ? 'Handle is writable' : 'Handle is readable';
+  });
 
 =head2 C<server_class>
 
@@ -440,8 +445,8 @@ following new ones.
 
 =head2 C<client>
 
-  my $id =
-    Mojo::IOLoop->client(address => '127.0.0.1', port => 3000, sub {...});
+  my $id
+    = Mojo::IOLoop->client(address => '127.0.0.1', port => 3000, sub {...});
   my $id = $loop->client(address => '127.0.0.1', port => 3000, sub {...});
   my $id = $loop->client({address => '127.0.0.1', port => 3000}, sub {...});
 
@@ -460,8 +465,8 @@ L<Mojo::IOLoop::Client/"connect">.
   my $delay = $loop->delay;
   my $delay = $loop->delay(sub {...});
 
-Get L<Mojo::IOLoop::Delay> object to synchronize events and subscribe to
-event L<Mojo::IOLoop::Delay/"finish"> if optional callback is provided.
+Get L<Mojo::IOLoop::Delay> object to synchronize events and subscribe to event
+L<Mojo::IOLoop::Delay/"finish"> if optional callback is provided.
 
   # Synchronize multiple events
   my $delay = Mojo::IOLoop->delay(sub { say 'BOOM!' });
@@ -497,8 +502,9 @@ Check if loop is running.
   Mojo::IOLoop->one_tick;
   $loop->one_tick;
 
-Run reactor for roughly one tick. Note that this method can recurse back into
-the reactor, so you need to be careful.
+Run reactor until at least one event has been handled or no events are being
+watched anymore. Note that this method can recurse back into the reactor, so
+you need to be careful.
 
 =head2 C<recurring>
 
@@ -507,10 +513,6 @@ the reactor, so you need to be careful.
 
 Create a new recurring timer, invoking the callback repeatedly after a given
 amount of time in seconds.
-
-  # Run multiple reactors next to each other
-  my $loop2 = Mojo::IOLoop->new;
-  Mojo::IOLoop->recurring(0 => sub { $loop2->one_tick });
 
 =head2 C<remove>
 
@@ -551,8 +553,11 @@ object from everywhere inside the process.
   Mojo::IOLoop->start;
   $loop->start;
 
-Start the loop, this will block until C<stop> is called or no events are
-being watched anymore.
+Start the loop, this will block until C<stop> is called or no events are being
+watched anymore.
+
+  # Start loop only if it is not running already
+  Mojo::IOLoop->start unless Mojo::IOLoop->is_running;
 
 =head2 C<stop>
 
@@ -584,8 +589,8 @@ seconds.
 
 =head1 DEBUGGING
 
-You can set the C<MOJO_IOLOOP_DEBUG> environment variable to get some
-advanced diagnostics information printed to C<STDERR>.
+You can set the C<MOJO_IOLOOP_DEBUG> environment variable to get some advanced
+diagnostics information printed to C<STDERR>.
 
   MOJO_IOLOOP_DEBUG=1
 

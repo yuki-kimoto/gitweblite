@@ -5,8 +5,8 @@ Mojolicious::Guides::CodingGuidelines - Coding guidelines
 
 =head1 OVERVIEW
 
-This document describes the coding guidelines that are the foundations
-of L<Mojo> and L<Mojolicious> development.
+This document describes the coding guidelines that are the foundations of
+L<Mojo> and L<Mojolicious> development.
 
 Please do not send patches unless you agree with them.
 
@@ -19,9 +19,9 @@ applications and higher level web frameworks such as L<Mojolicious>.
 All components should be reusable in other projects and in a UNIXish way
 only loosely coupled.
 
-Especially for people new to Perl it should be as easy as possible to
-install Mojolicious and get started. Writing web applications can be one of
-the most fun ways to learn a language!
+Especially for people new to Perl it should be as easy as possible to install
+Mojolicious and get started. Writing web applications can be one of the most
+fun ways to learn a language!
 
 For developers of other web frameworks it should be possible to reuse all the
 infrastructure and just consider the higher levels of the L<Mojolicious>
@@ -42,8 +42,6 @@ than a minute on most common hardware is a good rule of thumb)
 
 Code should be written with a Perl6 port in mind.
 
-No refactoring unless a very important feature absolutely depends on it.
-
 The addition and modification of features is decided by majority vote or the
 pumpking.
 
@@ -56,20 +54,22 @@ It's not a feature without a test and documentation.
 
 A feature is only needed when the majority of the userbase benefits from it.
 
-Features may not be changed without being deprecated for at least one major
-release or 3 months.
+Features may only be changed in a major release or after being deprecated for
+at least 3 months.
 
-Deprecating a feature should be avoided at all costs.
-
-A major release can be version number independent and is signaled by a new
-unique code name based on a unicode character.
+Refactoring and deprecations should be avoided if no important feature depends
+on it.
 
 New features can be marked as experimental to be excluded from deprecation
 policies.
 
-Only add prereqs if absolutely necessary and make them optional if possible.
+A major release is signaled by a new major version number and a unique code
+name based on a unicode character.
 
-Domain specific languages should be avoided in favor of Perl'ish solutions.
+Only add dependencies if absolutely necessary and make them optional if
+possible.
+
+Domain specific languages should be avoided in favor of Perl-ish solutions.
 
 No inline POD.
 
@@ -80,17 +80,15 @@ of text. (An example for every one or two sentences is a good rule of thumb)
 
 Everything should be ordered alphabetically if possible.
 
-The master source code repository should always be kept in a stable state,
-use feature branches for actual development.
+The master source code repository should always be kept in a stable state, use
+feature branches for actual development.
 
-Lines should not be longer than 78 characters and we indent with 2
-whitespaces.
-
-Code should be run through L<Perl::Tidy> with the included C<.perltidyrc>.
-
-No spaghetti code.
+Code has to be run through L<Perl::Tidy> with the included C<.perltidyrc>, and
+everything should look like it was written by a single person.
 
 Code should be organized in blocks and those blocks should be commented.
+
+No spaghetti code.
 
 Comments should be correctly capitalized, and funny if possible, punctuation
 is optional if it doesn't increase readability.
@@ -98,7 +96,7 @@ is optional if it doesn't increase readability.
 Every file should contain at least one quote from C<The Simpsons> or
 C<Futurama>.
 
-No names outside of the CREDITS section of Mojo.pm.
+No names outside of C<Mojolicious.pm>.
 
 No Elitism.
 

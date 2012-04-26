@@ -11,17 +11,16 @@ sub run {
   my $self = shift;
 
   # Find all embedded files
-  my $all = {};
+  my %all;
   my $app = $self->app;
-  for my $class (@{$app->renderer->classes}, @{$app->static->classes}) {
-    $all = {%{$self->get_all_data($class)}, %$all};
-  }
+  %all = (%{$self->get_all_data($_)}, %all)
+    for @{$app->renderer->classes}, @{$app->static->classes};
 
   # Turn them into real files
-  for my $file (keys %$all) {
+  for my $file (keys %all) {
     my $prefix = $file =~ /\.\w+\.\w+$/ ? 'templates' : 'public';
     my $path = $self->rel_file("$prefix/$file");
-    $self->write_file($path, encode('UTF-8', $all->{$file}));
+    $self->write_file($path, encode('UTF-8', $all{$file}));
   }
 }
 
@@ -46,8 +45,8 @@ the C<DATA> sections of your application into real files.
 
 =head1 ATTRIBUTES
 
-L<Mojolicious::Command::inflate> inherits all attributes from
-L<Mojo::Command> and implements the following new ones.
+L<Mojolicious::Command::inflate> inherits all attributes from L<Mojo::Command>
+and implements the following new ones.
 
 =head2 C<description>
 

@@ -4,41 +4,41 @@ use Mojo::Base -base;
 use Mojo::Util qw/decode encode html_unescape xml_escape/;
 use Scalar::Util 'weaken';
 
+has [qw/charset xml/];
+has tree => sub { ['root'] };
+
 my $ATTR_RE = qr/
   \s*
   ([^=\s>]+)       # Key
   (?:
-    \s*
-    =
-    \s*
+    \s*=\s*
     (?:
       "([^"]*?)"   # Quotation marks
-      |
+    |
       '([^']*?)'   # Apostrophes
-      |
+    |
       ([^>\s]*)    # Unquoted
     )
   )?
   \s*
 /x;
 my $END_RE   = qr#^\s*/\s*(.+)\s*#;
-my $START_RE = qr#([^\s/]+)([\s\S]*)#;
 my $TOKEN_RE = qr/
   ([^<]*)                                           # Text
   (?:
     <\?(.*?)\?>                                     # Processing Instruction
-    |
+  |
     <\!--(.*?)-->                                   # Comment
-    |
+  |
     <\!\[CDATA\[(.*?)\]\]>                          # CDATA
-    |
+  |
     <!DOCTYPE(
       \s+\w+
       (?:(?:\s+\w+)?(?:\s+(?:"[^"]*"|'[^']*'))+)?   # External ID
       (?:\s+\[.+?\])?                               # Int Subset
       \s*
     )>
-    |
+  |
     <(
       \s*
       [^>\s]+                                       # Tag
@@ -48,31 +48,23 @@ my $TOKEN_RE = qr/
 /xis;
 
 # Optional HTML elements
-my @OPTIONAL =
+my %OPTIONAL = map { $_ => 1 }
   qw/body colgroup dd head li optgroup option p rt rp tbody td tfoot th/;
-my %OPTIONAL;
-$OPTIONAL{$_}++ for @OPTIONAL;
 
 # Elements that break HTML paragraphs
-my @PARAGRAPH = (
+my %PARAGRAPH = map { $_ => 1 } (
   qw/address article aside blockquote dir div dl fieldset footer form h1 h2/,
   qw/h3 h4 h5 h6 header hgroup hr menu nav ol p pre section table or ul/
 );
-my %PARAGRAPH;
-$PARAGRAPH{$_}++ for @PARAGRAPH;
 
 # HTML table elements
-my @TABLE = qw/col colgroup tbody td th thead tr/;
-my %TABLE;
-$TABLE{$_}++ for @TABLE;
+my %TABLE = map { $_ => 1 } qw/col colgroup tbody td th thead tr/;
 
 # HTML5 void elements
-my @VOID = (
+my %VOID = map { $_ => 1 } (
   qw/area base br col command embed hr img input keygen link meta param/,
   qw/source track wbr/
 );
-my %VOID;
-$VOID{$_}++ for @VOID;
 
 # HTML4/5 inline elements
 my @HTML4_INLINE = qw/applet basefont big del font iframe ins s strike u/;
@@ -81,11 +73,7 @@ my @HTML5_INLINE = (
   qw/label map object q samp script select small strong span sub sup/,
   qw/textarea tt var/
 );
-my %INLINE;
-$INLINE{$_}++ for @HTML4_INLINE, @HTML5_INLINE;
-
-has [qw/charset xml/];
-has tree => sub { ['root'] };
+my %INLINE = map { $_ => 1 } @HTML4_INLINE, @HTML5_INLINE;
 
 # "No one believes me.
 #  I believe you, dad.
@@ -94,15 +82,14 @@ sub parse {
   my ($self, $html) = @_;
 
   # Decode
-  my $charset = $self->charset;
-  $html = decode $charset, $html if $charset;
+  if (my $charset = $self->charset) { $html = decode $charset, $html }
 
   # Tokenize
   my $tree    = ['root'];
   my $current = $tree;
   while ($html =~ m/\G$TOKEN_RE/gcs) {
-    my ($text, $pi, $comment, $cdata, $doctype, $tag) =
-      ($1, $2, $3, $4, $5, $6);
+    my ($text, $pi, $comment, $cdata, $doctype, $tag)
+      = ($1, $2, $3, $4, $5, $6);
 
     # Text
     if (length $text) {
@@ -114,9 +101,7 @@ sub parse {
     if ($doctype) { $self->_doctype($doctype, \$current) }
 
     # Comment
-    elsif ($comment) {
-      $self->_comment($comment, \$current);
-    }
+    elsif ($comment) { $self->_comment($comment, \$current) }
 
     # CDATA
     elsif ($cdata) { $self->_cdata($cdata, \$current) }
@@ -130,11 +115,11 @@ sub parse {
     if ($tag =~ $END_RE) { $self->_end($cs ? $1 : lc($1), \$current) }
 
     # Start
-    elsif ($tag =~ $START_RE) {
+    elsif ($tag =~ qr#([^\s/]+)([\s\S]*)#) {
       my ($start, $attr) = ($cs ? $1 : lc($1), $2);
 
       # Attributes
-      my $attrs = {};
+      my %attrs;
       while ($attr =~ /$ATTR_RE/g) {
         my $key = $cs ? $1 : lc($1);
         my $value = defined $2 ? $2 : defined $3 ? $3 : $4;
@@ -144,11 +129,11 @@ sub parse {
 
         # Add unescaped value
         $value = html_unescape $value if $value && (index $value, '&') >= 0;
-        $attrs->{$key} = $value;
+        $attrs{$key} = $value;
       }
 
       # Start
-      $self->_start($start, $attrs, \$current);
+      $self->_start($start, \%attrs, \$current);
 
       # Empty element
       $self->_end($start, \$current)
@@ -163,9 +148,8 @@ sub parse {
       }
     }
   }
-  $self->tree($tree);
 
-  return $self;
+  return $self->tree($tree);
 }
 
 sub render {
@@ -308,7 +292,7 @@ sub _render {
     # Attributes
     my @attrs;
     for my $key (sort keys %{$tree->[2]}) {
-      my $value = $tree->[2]->{$key};
+      my $value = $tree->[2]{$key};
 
       # No value
       push @attrs, $key and next unless defined $value;

@@ -142,7 +142,7 @@ sub _parse_multipart {
   # Parse
   $self->{multi_state} ||= 'multipart_preamble';
   my $boundary = $self->boundary;
-  while (!$self->is_finished) {
+  until ($self->is_finished) {
 
     # Preamble
     if (($self->{multi_state} || '') eq 'multipart_preamble') {
@@ -266,8 +266,8 @@ Emitted when a new L<Mojo::Content::Single> part starts.
 
 =head1 ATTRIBUTES
 
-L<Mojo::Content::MultiPart> inherits all attributes from L<Mojo::Content>
-and implements the following new ones.
+L<Mojo::Content::MultiPart> inherits all attributes from L<Mojo::Content> and
+implements the following new ones.
 
 =head2 C<parts>
 

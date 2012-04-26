@@ -9,6 +9,8 @@ use warnings;
 # No imports because we get subclassed, a lot!
 use Carp ();
 
+sub say(@) {print @_, "\n"}
+
 # "Kids, you tried your best and you failed miserably.
 #  The lesson is, never try."
 sub import {
@@ -40,6 +42,9 @@ sub import {
     # Can haz?
     *{"${caller}::has"} = sub { attr($caller, @_) };
   }
+  
+  my $caller = caller;
+  *{"${caller}::say"} = sub { say(@_) };
 
   # Mojo modules are strict!
   strict->import;
@@ -64,8 +69,7 @@ sub attr {
     if ref $default && ref $default ne 'CODE';
 
   # Create attributes
-  $attrs = [$attrs] unless ref $attrs eq 'ARRAY';
-  for my $attr (@$attrs) {
+  for my $attr (@{ref $attrs eq 'ARRAY' ? $attrs : [$attrs]}) {
     Carp::croak(qq/Attribute "$attr" invalid/)
       unless $attr =~ /^[a-zA-Z_]\w*$/;
 
@@ -73,21 +77,21 @@ sub attr {
     my $code = "sub {\n  if (\@_ == 1) {\n";
 
     # No default value (return value)
-    unless (defined $default) { $code .= "    return \$_[0]->{'$attr'};" }
+    unless (defined $default) { $code .= "    return \$_[0]{'$attr'};" }
 
     # Default value
     else {
 
       # Return value
-      $code .= "    return \$_[0]->{'$attr'} if exists \$_[0]->{'$attr'};\n";
+      $code .= "    return \$_[0]{'$attr'} if exists \$_[0]{'$attr'};\n";
 
       # Return default value
-      $code .= "    return \$_[0]->{'$attr'} = ";
+      $code .= "    return \$_[0]{'$attr'} = ";
       $code .= ref $default eq 'CODE' ? '$default->($_[0]);' : '$default;';
     }
 
     # Store value
-    $code .= "\n  }\n  \$_[0]->{'$attr'} = \$_[1];\n";
+    $code .= "\n  }\n  \$_[0]{'$attr'} = \$_[1];\n";
 
     # Footer (return invocant)
     $code .= "  \$_[0];\n};";
@@ -95,12 +99,7 @@ sub attr {
     # We compile custom attribute code for speed
     no strict 'refs';
     no warnings 'redefine';
-    *{"${class}::$attr"} = eval $code;
-
-    # This should never happen (hopefully)
-    Carp::croak("Mojo::Base compiler error: \n$code\n$@\n") if $@;
-
-    # Debug mode
+    *{"${class}::$attr"} = eval $code or Carp::croak("Mojo::Base error: $@");
     warn "\nATTRIBUTE: $class->$attr\n$code\n\n" if $ENV{MOJO_BASE_DEBUG};
   }
 }
@@ -207,10 +206,14 @@ hash or a hash reference with attribute values.
   BaseSubClass->attr([qw/name1 name2 name3/] => 'foo');
   BaseSubClass->attr([qw/name1 name2 name3/] => sub {...});
 
-Create attributes. An arrayref can be used to create more than one attribute.
-Pass an optional second argument to set a default value, it should be a
-constant or a sub reference. The sub reference will be excuted at accessor
-read time if there's no set value.
+Create attributes. An array reference can be used to create more than one
+attribute. Pass an optional second argument to set a default value, it should
+be a constant or a sub reference. The sub reference will be excuted at
+accessor read time if there's no set value.
+
+=head2 C<say>
+
+Backported from perl-5.10.1
 
 =head1 DEBUGGING
 
