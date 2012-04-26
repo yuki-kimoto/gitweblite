@@ -1,5 +1,5 @@
 <div class="page_nav">
-  % my $cid = stash('cid') || gitweblite_get_head_id($home, $project);
+  % my $cid = stash('cid') || gitweblite_get_head_id($project);
   % if ($current eq 'summary') {
     Summary
   % } else {
