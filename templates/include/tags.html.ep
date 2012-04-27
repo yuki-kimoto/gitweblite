@@ -9,7 +9,7 @@
       <td><i><%= $tag->{age} %></i></td>
       <td>
         <a class="list name" href=
-          "<%= url_for("$reftype", project => $project_ns, cid => $tag->{refid}) %>"
+          "<%= url_for("$reftype", project => $project_ns, id => $tag->{refid}) %>"
         >
           %= $tag->{name};
         </a>
@@ -33,18 +33,18 @@
       </td>
       <td class="link">
         <a href=
-          "<%= url_for("$reftype", project => $project_ns, cid => $tag->{refid}) %>"
+          "<%= url_for("$reftype", project => $project_ns, id => $tag->{refid}, id => $tag->{refid}) %>"
         >
           %= $reftype;
         </a>
         % if ($reftype eq 'commit') {
           |
-          <a href="<%= url_for('shortlog', project => $project_ns)->query(base_cid => $name) %>"
+          <a href="<%= url_for('shortlog', project => $project_ns)->query(base_id => $name) %>"
           >
             shortlog
           </a>
           |
-          <a href="<%= url_for('log', project => $project_ns)->query(base_cid => $name) %>">
+          <a href="<%= url_for('log', project => $project_ns)->query(base_id => $name) %>">
             log
           </a>
         % } elsif ($reftype eq 'blob') {

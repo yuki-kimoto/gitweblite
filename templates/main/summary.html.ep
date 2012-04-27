@@ -33,33 +33,34 @@
     
     % for (my $i = 0; $i < @$commits; $i++) {
       % my $commit = $commits->[$i];
-      % my $cid = $commit->{id};
+      % my $id = $commit->{id};
+      % my $id = $id;
       <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td title="<%= $commit->{age_string_date} %>"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('commit', project => $project_ns, cid => $cid) %>"
+            "<%= url_for('commit', project => $project_ns, id => $id) %>"
           >
             %= $commit->{title_short};
           </a>
           %= include 'include/refs', project_ns => $project_ns, commit => $commit, refs => $refs;
         </td>
         <td class="link">
-          <a href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">
+          <a href="<%= url_for('commit', project => $project_ns, id => $id) %>">
             commit
           </a>
           |
-          <a href="<%= url_for('commitdiff', project => $project_ns, cid => $cid) %>">
+          <a href="<%= url_for('commitdiff', project => $project_ns, id => $id) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('tree', project => $project_ns, id_dir => $cid) %>">
+          <a href="<%= url_for('tree', project => $project_ns, id_dir => $id) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-              <%= url_for('snapshot', project => $project_ns, cid => $cid) %>>
+              <%= url_for('snapshot', project => $project_ns, id => $id) %>>
             snapshot
           </a>
         </td>

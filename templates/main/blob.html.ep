@@ -6,26 +6,26 @@
     <a href="<%= url_for '/' %>">home</a> &gt;
     <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
   </div>
-  %= include '/include/page_navi', current => 'blob', head_cid => $cid, project_ns => $project_ns;
+  %= include '/include/page_navi', current => 'blob', head_id => $id, project_ns => $project_ns;
   <div class="page_nav">
-    <a href="<%= url_for('blob_plain', project => $project_ns)->query(cid => $cid, file => $file) %>"
+    <a href="<%= url_for('blob_plain', project => $project_ns)->query(id => $id, file => $file) %>"
     >
       Raw
     </a>
     |
     <a href="<%= url_for('blob', project => $project_ns,
-        cid => gitweblite_get_head_id($project), file => $file) %>">
+        id => gitweblite_get_head_id($project), file => $file) %>">
       HEAD
     </a>
     <br/>
   </div>
   <div class="header">
-  <a class="title" href= "<%= url_for('commit', project => $project_ns, cid => $cid) %>">
+  <a class="title" href= "<%= url_for('commit', project => $project_ns, id => $id) %>">
     <%= $commit->{title} %>
   </a>
   </div>
 
-  %= include '/include/pagepath', project_ns => $project_ns, cid => $cid, file => $file;
+  %= include '/include/pagepath', project_ns => $project_ns, id => $id, file => $file;
 
   <div class="page_body">
     % if ($mimetype =~ m#^image/#) {
@@ -33,7 +33,7 @@
         % if (defined $file) {
           alt="<%= $file %>" title="<%= $file %>"
         % }
-        src="<%= url_for('blob_plain',project => $project_ns)->query(cid => $cid, file => $file) %>"
+        src="<%= url_for('blob_plain',project => $project_ns)->query(id => $id, file => $file) %>"
       />
     % } else {
       % my $nr = 1;

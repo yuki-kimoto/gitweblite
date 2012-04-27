@@ -9,12 +9,12 @@
   %= include '/include/page_navi', current => 'commitdiff', project_ns => $project_ns;
   <div class="page_nav">
     <a href="<%= url_for('commitdiff', suffix => '_plain', project => $project_ns,
-        cid => $commit->{id})->query(type => 'plain') %>">
+        id => $commit->{id})->query(type => 'plain') %>">
       Raw
     </a>
   </div>
   <div class="header">
-    <a class="title" href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">
+    <a class="title" href="<%= url_for('commit', project => $project_ns) %>">
       <%= $commit->{title} %>
     </a>
   </div>
@@ -30,7 +30,7 @@
   <div class="page_body">
     <div class="list_head"></div>
 
-    <%= include '/include/difftree', cid => $commit->{id}, from_cid => $commit->{parent},
+    <%= include '/include/difftree', id => $commit->{id}, from_id => $commit->{parent},
       difftrees => $difftrees, parents => $commit->{parents} %>
 
     <div class="patchset">

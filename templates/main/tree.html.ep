@@ -18,20 +18,20 @@
   </div>
 
   <div class="header">
-    <a class="title" href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">
+    <a class="title" href="<%= url_for('commit', project => $project_ns, id => $id) %>">
       <%= $commit->{title} %>
     </a>
   </div>
 
   <div class="page_path">
-    [<a href="<%= url_for('tree', project => $project_ns, id_dir => $cid) %>"><%= $project %></a>]
+    [<a href="<%= url_for('tree', project => $project_ns, id_dir => $id) %>"><%= $project %></a>]
     % my @parts;
     % @parts = split('/', $dir) if defined $dir;
     % my $path;
     % for (my $i = 0; $i < @parts; $i++) {
       % my $part = $parts[$i];
       % $path .= "$part";
-      <a href="<%= url_for('tree', project => $project_ns, id_dir => $cid, dir => '/' . $path) %>">
+      <a href="<%= url_for('tree', project => $project_ns, id_dir => $id, dir => '/' . $path) %>">
         <%= $part %>
       % $path .= '/' if $i ne @parts - 1;
       </a>
@@ -59,12 +59,12 @@
               % my $file = defined $dir ? "$dir/$name" : $name;
 
               <a class="list" href="<%= url_for('blob', project => $project_ns,
-                  cid => $cid, file => $file) %>">
+                  id => $id, file => $file) %>">
                 <%= $tree->{name} %>
               </a>
             % } elsif ($tree) {
               <a href="<%= url_for('tree', project => $project_ns,
-                  id_dir => "$cid/$child_dir") %>">
+                  id_dir => "$id/$child_dir") %>">
                 <%= $tree->{name} %>
               </a>
             % }
@@ -74,17 +74,17 @@
               % my $file = defined $dir ? "$dir/$name" : $name;
               % $file =~ s/^\///;
               <a href="<%= url_for('blob', project => $project_ns,
-                  cid => $cid, file => $file) %>">
+                  id => $id, file => $file) %>">
                 blob
               </a>
               |
               <a href="<%= url_for('blob_plain', project => $project_ns,
-                  cid => $cid, file => $file) %>">
+                  id => $id, file => $file) %>">
                 raw
               </a>
             % } elsif ($type eq 'tree') {
               <a href="<%= url_for('tree', project => $project_ns,
-                  id_dir => "$cid/$child_dir") %>">
+                  id_dir => "$id/$child_dir") %>">
                 tree
               </a>
             % }

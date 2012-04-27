@@ -115,9 +115,9 @@ sub startup {
       my ($self, $project) = @_;
       
       my $head_commit = $self->app->git->parse_commit($project, "HEAD");
-      my $head_cid = $head_commit->{id};
+      my $head_id = $head_commit->{id};
       
-      return $head_cid;
+      return $head_id;
     });
   }
 
@@ -146,11 +146,11 @@ sub startup {
       ->to('#log')->name('log');
     
     # Commit
-    $r->get('/(*project)/commit/:cid', [project => $project_re])
+    $r->get('/(*project)/commit/(*id)', [project => $project_re])
       ->to('#commit')->name('commit');
     
     # Commit diff
-    $r->get('/(*project)/commitdiff/:cid', [project => $project_re])
+    $r->get('/(*project)/commitdiff/:id', [project => $project_re])
       ->to('#commitdiff')->name('commitdiff');
 
     # Tags
@@ -170,13 +170,13 @@ sub startup {
       ->to('#tree')->name('tree');
     
     # Blob
-    $r->get('/(*project)/blob/:cid/(*file)', [project => $project_re])
+    $r->get('/(*project)/blob/:id/(*file)', [project => $project_re])
       ->to('#blob')->name('blob');
     $r->get('/(*project)/blob/:bid', [project => $project_re])
       ->to('#blob')->name('blob_bid');
     
     # Blob plain
-    $r->get('/(*project)/blob_plain/:cid/(*file)', [project => $project_re])
+    $r->get('/(*project)/blob_plain/:id/(*file)', [project => $project_re])
       ->to('#blob_plain')->name('blob_plain');
     $r->get('/(*project)/blob_plain/:bid', [project => $project_re])
       ->to('#blob_plain')->name('blob_plain');
@@ -186,7 +186,7 @@ sub startup {
       ->to('#blobdiff', suffix => '')->name('blobdiff');
     
     # Snapshot
-    $r->get('/(*project)/snapshot/:cid', [project => $project_re])
+    $r->get('/(*project)/snapshot/:id', [project => $project_re])
       ->to('#snapshot')->name('snapshot');
   }
 }

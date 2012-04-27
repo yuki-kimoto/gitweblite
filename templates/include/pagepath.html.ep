@@ -1,5 +1,5 @@
 <div class="page_path">
-  [<a href="<%= url_for('tree', project => $project_ns, cid => $cid) %>"><%= $project %></a>]
+  [<a href="<%= url_for('tree', project => $project_ns, id => $id) %>"><%= $project %></a>]
   % my @parts = split('/', $file);
   % my $path;
   % for (my $i = 0; $i < @parts; $i++) {
@@ -8,13 +8,13 @@
     
     % if ($i eq @parts - 1) {
       <a title="tree home" href=
-        "<%= url_for('blob', project => $project_ns, cid => $cid, file => $path) %>"
+        "<%= url_for('blob', project => $project_ns, id => $id, file => $path) %>"
       >
        <%= $part %>
       </a>
     % } else {
       <a title="tree home" href=
-        "<%= url_for('tree', project => $project_ns, id_dir => "$cid/$path") %>"
+        "<%= url_for('tree', project => $project_ns, id_dir => "$id/$path") %>"
       >
        <%= $part %>
       </a>      

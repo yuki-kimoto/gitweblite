@@ -7,7 +7,7 @@
     <a href="<%= url_for('projects', $home_ns) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'shortlog', project_ns => $project_ns;
-  <%= include '/include/page_navi2', current => 'shortlog', base_cid => $base_cid,
+  <%= include '/include/page_navi2', current => 'shortlog', base_id => $base_id,
     page => $page, page_count => $page_count,commits => $commits;
   %>
 
@@ -20,31 +20,31 @@
   <table class="shortlog">
     % for (my $i = 0; $i < @$commits; $i++) {
       % my $commit = $commits->[$i];
-      % my $cid = $commit->{id};
+      % my $id = $commit->{id};
       <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td title="2012-03-20"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('commit', project => $project_ns, cid => $cid) %>"
+            "<%= url_for('commit', project => $project_ns, id => $id) %>"
           >
             <%= $commit->{title_short} %>
           </a>
           %= include 'include/refs', project_ns => $project_ns, commit => $commit, refs => $refs;
         </td>
         <td class="link">
-          <a href="<%= url_for('commit', project => $project_ns, cid => $cid) %>">commit</a>
+          <a href="<%= url_for('commit', project => $project_ns, id => $id) %>">commit</a>
           |
-          <a href="<%= url_for('commitdiff', project => $project_ns, cid => $cid) %>">
+          <a href="<%= url_for('commitdiff', project => $project_ns, id => $id) %>">
             commitdiff
           </a>
           |
-          <a href="<%= url_for('tree', project => $project_ns, id_dir => $cid) %>">
+          <a href="<%= url_for('tree', project => $project_ns, id_dir => $id) %>">
             tree
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('snapshot', project => $project_ns, cid => $cid) %>
+            <%= url_for('snapshot', project => $project_ns, id => $id) %>
           >
             snapshot
           </a>
@@ -55,7 +55,7 @@
       <td colspan="4">
         % if (@$commits == $page_count) {
           <a title="Alt-n" accesskey="n" href="<%= url_for('shortlog', project => $project_ns)
-              ->query(base_cid => $base_cid, page => $page + 1) %>">
+              ->query(base_id => $base_id, page => $page + 1) %>">
             Next
           </a>
         % }

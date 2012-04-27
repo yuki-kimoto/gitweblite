@@ -7,11 +7,11 @@
         <th></th>
         % for (my $i = 0; $i < @$parents; $i++) {
           % my $parent = $parents->[$i];
-          % my $from_cid = $parent;
+          % my $from_id = $parent;
           <th>
             <a href="<%= url_for('commitdiff', project => $project_ns,
-                cid => $cid, from_cid => $from_cid) %>"
-                title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_cid, 0, 7) %>">
+                id => $id, from_id => $from_id) %>"
+                title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_id, 0, 7) %>">
               <%= $i + 1 %>
             </a>
           </th>
@@ -34,7 +34,7 @@
           % } else {
             <td>
               <a class="list" href="<%= url_for('blob', project => $project_ns,
-                  cid => $cid, file => $file) %>">
+                  id => $id, file => $file) %>">
                 <%= $file %>
               </a>
             </td>
@@ -42,7 +42,7 @@
 
           % my $not_deleted = 0;
           % for (my $i = 0; $i < $difftree->{'nparents'}; $i++) {
-            % my $from_cid = $parents->[$i];
+            % my $from_id = $parents->[$i];
             % my $from_bid = $difftree->{'from_id'}[$i];
             % my $from_file = $difftree->{'from_file'}[$i];
             % my $status = $difftree->{'status'}[$i];
@@ -53,7 +53,7 @@
             % } elsif ($status eq 'D') {
               <td class="link">
                 <a class="list" href="<%= url_for('blob', project => $project_ns,
-                    ,cid => $from_cid, file => $from_file) %>">
+                    ,id => $from_id, file => $from_file) %>">
                   blob<%= $i + 1 %>
                 </a>
                 |
@@ -65,7 +65,7 @@
                 <td class="link">
               % }
               <a href="<%= url_for('blobdiff',project => $project_ns)
-                  ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
+                  ->query(from_id => $from_id, id => $id, file => $file) %>">
                 diff<%= $i + 1 %>
               </a>
               | </td>
@@ -75,7 +75,7 @@
           <td class="link">
             % if ($not_deleted) {
               <a href="<%= url_for('blob', project => $project_ns,
-                  cid => $cid, file => $file) %>">
+                  id => $id, file => $file) %>">
                 blob
               </a>
             % }
@@ -94,12 +94,12 @@
           % my $from_mode_oct = $difftree->{from_mode_oct};
           <td>
             <a class="list" href="<%= url_for('blob', project => $project_ns,
-                cid => $cid, file => $file) %>">
+                id => $id, file => $file) %>">
               % if ($status eq 'D') {
                 <%= $file %>
               % } else {
                 <a class="list" href="<%= url_for('blob', project => $project_ns,
-                    cid => $cid, file => $file) %>">
+                    id => $id, file => $file) %>">
                   <%= $file %>
                 </a>
               % }
@@ -148,7 +148,7 @@
                 [
                   <%= $status_name %> from
                   <a href="<%= url_for('blob', project => $project_ns,
-                      cid => $from_cid, file => $from_file) %>">
+                      id => $from_id, file => $from_file) %>">
                     <%= $difftree->{from_file} %></a>
                   with <%= $difftree->{similarity} %>%
                   <%= $mode_change %>
@@ -159,14 +159,14 @@
           <td class="link">
             % if ($status ne 'A') {
               <a href="<%= url_for('blobdiff', project => $project_ns)
-                  ->query(from_cid => $from_cid, cid => $cid, file => $file) %>">
+                  ->query(from_id => $from_id, id => $id, file => $file) %>">
                 diff
               </a>
               |
             % }
             % if ($status ne 'D') {
               <a href="<%= url_for('blob', project => $project_ns,
-                  cid => $cid, file => $file) %>">
+                  id => $id, file => $file) %>">
                 blob
               </a>
             % }

@@ -35,7 +35,7 @@
           <a href="<%= url_for('shortlog', project => $pname_ns) %>">shortlog</a> |
           <a href="<%= url_for('log', project => $pname_ns) %>">log</a> |
           <a href="<%= url_for('tree', project => $pname_ns, 
-              id_dir => $project->{head_cid}) %>">
+              id_dir => $project->{head_id}) %>">
             tree
           </a>
         </td>

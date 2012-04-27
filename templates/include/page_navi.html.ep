@@ -1,5 +1,6 @@
 <div class="page_nav">
-  % my $cid = stash('cid') || gitweblite_get_head_id($project);
+  % my $id = stash('id') || gitweblite_get_head_id($project);
+  % my $id = $id;
   % if ($current eq 'summary') {
     Summary
   % } else {
@@ -21,8 +22,7 @@
   % if ($current eq 'commit') {
     Commit
   % } else {
-    <a href="<%= url_for('commit', project => $project_ns,
-        cid => $cid) %>">
+    <a href="<%= url_for('commit', project => $project_ns, id => $id) %>">
       Commit
     </a>
   % }
@@ -30,12 +30,12 @@
   % if ($current eq 'commitdiff') {
     Commitdiff
   % } else {
-    <a href="<%= url_for('commitdiff', project => $project_ns, cid => $cid) %>">Commitdiff</a>
+    <a href="<%= url_for('commitdiff', project => $project_ns, id => $id) %>">Commitdiff</a>
   % }
   |
   % if ($current eq 'tree') {
     Tree
   % } else {
-    <a href="<%= url_for('tree', project => $project_ns, id_dir => $cid) %>">Tree</a>
+    <a href="<%= url_for('tree', project => $project_ns, id_dir => $id) %>">Tree</a>
   % }
 </div>
