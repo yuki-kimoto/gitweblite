@@ -7,7 +7,7 @@
     <a href="<%= url_for('projects', $home_ns) %>"><%= $home %></a>
   </div>
   %= include '/include/page_navi', current => 'shortlog', project_ns => $project_ns;
-  <%= include '/include/page_navi2', current => 'shortlog', base_id => $base_id,
+  <%= include '/include/page_navi2', current => 'shortlog', id => $id,
     page => $page, page_count => $page_count,commits => $commits;
   %>
 
@@ -55,7 +55,7 @@
       <td colspan="4">
         % if (@$commits == $page_count) {
           <a title="Alt-n" accesskey="n" href="<%= url_for('shortlog', project => $project_ns)
-              ->query(base_id => $base_id, page => $page + 1) %>">
+              ->query(id => $id, page => $page + 1) %>">
             Next
           </a>
         % }

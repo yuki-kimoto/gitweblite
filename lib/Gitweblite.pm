@@ -3,8 +3,6 @@ use Mojo::Base 'Mojolicious';
 
 use Validator::Custom;
 use Gitweblite::Git;
-use File::Find 'find';
-use File::Basename qw/basename dirname/;
 
 our $VERSION = '0.01';
 
@@ -74,11 +72,11 @@ sub startup {
       ->to('#summary')->name('summary');
     
     # Short log
-    $r->get('/(*project)/shortlog/(*id)', [project => $project_re])
+    $r->get('/(*project)/shortlog/(*id)', [project => $project_re], {id => 'HEAD'})
       ->to('#shortlog')->name('shortlog');
     
     # Log
-    $r->get('/(*project)/log/(*id)', [project => $project_re])
+    $r->get('/(*project)/log/(*id)', [project => $project_re], {id => 'HEAD'})
       ->to('#log')->name('log');
     
     # Commit
@@ -102,7 +100,7 @@ sub startup {
       ->to('#heads')->name('heads');
     
     # Tree
-    $r->get('/(*project)/tree/(*id_dir)', [project => $project_re])
+    $r->get('/(*project)/tree/(*id_dir)', [project => $project_re], {id_dir => 'HEAD'})
       ->to('#tree')->name('tree');
     
     # Blob

@@ -5,17 +5,17 @@
     <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
       <td><i><%= $head->{age} %></i></td>
       <td class="current_head">
-        <a class="list name" href="<%= url_for('log', project => $project_ns)->query(id => $name) %>"
+        <a class="list name" href="<%= url_for('log', project => $project_ns, id => $name) %>"
         >
           <%= $head->{name} %>
         </a>
       </td>
       <td class="link">
-        <a href="<%= url_for('shortlog', project => $project_ns)->query(base_id => $name) %>"
+        <a href="<%= url_for('shortlog', project => $project_ns)->query(id => $name) %>"
         >
           shortlog
         </a> |
-      <a href="<%= url_for('log', project => $project_ns)->query(base_id => $name) %>">
+      <a href="<%= url_for('log', project => $project_ns)->query(id => $name) %>">
         log
       </a> |
         <a href="<%= url_for('tree', project => $project_ns, id_dir => $name) %>">

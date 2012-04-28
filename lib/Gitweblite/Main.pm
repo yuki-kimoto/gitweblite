@@ -307,7 +307,7 @@ sub commitdiff {
 
 sub tree {
   my $self = shift;
-
+  
   # Validation
   my $raw_params = $self->_parse_params;
   my $rule = [
@@ -837,7 +837,7 @@ sub _log {
   my $rule = [
     project => ['not_blank'],
     page => {require => 0} => ['int'],
-    base_id => {require => 0} => ['any']
+    id => {require => 0} => ['any']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   return $self->render('not_found') unless $vresult->is_ok;
@@ -846,8 +846,8 @@ sub _log {
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $base_id = defined $params->{base_id}
-    ? $params->{base_id}
+  my $id = defined $params->{id}
+    ? $params->{id}
     :"HEAD";
   my $page = $params->{page} || 0;
   $page = 0 if $page < 0;
@@ -856,7 +856,7 @@ sub _log {
   my $git = $self->app->git;
   
   # Base commit
-  my $base_commit = $git->parse_commit($project, $base_id);
+  my $base_commit = $git->parse_commit($project, $id);
   
   # Commits
   my $page_count = $short ? 50 : 20;
@@ -880,7 +880,7 @@ sub _log {
     home_ns => $home_ns,
     project => $project,
     project_ns => $project_ns,
-    base_id => $base_id,
+    id => $id,
     commits => $commits,
     refs => $refs,
     page => $page,

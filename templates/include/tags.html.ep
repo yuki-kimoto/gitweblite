@@ -39,12 +39,12 @@
         </a>
         % if ($reftype eq 'commit') {
           |
-          <a href="<%= url_for('shortlog', project => $project_ns)->query(base_id => $name) %>"
+          <a href="<%= url_for('shortlog', project => $project_ns)->query(id => $name) %>"
           >
             shortlog
           </a>
           |
-          <a href="<%= url_for('log', project => $project_ns)->query(base_id => $name) %>">
+          <a href="<%= url_for('log', project => $project_ns)->query(id => $name) %>">
             log
           </a>
         % } elsif ($reftype eq 'blob') {
