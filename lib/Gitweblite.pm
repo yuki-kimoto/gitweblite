@@ -104,16 +104,12 @@ sub startup {
       ->to('#tree')->name('tree');
     
     # Blob
-    $r->get('/(*project)/blob/:id/(*file)', [project => $project_re])
+    $r->get('/(*project)/blob/(*id_file)', [project => $project_re])
       ->to('#blob')->name('blob');
-    $r->get('/(*project)/blob/:bid', [project => $project_re])
-      ->to('#blob')->name('blob_bid');
     
     # Blob plain
-    $r->get('/(*project)/blob_plain/:id/(*file)', [project => $project_re])
-      ->to('#blob_plain')->name('blob_plain');
-    $r->get('/(*project)/blob_plain/:bid', [project => $project_re])
-      ->to('#blob_plain')->name('blob_plain');
+    $r->get('/(*project)/blob_plain/(*id_file)', [project => $project_re])
+      ->to('#blob', plain => 1)->name('blob_plain');
     
     # Blob diff
     $r->get('/(*project)/blobdiff(:suffix)', [project => $project_re])

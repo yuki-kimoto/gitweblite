@@ -11,11 +11,11 @@
         </a>
       </td>
       <td class="link">
-        <a href="<%= url_for('shortlog', project => $project_ns)->query(id => $name) %>"
+        <a href="<%= url_for('shortlog', project => $project_ns, id => $name) %>"
         >
           shortlog
         </a> |
-      <a href="<%= url_for('log', project => $project_ns)->query(id => $name) %>">
+      <a href="<%= url_for('log', project => $project_ns, id => $name) %>">
         log
       </a> |
         <a href="<%= url_for('tree', project => $project_ns, id_dir => $name) %>">

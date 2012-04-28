@@ -12,8 +12,7 @@
   %>
 
   <div class="header">
-    <a class="title" href="<%= url_for('shortlog', project => $project_ns)
-       ->query($self->req->params->clone) %>">
+    <a class="title" href="<%= url_for('shortlog', project => $project_ns) %>">
      <%= $project %>
    </a>
   </div>
@@ -54,8 +53,8 @@
     <tr>
       <td colspan="4">
         % if (@$commits == $page_count) {
-          <a title="Alt-n" accesskey="n" href="<%= url_for('shortlog', project => $project_ns)
-              ->query(id => $id, page => $page + 1) %>">
+          <a title="Alt-n" accesskey="n" href="<%= url_for('shortlog', project => $project_ns, 
+              id => $id)->query(page => $page + 1) %>">
             Next
           </a>
         % }

@@ -4,7 +4,7 @@
     
     <span class="refs">
       <span class="<%= $type %>" title="<%= $full_name %>">
-        <a href="<%= url_for('shortlog', project => $project_ns)->query(id => $name) %>">
+        <a href="<%= url_for('shortlog', project => $project_ns, id => $name) %>">
           <%= $name %>
         </a>
       </span>

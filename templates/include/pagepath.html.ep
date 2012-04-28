@@ -8,8 +8,7 @@
     
     % if ($i eq @parts - 1) {
       <a title="tree home" href=
-        "<%= url_for('blob', project => $project_ns, id => $id, file => $path) %>"
-      >
+        "<%= url_for('blob', project => $project_ns, id_file => "$id/$path") %>">
        <%= $part %>
       </a>
     % } else {

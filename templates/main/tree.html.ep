@@ -59,7 +59,7 @@
               % my $file = defined $dir ? "$dir/$name" : $name;
 
               <a class="list" href="<%= url_for('blob', project => $project_ns,
-                  id => $id, file => $file) %>">
+                  id_file => "$id/$file") %>">
                 <%= $tree->{name} %>
               </a>
             % } elsif ($tree) {
@@ -74,12 +74,11 @@
               % my $file = defined $dir ? "$dir/$name" : $name;
               % $file =~ s/^\///;
               <a href="<%= url_for('blob', project => $project_ns,
-                  id => $id, file => $file) %>">
+                  id_file => "$id/$file") %>">
                 blob
               </a>
               |
-              <a href="<%= url_for('blob_plain', project => $project_ns,
-                  id => $id, file => $file) %>">
+              <a href="<%= url_for('blob_plain', project => $project_ns, id_file => "$id/$file") %>">
                 raw
               </a>
             % } elsif ($type eq 'tree') {

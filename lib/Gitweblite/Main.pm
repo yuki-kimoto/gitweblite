@@ -559,8 +559,7 @@ sub blob {
   my $raw_params = $self->_parse_params;
   my $rule = [
     project => ['not_blank'],
-    id => ['not_blank'],
-    file => ['not_blank']
+    id_file => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
   return $self->render('not_found') unless $vresult->is_ok;
@@ -569,121 +568,120 @@ sub blob {
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = $params->{id};
-  my $file = $params->{file};
+  my $id_file = $params->{id_file};
   
   # Git
   my $git = $self->app->git;
-  
-  # Blob id
-  my $bid = $git->get_id_by_path($project, $id, $file, "blob")
-    or die "Cannot find file";
+
+  # ID and file
+  my $refs = $git->get_references($project);
+  my $id;
+  my $file;
+  for my $rs (values %$refs) {
+    for my $ref (@$rs) {
+      $ref =~ s#^heads/##;
+      $ref =~ s#^tags/##;
+      if ($id_file =~ s#^\Q$ref(/|$)##) {
+        $id = $ref;
+        $file = $id_file;
+        last;
+      }      
+    }
+  }
+  unless (defined $id) {
+    if ($id_file =~ s#(^[^/]+)(/|$)##) {
+      $id = $1;
+      $file = $id_file;
+    }
+  }
+
+  # Blob plain
+  if ($self->stash('plain')) {
+    # Blob id
+    my $bid = $git->get_id_by_path($project, $id, $file, "blob")
+      or die "Cannot find file";
+    open my $fh, "-|", $git->git($project), "cat-file", "blob", $bid
+      or die "Open git-cat-file blob '$bid' failed";
+
+    # content-type (can include charset)
+    my $type = $git->blob_contenttype($fh, $file);
+
+    # "save as" filename, even when no $file is given
+    my $save_as = "$id";
+    if (defined $file) { $save_as = $file }
+    elsif ($type =~ m/^text\//) { $save_as .= '.txt' }
+
+    my $sandbox = $self->prevent_xss &&
+      $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
+
+    # serve text/* as text/plain
+    if ($self->prevent_xss &&
+        ($type =~ m!^text/[a-z]+\b(.*)$! ||
+         ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fh))) {
+      my $rest = $1;
+      $rest = defined $rest ? $rest : '';
+      $type = "text/plain$rest";
+    }
+    
+    my $content = do { local $/; <$fh> };
+    my $content_disposition = $sandbox ? 'attachment' : 'inline';
+    $content_disposition .= "; filename=$save_as";
+    $self->res->headers->content_disposition($content_disposition);
+    $self->res->headers->content_type($type);
+    $self->render_data($content);
+  }
   
   # Blob
-  my @git_cat_file = (
-    $git->git($project),
-    "cat-file",
-    "blob",
-    $bid
-  );
-  open my $fh, "-|", @git_cat_file
-    or die "Couldn't cat $file, $bid";
-  
-  my $mimetype = $git->blob_mimetype($fh, $file);
-  # Redirect to blob plane
-  if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fh) {
-    close $fh;
-    my $url = $self->url_for('/blob_plain')->query([home => $home, project => $project,
-      id => $id, file => $file]);
-    return $self->redirect_to($url);
+  else {
+    # Blob id
+    my $bid = $git->get_id_by_path($project, $id, $file, "blob")
+      or die "Cannot find file";
+    
+    # Blob
+    my @git_cat_file = (
+      $git->git($project),
+      "cat-file",
+      "blob",
+      $bid
+    );
+    open my $fh, "-|", @git_cat_file
+      or die "Couldn't cat $file, $bid";
+    
+    my $mimetype = $git->blob_mimetype($fh, $file);
+    # Redirect to blob plane
+    if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fh) {
+      close $fh;
+      my $url = $self->url_for('/blob_plain', home => $home,
+        project => $project, id => $id, file => $file);
+      return $self->redirect_to($url);
+    }
+    
+    # Commit
+    my %commit = $git->parse_commit($project, $id);
+
+    # Parse line
+    my @lines;
+    while (my $line = <$fh>) {
+      $line = d$line;
+      chomp $line;
+      $line = $git->_untabify($line);
+      push @lines, $line;
+    }
+    
+    # Render
+    $self->render(
+      home => $home,
+      home_ns => $home_ns,
+      project => $project,
+      project_ns => $project_ns,
+      id => $id,
+      bid => $bid,
+      file => $file,
+      commit => \%commit,
+      lines => \@lines,
+      mimetype => $mimetype
+    );
   }
-  
-  # Commit
-  my %commit = $git->parse_commit($project, $id);
-
-  # Parse line
-  my @lines;
-  while (my $line = <$fh>) {
-    $line = d$line;
-    chomp $line;
-    $line = $git->_untabify($line);
-    push @lines, $line;
-  }
-  
-  # Render
-  $self->render(
-    home => $home,
-    home_ns => $home_ns,
-    project => $project,
-    project_ns => $project_ns,
-    id => $id,
-    bid => $bid,
-    file => $file,
-    commit => \%commit,
-    lines => \@lines,
-    mimetype => $mimetype
-  );
-}
-
-sub blob_plain {
-  my $self = shift;
-
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id => ['not_blank'],
-    file => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
-  my $project = "/$project_ns";
-  my $home_ns = dirname $project_ns;
-  my $home = "/$home_ns";
-  my $id = $params->{id};
-  my $file = $params->{file};
-
-  # Git
-  my $git = $self->app->git;
-
-  # Blob id
-  my $bid = $git->get_id_by_path($project, $id, $file, "blob")
-    or die "Cannot find file";
-  open my $fh, "-|", $git->git($project), "cat-file", "blob", $bid
-    or die "Open git-cat-file blob '$bid' failed";
-
-  # content-type (can include charset)
-  my $type = $git->blob_contenttype($fh, $file);
-
-  # "save as" filename, even when no $file is given
-  my $save_as = "$id";
-  if (defined $file) {
-    $save_as = $file;
-  } elsif ($type =~ m/^text\//) {
-    $save_as .= '.txt';
-  }
-
-  my $sandbox = $self->prevent_xss &&
-    $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
-
-  # serve text/* as text/plain
-  if ($self->prevent_xss &&
-      ($type =~ m!^text/[a-z]+\b(.*)$! ||
-       ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fh))) {
-    my $rest = $1;
-    $rest = defined $rest ? $rest : '';
-    $type = "text/plain$rest";
-  }
-  
-  my $content = do { local $/; <$fh> };
-  my $content_disposition = $sandbox ? 'attachment' : 'inline';
-  $content_disposition .= "; filename=$save_as";
-  $self->res->headers->content_disposition($content_disposition);
-  $self->res->headers->content_type($type);
-  $self->render_data($content);
-
 }
 
 sub blobdiff {
