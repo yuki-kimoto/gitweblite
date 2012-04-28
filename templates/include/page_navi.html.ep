@@ -10,13 +10,13 @@
   % if ($current eq 'shortlog') {
     Shortlog
   % } else {
-    <a href="<%= url_for('shortlog', project => $project_ns) %>">Shortlog</a>
+    <a href="<%= url_for('shortlog', project => $project_ns, id => $id) %>">Shortlog</a>
   % }
   |
   % if ($current eq 'log') {
     Log
   % } else {
-    <a href="<%= url_for('log', project => $project_ns) %>">Log</a>
+    <a href="<%= url_for('log', project => $project_ns, id => $id) %>">Log</a>
   % }
   |
   % if ($current eq 'commit') {

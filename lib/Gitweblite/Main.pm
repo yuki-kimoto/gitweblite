@@ -17,7 +17,7 @@ sub home {
   # Search git repositories
   my $dirs = $self->app->config('search_dirs');
   my $max_depth = $self->app->config('search_max_depth');
-  my $projects = $self->app->_search_projects(
+  my $projects = $self->app->git->search_projects(
     dirs => $dirs,
     max_depth => $max_depth
   );

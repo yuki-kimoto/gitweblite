@@ -3,7 +3,8 @@ use Mojo::Base -base;
 
 use Carp 'croak';
 use Encode qw/encode decode/;
-use File::Basename 'basename';
+use File::Find 'find';
+use File::Basename qw/basename dirname/;
 use Fcntl ':mode';
 use constant {
   S_IFINVALID => 0030000,
@@ -953,6 +954,65 @@ sub file_type_long {
   } else {
     return "unknown";
   }
+}
+
+sub search_projects {
+  my ($self, %opt) = @_;
+  my $dirs = $opt{dirs};
+  my $max_depth = $opt{max_depth};
+  
+  # Search
+  my @projects;
+  for my $dir (@$dirs) {
+    next unless -d $dir;
+  
+    $dir =~ s/\/$//;
+    my $prefix_length = length($dir);
+    my $prefix_depth = 0;
+    for my $c (split //, $dir) {
+      $prefix_depth++ if $c eq '/';
+    }
+    
+    no warnings 'File::Find';
+    File::Find::find({
+      follow_fast => 1,
+      follow_skip => 2,
+      dangling_symlinks => 0,
+      wanted => sub {
+        my $path = $File::Find::name;
+        my $base_path = $_;
+        
+        return if (m!^[/.]$!);
+        return unless -d $base_path;
+        
+        if ($base_path eq '.git') {
+          $File::Find::prune = 1;
+          return;
+        };
+        
+        my $depth = 0;
+        for my $c (split //, $dir) {
+          $depth++ if $c eq '/';
+        }
+        
+        if ($depth - $prefix_depth > $max_depth) {
+          $File::Find::prune = 1;
+          return;
+        }
+        
+        if (-d $path) {
+          if ($self->check_head_link($path)) {
+            my $home = dirname $path;
+            my $name = basename $path;
+            push @projects, {home => $home, name => $name};
+            $File::Find::prune = 1;
+          }
+        }
+      },
+    }, $dir);
+  }
+  
+  return \@projects;
 }
 
 sub _slurp {

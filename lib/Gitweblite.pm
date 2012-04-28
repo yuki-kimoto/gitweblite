@@ -10,70 +10,6 @@ our $VERSION = '0.01';
 
 has 'validator';
 has 'git';
-has 'projects';
-
-sub _search_projects {
-  my ($self, %opt) = @_;
-  my $dirs = $opt{dirs};
-  my $max_depth = $opt{max_depth};
-  
-  # Git
-  my $git = $self->git;
-  
-  # Search
-  my @projects;
-  for my $dir (@$dirs) {
-    next unless -d $dir;
-  
-    $dir =~ s/\/$//;
-    my $prefix_length = length($dir);
-    my $prefix_depth = 0;
-    for my $c (split //, $dir) {
-      $prefix_depth++ if $c eq '/';
-    }
-    
-    no warnings 'File::Find';
-    File::Find::find({
-      follow_fast => 1,
-      follow_skip => 2,
-      dangling_symlinks => 0,
-      wanted => sub {
-        my $path = $File::Find::name;
-        my $base_path = $_;
-        
-        return if (m!^[/.]$!);
-        return unless -d $base_path;
-        
-        if ($base_path eq '.git') {
-          $File::Find::prune = 1;
-          return;
-        };
-        
-        my $depth = 0;
-        for my $c (split //, $dir) {
-          $depth++ if $c eq '/';
-        }
-        
-        if ($depth - $prefix_depth > $max_depth) {
-          $File::Find::prune = 1;
-          return;
-        }
-        
-        if (-d $path) {
-          
-          if ($git->check_head_link($path)) {
-            my $home = dirname $path;
-            my $name = basename $path;
-            push @projects, {home => $home, name => $name};
-            $File::Find::prune = 1;
-          }
-        }
-      },
-    }, $dir);
-  }
-  
-  return \@projects;
-}
 
 sub startup {
   my $self = shift;
@@ -138,11 +74,11 @@ sub startup {
       ->to('#summary')->name('summary');
     
     # Short log
-    $r->get('/(*project)/shortlog', [project => $project_re])
+    $r->get('/(*project)/shortlog/(*id)', [project => $project_re])
       ->to('#shortlog')->name('shortlog');
     
     # Log
-    $r->get('/(*project)/log', [project => $project_re])
+    $r->get('/(*project)/log/(*id)', [project => $project_re])
       ->to('#log')->name('log');
     
     # Commit
@@ -150,7 +86,7 @@ sub startup {
       ->to('#commit')->name('commit');
     
     # Commit diff
-    $r->get('/(*project)/commitdiff/:id', [project => $project_re])
+    $r->get('/(*project)/commitdiff/(*id)', [project => $project_re])
       ->to('#commitdiff')->name('commitdiff');
 
     # Tags
@@ -158,7 +94,7 @@ sub startup {
       ->to('#tags')->name('tags');
     
     # Tag
-    $r->get('/(*project)/tag/:id', [project => $project_re])
+    $r->get('/(*project)/tag/(*id)', [project => $project_re])
       ->to('#tag')->name('tag');
     
     # Heads
@@ -186,7 +122,7 @@ sub startup {
       ->to('#blobdiff', suffix => '')->name('blobdiff');
     
     # Snapshot
-    $r->get('/(*project)/snapshot/:id', [project => $project_re])
+    $r->get('/(*project)/snapshot/(*id)', [project => $project_re])
       ->to('#snapshot')->name('snapshot');
   }
 }
