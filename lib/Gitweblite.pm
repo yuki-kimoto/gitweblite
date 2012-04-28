@@ -4,7 +4,7 @@ use Mojo::Base 'Mojolicious';
 use Validator::Custom;
 use Gitweblite::Git;
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 has 'validator';
 has 'git';
@@ -56,68 +56,60 @@ sub startup {
   }
 
   # Route
-  my $r = $self->routes;
+  my $r = $self->routes->route->to('main#');
+    
+  # Home
+  $r->get('/')->to('#home');
+  
+  # Projects
+  $r->get('/(*home)/projects')->to('#projects')->name('projects');
+  
+  # Project
   {
-    my $r = $r->route->to('main#');
-    
-    # Home
-    $r->get('/')->to('#home');
-    
-    # Project
-    $r->get('/(*home)/projects')->to('#projects')->name('projects');
+    my $r = $r->route('/(*project)', project => qr/.+?\.git/);
     
     # Summary
-    my $project_re = qr/.+?\.git/;
-    $r->get('/(*project)/summary', [project => $project_re])
-      ->to('#summary')->name('summary');
+    $r->get('/summary')->to('#summary')->name('summary');
     
     # Short log
-    $r->get('/(*project)/shortlog/(*id)', [project => $project_re], {id => 'HEAD'})
+    $r->get('/shortlog/(*id)', {id => 'HEAD'})
       ->to('#shortlog')->name('shortlog');
     
     # Log
-    $r->get('/(*project)/log/(*id)', [project => $project_re], {id => 'HEAD'})
-      ->to('#log')->name('log');
+    $r->get('/log/(*id)', {id => 'HEAD'})->to('#log')->name('log');
     
     # Commit
-    $r->get('/(*project)/commit/(*id)', [project => $project_re])
-      ->to('#commit')->name('commit');
+    $r->get('/commit/(*id)')->to('#commit')->name('commit');
     
     # Commit diff
-    $r->get('/(*project)/commitdiff/(*id)', [project => $project_re])
-      ->to('#commitdiff')->name('commitdiff');
+    $r->get('/commitdiff/(*id)')->to('#commitdiff')->name('commitdiff');
 
     # Tags
-    $r->get('/(*project)/tags', [project => $project_re])
-      ->to('#tags')->name('tags');
+    $r->get('/tags')->to('#tags')->name('tags');
     
     # Tag
-    $r->get('/(*project)/tag/(*id)', [project => $project_re])
-      ->to('#tag')->name('tag');
+    $r->get('/tag/(*id)')->to('#tag')->name('tag');
     
     # Heads
-    $r->get('/(*project)/heads', [project => $project_re])
-      ->to('#heads')->name('heads');
+    $r->get('/heads')->to('#heads')->name('heads');
     
     # Tree
-    $r->get('/(*project)/tree/(*id_dir)', [project => $project_re], {id_dir => 'HEAD'})
+    $r->get('/tree/(*id_dir)', {id_dir => 'HEAD'})
       ->to('#tree')->name('tree');
     
     # Blob
-    $r->get('/(*project)/blob/(*id_file)', [project => $project_re])
-      ->to('#blob')->name('blob');
+    $r->get('/blob/(*id_file)')->to('#blob')->name('blob');
     
     # Blob plain
-    $r->get('/(*project)/blob_plain/(*id_file)', [project => $project_re])
+    $r->get('/blob_plain/(*id_file)')
       ->to('#blob', plain => 1)->name('blob_plain');
     
     # Blob diff
-    $r->get('/(*project)/blobdiff(:suffix)', [project => $project_re])
+    $r->get('/blobdiff(:suffix)')
       ->to('#blobdiff', suffix => '')->name('blobdiff');
     
     # Snapshot
-    $r->get('/(*project)/snapshot/(*id)', [project => $project_re])
-      ->to('#snapshot')->name('snapshot');
+    $r->get('/snapshot/(*id)')->to('#snapshot')->name('snapshot');
   }
 }
 

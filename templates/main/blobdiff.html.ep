@@ -1,35 +1,35 @@
 % layout 'common';
-% my $head_id = gitweblite_get_head_id($project);
-<div class="page_header">
-  <a href="#">Blob Diff</a> <%= $project %>
-</div>
-<div>
-  <a href="<%= url_for '/' %>">home</a> &gt;
-  <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
-</div>
-%= include '/include/page_navi', current => 'blobdiff', head_id => $id, project_ns => $project_ns;
-<div class="page_nav">
-  <a href="<%= url_for('blobdiff_plain', project => $project_ns)
-      ->query(from_id => $from_id, id => $id, file => $file) %>">
-    Raw
+  % my $head_id = gitweblite_get_head_id($project);
+  <div class="page_header">
+    <a href="#">Blob Diff</a> <%= $project %>
+  </div>
+  <div>
+    <a href="<%= url_for '/' %>">home</a> &gt;
+    <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
+  </div>
+  %= include '/include/page_navi', current => 'blobdiff', head_id => $id, project_ns => $project_ns;
+  <div class="page_nav">
+    <a href="<%= url_for('blobdiff_plain', project => $project_ns)
+        ->query(from_id => $from_id, id => $id, file => $file) %>">
+      Raw
+    </a>
+    |
+    <a href="<%= url_for('blob', project => $project_ns, id_file => "$id/$file") %>">
+      HEAD
+    </a>
+    <br/>
+  </div>
+  <div class="header">
+  <a class="title" href=
+    "<%= url_for('commit', project => $project_ns, id => $id) %>">
+    <%= $commit->{title} %>
   </a>
-  |
-  <a href="<%= url_for('blob', project => $project_ns, id_file => "$id/$file") %>">
-    HEAD
-  </a>
-  <br/>
-</div>
-<div class="header">
-<a class="title" href=
-  "<%= url_for('commit', project => $project_ns, id => $id) %>">
-  <%= $commit->{title} %>
-</a>
-</div>
+  </div>
 
-%= include '/include/pagepath', project_ns => $project_ns, id => $id, file => $file;
+  %= include '/include/pagepath', project_ns => $project_ns, id => $id, file => $file;
 
-<div class="page_body">
-  % for my $line (@$lines) {
-    <div class="<%= $line->{class} %>"><%= $line->{value} %></div>
-  % }
-</div>
+  <div class="page_body">
+    % for my $line (@$lines) {
+      <div class="<%= $line->{class} %>"><%= $line->{value} %></div>
+    % }
+  </div>
