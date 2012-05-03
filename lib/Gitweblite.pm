@@ -105,8 +105,11 @@ sub startup {
       ->to('#blob', plain => 1)->name('blob_plain');
     
     # Blob diff
-    $r->get('/blobdiff(:suffix)')
-      ->to('#blobdiff', suffix => '')->name('blobdiff');
+    $r->get('/blobdiff')->to('#blobdiff')->name('blobdiff');
+
+    # Blob diff plain
+    $r->get('/blobdiff_plain')
+      ->to('#blobdiff', plain => 1)->name('blobdiff_plain');
     
     # Snapshot
     $r->get('/snapshot/(*id)')->to('#snapshot')->name('snapshot');

@@ -706,17 +706,11 @@ sub blobdiff {
   my $file = $params->{file};
   my $from_id = $params->{from_id};
   my $from_file = $params->{from_file};
-
+  my $plain = $self->param('plain');
+  
+  
   # Git
   my $git = $self->app->git;
-  
-  my $suffix = $self->param('suffix') || '';
-  my $plain;
-  if ($suffix) {
-    if ($suffix eq '_plain') { $plain = 1 }
-    else { return $self->render('not_found') }
-  }
-  else { $plain = 0 }
 
   my $fh;
   my @difftree;
@@ -783,13 +777,14 @@ sub blobdiff {
   }
   
   my $commit = $git->parse_commit($project, $id);
-
+  
   if ($plain) {
-    my $content = $git->_slurp_fh($fh);
+    my $content = do { local $/; <$fh> };
+    close $fh;
     my $content_disposition .= "inline; filename=$file";
     $self->res->headers->content_disposition($content_disposition);
-    $self->res->headers->content_type("text/plain");
-    $self->render_data($content);
+    $self->res->headers->content_type("text/plain; charset=UTF-8");
+    $self->render(data => $content);
   }
   else {
     # patch

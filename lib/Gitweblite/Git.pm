@@ -1027,16 +1027,6 @@ sub _slurp {
   return $content;
 }
 
-sub _slurp_fh {
-  my ($self, $fh) = @_;
-  
-  my $content = do { local $/; <$fh> };
-  $content = d$content;
-  close $fh;
-  
-  return $content;
-}
-
 sub _unquote {
   my ($self, $str) = @_;
 
