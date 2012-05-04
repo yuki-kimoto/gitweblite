@@ -37,7 +37,7 @@ sub projects {
     home => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $home_ns = $params->{home};
   my $home = "/$home_ns";
@@ -75,7 +75,7 @@ sub summary {
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -146,7 +146,7 @@ sub commit {
     id => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -202,7 +202,7 @@ sub commitdiff {
     from_id => {require => 0} => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -316,7 +316,7 @@ sub tree {
     id_dir => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -402,7 +402,7 @@ sub snapshot {
     id => {require => 0 } => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -459,7 +459,7 @@ sub tag {
     id => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -497,7 +497,7 @@ sub tags {
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -529,7 +529,7 @@ sub heads {
     project => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -562,7 +562,7 @@ sub blob {
     id_file => ['not_blank'],
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
@@ -691,23 +691,21 @@ sub blobdiff {
   my $raw_params = $self->_parse_params;
   my $rule = [
     project => ['not_blank'],
-    id => ['any'],
-    file => ['any'],
-    from_id => ['any'],
+    diff =>['not_blank'],
+    file => ['not_blank']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = $params->{id};
+  my $diff = $params->{diff};
+  my ($from_id, $id) = $diff =~ /([a-zA-Z0-9]{40})\.\.([a-zA-Z0-9]{40})/;
   my $file = $params->{file};
-  my $from_id = $params->{from_id};
-  my $from_file = $params->{from_file};
+  my $from_file = $file;
   my $plain = $self->param('plain');
-  
   
   # Git
   my $git = $self->app->git;
@@ -833,7 +831,7 @@ sub _log {
     id => {require => 0} => ['any']
   ];
   my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render('not_found') unless $vresult->is_ok;
+  return $self->render_not_found unless $vresult->is_ok;
   my $params = $vresult->data;
   my $project_ns = $params->{project};
   my $project = "/$project_ns";
