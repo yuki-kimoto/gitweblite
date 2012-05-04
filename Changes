@@ -1,4 +1,5 @@
 0.03 (beta)
+  - don't overwrite gitweblite.conf
   - config file become JSON.
   - URL become more restful.
 0.02 (beta)

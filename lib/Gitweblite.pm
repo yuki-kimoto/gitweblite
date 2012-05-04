@@ -13,7 +13,10 @@ sub startup {
   my $self = shift;
   
   # Config
-  my $conf = $self->plugin('JSONConfigLoose', {ext => 'conf'});
+  my $conf = {};
+  if (-f $self->home->rel_file('gitweblite.conf')) {
+    $conf = $self->plugin('JSONConfigLoose', {ext => 'conf'});
+  }
   my $search_dirs = $conf->{search_dirs} || ['/git/pub', '/home'];
   $self->config(search_dirs => $search_dirs);
   my $search_max_depth = $conf->{search_max_depth} || 10;
