@@ -49,40 +49,40 @@ Description
 
 Config
 
-  You can set config in gitweblite.conf. Config is written by Perl data structure.
+  You can set config in gitweblite.conf. Config is written by JSON.
 
-    search_dirs => [$dir, ...]
-    
+    search_dirs
+        
       Git repository searching directories.
       
       Default:
       
-        search_dirs => ['/git/pub', '/home']
+        "search_dirs" : ["/git/pub", "/home"]
     
-    search_max_depth => $num
+    search_max_depth
     
       Searching directory max depth.
       
       Default:
       
-        search_max_depth => 10
+        "search_max_depth" : 10
     
-    git_bin => $path
+    git_bin
     
       git command
       
       Default:
       
-        git_bin => '/usr/local/bin/git'
+        "git_bin" : "/usr/local/bin/git"
     
-    hypnotoad => {$opt => $val, ...}
+    hypnotoad
     
       Server configuration.
     
       Default:
       
-        hypnotoad => {
-          listen => ['http://*:10010']
+        "hypnotoad" : {
+          "listen" => ["http://*:10010"]
         }
 
   See also gitweblite.conf.example.

@@ -64,8 +64,8 @@
               % } else {
                 <td class="link">
               % }
-              <a href="<%= url_for('blobdiff',project => $project_ns)
-                  ->query(from_id => $from_id, id => $id, file => $file) %>">
+              <a href="<%= url_for('blobdiff',project => $project_ns,
+                  diff => "$from_id..$id", file => $file) %>">
                 diff<%= $i + 1 %>
               </a>
               | </td>
@@ -157,8 +157,8 @@
           </td>
           <td class="link">
             % if ($status ne 'A') {
-              <a href="<%= url_for('blobdiff', project => $project_ns)
-                  ->query(from_id => $from_id, id => $id, file => $file) %>">
+              <a href="<%= url_for('blobdiff', project => $project_ns,
+                  diff => "$from_id..$id", file => $file) %>">
                 diff
               </a>
               |

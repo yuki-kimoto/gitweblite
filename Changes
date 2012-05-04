@@ -1,4 +1,8 @@
-0.02
+0.03 (beta)
+  - config file become JSON.
+  - URL become more restful.
+0.02 (beta)
   - fixed blob, blog_plain, commitdiff, commitdiff_plain encoding bug
-0.01
+
+0.01 (beta)
   - first beta release.

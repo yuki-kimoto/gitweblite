@@ -13,7 +13,7 @@ sub startup {
   my $self = shift;
   
   # Config
-  my $conf = $self->plugin('Config');
+  my $conf = $self->plugin('JSONConfigLoose', {ext => 'conf'});
   my $search_dirs = $conf->{search_dirs} || ['/git/pub', '/home'];
   $self->config(search_dirs => $search_dirs);
   my $search_max_depth = $conf->{search_max_depth} || 10;
@@ -105,10 +105,13 @@ sub startup {
       ->to('#blob', plain => 1)->name('blob_plain');
     
     # Blob diff
-    $r->get('/blobdiff')->to('#blobdiff')->name('blobdiff');
+    $r->get('/blobdiff/(:diff)/(*file)',
+        [diff => qr/[a-zA-Z0-9]{40}\.\.[a-zA-Z0-9]{40}/])
+      ->to('#blobdiff')->name('blobdiff');
 
     # Blob diff plain
-    $r->get('/blobdiff_plain')
+    $r->get('/blobdiff_plain/(:diff)/(*file)',
+        [diff => qr/[a-zA-Z0-9]{40}\.\.[a-zA-Z0-9]{40}/])
       ->to('#blobdiff', plain => 1)->name('blobdiff_plain');
     
     # Snapshot
