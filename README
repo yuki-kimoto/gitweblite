@@ -50,6 +50,11 @@ Description
 Config
 
   You can set config in gitweblite.conf. Config is written by JSON.
+  At first you create your config file copied from gitweblite.conf.example
+  
+    cp gitweblite.conf.example gitweblite.conf
+
+  These is available options
 
     search_dirs
         

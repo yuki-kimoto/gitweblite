@@ -1,12 +1,12 @@
 {
   // Search directory
-  "search_dirs" : ["/git/pub", "/home"],
+  // "search_dirs" : ["/git/pub", "/home"],
   
   // Serach max depth
-  "search_max_depth" : 10,
+  // "search_max_depth" : 10,
   
   // Git command
-  "git_bin" : "/usr/local/bin/git",
+  // "git_bin" : "/usr/local/bin/git",
   
   // Server config
   "hypnotoad" : {
