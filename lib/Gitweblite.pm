@@ -76,7 +76,7 @@ sub startup {
     
     # Short log
     $r->get('/shortlog/(*id)', {id => 'HEAD'})
-      ->to('#shortlog')->name('shortlog');
+      ->to('#log', short => 1)->name('shortlog');
     
     # Log
     $r->get('/log/(*id)', {id => 'HEAD'})->to('#log')->name('log');

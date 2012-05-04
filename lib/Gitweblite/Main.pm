@@ -132,10 +132,6 @@ sub summary {
   );
 }
 
-sub shortlog { shift->_log(short => 1) }
-
-sub log { shift->_log }
-
 sub commit {
   my $self = shift;
 
@@ -818,10 +814,8 @@ sub blobdiff {
   }
 }
 
-sub _log {
+sub log {
   my ($self, %opt) = @_;
-
-  my $short = $opt{short};
 
   # Validation
   my $raw_params = $self->_parse_params;
@@ -842,6 +836,7 @@ sub _log {
     :"HEAD";
   my $page = $params->{page} || 0;
   $page = 0 if $page < 0;
+  my $short = $self->param('short');
   
   # Git
   my $git = $self->app->git;
@@ -864,7 +859,7 @@ sub _log {
   my $refs = $git->get_references($project);
 
   # Render
-  my $template = $short ? 'shortlog' : 'log';
+  my $template = $short ? 'main/shortlog' : 'main/log';
   $self->render(
     $template,
     home => $home,
