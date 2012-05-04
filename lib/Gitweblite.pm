@@ -60,6 +60,10 @@ sub startup {
       return $head_id;
     });
   }
+  
+  # Added user public and templates path
+  unshift @{$self->static->paths}, $self->home->rel_file('user/public');
+  unshift @{$self->renderer->paths}, $self->home->rel_file('user/templates');
 
   # Route
   my $r = $self->routes->route->to('main#');
