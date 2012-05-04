@@ -34,7 +34,6 @@
     % for (my $i = 0; $i < @$commits; $i++) {
       % my $commit = $commits->[$i];
       % my $id = $commit->{id};
-      % my $id = $id;
       <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
         <td title="<%= $commit->{age_string_date} %>"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
