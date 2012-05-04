@@ -50,11 +50,11 @@ Description
 Config
 
   You can set config in gitweblite.conf. Config is written by JSON.
-  At first you create your config file copied from gitweblite.conf.example
+  Create your config file copied from gitweblite.conf.example
   
     cp gitweblite.conf.example gitweblite.conf
 
-  These is available options
+  These is available options.
 
     search_dirs
         
@@ -78,7 +78,7 @@ Config
       
       Default:
       
-        "git_bin" : "/usr/local/bin/git"
+        git command is automatically detected by PATH environment variable
     
     hypnotoad
     
@@ -89,5 +89,3 @@ Config
         "hypnotoad" : {
           "listen" => ["http://*:10010"]
         }
-
-  See also gitweblite.conf.example.
