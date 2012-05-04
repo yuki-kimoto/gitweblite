@@ -1,6 +1,6 @@
 % layout 'common';
   <div class="page_header">
-    <a href="#">Commit</a> # <%= $project %>
+    <a href="#">Commit</a> # <%= File::Basename::basename $project %>
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;

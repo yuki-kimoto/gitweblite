@@ -1,6 +1,6 @@
 % layout 'common';
   <div class="page_header">
-    <a href="#">Tree</a> # <%= $project %>
+    <a href="#">Tree</a> # <%= File::Basename::basename $project %>
   </div>
   <div>
     <a href="<%= url_for '/' %>">home</a> &gt;
