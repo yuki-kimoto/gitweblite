@@ -19,6 +19,23 @@ has 'bin';
 my $conf = {};
 my @diff_opts = ('-M');
 
+sub search_bin {
+  my $self = shift;
+  
+  my $env_path = $ENV{PATH};
+  my @paths = split /:/, $env_path;
+  
+  for my $path (@paths) {
+    $path =~ s#/$##;
+    my $bin = "$path/git";
+    if (-f $bin) {
+      return $bin;
+      last;
+    }
+  }
+  return;
+}
+
 sub blob_mimetype {
   my ($self, $fh, $file) = @_;
 

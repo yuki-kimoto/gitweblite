@@ -23,8 +23,11 @@ sub startup {
   $self->config(search_max_depth => $search_max_depth);
   
   # Git
-  my $git_bin = $conf->{git_bin} ? $conf->{git_bin} : '/usr/local/bin/git';
-  my $git = Gitweblite::Git->new(bin => $git_bin);
+  my $git = Gitweblite::Git->new;
+  my $git_bin = $conf->{git_bin} ? $conf->{git_bin} : $git->search_bin;
+  die qq/Can't detect git command. set "git_bin" in gitweblite.conf/
+    unless $git_bin;
+  $git->bin($git_bin);
   $self->git($git);
 
   # Validator
