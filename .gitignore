@@ -21,5 +21,7 @@ script/hypnotoad.pid
 !public/.gitignore
 script/hypnotoad.pid
 winstart.pid
-user/*
-!user/.gitignore
+user/public/*
+!user/public/.gitignore
+user/templates/*
+!user/templates/.gitignore
