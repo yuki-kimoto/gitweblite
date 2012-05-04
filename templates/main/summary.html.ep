@@ -1,12 +1,6 @@
 % layout 'common';
-  <div class="page_header">
-    <a href="#">Summary</a> # <%= File::Basename::basename $project %>
-  </div>
-  <div>
-    <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
-  </div>
-  
+  %= include '/include/header', title => 'Summary', project => $project;
+  %= include '/include/current_directory', home_ns => $home_ns, home => $home;
   %= include '/include/page_navi', current => 'summary', project_ns => $project_ns;
   <table class="projects_list">
     <tr id="metadata_desc"><td><b>Description:</b></td><td><%= $project_description %></td></tr>

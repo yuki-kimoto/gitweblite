@@ -1,12 +1,8 @@
 % layout 'common';
-  <div class="page_header">
-    <a href="#">Short Log</a> # <%= File::Basename::basename $project %>
-  </div>
-  <div>
-    <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', $home_ns) %>"><%= $home %></a>
-  </div>
+  %= include '/include/header', title => 'Short Log', project => $project;
+  %= include '/include/current_directory', home_ns => $home_ns, home => $home;
   %= include '/include/page_navi', current => 'shortlog', project_ns => $project_ns;
+
   <%= include '/include/page_navi2', current => 'shortlog', id => $id,
     page => $page, page_count => $page_count,commits => $commits;
   %>

@@ -1,11 +1,6 @@
 % layout 'common';
-  <div class="page_header">
-    <a href="#">Commit</a> # <%= File::Basename::basename $project %>
-  </div>
-  <div>
-    <a href="<%= url_for '/' %>">home</a> &gt;
-    <a href="<%= url_for('projects', home => $home_ns) %>"><%= $home %></a>
-  </div>
+  %= include '/include/header', title => 'Commit', project => $project;
+  %= include '/include/current_directory', home_ns => $home_ns, home => $home;
   %= include '/include/page_navi', current => 'commit', project_ns => $project_ns, id => $commit->{id};
 
   <div class="page_nav">

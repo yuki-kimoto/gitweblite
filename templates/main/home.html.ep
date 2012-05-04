@@ -1,7 +1,5 @@
 % layout 'common';
-  <div class="page_header">
-    <a href="/">Gitweb Lite</a>
-  </div>
+  %= include '/include/header', title => 'Gitweb Lite';
   <table class="project_list">
     <th>Home Directory</th>
     % my $toggle = 0;

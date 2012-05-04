@@ -1,0 +1,7 @@
+% use File::Basename 'basename';
+% my $project = stash('project');
+% $project = basename $project if defined $project;
+
+<div class="page_header">
+  <a href="#"><%= $title %></a> <%= $project ? "# $project" : '' %>
+</div>
