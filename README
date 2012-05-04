@@ -89,3 +89,11 @@ Config
         "hypnotoad" : {
           "listen" => ["http://*:10010"]
         }
+
+Logo and favicon
+
+  You can use your logo and favicon.
+  Set logo or favicon image file into the following name.
+  
+    user/public/git-logo.png
+    user/public/git-favicon.png

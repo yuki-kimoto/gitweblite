@@ -3,5 +3,8 @@
 % $project = basename $project if defined $project;
 
 <div class="page_header">
+  <a href="http://git-scm.com/">
+    <img src="<%= url_for('/git-logo.png') %>" class="logo"/>
+  </a>
   <a href="#"><%= $title %></a> <%= $project ? "# $project" : '' %>
 </div>
