@@ -2,6 +2,7 @@
   - don't overwrite gitweblite.conf
   - config file become JSON.
   - URL become more restful.
+  - Git command automatically detect
 0.02 (beta)
   - fixed blob, blog_plain, commitdiff, commitdiff_plain encoding bug
 
