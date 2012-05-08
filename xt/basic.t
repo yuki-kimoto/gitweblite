@@ -43,8 +43,17 @@ $t->get_ok("$home/projects")
 my $project = "$home/gitweblite_devrep.git";
 my $git = $app->git;
 my $head = $git->get_head_id($project);
-$t->get_ok("$project/summary");
+$t->get_ok("$project/summary")
   # Page navi
-  
-
-
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/$head">Shortlog</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/$head">Log</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/$head">\s*Commit\s*</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/$head">Commitdiff</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$head">Tree</a>#)
+  # Description
+  ->content_like(qr#<tr id="metadata_desc"><td><b>Description:</b></td><td>Test Repository\s*</td></tr>#)
+  # Owner
+  ->content_like(qr#<tr id="metadata_owner"><td><b>Owner:</b></td><td>kimoto</td></tr>#)
+  # Ripository URL
+  ->content_like(qr#http://somerep.git\s*<br />\s*git://somerep.git\s*<br />#)
+;
