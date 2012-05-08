@@ -41,7 +41,8 @@ $t->get_ok("$home/projects")
 
 # Summary
 my $project = "$home/gitweblite_devrep.git";
-my $head = $app->git->
+my $git = $app->git;
+my $head = $git->get_head_id($project);
 $t->get_ok("$project/summary");
   # Page navi
   

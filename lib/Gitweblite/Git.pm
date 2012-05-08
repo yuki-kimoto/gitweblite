@@ -210,12 +210,12 @@ sub get_difftree {
 }
 
 sub get_head_id {
-  my ($self, $project) = (shift, shift, shift);
-  return get_id($project, 'HEAD', @_);
+  my ($self, $project) = (shift, shift);
+  return $self->get_id($project, 'HEAD', @_);
 };
 
 sub get_short_id {
-  my ($self, $project) = (shift, shift, shift);
+  my ($self, $project) = (shift, shift);
   return $self->get_id($project, @_, '--short=7');
 }
 
