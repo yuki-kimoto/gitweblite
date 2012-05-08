@@ -230,7 +230,7 @@ sub commitdiff {
   # Plain text
   if ($plain) {
     # git diff-tree plain output
-    open my $fh, "-|", $git->git($project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
         '-p', $from_id, $id, "--"
       or die 500, "Open git-diff-tree failed";
     
@@ -245,7 +245,7 @@ sub commitdiff {
   # HTML
   else {
     # git diff-tree output
-    open my $fh, "-|", $git->git($project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
         "--no-commit-id", "--patch-with-raw", "--full-index",
         $from_id, $id, "--"
       or die 500, "Open git-diff-tree failed";
@@ -270,7 +270,7 @@ sub commitdiff {
       my $from_bid = $diffinfo->{'from_id'};
       my $bid = $diffinfo->{'to_id'};
       
-      my @git_diff_tree = ($git->git($project), "diff-tree", '-r',
+      my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
         @{$self->diff_opts}, '-p', (!$plain ? "--full-index" : ()), $from_id, $id,
         "--", (defined $from_file ? $from_file : ()), $file
       );
@@ -358,7 +358,7 @@ sub tree {
   my @entries = ();
   my $show_sizes = 0;
   {
-    open my $fh, "-|", $git->git($project), "ls-tree", '-z',
+    open my $fh, "-|", $git->cmd($project), "ls-tree", '-z',
       ($show_sizes ? '-l' : ()), $tid
       or die 500, "Open git-ls-tree failed";
     local $/ = "\0";
@@ -418,7 +418,7 @@ sub snapshot {
   my ($name, $prefix) = $git->snapshot_name($project, $id);
   my $file = "$name.tar.gz";
   my $cmd = $self->_quote_command(
-    $git->git($project), 'archive', "--format=tar", "--prefix=$prefix/", $id
+    $git->cmd($project), 'archive', "--format=tar", "--prefix=$prefix/", $id
   );
   $cmd .= ' | ' . $self->_quote_command('gzip', '-n');
 
@@ -596,7 +596,7 @@ sub blob {
     # Blob id
     my $bid = $git->get_id_by_path($project, $id, $file, "blob")
       or die "Cannot find file";
-    open my $fh, "-|", $git->git($project), "cat-file", "blob", $bid
+    open my $fh, "-|", $git->cmd($project), "cat-file", "blob", $bid
       or die "Open git-cat-file blob '$bid' failed";
 
     # content-type (can include charset)
@@ -635,7 +635,7 @@ sub blob {
     
     # Blob
     my @git_cat_file = (
-      $git->git($project),
+      $git->cmd($project),
       "cat-file",
       "blob",
       $bid
@@ -716,7 +716,7 @@ sub blobdiff {
   if (defined $id && defined $from_id) {
     if (defined $file) {
       # git diff tree
-      my @git_diff_tree = ($git->git($project), "diff-tree", '-r',
+      my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
         @{$self->diff_opts}, $from_id, $id, "--",
         (defined $from_file ? $from_file : ()), $file
       );
@@ -732,7 +732,7 @@ sub blobdiff {
     } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
 
       # read filtered raw output
-      open $fh, "-|", $git->git($project), "diff-tree", '-r', @{$self->diff_opts},
+      open $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
           $from_id, $id, "--"
         or die "Open git-diff-tree failed";
       @difftree =
@@ -759,7 +759,7 @@ sub blobdiff {
     $bid        ||= $diffinfo{'to_id'};
 
     # open patch output
-    open $fh, "-|", $git->git($project), "diff-tree", '-r', @{$self->diff_opts},
+    open $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
       '-p', (!$plain ? "--full-index" : ()),
       $from_id, $id,
       "--", (defined $from_file ? $from_file : ()), $file

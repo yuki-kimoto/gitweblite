@@ -8,7 +8,8 @@ use Gitweblite;
 
 use Test::Mojo;
 
-my $t = Test::Mojo->new(Gitweblite->new);
+my $app = Gitweblite->new;
+my $t = Test::Mojo->new($app);
 
 # Home
 $t->get_ok('/')
@@ -37,5 +38,12 @@ $t->get_ok("$home/projects")
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log">log</a>#)
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree">#)
 ;
+
+# Summary
+my $project = "$home/gitweblite_devrep.git";
+my $head = $app->git->
+$t->get_ok("$project/summary");
+  # Page navi
+  
 
 

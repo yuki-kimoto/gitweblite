@@ -98,7 +98,7 @@ sub get_path_by_id {
   my $hash = shift || return;
 
 
-  open my $fh, "-|", $self->git($project), "ls-tree", '-r', '-t', '-z', $base
+  open my $fh, "-|", $self->cmd($project), "ls-tree", '-r', '-t', '-z', $base
     or return undef;
 
   local $/ = "\0";
@@ -148,7 +148,7 @@ sub get_difftree {
 
   # Execute "git diff-tree"
   my @git_diff_tree = (
-    $self->git($project),
+    $self->cmd($project),
     "diff-tree", '-r',
     "--no-commit-id",
     @diff_opts,
@@ -223,7 +223,7 @@ sub get_id {
   my ($self, $project, $ref, @options) = @_;
   
   my $id;
-  if (open my $fh, '-|', $self->git($project), 'rev-parse',
+  if (open my $fh, '-|', $self->cmd($project), 'rev-parse',
       '--verify', '-q', @options, $ref) {
     $id = <$fh>;
     $id = d$id;
@@ -236,7 +236,7 @@ sub get_id {
 sub get_object_type {
   my ($self, $project, $cid) = @_;
 
-  open my $fh, "-|", $self->git($project), "cat-file", '-t', $cid or return;
+  open my $fh, "-|", $self->cmd($project), "cat-file", '-t', $cid or return;
   my $type = <$fh>;
   $type = d$type;
   close $fh or return;
@@ -248,7 +248,7 @@ sub get_references {
   my ($self, $project, $type) = @_;
   $type ||= '';
   my %refs;
-  open my $fh, "-|", $self->git($project), "show-ref", "--dereference",
+  open my $fh, "-|", $self->cmd($project), "show-ref", "--dereference",
     ($type ? ("--", "refs/$type") : ())
     or return;
 
@@ -285,7 +285,7 @@ sub get_id_by_path {
   $path =~ s,/+$,,;
   
   my @git_ls_tree = (
-    $self->git($project), "ls-tree", $id, "--", $path
+    $self->cmd($project), "ls-tree", $id, "--", $path
   );
   
   open my $fh, "-|", @git_ls_tree
@@ -313,7 +313,7 @@ sub get_heads {
   my @patterns = map { "refs/$_" } @classes;
   my @heads;
 
-  open my $fh, '-|', $self->git($project), 'for-each-ref',
+  open my $fh, '-|', $self->cmd($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
     '--format=%(objectname) %(refname) %(subject)%00%(committer)',
     @patterns
@@ -352,7 +352,7 @@ sub get_last_activity {
 
   my $fh;
   my @git_command = (
-    $self->git($project),
+    $self->cmd($project),
     'for-each-ref',
     '--format=%(committer)',
     '--sort=-committerdate',
@@ -425,7 +425,7 @@ sub get_tags {
   my ($self, $project, $limit) = @_;
   my @tags;
 
-  open my $fh, '-|', $self->git($project), 'for-each-ref',
+  open my $fh, '-|', $self->cmd($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
@@ -475,7 +475,7 @@ sub get_tags {
   return \@tags;
 }
 
-sub git {
+sub cmd {
   my ($self, $project) = @_;
   
   return ($self->bin, "--git-dir=$project");
@@ -566,7 +566,7 @@ sub parse_commit {
   
   # Git rev-list
   my @git_rev_list = (
-    $self->git($project),
+    $self->cmd($project),
     "rev-list",
     "--parents",
     "--header",
@@ -691,7 +691,7 @@ sub parse_commits {
   # git rev-list
   $maxcount ||= 1;
   $skip ||= 0;
-  open my $fh, "-|", $self->git($project), "rev-list",
+  open my $fh, "-|", $self->cmd($project), "rev-list",
     "--header",
     @args,
     ("--max-count=" . $maxcount),
@@ -754,7 +754,7 @@ sub parse_tag {
   my %tag;
   my @comment;
   
-  my @git_cat_file = ($self->git($project), "cat-file", "tag", $tag_id);
+  my @git_cat_file = ($self->cmd($project), "cat-file", "tag", $tag_id);
   
   open my $fh, "-|", @git_cat_file or return;
   $tag{'id'} = $tag_id;
