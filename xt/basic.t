@@ -45,6 +45,7 @@ $t->get_ok("$home/projects")
 my $project = "$home/gitweblite_devrep.git";
 my $git = $app->git;
 my $head = $git->get_head_id($project);
+my $tag_t21 = $git->get_tag($project, 't21');
 $t->get_ok("$project/summary")
   # Page navi
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/$head">Shortlog</a>#)
@@ -70,5 +71,23 @@ $t->get_ok("$project/summary")
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$head">\s*tree\s*</a>#)
   # Shortlog snapshot link
   ->content_like(qr#<a title="in format: tar.gz" rel="nofollow" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/snapshot/$head">\s*snapshot\s*</a>#)
-
+  # Tag name link
+  ->content_like(qr#<a class="list name" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/commit/$tag_t21->{refid}"\s*>\s*t10\s*</a>#)
+  # Tag comment link
+  ->content_like(qr#<a class="list subject" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tag/$tag_t21->{id}"\s*>\s*t21\s*</a>#)
+  # Tag shortlog link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/t21"\s*>\s*shortlog\s*</a>#)  # Tag log link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/t21">\s*log\s*</a>#)
+  # Tags link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tags">\s*...\s*</a>#)
+  # Head name link
+  ->content_like(qr#<a class="list name" href="/home/kimoto/labo/gitweblite_devrep.git/log/b10">\s*b10\s*</a>#)
+  # Head shortlog link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/b10">\s*shortlog\s*</a>#)
+  # Head log link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/b10">\s*log\s*</a>#)
+  # Head tree link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/b10">\s*tree\s*</a>#)
+  # Heads link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/heads">\s*...\s*</a>#)
 ;

@@ -421,6 +421,17 @@ sub get_projects {
   return @projects;
 }
 
+sub get_tag {
+  my ($self, $project, $name) = @_;
+  
+  my $tags = $self->get_tags($project);
+  for my $tag (@$tags) {
+    return $tag if $tag->{name} eq $name;
+  }
+  
+  return;
+}
+
 sub get_tags {
   my ($self, $project, $limit) = @_;
   my @tags;
