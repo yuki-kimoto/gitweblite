@@ -90,9 +90,7 @@
             parent
           </td>
           <td class="sha1">
-            <a class="list"
-              href="<%= url_for('commit', project => $project_ns, id => $from_id) %>"
-            >
+            <a class="list" href="<%= url_for('commit', project => $project_ns, id => $from_id) %>">
               <%= $from_id %>
             </a>
           </td>

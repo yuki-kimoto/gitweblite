@@ -100,6 +100,26 @@ my $parent_short = substr($parent, 0, 7);
 $t->get_ok("$project/commit/$id")
   # Parent
   ->content_like(qr#parent:\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/$parent">\s*$parent_short\s*</a>#)
-  # Comment
+  # Title
   ->content_like(qr#<a class="title" href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/$id">\s*日本語の内容を追加\s*</a>#)
+  # Head link
+  ->content_like(qr#<span class="head" title="heads/b10">\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/heads/b10">\s*b10\s*</a>\s*</span>#)
+  # Tag link
+  ->content_like(qr#<span class="tag" title="tags/t10">\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/tags/t10">\s*t10\s*</a>\s*</span>#)
+  # Author
+  ->content_like(qr#<td>author</td>\s*<td>Yuki Kimoto &lt;kimoto.yuki\@gmail.com&gt;</td>#)
+  # Committer
+  ->content_like(qr#<td>committer</td>\s*<td>Yuki Kimoto &lt;kimoto.yuki\@gmail.com&gt;</td>#)
+  # Commit
+  ->content_like(qr#<td>commit</td>\s*<td class="sha1">$id</td>#)
+  # Tree commit id link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$id">\s*tree\s*</a>#)
+  # Tree link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$id">\s*tree\s*</a>#)
+  # Snapshot link
+  ->content_like(qr#<a title="in format: tar.gz" rel="nofollow"\s*href="/home/kimoto/labo/gitweblite_devrep.git/snapshot/$id">\s*snapshot\s*</a>#)
+  # Parent commit id link
+  ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/commit/$parent">\s*$parent\s*</a>#)
+  # Parent commit link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/$parent">\s*commit\s*</a>#)
 ;
