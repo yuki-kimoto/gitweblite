@@ -60,7 +60,7 @@ $t->get_ok("$project/summary")
   # Ripository URL
   ->content_like(qr#http://somerep.git\s*<br />\s*git://somerep.git\s*<br />#)
   # Branch
-  ->content_like(qr#<span class="head" title="heads/master">\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/master">\s*master\s*</a>\s*</span>#)
+  ->content_like(qr#<span class="head" title="heads/master">\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/heads/master">\s*master\s*</a>\s*</span>#)
   # Shorlog comment link
   ->content_like(qr#<a class="list subject" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/commit/$head"\s* >\s*日本語の内容を追加\s*</a>#)
   # Shortlog commit link
@@ -76,18 +76,30 @@ $t->get_ok("$project/summary")
   # Tag comment link
   ->content_like(qr#<a class="list subject" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tag/$tag_t21->{id}"\s*>\s*t21\s*</a>#)
   # Tag shortlog link
-  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/t21"\s*>\s*shortlog\s*</a>#)  # Tag log link
-  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/t21">\s*log\s*</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/tags/t21"\s*>\s*shortlog\s*</a>#)  # Tag log link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/tags/t21">\s*log\s*</a>#)
   # Tags link
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tags">\s*...\s*</a>#)
   # Head name link
-  ->content_like(qr#<a class="list name" href="/home/kimoto/labo/gitweblite_devrep.git/log/b10">\s*b10\s*</a>#)
+  ->content_like(qr#<a class="list name" href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/heads/b10">\s*b10\s*</a>#)
   # Head shortlog link
-  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/b10">\s*shortlog\s*</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/heads/b10">\s*shortlog\s*</a>#)
   # Head log link
-  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/b10">\s*log\s*</a>#)
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/heads/b10">\s*log\s*</a>#)
   # Head tree link
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/b10">\s*tree\s*</a>#)
   # Heads link
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/heads">\s*...\s*</a>#)
+;
+
+# Commit
+my $id = '6d71d9bc1ee3bd1c96a559109244c1fe745045de';
+my $commit = $git->parse_commit($project, $id);
+my $parent = $commit->{parent};
+my $parent_short = substr($parent, 0, 7);
+$t->get_ok("$project/commit/$id")
+  # Parent
+  ->content_like(qr#parent:\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/$parent">\s*$parent_short\s*</a>#)
+  # Comment
+  ->content_like(qr#<a class="title" href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/$id">\s*日本語の内容を追加\s*</a>#)
 ;
