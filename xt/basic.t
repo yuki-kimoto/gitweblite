@@ -1,5 +1,7 @@
 use strict;
 use warnings;
+use utf8;
+
 use Test::More 'no_plan';
 
 use FindBin;
@@ -56,4 +58,17 @@ $t->get_ok("$project/summary")
   ->content_like(qr#<tr id="metadata_owner"><td><b>Owner:</b></td><td>kimoto</td></tr>#)
   # Ripository URL
   ->content_like(qr#http://somerep.git\s*<br />\s*git://somerep.git\s*<br />#)
+  # Branch
+  ->content_like(qr#<span class="head" title="heads/master">\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/master">\s*master\s*</a>\s*</span>#)
+  # Shorlog comment link
+  ->content_like(qr#<a class="list subject" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/commit/$head"\s* >\s*日本語の内容を追加\s*</a>#)
+  # Shortlog commit link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/$head">\s*commit\s*</a>#)
+  # Shortlog commitdiff link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/$head">\s*commitdiff\s*</a>#)
+  # Shortlog tree link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$head">\s*tree\s*</a>#)
+  # Shortlog snapshot link
+  ->content_like(qr#<a title="in format: tar.gz" rel="nofollow" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/snapshot/$head">\s*snapshot\s*</a>#)
+
 ;

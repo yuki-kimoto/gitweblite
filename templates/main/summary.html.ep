@@ -53,7 +53,7 @@
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-              <%= url_for('snapshot', project => $project_ns, id => $id) %>>
+              "<%= url_for('snapshot', project => $project_ns, id => $id) %>">
             snapshot
           </a>
         </td>
