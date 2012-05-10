@@ -29,7 +29,7 @@
   % if ($current eq 'commitdiff') {
     Commitdiff
   % } else {
-    <a href="<%= url_for('commitdiff', project => $project_ns, id => $id) %>">Commitdiff</a>
+    <a href="<%= url_for('commitdiff', project => $project_ns, diff => $id) %>">Commitdiff</a>
   % }
   |
   % if ($current eq 'tree') {

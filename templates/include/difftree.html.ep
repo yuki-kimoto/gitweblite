@@ -9,8 +9,7 @@
           % my $parent = $parents->[$i];
           % my $from_id = $parent;
           <th>
-            <a href="<%= url_for('commitdiff', project => $project_ns,
-                id => $id, from_id => $from_id) %>"
+            <a href="<%= url_for('commitdiff', project => $project_ns, diff => "$from_id..$id") %>"
                 title="commitdiff to parent number <%= $i + 1 %> <%= substr($from_id, 0, 7) %>">
               <%= $i + 1 %>
             </a>

@@ -20,7 +20,7 @@
     <div class="title_text">
       <div class="log_link">
         <a href="<%= url_for('commit', project => $project_ns, id => $commit->{id}) %>">commit</a> |
-        <a href="<%= url_for('commitdiff', project => $project_ns, id => $commit->{id}) %>">
+        <a href="<%= url_for('commitdiff', project => $project_ns, diff => $commit->{id}) %>">
           commitdiff
         </a>
         |

@@ -31,7 +31,7 @@
 
   <div class="header">
     % if (defined $parent) {
-      <a class="title" href="<%= url_for('commitdiff', project => $project_ns, id => $commit->{id}) %>">
+      <a class="title" href="<%= url_for('commitdiff', project => $project_ns, diff => $commit->{id}) %>">
         <%= $commit->{title} %>
       </a>
     % } else {
@@ -100,7 +100,7 @@
             </a>
             |
             <a href="<%= url_for('commitdiff', project => $project_ns,
-                id => $commit->{id}, from_id => $from_id) %>">
+                diff => "$from_id..$commit->{id}") %>">
               diff
             </a>
           </td>

@@ -190,22 +190,17 @@ sub commit {
 sub commitdiff {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id => {require => 0 } => ['not_blank'],
-    from_id => {require => 0} => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Paramters
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = defined $params->{id} ? $params->{id} : 'HEAD';
-  my $from_id = $params->{from_id};
+  my $diff = $self->param('diff');
+  my ($from_id, $id) = $diff =~ /([a-zA-Z0-9]{40})(?:\.\.([a-zA-Z0-9]{40}))?/;
+  unless ($id) {
+    $id = $from_id;
+    $from_id = undef;
+  }
   
   # Git
   my $git = $self->app->git;

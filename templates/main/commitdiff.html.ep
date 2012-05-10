@@ -4,7 +4,7 @@
   %= include '/include/page_navi', current => 'commitdiff', project_ns => $project_ns;
   <div class="page_nav">
     <a href="<%= url_for('commitdiff', suffix => '_plain', project => $project_ns,
-        id => $commit->{id})->query(type => 'plain') %>">
+        diff => $commit->{id})->query(type => 'plain') %>">
       Raw
     </a>
   </div>
