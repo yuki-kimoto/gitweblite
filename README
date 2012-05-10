@@ -87,7 +87,7 @@ Config
       Default:
       
         "hypnotoad" : {
-          "listen" => ["http://*:10010"]
+          "listen" : ["http://*:10010"]
         }
 
 Logo and favicon
