@@ -122,4 +122,13 @@ $t->get_ok("$project/commit/$id")
   ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/commit/$parent">\s*$parent\s*</a>#)
   # Parent commit link
   ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/$parent">\s*commit\s*</a>#)
+  # Comment
+  ->content_like(qr#<div class="page_body">\s*日本語の内容を追加<br/>\s*<br/>\s*</div>#)
+  # Commit difftree file name link
+  ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/blob/$id/a_renamed.txt">\s*a_renamed.txt\s*</a>#)
+  # Commit difftree blobdiff link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blobdiff/$parent\.\.$id/a_renamed.txt">\s*diff\s*</a>#)
+  # Commit difftree blob link
+  ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/$id/a_renamed.txt">\s*blob\s*</a>#)
 ;
+
