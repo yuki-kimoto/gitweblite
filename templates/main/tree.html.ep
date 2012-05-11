@@ -48,10 +48,10 @@
           <td class="mode">
             <%= $tree->{mode_str} %>
           </td>
+          % my $file = defined $dir ? "$dir/$name" : $name;
+          % $file =~ s/^\///;
           <td class="list">
             % if ($type eq 'blob') {
-              % my $file = defined $dir ? "$dir/$name" : $name;
-
               <a class="list" href="<%= url_for('blob', project => $project_ns,
                   id_file => "$id/$file") %>">
                 <%= $tree->{name} %>
@@ -65,8 +65,6 @@
           </td>
           <td class="link">
             % if ($type eq 'blob') {
-              % my $file = defined $dir ? "$dir/$name" : $name;
-              % $file =~ s/^\///;
               <a href="<%= url_for('blob', project => $project_ns,
                   id_file => "$id/$file") %>">
                 blob
