@@ -129,6 +129,14 @@ sub startup {
     # Snapshot
     $r->get('/snapshot/(*id)')->to('#snapshot')->name('snapshot');
   }
+  
+  # File cache
+  my $dirs = $self->config('search_dirs');
+  my $max_depth = $self->config('search_max_depth');
+  $git->search_projects(
+    dirs => $dirs,
+    max_depth => $max_depth
+  );
 }
 
 1;
