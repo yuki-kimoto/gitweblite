@@ -160,4 +160,15 @@ my $git = $app->git;
   ;
 }
 
+# Commit page (First commit)
+{
+  my $id = '4b0e81c462088b16fefbe545e00b993fd7e6f884';
+  $t->get_ok("$project/commit/$id")
+    # Initial
+    ->content_like(qr#\Q(initial)#)
+    # New file
+    ->content_like(qr#<span class="file_status new">\s*\[\s*new file\s*with mode: 0644\s*\]\s*</span>#)
+    
+  ;
+}
 
