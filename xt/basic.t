@@ -168,7 +168,27 @@ my $git = $app->git;
     ->content_like(qr#\Q(initial)#)
     # New file
     ->content_like(qr#<span class="file_status new">\s*\[\s*new file\s*with mode: 0644\s*\]\s*</span>#)
-    
   ;
 }
 
+# Commit page (Rename)
+{
+  my $id = '15ea9d711617abda5eed7b4173a3349d30bca959';
+  my $commit = $git->parse_commit($project, $id);
+  my $parent = $commit->{parent};
+  $t->get_ok("$project/commit/$id")
+    # Rename
+    ->content_like(qr#\[\s*moved from\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/$parent/a\.txt">\s*a\.txt</a>\s*with 100%\s*\]#)
+  ;
+}
+
+# Commit page (Change mode)
+{
+  my $id = '5a4043069b01c2a0c257dae1cc862c730bdb2c2f';
+  my $commit = $git->parse_commit($project, $id);
+  my $parent = $commit->{parent};
+  $t->get_ok("$project/commit/$id")
+    # Change mode
+    ->content_like(qr#\[\s*changed\s*mode: 0644->0755\s*\]#)
+  ;
+}
