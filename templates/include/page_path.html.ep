@@ -1,7 +1,7 @@
 % use File::Basename 'basename';
 
 <div class="page_path">
-  [<a href="<%= url_for('tree', project => $project_ns, id => $id, dir => '') %>"><%= basename $project %></a>]
+  [<a href="<%= url_for('tree', project => $project_ns, id_dir => $id) %>"><%= basename $project %></a>]
   % my @parts = split('/', $Path);
   % my $path;
   % for (my $i = 0; $i < @parts; $i++) {
