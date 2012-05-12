@@ -363,11 +363,8 @@ sub commitdiff {
   $commit->{committer_date} = $git->_timestamp(\%committer_date);
   $from_id = $commit->{parent} unless defined $from_id;
   
-  # Check plain
-  my $type = $self->param('type');
-  my $plain = defined $type && $type eq 'plain' ? 1 : 0;
-  
   # Plain text
+  my $plain = $self->param('plain');
   if ($plain) {
     # git diff-tree plain output
     open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
