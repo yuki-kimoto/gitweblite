@@ -17,23 +17,7 @@
     </a>
   </div>
 
-  <div class="page_path">
-    [<a href="<%= url_for('tree', project => $project_ns, id_dir => $id) %>"><%= $project %></a>]
-    % my @parts;
-    % @parts = split('/', $dir) if defined $dir;
-    % my $path;
-    % for (my $i = 0; $i < @parts; $i++) {
-      % my $part = $parts[$i];
-      % $path .= "$part";
-      <a href="<%= url_for('tree', project => $project_ns, id_dir => $id, dir => '/' . $path) %>">
-        <%= $part %>
-      % $path .= '/' if $i ne @parts - 1;
-      </a>
-      % unless ($i == @parts - 1) {
-        /
-      % }
-    % }
-  </div>
+  %= include '/include/page_path', project_ns => $project_ns, id => $id, Path => $dir, type => 'tree';
 
   <div class="page_body">
     %= include 'include/refs', project => $project_ns, commit => $commit, refs => $refs;
@@ -43,23 +27,25 @@
         % my $tree = $trees->[$i];
         % my $type = $tree->{type};
         % my $name = $tree->{name};
-        % my $child_dir = defined $dir && length $dir ? join('/', $dir, $tree->{name}) : $tree->{name};
+        
+        % my $child_dir = defined $dir && length $dir ? join('/', $dir, $name) : $name;
         <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
           <td class="mode">
             <%= $tree->{mode_str} %>
           </td>
           % my $file = defined $dir ? "$dir/$name" : $name;
           % $file =~ s/^\///;
+          
           <td class="list">
             % if ($type eq 'blob') {
               <a class="list" href="<%= url_for('blob', project => $project_ns,
                   id_file => "$id/$file") %>">
-                <%= $tree->{name} %>
+                <%= $name %>
               </a>
             % } elsif ($tree) {
               <a href="<%= url_for('tree', project => $project_ns,
                   id_dir => "$id/$child_dir") %>">
-                <%= $tree->{name} %>
+                <%= $name %>
               </a>
             % }
           </td>

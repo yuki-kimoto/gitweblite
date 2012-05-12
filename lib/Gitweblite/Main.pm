@@ -323,7 +323,8 @@ sub tree {
   my $id;
   my $dir;
   for my $rs (values %$refs) {
-    for my $ref (@$rs) {
+    for my $r (@$rs) {
+      my $ref = $r;
       $ref =~ s#^heads/##;
       $ref =~ s#^tags/##;
       if ($id_dir =~ s#^\Q$ref(/|$)##) {
@@ -368,7 +369,8 @@ sub tree {
     $tree{mode_str} = $git->_mode_str($tree{mode});
     push @trees, \%tree;
   }
-
+  
+  
   $self->render(
     home => $home,
     home_ns => $home_ns,

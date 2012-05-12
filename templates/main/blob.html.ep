@@ -1,5 +1,4 @@
 % layout 'common';
-  % my $head_id = gitweblite_get_head_id($project);
   %= include '/include/header', title => 'Blob', project => $project;
   %= include '/include/current_directory', home_ns => $home_ns, home => $home;
   %= include '/include/page_navi', current => 'blob', head_id => $id, project_ns => $project_ns;
@@ -8,6 +7,7 @@
       Raw
     </a>
     |
+    % my $head_id = gitweblite_get_head_id($project);
     <a href="<%= url_for('blob', project => $project_ns, id_file => "$head_id/$file") %>">
       HEAD
     </a>
@@ -19,7 +19,7 @@
   </a>
   </div>
 
-  %= include '/include/pagepath', project_ns => $project_ns, id => $id, file => $file;
+  %= include '/include/page_path', project_ns => $project_ns, id => $id, Path => $file, type => 'blob';
 
   <div class="page_body">
     % if ($mimetype =~ m#^image/#) {

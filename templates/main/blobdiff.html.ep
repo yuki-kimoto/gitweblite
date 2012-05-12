@@ -21,7 +21,7 @@
   </a>
   </div>
 
-  %= include '/include/pagepath', project_ns => $project_ns, id => $id, file => $file;
+  %= include '/include/page_path', project_ns => $project_ns, id => $id, Path => $file, type => 'blob';
 
   <div class="page_body">
     % for my $line (@$lines) {
