@@ -8,7 +8,7 @@
     </a>
     |
     % my $head_id = gitweblite_get_head_id($project);
-    <a href="<%= url_for('blob', project => $project_ns, id_file => "$head_id/$file") %>">
+    <a href="<%= url_for('blob', project => $project_ns, id_file => "HEAD/$file") %>">
       HEAD
     </a>
     <br/>

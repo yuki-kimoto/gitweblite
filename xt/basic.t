@@ -195,5 +195,18 @@ my $git = $app->git;
 
 # Blob
 {
-  
+  my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
+  my $file = 'dir/a.txt';
+  $t->get_ok("$project/blob/$id/$file")
+    # Raw link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob_plain/$id/$file">\s*Raw\s*</a>#)
+    # HEAD link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/HEAD/dir/a.txt">\s*HEAD\s*</a>#)
+    # Page path(project)
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$id">gitweblite_devrep.git</a>#)
+    # Page path(blob)
+    ->content_like(qr#<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tree/$id/dir"\s*>\s*dir\s*</a>\s*/\s*<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/blob/$id/dir/a.txt">\s*a.txt\s*</a>#)
+    # Content
+    ->content_like(qr#<div class="pre"><a id="l1" href="1" class="linenr">   1</a> aaaa</div>#)
+  ;
 }
