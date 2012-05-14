@@ -132,7 +132,7 @@ sub startup {
       ->to('#blobdiff', plain => 1)->name('blobdiff_plain');
     
     # Snapshot
-    $r->get('/snapshot/(*id)')->to('#snapshot')->name('snapshot');
+    $r->get('/snapshot/(:id)', {id => 'HEAD'})->to('#snapshot')->name('snapshot');
   }
   
   # File cache

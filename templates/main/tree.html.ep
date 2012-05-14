@@ -5,7 +5,7 @@
 
   <div class="page_nav">
     <a title="in format: tar.gz" rel="nofollow"
-        href="<%= url_for('snapshot', project => $project_ns) %>">
+        href="<%= url_for('snapshot', project => $project_ns, id => $id) %>">
       snapshot
     </a>
   </div>

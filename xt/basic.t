@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 use utf8;
+use File::Temp 'tempdir';
+use Archive::Tar;
 
 use Test::More 'no_plan';
 
@@ -256,7 +258,7 @@ my $git = $app->git;
   my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
   $t->get_ok("$project/tree/$id")
     # Snapshot link
-    ->content_like(qr#<a title="in format: tar.gz" rel="nofollow"\s*href="/home/kimoto/labo/gitweblite_devrep.git/snapshot/">\s*snapshot\s*</a>#)
+    ->content_like(qr#<a title="in format: tar.gz" rel="nofollow"\s*href="/home/kimoto/labo/gitweblite_devrep.git/snapshot/$id">\s*snapshot\s*</a>#)
     # Commit comment
     ->content_like(qr#<a class="title" href="/home/kimoto/labo/gitweblite_devrep.git/commit/68a698012b16490e8cfb9d66bf8bbd9085421c69">\s*added text to dir/a.txt\s*</a>#)
     # File name link
@@ -269,7 +271,6 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir">\s*dir\s*</a>#)
     # Tree link
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir">\s*tree\s*</a>#)
-    
   ;
 }
 
@@ -280,8 +281,23 @@ my $git = $app->git;
   $t->get_ok("$project/tree/$id/$dir")
     # Page path (project)
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69">gitweblite_devrep.git</a>#)
-    # Page path (direcotry)
+    # Page path (directory)
     ->content_like(qr#<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir">\s*dir\s*</a>#)
-    
   ;
+}
+
+# Snapshot
+{
+  my $id = 'a37fbb832ab530fe9747cb128f9461211959103b';
+  $t->get_ok("$project/snapshot/$id");
+  my $tmpdir = tempdir( CLEANUP => 1 );
+  my $tmpfile = "$tmpdir/snapshot.tar.gz";
+  $t->tx->res->content->asset->move_to($tmpfile);
+  my $at = Archive::Tar->new($tmpfile);
+  
+  ok($at->contains_file('gitweblite_devrep-a37fbb8/README'));
+  ok($at->contains_file('gitweblite_devrep-a37fbb8/dir/a.txt'));
+  
+  
+  
 }

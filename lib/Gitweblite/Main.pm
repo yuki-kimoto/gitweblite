@@ -589,21 +589,12 @@ sub projects {
 sub snapshot {
   my $self = shift;
 
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id => {require => 0 } => ['not_blank'],
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameter
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = $params->{id};
-  $id = "HEAD" unless defined $id;
+  my $id = $self->param('id');
   
   # Git
   my $git = $self->app->git;
@@ -612,7 +603,8 @@ sub snapshot {
   my $type = $git->get_object_type($project, "$id^{}");
   if (!$type) { die 404, 'Object does not exist' }
   elsif ($type eq 'blob') { die 400, 'Object is not a tree-ish' }
-
+  
+  
   my ($name, $prefix) = $git->snapshot_name($project, $id);
   my $file = "$name.tar.gz";
   my $cmd = $self->_quote_command(
