@@ -220,3 +220,33 @@ my $git = $app->git;
     ->content_like(qr#aaaa#)
   ;
 }
+
+# Blob diff
+{
+  my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
+  my $from_id = 'a37fbb832ab530fe9747cb128f9461211959103b';
+  my $file = 'dir/a.txt';
+  $t->get_ok("$project/blobdiff/$from_id..$id/$file")
+    # Raw link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blobdiff_plain/a37fbb832ab530fe9747cb128f9461211959103b..68a698012b16490e8cfb9d66bf8bbd9085421c69/dir/a.txt">\s*Raw\s*</a>#)
+    # Page path (project)
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69">gitweblite_devrep.git</a>#)
+    # Page path (blob)
+    ->content_like(qr#<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir"\s*>\s*dir\s*</a>\s*/\s*<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir/a.txt">\s*a.txt\s*</a>#)
+    # Content (diff header)
+    ->content_like(qr#<div class="diff header">diff --git <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/a37fbb832ab530fe9747cb128f9461211959103b/dir/a.txt">a/dir/a.txt</a> <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir/a.txt">b/dir/a.txt</a></div>#)
+    # Content (diff line)
+    ->content_like(qr#<div class="diff to_file">\+aaaa</div>#)
+  ;
+}
+
+# Blob diff plain
+{
+  my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
+  my $from_id = 'a37fbb832ab530fe9747cb128f9461211959103b';
+  my $file = 'dir/a.txt';
+  $t->get_ok("$project/blobdiff_plain/$from_id..$id/$file")
+    # Content (diff line)
+    ->content_like(qr#\+aaaa#)
+  ;
+}
