@@ -210,3 +210,13 @@ my $git = $app->git;
     ->content_like(qr#<div class="pre"><a id="l1" href="1" class="linenr">   1</a> aaaa</div>#)
   ;
 }
+
+# Blob plain
+{
+  my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
+  my $file = 'dir/a.txt';
+  $t->get_ok("$project/blob_plain/$id/$file")
+    # Content
+    ->content_like(qr#aaaa#)
+  ;
+}
