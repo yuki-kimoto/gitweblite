@@ -16,12 +16,6 @@ Features
   - Zero configuration.
   - don't work on Windows
 
-Test
-
-    prove t
-
-  If all tests is passed, Gitweb Lite work on your system.
-
 Operation
 
   Start

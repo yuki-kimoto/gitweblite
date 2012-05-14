@@ -8,10 +8,6 @@
         diff => "$from_id..$id", file => $file) %>">
       Raw
     </a>
-    |
-    <a href="<%= url_for('blob', project => $project_ns, id_file => "$id/$file") %>">
-      HEAD
-    </a>
     <br/>
   </div>
   <div class="header">

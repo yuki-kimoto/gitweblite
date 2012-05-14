@@ -192,3 +192,8 @@ my $git = $app->git;
     ->content_like(qr#\[\s*changed\s*mode: 0644->0755\s*\]#)
   ;
 }
+
+# Blob
+{
+  
+}
