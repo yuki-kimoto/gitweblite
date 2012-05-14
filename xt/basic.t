@@ -193,7 +193,7 @@ my $git = $app->git;
   ;
 }
 
-# Blob
+# Blob page
 {
   my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
   my $file = 'dir/a.txt';
@@ -221,7 +221,7 @@ my $git = $app->git;
   ;
 }
 
-# Blob diff
+# Blob diff page
 {
   my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
   my $from_id = 'a37fbb832ab530fe9747cb128f9461211959103b';
@@ -248,5 +248,40 @@ my $git = $app->git;
   $t->get_ok("$project/blobdiff_plain/$from_id..$id/$file")
     # Content (diff line)
     ->content_like(qr#\+aaaa#)
+  ;
+}
+
+# Tree page (Top direcotory)
+{
+  my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
+  $t->get_ok("$project/tree/$id")
+    # Snapshot link
+    ->content_like(qr#<a title="in format: tar.gz" rel="nofollow"\s*href="/home/kimoto/labo/gitweblite_devrep.git/snapshot/">\s*snapshot\s*</a>#)
+    # Commit comment
+    ->content_like(qr#<a class="title" href="/home/kimoto/labo/gitweblite_devrep.git/commit/68a698012b16490e8cfb9d66bf8bbd9085421c69">\s*added text to dir/a.txt\s*</a>#)
+    # File name link
+    ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/README">\s*README\s*</a>#)
+    # Blob link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/README">\s*blob\s*</a>#)
+    # Raw link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob_plain/68a698012b16490e8cfb9d66bf8bbd9085421c69/README">\s*raw\s*</a>#)
+    # Directory link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir">\s*dir\s*</a>#)
+    # Tree link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir">\s*tree\s*</a>#)
+    
+  ;
+}
+
+# Tree page (Sub directory)
+{
+  my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
+  my $dir = 'dir';
+  $t->get_ok("$project/tree/$id/$dir")
+    # Page path (project)
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69">gitweblite_devrep.git</a>#)
+    # Page path (direcotry)
+    ->content_like(qr#<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir">\s*dir\s*</a>#)
+    
   ;
 }

@@ -5,8 +5,7 @@
 
   <div class="page_nav">
     <a title="in format: tar.gz" rel="nofollow"
-      href="<%= url_for('snapshot', project => $project_ns) %>"
-    >
+        href="<%= url_for('snapshot', project => $project_ns) %>">
       snapshot
     </a>
   </div>
@@ -38,21 +37,18 @@
           
           <td class="list">
             % if ($type eq 'blob') {
-              <a class="list" href="<%= url_for('blob', project => $project_ns,
-                  id_file => "$id/$file") %>">
+              <a class="list" href="<%= url_for('blob', project => $project_ns, id_file => "$id/$file") %>">
                 <%= $name %>
               </a>
             % } elsif ($tree) {
-              <a href="<%= url_for('tree', project => $project_ns,
-                  id_dir => "$id/$child_dir") %>">
+              <a href="<%= url_for('tree', project => $project_ns, id_dir => "$id/$child_dir") %>">
                 <%= $name %>
               </a>
             % }
           </td>
           <td class="link">
             % if ($type eq 'blob') {
-              <a href="<%= url_for('blob', project => $project_ns,
-                  id_file => "$id/$file") %>">
+              <a href="<%= url_for('blob', project => $project_ns, id_file => "$id/$file") %>">
                 blob
               </a>
               |
@@ -60,8 +56,7 @@
                 raw
               </a>
             % } elsif ($type eq 'tree') {
-              <a href="<%= url_for('tree', project => $project_ns,
-                  id_dir => "$id/$child_dir") %>">
+              <a href="<%= url_for('tree', project => $project_ns, id_dir => "$id/$child_dir") %>">
                 tree
               </a>
             % }
