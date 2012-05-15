@@ -248,7 +248,7 @@ my $git = $app->git;
   ;
 }
 
-# Blob diff plain
+# Blobdiff plain
 {
   my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';
   my $from_id = 'a37fbb832ab530fe9747cb128f9461211959103b';
@@ -369,3 +369,24 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/efcac846dfa843dca225c6d7445e349059011a44">\s*tree\s*</a>#)
     ;
 }
+
+# Commitdiff
+{
+  my $id = 'db9d83440469d42dda2021ebe34e20def0c0cba6';
+  $t->get_ok("$project/commitdiff/$id")
+    # Raw link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff_plain/db9d83440469d42dda2021ebe34e20def0c0cba6">\s*Raw\s*</a>#)
+    # Comment link
+    ->content_like(qr#<a class="title" href="/home/kimoto/labo/gitweblite_devrep.git/commit/">\s*edit a_renamed.txt\s*</a>#)
+    # Author
+    ->content_like(qr#<td>Author</td><td>Yuki Kimoto#)
+    # Committer
+    ->content_like(qr#<td>Committer</td><td>Yuki Kimoto#)
+    # Difftree (file name link)
+    ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">\s*a_renamed.txt\s*</a>#)
+    # Difftree (diff link)
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blobdiff/efcac846dfa843dca225c6d7445e349059011a44\.\.db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">\s*diff\s*</a>#)
+    # Difftree (blob link)
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">\s*blob\s*</a>#)
+}
+
