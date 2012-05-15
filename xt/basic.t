@@ -7,6 +7,7 @@ use Archive::Tar;
 use Test::More 'no_plan';
 
 use FindBin;
+use lib "$FindBin::Bin/../mojolegacy/lib";
 use lib "$FindBin::Bin/../lib";
 use Gitweblite;
 
@@ -145,6 +146,8 @@ my $git = $app->git;
   ;
 }
 
+__END__
+
 # Commit page (Merge commit)
 {
   my $id = '495195e5a9eec6c0126df9017c320f9dc2e5d0ef';
@@ -166,6 +169,8 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blobdiff/$parent2\.\.$id/conflict.txt">\s*diff2\s*</a>#)
   ;
 }
+
+__END__
 
 # Commit page (First commit)
 {
