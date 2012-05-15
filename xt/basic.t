@@ -146,8 +146,6 @@ my $git = $app->git;
   ;
 }
 
-__END__
-
 # Commit page (Merge commit)
 {
   my $id = '495195e5a9eec6c0126df9017c320f9dc2e5d0ef';
