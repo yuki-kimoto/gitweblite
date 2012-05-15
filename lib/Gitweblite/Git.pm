@@ -95,12 +95,12 @@ sub fill_from_file_info {
   my ($self, $project, $diff, $parents) = @_;
   
   # Fill file info
-  $diff->{'from_file'} = [];
-  $diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
-  for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
-    if ($diff->{'status'}[$i] eq 'R' || $diff->{'status'}[$i] eq 'C') {
-      $diff->{'from_file'}[$i] =
-        $self->get_path_by_id($project, $parents->[$i], $diff->{'from_id'}[$i]);
+  $diff->{from_file} = [];
+  $diff->{from_file}[$diff->{nparents} - 1] = undef;
+  for (my $i = 0; $i < $diff->{nparents}; $i++) {
+    if ($diff->{status}[$i] eq 'R' || $diff->{status}[$i] eq 'C') {
+      $diff->{from_file}[$i] =
+        $self->get_path_by_id($project, $parents->[$i], $diff->{from_id}[$i]);
     }
   }
 
@@ -115,11 +115,11 @@ sub fill_projects {
   for my $project (@$ps) {
     my (@activity) = $self->get_last_activity("$home/$project->{path}");
     next unless @activity;
-    ($project->{'age'}, $project->{'age_string'}) = @activity;
-    if (!defined $project->{'descr'}) {
+    ($project->{age}, $project->{age_string}) = @activity;
+    if (!defined $project->{descr}) {
       my $descr = $self->get_project_description("$home/$project->{path}") || "";
-      $project->{'descr_long'} = $descr;
-      $project->{'descr'} = $self->_chop_str($descr, 25, 5);
+      $project->{descr_long} = $descr;
+      $project->{descr} = $self->_chop_str($descr, 25, 5);
     }
 
     push @projects, $project;
@@ -149,10 +149,10 @@ sub get_difftree {
     my $diff = $self->parsed_difftree_line($line);
     
     # Parent are more than one
-    if (exists $diff->{'nparents'}) {
+    if (exists $diff->{nparents}) {
 
       $self->fill_from_file_info($project, $diff, $parents)
-        unless exists $diff->{'from_file'};
+        unless exists $diff->{from_file};
       $diff->{is_deleted} = 1 if $self->is_deleted($diff);
       push @$diffs, $diff;
     }
@@ -161,19 +161,19 @@ sub get_difftree {
     else {
       my ($to_mode_oct, $to_mode_str, $to_file_type);
       my ($from_mode_oct, $from_mode_str, $from_file_type);
-      if ($diff->{'to_mode'} ne ('0' x 6)) {
-        $to_mode_oct = oct $diff->{'to_mode'};
+      if ($diff->{to_mode} ne ('0' x 6)) {
+        $to_mode_oct = oct $diff->{to_mode};
         if (S_ISREG($to_mode_oct)) { # only for regular file
           $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
         }
-        $to_file_type = $self->file_type($diff->{'to_mode'});
+        $to_file_type = $self->file_type($diff->{to_mode});
       }
-      if ($diff->{'from_mode'} ne ('0' x 6)) {
-        $from_mode_oct = oct $diff->{'from_mode'};
+      if ($diff->{from_mode} ne ('0' x 6)) {
+        $from_mode_oct = oct $diff->{from_mode};
         if (S_ISREG($from_mode_oct)) { # only for regular file
           $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
         }
-        $from_file_type = $self->file_type($diff->{'from_mode'});
+        $from_file_type = $self->file_type($diff->{from_mode});
       }
       
       $diff->{to_mode_str} = $to_mode_str;
@@ -220,16 +220,16 @@ sub get_heads {
     my ($cid, $name, $title) = split(' ', $refinfo, 3);
     my ($committer, $epoch, $tz) =
       ($committerinfo =~ /^(.*) ([0-9]+) (.*)$/);
-    $ref_item{'fullname'}  = $name;
+    $ref_item{fullname}  = $name;
     $name =~ s!^refs/(?:head|remote)s/!!;
 
-    $ref_item{'name'}  = $name;
-    $ref_item{'id'}    = $cid;
-    $ref_item{'title'} = $title || '(no commit message)';
-    $ref_item{'epoch'} = $epoch;
+    $ref_item{name}  = $name;
+    $ref_item{id}    = $cid;
+    $ref_item{title} = $title || '(no commit message)';
+    $ref_item{epoch} = $epoch;
     if ($epoch) {
-      $ref_item{'age'} = $self->_age_string(time - $ref_item{'epoch'});
-    } else { $ref_item{'age'} = "unknown" }
+      $ref_item{age} = $self->_age_string(time - $ref_item{epoch});
+    } else { $ref_item{age} = "unknown" }
 
     push @heads, \%ref_item;
   }
@@ -460,27 +460,27 @@ sub get_tags {
     my ($id, $type, $name, $refid, $reftype, $title) = split(' ', $refinfo, 6);
     my ($creator, $epoch, $tz) =
       ($creatorinfo =~ /^(.*) ([0-9]+) (.*)$/);
-    $tag{'fullname'} = $name;
+    $tag{fullname} = $name;
     $name =~ s!^refs/tags/!!;
 
-    $tag{'type'} = $type;
-    $tag{'id'} = $id;
-    $tag{'name'} = $name;
+    $tag{type} = $type;
+    $tag{id} = $id;
+    $tag{name} = $name;
     if ($type eq "tag") {
-      $tag{'subject'} = $title;
-      $tag{'reftype'} = $reftype;
-      $tag{'refid'}   = $refid;
+      $tag{subject} = $title;
+      $tag{reftype} = $reftype;
+      $tag{refid}   = $refid;
     } else {
-      $tag{'reftype'} = $type;
-      $tag{'refid'}   = $id;
+      $tag{reftype} = $type;
+      $tag{refid}   = $id;
     }
 
     if ($type eq "tag" || $type eq "commit") {
-      $tag{'epoch'} = $epoch;
+      $tag{epoch} = $epoch;
       if ($epoch) {
-        $tag{'age'} = $self->_age_string(time - $tag{'epoch'});
+        $tag{age} = $self->_age_string(time - $tag{epoch});
       } else {
-        $tag{'age'} = "unknown";
+        $tag{age} = "unknown";
       }
     }
     
@@ -498,7 +498,7 @@ sub is_deleted {
   my ($self, $diffinfo) = @_;
   
   # Check if deleted
-  return $diffinfo->{'to_id'} eq ('0' x 40);
+  return $diffinfo->{to_id} eq ('0' x 40);
 }
 
 sub id_set_multi {
@@ -540,43 +540,43 @@ sub parse_commit_text {
   my $header = shift @commit_lines;
   return if $header !~ m/^[0-9a-fA-F]{40}/;
   
-  ($commit{'id'}, my @parents) = split ' ', $header;
+  ($commit{id}, my @parents) = split ' ', $header;
   while (my $line = shift @commit_lines) {
     last if $line eq "\n";
     if ($line =~ m/^tree ([0-9a-fA-F]{40})$/) {
-      $commit{'tree'} = $1;
+      $commit{tree} = $1;
     } elsif ((!defined $withparents) && ($line =~ m/^parent ([0-9a-fA-F]{40})$/)) {
       push @parents, $1;
     } elsif ($line =~ m/^author (.*) ([0-9]+) (.*)$/) {
-      $commit{'author'} = $1;
-      $commit{'author_epoch'} = $2;
-      $commit{'author_tz'} = $3;
-      if ($commit{'author'} =~ m/^([^<]+) <([^>]*)>/) {
-        $commit{'author_name'}  = $1;
-        $commit{'author_email'} = $2;
+      $commit{author} = $1;
+      $commit{author_epoch} = $2;
+      $commit{author_tz} = $3;
+      if ($commit{author} =~ m/^([^<]+) <([^>]*)>/) {
+        $commit{author_name}  = $1;
+        $commit{author_email} = $2;
       } else {
-        $commit{'author_name'} = $commit{'author'};
+        $commit{author_name} = $commit{author};
       }
     } elsif ($line =~ m/^committer (.*) ([0-9]+) (.*)$/) {
-      $commit{'committer'} = $1;
-      $commit{'committer_epoch'} = $2;
-      $commit{'committer_tz'} = $3;
-      if ($commit{'committer'} =~ m/^([^<]+) <([^>]*)>/) {
-        $commit{'committer_name'}  = $1;
-        $commit{'committer_email'} = $2;
+      $commit{committer} = $1;
+      $commit{committer_epoch} = $2;
+      $commit{committer_tz} = $3;
+      if ($commit{committer} =~ m/^([^<]+) <([^>]*)>/) {
+        $commit{committer_name}  = $1;
+        $commit{committer_email} = $2;
       } else {
-        $commit{'committer_name'} = $commit{'committer'};
+        $commit{committer_name} = $commit{committer};
       }
     }
   }
-  return unless defined $commit{'tree'};
-  $commit{'parents'} = \@parents;
-  $commit{'parent'} = $parents[0];
+  return unless defined $commit{tree};
+  $commit{parents} = \@parents;
+  $commit{parent} = $parents[0];
 
   for my $title (@commit_lines) {
     $title =~ s/^    //;
     if ($title ne "") {
-      $commit{'title'} = $self->_chop_str($title, 80, 5);
+      $commit{title} = $self->_chop_str($title, 80, 5);
       # remove leading stuff of merges to make the interesting part visible
       if (length($title) > 50) {
         $title =~ s/^Automatic //;
@@ -594,29 +594,29 @@ sub parse_commit_text {
           $title =~ s/\/pub\/scm//;
         }
       }
-      $commit{'title_short'} = $self->_chop_str($title, 50, 5);
+      $commit{title_short} = $self->_chop_str($title, 50, 5);
       last;
     }
   }
-  if (! defined $commit{'title'} || $commit{'title'} eq "") {
-    $commit{'title'} = $commit{'title_short'} = '(no commit message)';
+  if (! defined $commit{title} || $commit{title} eq "") {
+    $commit{title} = $commit{title_short} = '(no commit message)';
   }
   # remove added spaces
   for my $line (@commit_lines) {
     $line =~ s/^    //;
   }
-  $commit{'comment'} = \@commit_lines;
+  $commit{comment} = \@commit_lines;
 
-  my $age = time - $commit{'committer_epoch'};
-  $commit{'age'} = $age;
-  $commit{'age_string'} = $self->_age_string($age);
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($commit{'committer_epoch'});
+  my $age = time - $commit{committer_epoch};
+  $commit{age} = $age;
+  $commit{age_string} = $self->_age_string($age);
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($commit{committer_epoch});
   if ($age > 60*60*24*7*2) {
-    $commit{'age_string_date'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
-    $commit{'age_string_age'} = $commit{'age_string'};
+    $commit{age_string_date} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{age_string_age} = $commit{age_string};
   } else {
-    $commit{'age_string_date'} = $commit{'age_string'};
-    $commit{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{age_string_date} = $commit{age_string};
+    $commit{age_string_age} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
   }
   return \%commit;
 }
@@ -654,34 +654,33 @@ sub parse_date {
   my $self = shift;
   my $epoch = shift;
   my $tz = shift || "-0000";
-
+  
+  # Parse data
   my %date;
   my @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
   my @days = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
   my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($epoch);
-  $date{'hour'} = $hour;
-  $date{'minute'} = $min;
-  $date{'mday'} = $mday;
-  $date{'day'} = $days[$wday];
-  $date{'month'} = $months[$mon];
-  $date{'rfc2822'}   = sprintf "%s, %d %s %4d %02d:%02d:%02d +0000",
-                       $days[$wday], $mday, $months[$mon], 1900+$year, $hour ,$min, $sec;
+  $date{hour} = $hour;
+  $date{minute} = $min;
+  $date{mday} = $mday;
+  $date{day} = $days[$wday];
+  $date{month} = $months[$mon];
+  $date{rfc2822} = sprintf "%s, %d %s %4d %02d:%02d:%02d +0000",
+    $days[$wday], $mday, $months[$mon], 1900+$year, $hour ,$min, $sec;
   $date{'mday-time'} = sprintf "%d %s %02d:%02d",
-                       $mday, $months[$mon], $hour ,$min;
+    $mday, $months[$mon], $hour ,$min;
   $date{'iso-8601'}  = sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ",
-                       1900+$year, 1+$mon, $mday, $hour ,$min, $sec;
-
-  my ($tz_sign, $tz_hour, $tz_min) =
-    ($tz =~ m/^([-+])(\d\d)(\d\d)$/);
+    1900 + $year, 1+$mon, $mday, $hour ,$min, $sec;
+  my ($tz_sign, $tz_hour, $tz_min) = ($tz =~ m/^([-+])(\d\d)(\d\d)$/);
   $tz_sign = ($tz_sign eq '-' ? -1 : +1);
   my $local = $epoch + $tz_sign*((($tz_hour*60) + $tz_min)*60);
   ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($local);
-  $date{'hour_local'} = $hour;
-  $date{'minute_local'} = $min;
-  $date{'tz_local'} = $tz;
+  $date{hour_local} = $hour;
+  $date{minute_local} = $min;
+  $date{tz_local} = $tz;
   $date{'iso-tz'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d %s",
-                            1900+$year, $mon+1, $mday,
-                            $hour, $min, $sec, $tz);
+    1900 + $year, $mon+1, $mday, $hour, $min, $sec, $tz);
+  
   return %date;
 }
 
@@ -953,16 +952,18 @@ sub _chop_str {
   my $str = shift;
   my $len = shift;
   my $add_len = shift || 10;
-  my $where = shift || 'right'; # 'left' | 'center' | 'right'
+  my $where = shift || 'right';
 
   if ($where eq 'center') {
-    return $str if ($len + 5 >= length($str)); # filler is length 5
+    # Filler is length 5
+    return $str if ($len + 5 >= length($str));
     $len = int($len/2);
   } else {
-    return $str if ($len + 4 >= length($str)); # filler is length 4
+    # Filler is length 4
+    return $str if ($len + 4 >= length($str)); 
   }
 
-  # regexps: ending and beginning with word part up to $add_len
+  # Regexps: ending and beginning with word part up to $add_len
   my $endre = qr/.{$len}\w{0,$add_len}/;
   my $begre = qr/\w{0,$add_len}.{$len}/;
 
