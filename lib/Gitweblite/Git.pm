@@ -530,19 +530,16 @@ sub parse_commit {
 
 sub parse_commit_text {
   my ($self, $commit_text, $withparents) = @_;
+  
   my @commit_lines = split '\n', $commit_text;
   my %commit;
 
   pop @commit_lines; # Remove '\0'
-
-  if (! @commit_lines) {
-    return;
-  }
+  return unless @commit_lines;
 
   my $header = shift @commit_lines;
-  if ($header !~ m/^[0-9a-fA-F]{40}/) {
-    return;
-  }
+  return if $header !~ m/^[0-9a-fA-F]{40}/;
+  
   ($commit{'id'}, my @parents) = split ' ', $header;
   while (my $line = shift @commit_lines) {
     last if $line eq "\n";
@@ -572,9 +569,7 @@ sub parse_commit_text {
       }
     }
   }
-  if (!defined $commit{'tree'}) {
-    return;
-  };
+  return unless defined $commit{'tree'};
   $commit{'parents'} = \@parents;
   $commit{'parent'} = $parents[0];
 
@@ -1004,43 +999,42 @@ sub _mode_str {
   my $self = shift;
   my $mode = oct shift;
 
-  if ($self->_s_isgitlink($mode)) {
-    return 'm---------';
-  } elsif (S_ISDIR($mode & S_IFMT)) {
-    return 'drwxr-xr-x';
-  } elsif (S_ISLNK($mode)) {
-    return 'lrwxrwxrwx';
-  } elsif (S_ISREG($mode)) {
-    # git cares only about the executable bit
+  # Mode to string
+  if ($self->_s_isgitlink($mode)) { return 'm---------' }
+  elsif (S_ISDIR($mode & S_IFMT)) { return 'drwxr-xr-x' }
+  elsif (S_ISLNK($mode)) { return 'lrwxrwxrwx' }
+  elsif (S_ISREG($mode)) {
     if ($mode & S_IXUSR) {
       return '-rwxr-xr-x';
     } else {
-      return '-rw-r--r--';
-    };
-  } else {
-    return '----------';
-  }
+      return '-rw-r--r--'
+    }
+  } else { return '----------' }
+  
+  return;
 }
 
 sub _s_isgitlink {
   my ($self, $mode) = @_;
   
-  # Constant
+  # Check if git link
   my $s_ifgitlink = 0160000;
   return (($mode & S_IFMT) == $s_ifgitlink)
 }
 
 sub _timestamp {
   my ($self, $date) = @_;
-  my $strtime = $date->{'rfc2822'};
-
+  
+  # Time stamp
+  my $strtime = $date->{rfc2822};
   my $localtime_format = '(%02d:%02d %s)';
-  if ($date->{'hour_local'} < 6) {
-    $localtime_format = '(%02d:%02d %s)';
-  }
-  $strtime .= ' ' .
-              sprintf($localtime_format,
-                      $date->{'hour_local'}, $date->{'minute_local'}, $date->{'tz_local'});
+  if ($date->{hour_local} < 6) { $localtime_format = '(%02d:%02d %s)' }
+  $strtime .= ' ' . sprintf(
+    $localtime_format,
+    $date->{hour_local},
+    $date->{minute_local},
+    $date->{tz_local}
+  );
 
   return $strtime;
 }
@@ -1048,10 +1042,10 @@ sub _timestamp {
 sub _slurp {
   my ($self, $file) = @_;
   
+  # Slurp
   open my $fh, '<', $file
     or die qq/Can't open file "$file": $!/;
-  my $content = do { local $/; <$fh> };
-  $content = d$content;
+  my $content = d(do { local $/; <$fh> });
   close $fh;
   
   return $content;
@@ -1059,42 +1053,46 @@ sub _slurp {
 
 sub _unquote {
   my ($self, $str) = @_;
-
-  sub unq {
+  
+  # Unquote function
+  my $unq = sub {
     my $seq = shift;
-    my %es = ( # character escape codes, aka escape sequences
-      't' => "\t",   # tab            (HT, TAB)
-      'n' => "\n",   # newline        (NL)
-      'r' => "\r",   # return         (CR)
-      'f' => "\f",   # form feed      (FF)
-      'b' => "\b",   # backspace      (BS)
-      'a' => "\a",   # alarm (bell)   (BEL)
-      'e' => "\e",   # escape         (ESC)
-      'v' => "\013", # vertical tab   (VT)
+    
+    # Character escape codes
+    my %es = ( 
+      t => "\t",   # tab            (HT, TAB)
+      n => "\n",   # newline        (NL)
+      r => "\r",   # return         (CR)
+      f => "\f",   # form feed      (FF)
+      b => "\b",   # backspace      (BS)
+      a => "\a",   # alarm (bell)   (BEL)
+      e => "\e",   # escape         (ESC)
+      v => "\013", # vertical tab   (VT)
     );
 
-    if ($seq =~ m/^[0-7]{1,3}$/) {
-      # octal char sequence
-      return chr(oct($seq));
-    } elsif (exists $es{$seq}) {
-      # C escape sequence, aka character escape code
-      return $es{$seq};
-    }
-    # quoted ordinary character
+    # Octal char sequence
+    if ($seq =~ m/^[0-7]{1,3}$/) { return chr oct $seq }
+    # C escape sequence, aka character escape code
+    elsif (exists $es{$seq}) { return $es{$seq} }
+    
+    # Quoted ordinary character
     return $seq;
-  }
-
+  };
+  
+  # Unquote
   if ($str =~ m/^"(.*)"$/) {
     # needs unquoting
     $str = $1;
-    $str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
+    $str =~ s/\\([^0-7]|[0-7]{1,3})/$unq->($1)/eg;
   }
+  
   return $str;
 }
 
 sub _untabify {
   my ($self, $line) = @_;
-
+  
+  # Untabify
   while ((my $pos = index($line, "\t")) != -1) {
     if (my $count = (8 - ($pos % 8))) {
       my $spaces = ' ' x $count;
