@@ -13,7 +13,7 @@ has prevent_xss => 0;
 sub blob {
   my $self = shift;
 
-  # Parameter
+  # Parameters
   my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
@@ -137,7 +137,7 @@ sub blob {
 sub blobdiff {
   my $self = shift;
 
-  # Parameter
+  # Parameters
   my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
@@ -253,7 +253,7 @@ sub blobdiff {
 sub commit {
   my $self = shift;
 
-  # Parameter
+  # Parameters
   my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
@@ -426,7 +426,7 @@ sub home {
 sub heads {
   my $self = shift;
   
-  # Parameter
+  # Parameters
   my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
@@ -501,15 +501,8 @@ sub log {
 sub projects {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    home => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $home_ns = $params->{home};
+  # Parameters
+  my $home_ns = $self->param('home');
   my $home = "/$home_ns";
 
   # Git
@@ -588,15 +581,8 @@ sub snapshot {
 sub summary {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameters
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
@@ -654,20 +640,12 @@ sub summary {
 sub tag {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameters
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = $params->{id};
+  my $id = $self->param('id');
   
   # Git
   my $git = $self->app->git;
@@ -693,15 +671,8 @@ sub tag {
 sub tags {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameters
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
@@ -725,21 +696,12 @@ sub tags {
 sub tree {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id => {require => 0 } => ['not_blank'],
-    id_dir => ['not_blank'],
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameters
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id_dir = $params->{id_dir};
+  my $id_dir = $self->param('id_dir');
 
   # Git
   my $git = $self->app->git;

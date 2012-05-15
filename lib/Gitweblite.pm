@@ -1,12 +1,10 @@
 package Gitweblite;
-use Mojo::Base 'Mojolicious';
-
-use Validator::Custom;
-use Gitweblite::Git;
 
 our $VERSION = '0.03';
 
-has 'validator';
+use Mojo::Base 'Mojolicious';
+use Gitweblite::Git;
+
 has 'git';
 
 sub startup {
@@ -30,15 +28,6 @@ sub startup {
   $git->bin($git_bin);
   $self->git($git);
 
-  # Validator
-  my $validator = Validator::Custom->new;
-  $validator->register_constraint(hex => sub {
-    my $value = shift;
-    return 0 unless defined $value;
-    $value =~ /^[0-9a-fA-F]+$/ ? 1 : 0;
-  });
-  $self->validator($validator);
-  
   # Helper
   {
     # Remove top slash
