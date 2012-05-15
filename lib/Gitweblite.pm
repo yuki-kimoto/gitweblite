@@ -95,7 +95,7 @@ sub startup {
     $r->get('/commitdiff/(*diff)')->to('#commitdiff')->name('commitdiff');
     
     # Commit diff plain
-    $r->get('/commitdiff_plain/(*diff)')
+    $r->get('/commitdiff-plain/(*diff)')
       ->to('#commitdiff', plain => 1)->name('commitdiff_plain');
     
     # Tags
@@ -115,7 +115,7 @@ sub startup {
     $r->get('/blob/(*id_file)')->to('#blob')->name('blob');
     
     # Blob plain
-    $r->get('/blob_plain/(*id_file)')
+    $r->get('/blob-plain/(*id_file)')
       ->to('#blob', plain => 1)->name('blob_plain');
     
     # Blob diff
@@ -123,7 +123,7 @@ sub startup {
       ->to('#blobdiff')->name('blobdiff');
 
     # Blob diff plain
-    $r->get('/blobdiff_plain/(#diff)/(*file)')
+    $r->get('/blobdiff-plain/(#diff)/(*file)')
       ->to('#blobdiff', plain => 1)->name('blobdiff_plain');
     
     # Snapshot
