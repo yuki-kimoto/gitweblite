@@ -160,10 +160,15 @@ sub blobdiff {
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
   my $diff = $params->{diff};
-  my ($from_id, $id) = $diff =~ /([a-zA-Z0-9]{40})\.\.([a-zA-Z0-9]{40})/;
   my $file = $params->{file};
   my $from_file = $file;
   my $plain = $self->param('plain');
+  my $from_id;
+  my $id;
+  if ($diff =~ /\.\./) {
+    ($from_id, $id) = $diff =~ /(.+)\.\.(.+)/;
+  }
+  else { $id = $diff }
   
   # Git
   my $git = $self->app->git;

@@ -119,13 +119,11 @@ sub startup {
       ->to('#blob', plain => 1)->name('blob_plain');
     
     # Blob diff
-    $r->get('/blobdiff/(:diff)/(*file)',
-        [diff => qr/[a-zA-Z0-9]{40}\.\.[a-zA-Z0-9]{40}/])
+    $r->get('/blobdiff/(#diff)/(*file)')
       ->to('#blobdiff')->name('blobdiff');
 
     # Blob diff plain
-    $r->get('/blobdiff_plain/(:diff)/(*file)',
-        [diff => qr/[a-zA-Z0-9]{40}\.\.[a-zA-Z0-9]{40}/])
+    $r->get('/blobdiff_plain/(#diff)/(*file)')
       ->to('#blobdiff', plain => 1)->name('blobdiff_plain');
     
     # Snapshot
