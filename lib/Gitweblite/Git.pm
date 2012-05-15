@@ -138,9 +138,9 @@ sub get_difftree {
   my @cmd = ($self->cmd($project), "diff-tree", '-r', "--no-commit-id",
     '-M', (@$parents <= 1 ? $parent : '-c'), $cid, "--");
   open my $fh, "-|", @cmd
-    or die 500, "Open git-diff-tree failed";
+    or croak 500, "Open git-diff-tree failed";
   my @difftree = map { chomp; d$_ } <$fh>;
-  close $fh or die "Reading git-diff-tree failed";
+  close $fh or croak "Reading git-diff-tree failed";
   
   # Parse "git diff-tree" output
   my $diffs = [];
@@ -263,7 +263,7 @@ sub get_id_by_path {
   # Command "git ls-tree"
   my @cmd = ($self->cmd($project), "ls-tree", $id, "--", $path);
   open my $fh, "-|", @cmd
-    or die "Open git-ls-tree failed";
+    or croak "Open git-ls-tree failed";
   my $line = <$fh>;
   $line = d$line;
   close $fh or return undef;
@@ -516,7 +516,7 @@ sub parse_commit {
   my @cmd = ($self->cmd($project), "rev-list", "--parents",
     "--header", "--max-count=1", $id, "--");
   open my $fh, "-|", @cmd
-    or die "Open git-rev-list failed";
+    or croak "Open git-rev-list failed";
   
   # Parse commit
   local $/ = "\0";
@@ -635,7 +635,7 @@ sub parse_commits {
     $cid,
     "--",
     ($file ? ($file) : ())
-    or die_error(500, "Open git-rev-list failed");
+    or croak_error(500, "Open git-rev-list failed");
 
   # Parse rev-list results
   local $/ = "\0";
@@ -1046,7 +1046,7 @@ sub _slurp {
   
   # Slurp
   open my $fh, '<', $file
-    or die qq/Can't open file "$file": $!/;
+    or croak qq/Can't open file "$file": $!/;
   my $content = d(do { local $/; <$fh> });
   close $fh;
   

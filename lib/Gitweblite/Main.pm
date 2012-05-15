@@ -1,9 +1,10 @@
 package Gitweblite::Main;
 use Mojo::Base 'Mojolicious::Controller';
-use Mojo::Cache;
-use Encode qw/encode decode/;
 use File::Basename 'dirname';
+use Carp 'croak';
 
+# Encode
+use Encode qw/encode decode/;
 sub e($) { encode('UTF-8', shift) }
 sub d($) { decode('UTF-8', shift) }
 
@@ -49,9 +50,9 @@ sub blob {
   if ($self->stash('plain')) {
     # Blob id
     my $bid = $git->get_id_by_path($project, $id, $file, "blob")
-      or die "Cannot find file";
+      or croak "Cannot find file";
     open my $fh, "-|", $git->cmd($project), "cat-file", "blob", $bid
-      or die "Open git-cat-file blob '$bid' failed";
+      or croak "Open git-cat-file blob '$bid' failed";
 
     # content-type (can include charset)
     my $type = $git->blob_contenttype($fh, $file);
@@ -85,7 +86,7 @@ sub blob {
   else {
     # Blob id
     my $bid = $git->get_id_by_path($project, $id, $file, "blob")
-      or die "Cannot find file";
+      or croak "Cannot find file";
     
     # Blob
     my @git_cat_file = (
@@ -95,7 +96,7 @@ sub blob {
       $bid
     );
     open my $fh, "-|", @git_cat_file
-      or die "Couldn't cat $file, $bid";
+      or croak "Couldn't cat $file, $bid";
     
     my $mimetype = $git->blob_mimetype($fh, $file);
     # Redirect to blob plane
@@ -170,33 +171,33 @@ sub blobdiff {
       );
       
       open $fh, "-|", @git_diff_tree
-        or die 500, "Open git-diff-tree failed";
+        or croak 500, "Open git-diff-tree failed";
       @difftree = map { chomp; d$_ } <$fh>;
       close $fh
-        or die 404, "Reading git-diff-tree failed";
+        or croak 404, "Reading git-diff-tree failed";
       @difftree
-        or die 404, "Blob diff not found";
+        or croak 404, "Blob diff not found";
 
     } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
 
       # read filtered raw output
       open $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
           $from_id, $id, "--"
-        or die "Open git-diff-tree failed";
+        or croak "Open git-diff-tree failed";
       @difftree =
         grep { /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} $bid/ }
         map { chomp; d$_ } <$fh>;
       close $fh
-        or die("Reading git-diff-tree failed");
+        or croak("Reading git-diff-tree failed");
       @difftree
-        or die("Blob diff not found");
+        or croak("Blob diff not found");
 
     } else {
-      die "Missing one of the blob diff parameters";
+      croak "Missing one of the blob diff parameters";
     }
 
     if (@difftree > 1) {
-      die "Ambiguous blob diff specification";
+      croak "Ambiguous blob diff specification";
     }
 
     %diffinfo = $git->parse_difftree_raw_line($difftree[0]);
@@ -211,11 +212,11 @@ sub blobdiff {
       '-p', (!$plain ? "--full-index" : ()),
       $from_id, $id,
       "--", (defined $from_file ? $from_file : ()), $file
-      or die_error(500, "Open git-diff-tree failed");
+      or croak_error(500, "Open git-diff-tree failed");
   }
   
   if (!%diffinfo) {
-    die '404 Not Found', "Missing one of the blob diff parameters";
+    croak '404 Not Found', "Missing one of the blob diff parameters";
   }
   
   my $commit = $git->parse_commit($project, $id);
@@ -318,7 +319,7 @@ sub commitdiff {
   
   # Commit
   my $commit = $git->parse_commit($project, $id)
-    or die 404, "Unknown commit object";
+    or croak 404, "Unknown commit object";
   my %author_date = %$commit
     ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
     : ();
@@ -335,7 +336,7 @@ sub commitdiff {
     # git diff-tree plain output
     open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
         '-p', $from_id, $id, "--"
-      or die 500, "Open git-diff-tree failed";
+      or croak 500, "Open git-diff-tree failed";
     
 
     my $content = do { local $/; <$fh> };
@@ -351,7 +352,7 @@ sub commitdiff {
     open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
         "--no-commit-id", "--patch-with-raw", "--full-index",
         $from_id, $id, "--"
-      or die 500, "Open git-diff-tree failed";
+      or croak 500, "Open git-diff-tree failed";
 
     # Parse output
     my @diffinfos;
@@ -378,7 +379,7 @@ sub commitdiff {
         "--", (defined $from_file ? $from_file : ()), $file
       );
       open $fh, "-|", @git_diff_tree
-        or die 500, "Open git-diff-tree failed";
+        or croak 500, "Open git-diff-tree failed";
       
       my @lines = <$fh>;
       close $fh;
@@ -544,8 +545,8 @@ sub snapshot {
 
   # Object type
   my $type = $git->get_object_type($project, "$id^{}");
-  if (!$type) { die 404, 'Object does not exist' }
-  elsif ($type eq 'blob') { die 400, 'Object is not a tree-ish' }
+  if (!$type) { croak 404, 'Object does not exist' }
+  elsif ($type eq 'blob') { croak 400, 'Object is not a tree-ish' }
   
   
   my ($name, $prefix) = $git->snapshot_name($project, $id);
@@ -558,7 +559,7 @@ sub snapshot {
   $file =~ s/(["\\])/\\$1/g;
 
   open my $fh, "-|", $cmd
-    or die 500, "Execute git-archive failed";
+    or croak 500, "Execute git-archive failed";
   
   # Write chunk
   $self->res->headers->content_type('application/x-tar');
@@ -737,18 +738,18 @@ sub tree {
     }
     else { $tid = $commit->{tree} }
   }
-  die 404, "No such tree" unless defined $tid;
+  croak 404, "No such tree" unless defined $tid;
 
   my @entries = ();
   my $show_sizes = 0;
   {
     open my $fh, "-|", $git->cmd($project), "ls-tree", '-z',
       ($show_sizes ? '-l' : ()), $tid
-      or die 500, "Open git-ls-tree failed";
+      or croak 500, "Open git-ls-tree failed";
     local $/ = "\0";
     @entries = map { chomp; d$_ } <$fh>;
     close $fh
-      or die 404, "Reading tree failed";
+      or croak 404, "Reading tree failed";
   }
   
   my @trees;
