@@ -700,30 +700,30 @@ sub parse_difftree_raw_line {
   my %res;
 
   if ($line =~ m/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/) {
-    $res{'from_mode'} = $1;
-    $res{'to_mode'} = $2;
-    $res{'from_id'} = $3;
-    $res{'to_id'} = $4;
-    $res{'status'} = $5;
-    $res{'similarity'} = $6;
-    if ($res{'status'} eq 'R' || $res{'status'} eq 'C') { # renamed or copied
-      ($res{'from_file'}, $res{'to_file'}) = map { $self->_unquote($_) } split("\t", $7);
+    $res{from_mode} = $1;
+    $res{to_mode} = $2;
+    $res{from_id} = $3;
+    $res{to_id} = $4;
+    $res{status} = $5;
+    $res{similarity} = $6;
+    if ($res{status} eq 'R' || $res{status} eq 'C') { # renamed or copied
+      ($res{from_file}, $res{to_file}) = map { $self->_unquote($_) } split("\t", $7);
     } else {
-      $res{'from_file'} = $res{'to_file'} = $res{'file'} = $self->_unquote($7);
+      $res{from_file} = $res{to_file} = $res{file} = $self->_unquote($7);
     }
   }
   elsif ($line =~ s/^(::+)((?:[0-7]{6} )+)((?:[0-9a-fA-F]{40} )+)([a-zA-Z]+)\t(.*)$//) {
-    $res{'nparents'}  = length($1);
-    $res{'from_mode'} = [ split(' ', $2) ];
-    $res{'to_mode'} = pop @{$res{'from_mode'}};
-    $res{'from_id'} = [ split(' ', $3) ];
-    $res{'to_id'} = pop @{$res{'from_id'}};
-    $res{'status'} = [ split('', $4) ];
-    $res{'to_file'} = $self->_unquote($5);
+    $res{nparents}  = length($1);
+    $res{from_mode} = [ split(' ', $2) ];
+    $res{to_mode} = pop @{$res{from_mode}};
+    $res{from_id} = [ split(' ', $3) ];
+    $res{to_id} = pop @{$res{from_id}};
+    $res{status} = [ split('', $4) ];
+    $res{to_file} = $self->_unquote($5);
   }
   # 'c512b523472485aef4fff9e57b229d9d243c967f'
   elsif ($line =~ m/^([0-9a-fA-F]{40})$/) {
-    $res{'commit'} = $1;
+    $res{commit} = $1;
   }
 
   return wantarray ? %res : \%res;
@@ -738,26 +738,26 @@ sub parse_ls_tree_line {
     #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa   16717  panic.c'
     $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40}) +(-|[0-9]+)\t(.+)$/s;
 
-    $res{'mode'} = $1;
-    $res{'type'} = $2;
-    $res{'hash'} = $3;
-    $res{'size'} = $4;
+    $res{mode} = $1;
+    $res{type} = $2;
+    $res{hash} = $3;
+    $res{size} = $4;
     if ($opts{'-z'}) {
-      $res{'name'} = $5;
+      $res{name} = $5;
     } else {
-      $res{'name'} = $self->_unquote($5);
+      $res{name} = $self->_unquote($5);
     }
   } else {
     #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa  panic.c'
     $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/s;
 
-    $res{'mode'} = $1;
-    $res{'type'} = $2;
-    $res{'hash'} = $3;
+    $res{mode} = $1;
+    $res{type} = $2;
+    $res{hash} = $3;
     if ($opts{'-z'}) {
-      $res{'name'} = $4;
+      $res{name} = $4;
     } else {
-      $res{'name'} = $self->_unquote($4);
+      $res{name} = $self->_unquote($4);
     }
   }
 
@@ -766,32 +766,34 @@ sub parse_ls_tree_line {
 
 sub parse_tag {
   my ($self, $project, $tag_id) = @_;
+  
+  # Command "git cat-file" (get tag)
+  my @cmd = ($self->cmd($project), "cat-file", "tag", $tag_id);
+  open my $fh, "-|", @cmd or return;
+  
+  # Parse tag
   my %tag;
   my @comment;
-  
-  my @git_cat_file = ($self->cmd($project), "cat-file", "tag", $tag_id);
-  
-  open my $fh, "-|", @git_cat_file or return;
-  $tag{'id'} = $tag_id;
+  $tag{id} = $tag_id;
   while (my $line = <$fh>) {
     $line = d$line;
     
     chomp $line;
     if ($line =~ m/^object ([0-9a-fA-F]{40})$/) {
-      $tag{'object'} = $1;
+      $tag{object} = $1;
     } elsif ($line =~ m/^type (.+)$/) {
-      $tag{'type'} = $1;
+      $tag{type} = $1;
     } elsif ($line =~ m/^tag (.+)$/) {
-      $tag{'name'} = $1;
+      $tag{name} = $1;
     } elsif ($line =~ m/^tagger (.*) ([0-9]+) (.*)$/) {
-      $tag{'author'} = $1;
-      $tag{'author_epoch'} = $2;
-      $tag{'author_tz'} = $3;
-      if ($tag{'author'} =~ m/^([^<]+) <([^>]*)>/) {
-        $tag{'author_name'}  = $1;
-        $tag{'author_email'} = $2;
+      $tag{author} = $1;
+      $tag{author_epoch} = $2;
+      $tag{author_tz} = $3;
+      if ($tag{author} =~ m/^([^<]+) <([^>]*)>/) {
+        $tag{author_name}  = $1;
+        $tag{author_email} = $2;
       } else {
-        $tag{'author_name'} = $tag{'author'};
+        $tag{author_name} = $tag{author};
       }
     } elsif ($line =~ m/--BEGIN/) {
       push @comment, $line;
@@ -802,20 +804,19 @@ sub parse_tag {
   }
   my $comment = <$fh>;
   push @comment, d$comment;
-  $tag{'comment'} = \@comment;
+  $tag{comment} = \@comment;
   close $fh or return;
-  if (!defined $tag{'name'}) {
-    return
-  };
+  return unless defined $tag{name};
+  
   return \%tag;
 }
 
 sub search_bin {
   my $self = shift;
   
+  # Search git bin
   my $env_path = $ENV{PATH};
   my @paths = split /:/, $env_path;
-  
   for my $path (@paths) {
     $path =~ s#/$##;
     my $bin = "$path/git";
