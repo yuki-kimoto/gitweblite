@@ -285,11 +285,12 @@ sub get_path_by_id {
   my $project = shift;
   my $base = shift || return;
   my $hash = shift || return;
+  
+  # Command "git ls-tree"
+  my @cmd = ($self->cmd($project), "ls-tree", '-r', '-t', '-z', $base);
+  open my $fh, "-|" or return;
 
-
-  open my $fh, "-|", $self->cmd($project), "ls-tree", '-r', '-t', '-z', $base
-    or return undef;
-
+  # Get path
   local $/ = "\0";
   while (my $line = <$fh>) {
     $line = d$line;
@@ -301,68 +302,70 @@ sub get_path_by_id {
     }
   }
   close $fh;
-  return undef;
+  
+  return;
 }
 
 sub get_project_description {
   my ($self, $project) = @_;
   
-  my $description_file = "$project/description";
-  
-  my $description = $self->_slurp($description_file) || '';
+  # Description
+  my $file = "$project/description";
+  my $description = $self->_slurp($file) || '';
   
   return $description;
 }
 
 sub get_last_activity {
   my ($self, $project) = @_;
-
-  my $fh;
-  my @git_command = (
-    $self->cmd($project),
-    'for-each-ref',
-    '--format=%(committer)',
-    '--sort=-committerdate',
-    '--count=1',
-    'refs/heads'  
-  );
-  open($fh, "-|", @git_command) or return;
+  
+  # Command "git for-each-ref"
+  my @cmd = ($self->cmd($project), 'for-each-ref',
+    '--format=%(committer)', '--sort=-committerdate',
+    '--count=1', 'refs/heads');
+  open my $fh, "-|", @cmd or return;
   my $most_recent = <$fh>;
   $most_recent = d$most_recent;
-  
   close $fh or return;
+  
+  # Parse most recent
   if (defined $most_recent &&
       $most_recent =~ / (\d+) [-+][01]\d\d\d$/) {
     my $timestamp = $1;
     my $age = time - $timestamp;
     return ($age, $self->_age_string($age));
   }
-  return (undef, undef);
+  
+  return;
 }
 
 sub get_object_type {
   my ($self, $project, $cid) = @_;
-
-  open my $fh, "-|", $self->cmd($project), "cat-file", '-t', $cid or return;
-  my $type = <$fh>;
-  $type = d$type;
+  
+  # Command "git cat-file" (Get object type)
+  my @cmd = ($self->cmd($project), "cat-file", '-t', $cid);
+  open my $fh, "-|", @cmd  or return;
+  my $type = d(<$fh>);
   close $fh or return;
   chomp $type;
+  
   return $type;
 }
 
 sub get_project_owner {
   my ($self, $project) = @_;
   
+  # Project owner
   my $user_id = (stat $project)[4];
-  my $user = getpwuid($user_id);
+  my $user = getpwuid $user_id;
   
   return $user;
 }
 
 sub get_project_urls {
   my ($self, $project) = @_;
-
+  
+  # Project URLs
   open my $fh, '<', "$project/cloneurl"
     or return;
   my @urls = map { chomp; d$_ } <$fh>;
@@ -373,11 +376,12 @@ sub get_project_urls {
 
 sub get_projects {
   my ($self, $home, %opt) = @_;
+  
   my $filter = $opt{filter};
   
+  # Projects
   opendir my $dh, e$home
     or croak qq/Can't open directory $home: $!/;
-  
   my @projects;
   while (my $project = readdir $dh) {
     next unless $project =~ /\.git$/;
@@ -391,35 +395,40 @@ sub get_projects {
 
 sub get_references {
   my ($self, $project, $type) = @_;
+  
   $type ||= '';
+  
+  # Command "git show-ref" (get references)
+  my @cmd = ($self->cmd($project), "show-ref", "--dereference",
+    ($type ? ("--", "refs/$type") : ()));
+  open my $fh, "-|", @cmd or return;
+  
+  # Parse references
   my %refs;
-  open my $fh, "-|", $self->cmd($project), "show-ref", "--dereference",
-    ($type ? ("--", "refs/$type") : ())
-    or return;
-
   while (my $line = <$fh>) {
     $line = d$line;
     chomp $line;
     if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
-      if (defined $refs{$1}) {
-        push @{$refs{$1}}, $2;
-      } else {
-        $refs{$1} = [ $2 ];
-      }
+      if (defined $refs{$1}) { push @{$refs{$1}}, $2 }
+      else { $refs{$1} = [$2] }
     }
   }
   close $fh or return;
+  
   return \%refs;
 }
 
 sub get_short_id {
   my ($self, $project) = (shift, shift);
+  
+  # Short id
   return $self->get_id($project, @_, '--short=7');
 }
 
 sub get_tag {
   my ($self, $project, $name) = @_;
   
+  # Tag
   my $tags = $self->get_tags($project);
   for my $tag (@$tags) {
     return $tag if $tag->{name} eq $name;
@@ -430,14 +439,17 @@ sub get_tag {
 
 sub get_tags {
   my ($self, $project, $limit) = @_;
-  my @tags;
-
-  open my $fh, '-|', $self->cmd($project), 'for-each-ref',
+  
+  # Command "git for-each-ref" (get tags)
+  my @cmd = ($self->cmd($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
     '%(*objectname) %(*objecttype) %(subject)%00%(creator)',
-    'refs/tags'
-    or return;
+    'refs/tags');
+  open my $fh, '-|', @cmd or return;
+  
+  # Parse Tags
+  my @tags;
   while (my $line = <$fh>) {
     $line = d$line;
     
@@ -484,20 +496,17 @@ sub get_tags {
 
 sub is_deleted {
   my ($self, $diffinfo) = @_;
-
+  
+  # Check if deleted
   return $diffinfo->{'to_id'} eq ('0' x 40);
 }
 
 sub id_set_multi {
   my ($self, $cid, $key, $value) = @_;
 
-  if (!exists $cid->{$key}) {
-    $cid->{$key} = $value;
-  } elsif (!ref $cid->{$key}) {
-    $cid->{$key} = [ $cid->{$key}, $value ];
-  } else {
-    push @{$cid->{$key}}, $value;
-  }
+  if (!exists $cid->{$key}) { $cid->{$key} = $value }
+  elsif (!ref $cid->{$key}) { $cid->{$key} = [ $cid->{$key}, $value ] }
+  else { push @{$cid->{$key}}, $value }
 }
 
 sub parse_commit {
