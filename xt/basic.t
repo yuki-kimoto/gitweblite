@@ -388,5 +388,9 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blobdiff/efcac846dfa843dca225c6d7445e349059011a44\.\.db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">\s*diff\s*</a>#)
     # Difftree (blob link)
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">\s*blob\s*</a>#)
+    # Content (diff header)
+    ->content_like(qr#<div class="diff header">diff --git <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/efcac846dfa843dca225c6d7445e349059011a44/a_renamed.txt">a/a_renamed.txt</a> <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">b/a_renamed.txt</a></div>#)
+    # Content (added)
+    ->content_like(qr#<div class="diff to_file">\+a</div>#)
 }
 
