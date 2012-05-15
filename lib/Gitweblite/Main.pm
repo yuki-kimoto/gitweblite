@@ -13,20 +13,12 @@ has prevent_xss => 0;
 sub blob {
   my $self = shift;
 
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id_file => ['not_blank'],
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameter
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id_file = $params->{id_file};
+  my $id_file = $self->param('id_file');
   
   # Git
   my $git = $self->app->git;
@@ -145,29 +137,18 @@ sub blob {
 sub blobdiff {
   my $self = shift;
 
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    diff =>['not_blank'],
-    file => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameter
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $diff = $params->{diff};
-  my $file = $params->{file};
+  my $diff = $self->param('diff');
+  my $file = $self->param('file');
   my $from_file = $file;
   my $plain = $self->param('plain');
   my $from_id;
   my $id;
-  if ($diff =~ /\.\./) {
-    ($from_id, $id) = $diff =~ /(.+)\.\.(.+)/;
-  }
+  if ($diff =~ /\.\./) { ($from_id, $id) = $diff =~ /(.+)\.\.(.+)/ }
   else { $id = $diff }
   
   # Git
@@ -219,11 +200,11 @@ sub blobdiff {
     }
 
     %diffinfo = $git->parse_difftree_raw_line($difftree[0]);
-    $from_file ||= $diffinfo{'from_file'} || $file;
-    $file   ||= $diffinfo{'to_file'};
+    $from_file ||= $diffinfo{from_file} || $file;
+    $file   ||= $diffinfo{to_file};
 
-    $from_bid ||= $diffinfo{'from_id'};
-    $bid        ||= $diffinfo{'to_id'};
+    $from_bid ||= $diffinfo{from_id};
+    $bid        ||= $diffinfo{to_id};
 
     # open patch output
     open $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
@@ -272,20 +253,12 @@ sub blobdiff {
 sub commit {
   my $self = shift;
 
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    id => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameter
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = $params->{id};
+  my $id = $self->param('id');
   
   # Git
   my $git = $self->app->git;
@@ -296,8 +269,8 @@ sub commit {
   
   # Commit
   my $commit = $git->parse_commit($project, $id);
-  my %committer_date = $commit ? $git->parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'}) : ();
-  my %author_date = $commit ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'}) : ();
+  my %committer_date = $commit ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz}) : ();
+  my %author_date = $commit ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz}) : ();
   $commit->{author_date} = $git->_timestamp(\%author_date);
   $commit->{committer_date} = $git->_timestamp(\%committer_date);
   
@@ -347,10 +320,10 @@ sub commitdiff {
   my $commit = $git->parse_commit($project, $id)
     or die 404, "Unknown commit object";
   my %author_date = %$commit
-    ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
+    ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
     : ();
   my %committer_date = %$commit
-    ? $git->parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'})
+    ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz})
     : ();
   $commit->{author_date} = $git->_timestamp(\%author_date);
   $commit->{committer_date} = $git->_timestamp(\%committer_date);
@@ -395,10 +368,10 @@ sub commitdiff {
     my @blobdiffs;
     for my $diffinfo (@diffinfos) {
       
-      my $from_file = $diffinfo->{'from_file'};
-      my $file = $diffinfo->{'to_file'};
-      my $from_bid = $diffinfo->{'from_id'};
-      my $bid = $diffinfo->{'to_id'};
+      my $from_file = $diffinfo->{from_file};
+      my $file = $diffinfo->{to_file};
+      my $from_bid = $diffinfo->{from_id};
+      my $bid = $diffinfo->{to_id};
       
       my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
         @{$self->diff_opts}, '-p', (!$plain ? "--full-index" : ()), $from_id, $id,
@@ -453,15 +426,8 @@ sub home {
 sub heads {
   my $self = shift;
   
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameter
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
@@ -485,40 +451,30 @@ sub heads {
 sub log {
   my ($self, %opt) = @_;
 
-  # Validation
-  my $raw_params = $self->_parse_params;
-  my $rule = [
-    project => ['not_blank'],
-    page => {require => 0} => ['int'],
-    id => {require => 0} => ['any']
-  ];
-  my $vresult = $self->app->validator->validate($raw_params, $rule);
-  return $self->render_not_found unless $vresult->is_ok;
-  my $params = $vresult->data;
-  my $project_ns = $params->{project};
+  # Parameters
+  my $project_ns = $self->param('project');
   my $project = "/$project_ns";
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
-  my $id = defined $params->{id}
-    ? $params->{id}
-    :"HEAD";
-  my $page = $params->{page} || 0;
-  $page = 0 if $page < 0;
+  my $id = $self->param('id');
+  my $page = $self->param('page');
+  $page = 0 if !defined $page;
   my $short = $self->param('short');
   
   # Git
   my $git = $self->app->git;
   
-  # Base commit
-  my $base_commit = $git->parse_commit($project, $id);
+  # Commit
+  my $commit = $git->parse_commit($project, $id);
   
   # Commits
   my $page_count = $short ? 50 : 20;
-  my $commits = $git->parse_commits($project, $base_commit->{id}, $page_count, $page_count * $page);
+  my $commits = $git->parse_commits(
+    $project, $commit->{id},$page_count, $page_count * $page);
 
   for my $commit (@$commits) {
     my %author_date = %$commit
-      ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'})
+      ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
       : ();
     $commit->{author_date} = $git->_timestamp(\%author_date);
   }
