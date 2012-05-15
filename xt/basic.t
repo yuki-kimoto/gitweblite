@@ -296,7 +296,7 @@ my $git = $app->git;
 {
   my $id = 'a37fbb832ab530fe9747cb128f9461211959103b';
   $t->get_ok("$project/snapshot/$id");
-  my $tmpdir = tempdir( CLEANUP => 1 );
+  my $tmpdir = tempdir(CLEANUP => 1);
   my $tmpfile = "$tmpdir/snapshot.tar.gz";
   $t->tx->res->content->asset->move_to($tmpfile);
   my $at = Archive::Tar->new($tmpfile);
@@ -305,3 +305,35 @@ my $git = $app->git;
   ok($at->contains_file('gitweblite_devrep-a37fbb8/dir/a.txt'));
 }
 
+# Shortlog page (HEAD)
+{
+  $t->get_ok("$project/shortlog")
+    # HEAD link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog">\s*HEAD\s*</a>#)
+    # Next page link
+    ->content_like(qr#<a title="Alt-n" accesskey="n" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/shortlog\?page=1">\s*Next\s*</a>#)
+  ;
+  $t->get_ok("$project/shortlog?page=1")
+    # Prev page link
+    ->content_like(qr#<a title="Alt-p" accesskey="p" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/shortlog\?page=0">\s*Prev\s*</a>#)
+  ;
+}
+
+# Shortlog page (not HEAD)
+{
+  my $id = 'efcac846dfa843dca225c6d7445e349059011a44';
+  $t->get_ok("$project/shortlog/$id")
+    # Author
+    ->content_like(qr#<td class="author">Yuki Kimoto</td>#)
+    # Comment link
+    ->content_like(qr#<a class="list subject" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/commit/efcac846dfa843dca225c6d7445e349059011a44">\s*edit a_renamed.txt\s*</a>#)
+    # Commit link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/efcac846dfa843dca225c6d7445e349059011a44">commit</a>#)
+    # Commitdiff link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/efcac846dfa843dca225c6d7445e349059011a44">\s*commitdiff\s*</a>#)
+    # Tree link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/efcac846dfa843dca225c6d7445e349059011a44">\s*tree\s*</a>#)
+    # Snapshot link
+    ->content_like(qr#<a title="in format: tar.gz" rel="nofollow" href=\s*/home/kimoto/labo/gitweblite_devrep.git/snapshot/efcac846dfa843dca225c6d7445e349059011a44>\s*snapshot\s*</a>#)
+    ;
+}

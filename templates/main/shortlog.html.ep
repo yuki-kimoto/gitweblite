@@ -21,8 +21,7 @@
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
           <a class="list subject" href=
-            "<%= url_for('commit', project => $project_ns, id => $id) %>"
-          >
+              "<%= url_for('commit', project => $project_ns, id => $id) %>">
             <%= $commit->{title_short} %>
           </a>
           %= include 'include/refs', project_ns => $project_ns, commit => $commit, refs => $refs;
@@ -39,8 +38,7 @@
           </a>
           |
           <a title="in format: tar.gz" rel="nofollow" href=
-            <%= url_for('snapshot', project => $project_ns, id => $id) %>
-          >
+              <%= url_for('snapshot', project => $project_ns, id => $id) %>>
             snapshot
           </a>
         </td>
