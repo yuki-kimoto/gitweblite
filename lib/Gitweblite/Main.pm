@@ -115,7 +115,7 @@ sub blob {
     }
     
     # Commit
-    my %commit = $git->parse_commit($project, $id);
+    my $commit = $git->parse_commit($project, $id);
 
     # Parse line
     my @lines;
@@ -135,7 +135,7 @@ sub blob {
       id => $id,
       bid => $bid,
       file => $file,
-      commit => \%commit,
+      commit => $commit,
       lines => \@lines,
       mimetype => $mimetype
     );
@@ -295,19 +295,19 @@ sub commit {
   my $project_owner = $git->get_project_owner($project);
   
   # Commit
-  my %commit = $git->parse_commit($project, $id);
-  my %committer_date = %commit ? $git->parse_date($commit{'committer_epoch'}, $commit{'committer_tz'}) : ();
-  my %author_date = %commit ? $git->parse_date($commit{'author_epoch'}, $commit{'author_tz'}) : ();
-  $commit{author_date} = $git->_timestamp(\%author_date);
-  $commit{committer_date} = $git->_timestamp(\%committer_date);
+  my $commit = $git->parse_commit($project, $id);
+  my %committer_date = $commit ? $git->parse_date($commit->{'committer_epoch'}, $commit->{'committer_tz'}) : ();
+  my %author_date = $commit ? $git->parse_date($commit->{'author_epoch'}, $commit->{'author_tz'}) : ();
+  $commit->{author_date} = $git->_timestamp(\%author_date);
+  $commit->{committer_date} = $git->_timestamp(\%committer_date);
   
   # References
   my $refs = $git->get_references($project);
   
   # Diff tree
-  my $parent = $commit{parent};
-  my $parents = $commit{parents};
-  my $difftrees = $git->get_difftree($project, $commit{id}, $parent, $parents);
+  my $parent = $commit->{parent};
+  my $parents = $commit->{parents};
+  my $difftrees = $git->get_difftree($project, $commit->{id}, $parent, $parents);
   
   # Render
   $self->render(
@@ -318,7 +318,7 @@ sub commit {
     project_owner => $project_owner,
     id => $id,
     id => $id,
-    commit => \%commit,
+    commit => $commit,
     refs => $refs,
     difftrees => $difftrees,
   );
@@ -652,7 +652,7 @@ sub summary {
   my $project_description = $git->get_project_description($project);
   my $project_owner = $git->get_project_owner($project);
   my $head_commit = $git->parse_commit($project, "HEAD");
-  my %committer_date = %$head_commit
+  my %committer_date = $head_commit
     ? $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
   my $last_change = $git->_timestamp(\%committer_date);

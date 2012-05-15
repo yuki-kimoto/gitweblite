@@ -513,26 +513,19 @@ sub parse_commit {
   my ($self, $project, $id) = @_;
   
   # Git rev-list
-  my @git_rev_list = (
-    $self->cmd($project),
-    "rev-list",
-    "--parents",
-    "--header",
-    "--max-count=1",
-    $id,
-    "--"
-  );
-  open my $fh, "-|", @git_rev_list
+  my @cmd = ($self->cmd($project), "rev-list", "--parents",
+    "--header", "--max-count=1", $id, "--");
+  open my $fh, "-|", @cmd
     or die "Open git-rev-list failed";
   
-  # Parse rev-list result
+  # Parse commit
   local $/ = "\0";
   my $content = <$fh>;
   $content = d$content;
-  my %commit = $self->parse_commit_text($content, 1);
+  my $commit = $self->parse_commit_text($content, 1);
   close $fh;
 
-  return wantarray ? %commit : \%commit;
+  return $commit;
 }
 
 sub parse_commit_text {
@@ -630,7 +623,7 @@ sub parse_commit_text {
     $commit{'age_string_date'} = $commit{'age_string'};
     $commit{'age_string_age'} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
   }
-  return %commit;
+  return \%commit;
 }
 
 sub parse_commits {
@@ -654,8 +647,8 @@ sub parse_commits {
   my @commits;
   while (my $line = <$fh>) {
     $line = d$line;
-    my %commit = $self->parse_commit_text($line);
-    push @commits, \%commit;
+    my $commit = $self->parse_commit_text($line);
+    push @commits, $commit;
   }
   close $fh;
 
