@@ -17,27 +17,23 @@ has 'bin';
 sub blob_mimetype {
   my ($self, $fh, $file) = @_;
 
-  # just in case
   return 'text/plain' unless $fh;
-
-  if (-T $fh) {
-    return 'text/plain';
-  } elsif (! $file) {
-    return 'application/octet-stream';
-  } elsif ($file =~ m/\.png$/i) {
-    return 'image/png';
-  } elsif ($file =~ m/\.gif$/i) {
-    return 'image/gif';
-  } elsif ($file =~ m/\.jpe?g$/i) {
-    return 'image/jpeg';
-  } else {
-    return 'application/octet-stream';
-  }
+  
+  # MIME type
+  if (-T $fh) { return 'text/plain' }
+  elsif (! $file) { return 'application/octet-stream' }
+  elsif ($file =~ m/\.png$/i) { return 'image/png' }
+  elsif ($file =~ m/\.gif$/i) { return 'image/gif' }
+  elsif ($file =~ m/\.jpe?g$/i) { return 'image/jpeg'}
+  else { return 'application/octet-stream'}
+  
+  return;
 }
 
 sub blob_contenttype {
   my ($self, $fh, $file, $type) = @_;
-
+  
+  # Content type
   $type ||= $self->blob_mimetype($fh, $file);
   if ($type eq 'text/plain') {
     $type .= "; charset=UTF-8";
@@ -48,73 +44,61 @@ sub blob_contenttype {
 
 sub check_head_link {
   my ($self, $dir) = @_;
-  my $headfile = "$dir/HEAD";
-  return ((-e $headfile) ||
-    (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
+  
+  # Chack head
+  my $head_file = "$dir/HEAD";
+  return ((-e $head_file) ||
+    (-l $head_file && readlink($head_file) =~ /^refs\/heads\//));
 }
 
 sub cmd {
   my ($self, $project) = @_;
   
+  # Execute git command
   return ($self->bin, "--git-dir=$project");
 }
 
 sub file_type {
   my ($self, $mode) = @_;
-
-  if ($mode !~ m/^[0-7]+$/) {
-    return $mode;
-  } else {
-    $mode = oct $mode;
-  }
-
-  if ($self->_s_isgitlink($mode)) {
-    return "submodule";
-  } elsif (S_ISDIR($mode & S_IFMT)) {
-    return "directory";
-  } elsif (S_ISLNK($mode)) {
-    return "symlink";
-  } elsif (S_ISREG($mode)) {
-    return "file";
-  } else {
-    return "unknown";
-  }
+  
+  # File type
+  if ($mode !~ m/^[0-7]+$/) { return $mode }
+  else { $mode = oct $mode }
+  if ($self->_s_isgitlink($mode)) { return "submodule" }
+  elsif (S_ISDIR($mode & S_IFMT)) { return "directory" }
+  elsif (S_ISLNK($mode)) { return "symlink" }
+  elsif (S_ISREG($mode)) { return "file" }
+  else { return "unknown" }
+  
+  return
 }
 
 sub file_type_long {
   my ($self, $mode) = @_;
-
-  if ($mode !~ m/^[0-7]+$/) {
-    return $mode;
-  } else {
-    $mode = oct $mode;
+  
+  # File type
+  if ($mode !~ m/^[0-7]+$/) { return $mode }
+  else { $mode = oct $mode }
+  if (S_ISGITLINK($mode)) { return "submodule" }
+  elsif (S_ISDIR($mode & S_IFMT)) { return "directory" }
+  elsif (S_ISLNK($mode)) { return "symlink" }
+  elsif (S_ISREG($mode)) {
+    if ($mode & S_IXUSR) { return "executable" }
+    else { return "file" }
   }
-
-  if (S_ISGITLINK($mode)) {
-    return "submodule";
-  } elsif (S_ISDIR($mode & S_IFMT)) {
-    return "directory";
-  } elsif (S_ISLNK($mode)) {
-    return "symlink";
-  } elsif (S_ISREG($mode)) {
-    if ($mode & S_IXUSR) {
-      return "executable";
-    } else {
-      return "file";
-    };
-  } else {
-    return "unknown";
-  }
+  else { return "unknown" }
+  
+  return;
 }
 
 sub fill_from_file_info {
   my ($self, $project, $diff, $parents) = @_;
-
+  
+  # Fill file info
   $diff->{'from_file'} = [];
   $diff->{'from_file'}[$diff->{'nparents'} - 1] = undef;
   for (my $i = 0; $i < $diff->{'nparents'}; $i++) {
-    if ($diff->{'status'}[$i] eq 'R' ||
-        $diff->{'status'}[$i] eq 'C') {
+    if ($diff->{'status'}[$i] eq 'R' || $diff->{'status'}[$i] eq 'C') {
       $diff->{'from_file'}[$i] =
         $self->get_path_by_id($project, $parents->[$i], $diff->{'from_id'}[$i]);
     }
@@ -125,7 +109,8 @@ sub fill_from_file_info {
 
 sub fill_projects {
   my ($self, $home, $ps) = @_;
-
+  
+  # Fill project info
   my @projects;
   for my $project (@$ps) {
     my (@activity) = $self->get_last_activity("$home/$project->{path}");
@@ -146,20 +131,13 @@ sub fill_projects {
 sub get_difftree {
   my ($self, $project, $cid, $parent, $parents) = @_;
   
+  # Root
   $parent = "--root" unless defined $parent;
 
-  # Execute "git diff-tree"
-  my @git_diff_tree = (
-    $self->cmd($project),
-    "diff-tree", '-r',
-    "--no-commit-id",
-    '-M',
-    (@$parents <= 1 ? $parent : '-c'),
-    $cid,
-    "--"
-  );
-  
-  open my $fh, "-|", @git_diff_tree
+  # Command "git diff-tree"
+  my @cmd = ($self->cmd($project), "diff-tree", '-r', "--no-commit-id",
+    '-M', (@$parents <= 1 ? $parent : '-c'), $cid, "--");
+  open my $fh, "-|", @cmd
     or die 500, "Open git-diff-tree failed";
   my @difftree = map { chomp; d$_ } <$fh>;
   close $fh or die "Reading git-diff-tree failed";
@@ -167,18 +145,19 @@ sub get_difftree {
   # Parse "git diff-tree" output
   my $diffs = [];
   my @parents = @$parents;
-  
   for my $line (@difftree) {
     my $diff = $self->parsed_difftree_line($line);
-
+    
+    # Parent are more than one
     if (exists $diff->{'nparents'}) {
 
       $self->fill_from_file_info($project, $diff, $parents)
         unless exists $diff->{'from_file'};
-
       $diff->{is_deleted} = 1 if $self->is_deleted($diff);
       push @$diffs, $diff;
     }
+    
+    # Parent is single
     else {
       my ($to_mode_oct, $to_mode_str, $to_file_type);
       my ($from_mode_oct, $from_mode_str, $from_file_type);
@@ -213,20 +192,25 @@ sub get_difftree {
 
 sub get_head_id {
   my ($self, $project) = (shift, shift);
+  
+  # HEAD id
   return $self->get_id($project, 'HEAD', @_);
 };
 
 sub get_heads {
   my ($self, $project, $limit, @classes) = @_;
+  
+  # Command "git for-each-ref" (get heads)
   @classes = ('heads') unless @classes;
   my @patterns = map { "refs/$_" } @classes;
-  my @heads;
-
-  open my $fh, '-|', $self->cmd($project), 'for-each-ref',
+  my @cmd = ($self->cmd($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-committerdate',
     '--format=%(objectname) %(refname) %(subject)%00%(committer)',
-    @patterns
-    or return;
+    @patterns);
+  open my $fh, '-|', @cmd or return;
+  
+  # Create head info
+  my @heads;
   while (my $line = <$fh>) {
     $line = d$line;
     my %ref_item;
@@ -245,9 +229,7 @@ sub get_heads {
     $ref_item{'epoch'} = $epoch;
     if ($epoch) {
       $ref_item{'age'} = $self->_age_string(time - $ref_item{'epoch'});
-    } else {
-      $ref_item{'age'} = "unknown";
-    }
+    } else { $ref_item{'age'} = "unknown" }
 
     push @heads, \%ref_item;
   }
@@ -259,43 +241,43 @@ sub get_heads {
 sub get_id {
   my ($self, $project, $ref, @options) = @_;
   
+  # Command "git rev-parse" (get commit id)
   my $id;
-  if (open my $fh, '-|', $self->cmd($project), 'rev-parse',
-      '--verify', '-q', @options, $ref) {
+  my @cmd = ($self->cmd($project), 'rev-parse',
+    '--verify', '-q', @options, $ref);
+  if (open my $fh, '-|', @cmd) {
     $id = <$fh>;
     $id = d$id;
     chomp $id if defined $id;
     close $fh;
   }
+  
   return $id;
 }
 
 sub get_id_by_path {
   my ($self, $project, $id, $path, $type) = @_;
-
-  $path =~ s,/+$,,;
   
-  my @git_ls_tree = (
-    $self->cmd($project), "ls-tree", $id, "--", $path
-  );
+  $path =~ s#/+$##;
   
-  open my $fh, "-|", @git_ls_tree
+  # Command "git ls-tree"
+  my @cmd = ($self->cmd($project), "ls-tree", $id, "--", $path);
+  open my $fh, "-|", @cmd
     or die "Open git-ls-tree failed";
   my $line = <$fh>;
   $line = d$line;
   close $fh or return undef;
 
-  if (!defined $line) {
-    # there is no tree or hash given by $path at $base
-    return undef;
+  # there is no tree or hash given by $path at $base
+  return if !defined $line;
+  
+  # ID
+  if ($line =~ m/^[0-9]+ (.+) ([0-9a-fA-F]{40})\t/) {
+    return if defined $type && $type ne $1;
+    return $2;
   }
 
-  $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/;
-  if (defined $type && $type ne $2) {
-    # type doesn't match
-    return undef;
-  }
-  return $3;
+  return;
 }
 
 sub get_path_by_id {
