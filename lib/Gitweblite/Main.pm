@@ -249,22 +249,9 @@ sub blobdiff {
   }
   else {
     # patch
-    my @lines;
-    while (my $line = <$fh>) {
-      $line = d$line;
-      chomp $line;
-      my $class;
-      
-      if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
-      elsif ($line =~ /^index /) { $class = 'diff extended_header' }
-      elsif ($line =~ /^\+/) { $class = 'diff to_file' }
-      elsif ($line =~ /^\-/) { $class = 'diff from_file' }
-      elsif ($line =~ /^\@\@/) { $class = 'diff chunk_header' }
-      elsif ($line =~ /^Binary files/) { $class = 'diff binary_file' }
-      else { $class = 'diff' }
-      push @lines, {value => $line, class => $class};
-    }
+    my @lines = <$fh>;
     close $fh;
+    my $lines = $self->_parse_blobdiff_lines(\@lines);
 
     $self->render(
       '/blobdiff',
@@ -277,7 +264,7 @@ sub blobdiff {
       file => $file,
       commit => $commit,
       diffinfo => \%diffinfo,
-      lines => \@lines
+      lines => $lines
     );
   }
 }
@@ -420,9 +407,9 @@ sub commitdiff {
       open $fh, "-|", @git_diff_tree
         or die 500, "Open git-diff-tree failed";
       
-      my @lines = map { chomp $_; d$_ } <$fh>;
+      my @lines = <$fh>;
       close $fh;
-      push @blobdiffs, {lines => \@lines};
+      push @blobdiffs, {file => $file, lines => $self->_parse_blobdiff_lines(\@lines)};
     }
 
     # References
@@ -435,6 +422,7 @@ sub commitdiff {
       home_ns => $home_ns,
       project => $project,
       project_ns => $project_ns,
+      from_id => $from_id,
       id => $id,
       commit => $commit,
       difftrees => $difftrees,
@@ -865,6 +853,28 @@ sub tree {
     trees => \@trees,
     refs => $refs
   );
+}
+
+sub _parse_blobdiff_lines {
+  my ($self, $lines_raw) = @_;
+  
+  my @lines;
+  for my $line (@$lines_raw) {
+    $line = d$line;
+    chomp $line;
+    my $class;
+    
+    if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
+    elsif ($line =~ /^index /) { $class = 'diff extended_header' }
+    elsif ($line =~ /^\+/) { $class = 'diff to_file' }
+    elsif ($line =~ /^\-/) { $class = 'diff from_file' }
+    elsif ($line =~ /^\@\@/) { $class = 'diff chunk_header' }
+    elsif ($line =~ /^Binary files/) { $class = 'diff binary_file' }
+    else { $class = 'diff' }
+    push @lines, {value => $line, class => $class};
+  }
+  
+  return \@lines;
 }
 
 sub _parse_params {

@@ -31,16 +31,9 @@
       % for (my $i = 0; $i < @$blobdiffs; $i++) {
         % my $blobdiff = $blobdiffs->[$i];
         <div class="patch" id="<%= $i + 1 %>">
-          % for my $line (@{$blobdiff->{lines}}) {
-            % my $class;
-            % if ($line =~ /^diff \-\-git /) { $class = 'diff header' }
-            % elsif ($line =~ /^index /) { $class = 'diff extended_header' }
-            % elsif ($line =~ /^\+/) { $class = 'diff to_file' }
-            % elsif ($line =~ /^\-/) { $class = 'diff from_file' }
-            % elsif ($line =~ /^\@\@/) { $class = 'diff chunk_header' }
-            % else { $class = 'diff' }
-            <div class="<%= $class %>"><%= $line %></div>
-          % }
+          % my $lines = $blobdiff->{lines};
+          % my $file = $blobdiff->{file};
+          %= include '/include/blobdiff_body', file => $file, lines => $blobdiff->{lines};
         </div>
       % }
     </div>
