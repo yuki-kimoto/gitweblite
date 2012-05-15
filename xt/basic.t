@@ -397,7 +397,7 @@ my $git = $app->git;
 # Commitdiff plain
 {
   my $id = 'db9d83440469d42dda2021ebe34e20def0c0cba6';
-  $t->get_ok("$project/commitdiff/$id")
+  $t->get_ok("$project/commitdiff_plain/$id")
     # Content
     ->content_like(qr#\+a#)
 }
