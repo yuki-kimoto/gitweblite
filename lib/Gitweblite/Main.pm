@@ -341,11 +341,12 @@ sub commitdiff {
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
   my $diff = $self->param('diff');
-  my ($from_id, $id) = $diff =~ /([a-zA-Z0-9]{40})(?:\.\.([a-zA-Z0-9]{40}))?/;
-  unless ($id) {
-    $id = $from_id;
-    $from_id = undef;
+  my $from_id;
+  my $id;
+  if ($diff =~ /\.\./) {
+    ($from_id, $id) = $diff =~ /(.+)\.\.(.+)/;
   }
+  else { $id = $diff }
   
   # Git
   my $git = $self->app->git;

@@ -92,15 +92,12 @@ sub startup {
     $r->get('/commit/(*id)')->to('#commit')->name('commit');
     
     # Commit diff
-    $r->get('/commitdiff/:diff',
-        [diff => qr/[a-zA-Z0-9]{40}(?:\.\.[a-zA-Z0-9]{40})?/])
-      ->to('#commitdiff')->name('commitdiff');
-
+    $r->get('/commitdiff/(*diff)')->to('#commitdiff')->name('commitdiff');
+    
     # Commit diff plain
-    $r->get('/commitdiff_plain/:diff',
-        [diff => qr/[a-zA-Z0-9]{40}(?:\.\.[a-zA-Z0-9]{40})?/])
+    $r->get('/commitdiff_plain/(*diff)')
       ->to('#commitdiff', plain => 1)->name('commitdiff_plain');
-
+    
     # Tags
     $r->get('/tags')->to('#tags')->name('tags');
     

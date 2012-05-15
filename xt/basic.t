@@ -66,6 +66,8 @@ my $git = $app->git;
     ->content_like(qr#http://somerep.git\s*<br />\s*git://somerep.git\s*<br />#)
     # Branch
     ->content_like(qr#<span class="head" title="heads/master">\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/heads/master">\s*master\s*</a>\s*</span>#)
+    # Shortlog title link
+    ->content_like(qr#<a class="title" href="/home/kimoto/labo/gitweblite_devrep.git/shortlog">\s*Shortlog\s*</a>#)
     # Shorlog comment link
     ->content_like(qr#<a class="list subject" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/commit/$head"\s* >\s*$title_short\s*</a>#)
     # Shortlog commit link
@@ -76,6 +78,8 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$head">\s*tree\s*</a>#)
     # Shortlog snapshot link
     ->content_like(qr#<a title="in format: tar.gz" rel="nofollow" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/snapshot/$head">\s*snapshot\s*</a>#)
+    # Shortlog page ... link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog">\s*\.\.\.\s*</a>#)
     # Tag name link
     ->content_like(qr#<a class="list name" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/commit/$tag_t21->{refid}"\s*>\s*t10\s*</a>#)
     # Tag comment link
@@ -85,6 +89,7 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/tags/t21">\s*log\s*</a>#)
     # Tags link
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tags">\s*...\s*</a>#)
+
     # Head name link
     ->content_like(qr#<a class="list name" href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/heads/b10">\s*b10\s*</a>#)
     # Head shortlog link
@@ -297,7 +302,5 @@ my $git = $app->git;
   
   ok($at->contains_file('gitweblite_devrep-a37fbb8/README'));
   ok($at->contains_file('gitweblite_devrep-a37fbb8/dir/a.txt'));
-  
-  
-  
 }
+
