@@ -2,39 +2,17 @@ package Gitweblite::Git;
 use Mojo::Base -base;
 
 use Carp 'croak';
-use Encode qw/encode decode/;
 use File::Find 'find';
 use File::Basename qw/basename dirname/;
 use Fcntl ':mode';
-use constant {
-  S_IFINVALID => 0030000,
-  S_IFGITLINK => 0160000,
-};
 
+# Encode
+use Encode qw/encode decode/;
 sub e($) { encode('UTF-8', shift) }
 sub d($) { decode('UTF-8', shift) }
 
+# Attributes
 has 'bin';
-
-my $conf = {};
-my @diff_opts = ('-M');
-
-sub search_bin {
-  my $self = shift;
-  
-  my $env_path = $ENV{PATH};
-  my @paths = split /:/, $env_path;
-  
-  for my $path (@paths) {
-    $path =~ s#/$##;
-    my $bin = "$path/git";
-    if (-f $bin) {
-      return $bin;
-      last;
-    }
-  }
-  return;
-}
 
 sub blob_mimetype {
   my ($self, $fh, $file) = @_;
@@ -75,6 +53,60 @@ sub check_head_link {
     (-l $headfile && readlink($headfile) =~ /^refs\/heads\//));
 }
 
+sub cmd {
+  my ($self, $project) = @_;
+  
+  return ($self->bin, "--git-dir=$project");
+}
+
+sub file_type {
+  my ($self, $mode) = @_;
+
+  if ($mode !~ m/^[0-7]+$/) {
+    return $mode;
+  } else {
+    $mode = oct $mode;
+  }
+
+  if ($self->_s_isgitlink($mode)) {
+    return "submodule";
+  } elsif (S_ISDIR($mode & S_IFMT)) {
+    return "directory";
+  } elsif (S_ISLNK($mode)) {
+    return "symlink";
+  } elsif (S_ISREG($mode)) {
+    return "file";
+  } else {
+    return "unknown";
+  }
+}
+
+sub file_type_long {
+  my ($self, $mode) = @_;
+
+  if ($mode !~ m/^[0-7]+$/) {
+    return $mode;
+  } else {
+    $mode = oct $mode;
+  }
+
+  if (S_ISGITLINK($mode)) {
+    return "submodule";
+  } elsif (S_ISDIR($mode & S_IFMT)) {
+    return "directory";
+  } elsif (S_ISLNK($mode)) {
+    return "symlink";
+  } elsif (S_ISREG($mode)) {
+    if ($mode & S_IXUSR) {
+      return "executable";
+    } else {
+      return "file";
+    };
+  } else {
+    return "unknown";
+  }
+}
+
 sub fill_from_file_info {
   my ($self, $project, $diff, $parents) = @_;
 
@@ -89,36 +121,6 @@ sub fill_from_file_info {
   }
 
   return $diff;
-}
-
-sub get_path_by_id {
-  my $self = shift;
-  my $project = shift;
-  my $base = shift || return;
-  my $hash = shift || return;
-
-
-  open my $fh, "-|", $self->cmd($project), "ls-tree", '-r', '-t', '-z', $base
-    or return undef;
-
-  local $/ = "\0";
-  while (my $line = <$fh>) {
-    $line = d$line;
-    chomp $line;
-
-    if ($line =~ m/(?:[0-9]+) (?:.+) $hash\t(.+)$/) {
-      close $fh;
-      return $1;
-    }
-  }
-  close $fh;
-  return undef;
-}
-
-sub is_deleted {
-  my ($self, $diffinfo) = @_;
-
-  return $diffinfo->{'to_id'} eq ('0' x 40);
 }
 
 sub fill_projects {
@@ -151,7 +153,7 @@ sub get_difftree {
     $self->cmd($project),
     "diff-tree", '-r',
     "--no-commit-id",
-    @diff_opts,
+    '-M',
     (@$parents <= 1 ? $parent : '-c'),
     $cid,
     "--"
@@ -214,99 +216,6 @@ sub get_head_id {
   return $self->get_id($project, 'HEAD', @_);
 };
 
-sub get_short_id {
-  my ($self, $project) = (shift, shift);
-  return $self->get_id($project, @_, '--short=7');
-}
-
-sub get_id {
-  my ($self, $project, $ref, @options) = @_;
-  
-  my $id;
-  if (open my $fh, '-|', $self->cmd($project), 'rev-parse',
-      '--verify', '-q', @options, $ref) {
-    $id = <$fh>;
-    $id = d$id;
-    chomp $id if defined $id;
-    close $fh;
-  }
-  return $id;
-}
-
-sub get_object_type {
-  my ($self, $project, $cid) = @_;
-
-  open my $fh, "-|", $self->cmd($project), "cat-file", '-t', $cid or return;
-  my $type = <$fh>;
-  $type = d$type;
-  close $fh or return;
-  chomp $type;
-  return $type;
-}
-
-sub get_references {
-  my ($self, $project, $type) = @_;
-  $type ||= '';
-  my %refs;
-  open my $fh, "-|", $self->cmd($project), "show-ref", "--dereference",
-    ($type ? ("--", "refs/$type") : ())
-    or return;
-
-  while (my $line = <$fh>) {
-    $line = d$line;
-    chomp $line;
-    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
-      if (defined $refs{$1}) {
-        push @{$refs{$1}}, $2;
-      } else {
-        $refs{$1} = [ $2 ];
-      }
-    }
-  }
-  close $fh or return;
-  return \%refs;
-}
-
-sub id_set_multi {
-  my ($self, $cid, $key, $value) = @_;
-
-  if (!exists $cid->{$key}) {
-    $cid->{$key} = $value;
-  } elsif (!ref $cid->{$key}) {
-    $cid->{$key} = [ $cid->{$key}, $value ];
-  } else {
-    push @{$cid->{$key}}, $value;
-  }
-}
-
-sub get_id_by_path {
-  my ($self, $project, $id, $path, $type) = @_;
-
-  $path =~ s,/+$,,;
-  
-  my @git_ls_tree = (
-    $self->cmd($project), "ls-tree", $id, "--", $path
-  );
-  
-  open my $fh, "-|", @git_ls_tree
-    or die "Open git-ls-tree failed";
-  my $line = <$fh>;
-  $line = d$line;
-  close $fh or return undef;
-
-  if (!defined $line) {
-    # there is no tree or hash given by $path at $base
-    return undef;
-  }
-
-  $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/;
-  if (defined $type && $type ne $2) {
-    # type doesn't match
-    return undef;
-  }
-  return $3;
-}
-
 sub get_heads {
   my ($self, $project, $limit, @classes) = @_;
   @classes = ('heads') unless @classes;
@@ -347,6 +256,82 @@ sub get_heads {
   return \@heads;
 }
 
+sub get_id {
+  my ($self, $project, $ref, @options) = @_;
+  
+  my $id;
+  if (open my $fh, '-|', $self->cmd($project), 'rev-parse',
+      '--verify', '-q', @options, $ref) {
+    $id = <$fh>;
+    $id = d$id;
+    chomp $id if defined $id;
+    close $fh;
+  }
+  return $id;
+}
+
+sub get_id_by_path {
+  my ($self, $project, $id, $path, $type) = @_;
+
+  $path =~ s,/+$,,;
+  
+  my @git_ls_tree = (
+    $self->cmd($project), "ls-tree", $id, "--", $path
+  );
+  
+  open my $fh, "-|", @git_ls_tree
+    or die "Open git-ls-tree failed";
+  my $line = <$fh>;
+  $line = d$line;
+  close $fh or return undef;
+
+  if (!defined $line) {
+    # there is no tree or hash given by $path at $base
+    return undef;
+  }
+
+  $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t/;
+  if (defined $type && $type ne $2) {
+    # type doesn't match
+    return undef;
+  }
+  return $3;
+}
+
+sub get_path_by_id {
+  my $self = shift;
+  my $project = shift;
+  my $base = shift || return;
+  my $hash = shift || return;
+
+
+  open my $fh, "-|", $self->cmd($project), "ls-tree", '-r', '-t', '-z', $base
+    or return undef;
+
+  local $/ = "\0";
+  while (my $line = <$fh>) {
+    $line = d$line;
+    chomp $line;
+
+    if ($line =~ m/(?:[0-9]+) (?:.+) $hash\t(.+)$/) {
+      close $fh;
+      return $1;
+    }
+  }
+  close $fh;
+  return undef;
+}
+
+sub get_project_description {
+  my ($self, $project) = @_;
+  
+  my $description_file = "$project/description";
+  
+  my $description = $self->_slurp($description_file) || '';
+  
+  return $description;
+}
+
 sub get_last_activity {
   my ($self, $project) = @_;
 
@@ -373,14 +358,15 @@ sub get_last_activity {
   return (undef, undef);
 }
 
-sub get_project_description {
-  my ($self, $project) = @_;
-  
-  my $description_file = "$project/description";
-  
-  my $description = $self->_slurp($description_file) || '';
-  
-  return $description;
+sub get_object_type {
+  my ($self, $project, $cid) = @_;
+
+  open my $fh, "-|", $self->cmd($project), "cat-file", '-t', $cid or return;
+  my $type = <$fh>;
+  $type = d$type;
+  close $fh or return;
+  chomp $type;
+  return $type;
 }
 
 sub get_project_owner {
@@ -419,6 +405,34 @@ sub get_projects {
   }
 
   return @projects;
+}
+
+sub get_references {
+  my ($self, $project, $type) = @_;
+  $type ||= '';
+  my %refs;
+  open my $fh, "-|", $self->cmd($project), "show-ref", "--dereference",
+    ($type ? ("--", "refs/$type") : ())
+    or return;
+
+  while (my $line = <$fh>) {
+    $line = d$line;
+    chomp $line;
+    if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
+      if (defined $refs{$1}) {
+        push @{$refs{$1}}, $2;
+      } else {
+        $refs{$1} = [ $2 ];
+      }
+    }
+  }
+  close $fh or return;
+  return \%refs;
+}
+
+sub get_short_id {
+  my ($self, $project) = (shift, shift);
+  return $self->get_id($project, @_, '--short=7');
 }
 
 sub get_tag {
@@ -486,90 +500,22 @@ sub get_tags {
   return \@tags;
 }
 
-sub cmd {
-  my ($self, $project) = @_;
-  
-  return ($self->bin, "--git-dir=$project");
+sub is_deleted {
+  my ($self, $diffinfo) = @_;
+
+  return $diffinfo->{'to_id'} eq ('0' x 40);
 }
 
-sub parse_difftree_raw_line {
-  my ($self, $line) = @_;
-  my %res;
+sub id_set_multi {
+  my ($self, $cid, $key, $value) = @_;
 
-  if ($line =~ m/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/) {
-    $res{'from_mode'} = $1;
-    $res{'to_mode'} = $2;
-    $res{'from_id'} = $3;
-    $res{'to_id'} = $4;
-    $res{'status'} = $5;
-    $res{'similarity'} = $6;
-    if ($res{'status'} eq 'R' || $res{'status'} eq 'C') { # renamed or copied
-      ($res{'from_file'}, $res{'to_file'}) = map { $self->_unquote($_) } split("\t", $7);
-    } else {
-      $res{'from_file'} = $res{'to_file'} = $res{'file'} = $self->_unquote($7);
-    }
-  }
-  elsif ($line =~ s/^(::+)((?:[0-7]{6} )+)((?:[0-9a-fA-F]{40} )+)([a-zA-Z]+)\t(.*)$//) {
-    $res{'nparents'}  = length($1);
-    $res{'from_mode'} = [ split(' ', $2) ];
-    $res{'to_mode'} = pop @{$res{'from_mode'}};
-    $res{'from_id'} = [ split(' ', $3) ];
-    $res{'to_id'} = pop @{$res{'from_id'}};
-    $res{'status'} = [ split('', $4) ];
-    $res{'to_file'} = $self->_unquote($5);
-  }
-  # 'c512b523472485aef4fff9e57b229d9d243c967f'
-  elsif ($line =~ m/^([0-9a-fA-F]{40})$/) {
-    $res{'commit'} = $1;
-  }
-
-  return wantarray ? %res : \%res;
-}
-
-sub parsed_difftree_line {
-  my ($self, $line_or_ref) = @_;
-
-  if (ref($line_or_ref) eq "HASH") {
-    # pre-parsed (or generated by hand)
-    return $line_or_ref;
+  if (!exists $cid->{$key}) {
+    $cid->{$key} = $value;
+  } elsif (!ref $cid->{$key}) {
+    $cid->{$key} = [ $cid->{$key}, $value ];
   } else {
-    return $self->parse_difftree_raw_line($line_or_ref);
+    push @{$cid->{$key}}, $value;
   }
-}
-
-sub parse_ls_tree_line {
-  my ($self, $line) = @_;
-  my %opts = @_;
-  my %res;
-
-  if ($opts{'-l'}) {
-    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa   16717  panic.c'
-    $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40}) +(-|[0-9]+)\t(.+)$/s;
-
-    $res{'mode'} = $1;
-    $res{'type'} = $2;
-    $res{'hash'} = $3;
-    $res{'size'} = $4;
-    if ($opts{'-z'}) {
-      $res{'name'} = $5;
-    } else {
-      $res{'name'} = $self->_unquote($5);
-    }
-  } else {
-    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa  panic.c'
-    $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/s;
-
-    $res{'mode'} = $1;
-    $res{'type'} = $2;
-    $res{'hash'} = $3;
-    if ($opts{'-z'}) {
-      $res{'name'} = $4;
-    } else {
-      $res{'name'} = $self->_unquote($4);
-    }
-  }
-
-  return wantarray ? %res : \%res;
 }
 
 sub parse_commit {
@@ -760,6 +706,86 @@ sub parse_date {
   return %date;
 }
 
+sub parsed_difftree_line {
+  my ($self, $line_or_ref) = @_;
+
+  if (ref($line_or_ref) eq "HASH") {
+    # pre-parsed (or generated by hand)
+    return $line_or_ref;
+  } else {
+    return $self->parse_difftree_raw_line($line_or_ref);
+  }
+}
+
+sub parse_difftree_raw_line {
+  my ($self, $line) = @_;
+  my %res;
+
+  if ($line =~ m/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/) {
+    $res{'from_mode'} = $1;
+    $res{'to_mode'} = $2;
+    $res{'from_id'} = $3;
+    $res{'to_id'} = $4;
+    $res{'status'} = $5;
+    $res{'similarity'} = $6;
+    if ($res{'status'} eq 'R' || $res{'status'} eq 'C') { # renamed or copied
+      ($res{'from_file'}, $res{'to_file'}) = map { $self->_unquote($_) } split("\t", $7);
+    } else {
+      $res{'from_file'} = $res{'to_file'} = $res{'file'} = $self->_unquote($7);
+    }
+  }
+  elsif ($line =~ s/^(::+)((?:[0-7]{6} )+)((?:[0-9a-fA-F]{40} )+)([a-zA-Z]+)\t(.*)$//) {
+    $res{'nparents'}  = length($1);
+    $res{'from_mode'} = [ split(' ', $2) ];
+    $res{'to_mode'} = pop @{$res{'from_mode'}};
+    $res{'from_id'} = [ split(' ', $3) ];
+    $res{'to_id'} = pop @{$res{'from_id'}};
+    $res{'status'} = [ split('', $4) ];
+    $res{'to_file'} = $self->_unquote($5);
+  }
+  # 'c512b523472485aef4fff9e57b229d9d243c967f'
+  elsif ($line =~ m/^([0-9a-fA-F]{40})$/) {
+    $res{'commit'} = $1;
+  }
+
+  return wantarray ? %res : \%res;
+}
+
+sub parse_ls_tree_line {
+  my ($self, $line) = @_;
+  my %opts = @_;
+  my %res;
+
+  if ($opts{'-l'}) {
+    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa   16717  panic.c'
+    $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40}) +(-|[0-9]+)\t(.+)$/s;
+
+    $res{'mode'} = $1;
+    $res{'type'} = $2;
+    $res{'hash'} = $3;
+    $res{'size'} = $4;
+    if ($opts{'-z'}) {
+      $res{'name'} = $5;
+    } else {
+      $res{'name'} = $self->_unquote($5);
+    }
+  } else {
+    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa  panic.c'
+    $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/s;
+
+    $res{'mode'} = $1;
+    $res{'type'} = $2;
+    $res{'hash'} = $3;
+    if ($opts{'-z'}) {
+      $res{'name'} = $4;
+    } else {
+      $res{'name'} = $self->_unquote($4);
+    }
+  }
+
+  return wantarray ? %res : \%res;
+}
+
 sub parse_tag {
   my ($self, $project, $tag_id) = @_;
   my %tag;
@@ -804,6 +830,82 @@ sub parse_tag {
     return
   };
   return \%tag;
+}
+
+sub search_bin {
+  my $self = shift;
+  
+  my $env_path = $ENV{PATH};
+  my @paths = split /:/, $env_path;
+  
+  for my $path (@paths) {
+    $path =~ s#/$##;
+    my $bin = "$path/git";
+    if (-f $bin) {
+      return $bin;
+      last;
+    }
+  }
+  return;
+}
+
+sub search_projects {
+  my ($self, %opt) = @_;
+  my $dirs = $opt{dirs};
+  my $max_depth = $opt{max_depth};
+  
+  # Search
+  my @projects;
+  for my $dir (@$dirs) {
+    next unless -d $dir;
+  
+    $dir =~ s/\/$//;
+    my $prefix_length = length($dir);
+    my $prefix_depth = 0;
+    for my $c (split //, $dir) {
+      $prefix_depth++ if $c eq '/';
+    }
+    
+    no warnings 'File::Find';
+    File::Find::find({
+      follow_fast => 1,
+      follow_skip => 2,
+      dangling_symlinks => 0,
+      wanted => sub {
+        my $path = $File::Find::name;
+        my $base_path = $_;
+        
+        return if (m!^[/.]$!);
+        return unless -d $base_path;
+        
+        if ($base_path eq '.git') {
+          $File::Find::prune = 1;
+          return;
+        };
+        
+        my $depth = 0;
+        for my $c (split //, $dir) {
+          $depth++ if $c eq '/';
+        }
+        
+        if ($depth - $prefix_depth > $max_depth) {
+          $File::Find::prune = 1;
+          return;
+        }
+        
+        if (-d $path) {
+          if ($self->check_head_link($path)) {
+            my $home = dirname $path;
+            my $name = basename $path;
+            push @projects, {home => $home, name => $name};
+            $File::Find::prune = 1;
+          }
+        }
+      },
+    }, $dir);
+  }
+  
+  return \@projects;
 }
 
 sub snapshot_name {
@@ -918,7 +1020,7 @@ sub _mode_str {
   my $self = shift;
   my $mode = oct shift;
 
-  if ($self->_S_ISGITLINK($mode)) {
+  if ($self->_s_isgitlink($mode)) {
     return 'm---------';
   } elsif (S_ISDIR($mode & S_IFMT)) {
     return 'drwxr-xr-x';
@@ -936,111 +1038,27 @@ sub _mode_str {
   }
 }
 
-sub file_type {
+sub _s_isgitlink {
   my ($self, $mode) = @_;
-
-  if ($mode !~ m/^[0-7]+$/) {
-    return $mode;
-  } else {
-    $mode = oct $mode;
-  }
-
-  if ($self->_S_ISGITLINK($mode)) {
-    return "submodule";
-  } elsif (S_ISDIR($mode & S_IFMT)) {
-    return "directory";
-  } elsif (S_ISLNK($mode)) {
-    return "symlink";
-  } elsif (S_ISREG($mode)) {
-    return "file";
-  } else {
-    return "unknown";
-  }
+  
+  # Constant
+  my $s_ifgitlink = 0160000;
+  return (($mode & S_IFMT) == $s_ifgitlink)
 }
 
-sub file_type_long {
-  my ($self, $mode) = @_;
+sub _timestamp {
+  my ($self, $date) = @_;
+  my $strtime = $date->{'rfc2822'};
 
-  if ($mode !~ m/^[0-7]+$/) {
-    return $mode;
-  } else {
-    $mode = oct $mode;
+  my $localtime_format = '(%02d:%02d %s)';
+  if ($date->{'hour_local'} < 6) {
+    $localtime_format = '(%02d:%02d %s)';
   }
+  $strtime .= ' ' .
+              sprintf($localtime_format,
+                      $date->{'hour_local'}, $date->{'minute_local'}, $date->{'tz_local'});
 
-  if (S_ISGITLINK($mode)) {
-    return "submodule";
-  } elsif (S_ISDIR($mode & S_IFMT)) {
-    return "directory";
-  } elsif (S_ISLNK($mode)) {
-    return "symlink";
-  } elsif (S_ISREG($mode)) {
-    if ($mode & S_IXUSR) {
-      return "executable";
-    } else {
-      return "file";
-    };
-  } else {
-    return "unknown";
-  }
-}
-
-sub search_projects {
-  my ($self, %opt) = @_;
-  my $dirs = $opt{dirs};
-  my $max_depth = $opt{max_depth};
-  
-  # Search
-  my @projects;
-  for my $dir (@$dirs) {
-    next unless -d $dir;
-  
-    $dir =~ s/\/$//;
-    my $prefix_length = length($dir);
-    my $prefix_depth = 0;
-    for my $c (split //, $dir) {
-      $prefix_depth++ if $c eq '/';
-    }
-    
-    no warnings 'File::Find';
-    File::Find::find({
-      follow_fast => 1,
-      follow_skip => 2,
-      dangling_symlinks => 0,
-      wanted => sub {
-        my $path = $File::Find::name;
-        my $base_path = $_;
-        
-        return if (m!^[/.]$!);
-        return unless -d $base_path;
-        
-        if ($base_path eq '.git') {
-          $File::Find::prune = 1;
-          return;
-        };
-        
-        my $depth = 0;
-        for my $c (split //, $dir) {
-          $depth++ if $c eq '/';
-        }
-        
-        if ($depth - $prefix_depth > $max_depth) {
-          $File::Find::prune = 1;
-          return;
-        }
-        
-        if (-d $path) {
-          if ($self->check_head_link($path)) {
-            my $home = dirname $path;
-            my $name = basename $path;
-            push @projects, {home => $home, name => $name};
-            $File::Find::prune = 1;
-          }
-        }
-      },
-    }, $dir);
-  }
-  
-  return \@projects;
+  return $strtime;
 }
 
 sub _slurp {
@@ -1088,27 +1106,6 @@ sub _unquote {
     $str =~ s/\\([^0-7]|[0-7]{1,3})/unq($1)/eg;
   }
   return $str;
-}
-
-sub _S_ISGITLINK {
-  my ($self, $mode) = @_;
-
-  return (($mode & S_IFMT) == S_IFGITLINK)
-}
-
-sub _timestamp {
-  my ($self, $date) = @_;
-  my $strtime = $date->{'rfc2822'};
-
-  my $localtime_format = '(%02d:%02d %s)';
-  if ($date->{'hour_local'} < 6) {
-    $localtime_format = '(%02d:%02d %s)';
-  }
-  $strtime .= ' ' .
-              sprintf($localtime_format,
-                      $date->{'hour_local'}, $date->{'minute_local'}, $date->{'tz_local'});
-
-  return $strtime;
 }
 
 sub _untabify {
