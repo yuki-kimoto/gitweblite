@@ -335,5 +335,37 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/efcac846dfa843dca225c6d7445e349059011a44">\s*tree\s*</a>#)
     # Snapshot link
     ->content_like(qr#<a title="in format: tar.gz" rel="nofollow" href=\s*/home/kimoto/labo/gitweblite_devrep.git/snapshot/efcac846dfa843dca225c6d7445e349059011a44>\s*snapshot\s*</a>#)
+    
+    ;
+}
+
+# log page (HEAD)
+{
+  $t->get_ok("$project/log")
+    # HEAD link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log">\s*HEAD\s*</a>#)
+    # Next page link
+    ->content_like(qr#<a title="Alt-n" accesskey="n" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/log\?page=1">\s*Next\s*</a>#)
+  ;
+  $t->get_ok("$project/log?page=1")
+    # Prev page link
+    ->content_like(qr#<a title="Alt-p" accesskey="p" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/log\?page=0">\s*Prev\s*</a>#)
+  ;
+}
+
+# log page (not HEAD)
+{
+  my $id = 'efcac846dfa843dca225c6d7445e349059011a44';
+  $t->get_ok("$project/log/$id")
+    # Author
+    ->content_like(qr#<span class="author_date">Yuki Kimoto#)
+    # Comment link
+    ->content_like(qr#edit a_renamed.txt#)
+    # Commit link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/efcac846dfa843dca225c6d7445e349059011a44">commit</a>#)
+    # Commitdiff link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/efcac846dfa843dca225c6d7445e349059011a44">\s*commitdiff\s*</a>#)
+    # Tree link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/efcac846dfa843dca225c6d7445e349059011a44">\s*tree\s*</a>#)
     ;
 }
