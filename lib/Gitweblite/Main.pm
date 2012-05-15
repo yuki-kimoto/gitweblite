@@ -8,7 +8,6 @@ use Encode qw/encode decode/;
 sub e($) { encode('UTF-8', shift) }
 sub d($) { decode('UTF-8', shift) }
 
-has diff_opts => sub { ['-M'] };
 has prevent_xss => 0;
 
 sub blob {
@@ -166,7 +165,7 @@ sub blobdiff {
     if (defined $file) {
       # git diff tree
       my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
-        @{$self->diff_opts}, $from_id, $id, "--",
+        '-M', $from_id, $id, "--",
         (defined $from_file ? $from_file : ()), $file
       );
       
@@ -181,7 +180,7 @@ sub blobdiff {
     } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
 
       # read filtered raw output
-      open $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
+      open $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
           $from_id, $id, "--"
         or croak "Open git-diff-tree failed";
       @difftree =
@@ -208,7 +207,7 @@ sub blobdiff {
     $bid        ||= $diffinfo{to_id};
 
     # open patch output
-    open $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
+    open $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
       '-p', (!$plain ? "--full-index" : ()),
       $from_id, $id,
       "--", (defined $from_file ? $from_file : ()), $file
@@ -334,7 +333,7 @@ sub commitdiff {
   my $plain = $self->param('plain');
   if ($plain) {
     # git diff-tree plain output
-    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
         '-p', $from_id, $id, "--"
       or croak 500, "Open git-diff-tree failed";
     
@@ -349,7 +348,7 @@ sub commitdiff {
   # HTML
   else {
     # git diff-tree output
-    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', @{$self->diff_opts},
+    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
         "--no-commit-id", "--patch-with-raw", "--full-index",
         $from_id, $id, "--"
       or croak 500, "Open git-diff-tree failed";
@@ -375,7 +374,7 @@ sub commitdiff {
       my $bid = $diffinfo->{to_id};
       
       my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
-        @{$self->diff_opts}, '-p', (!$plain ? "--full-index" : ()), $from_id, $id,
+        '-M', '-p', (!$plain ? "--full-index" : ()), $from_id, $id,
         "--", (defined $from_file ? $from_file : ()), $file
       );
       open $fh, "-|", @git_diff_tree
