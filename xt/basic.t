@@ -168,8 +168,6 @@ my $git = $app->git;
   ;
 }
 
-__END__
-
 # Commit page (First commit)
 {
   my $id = '4b0e81c462088b16fefbe545e00b993fd7e6f884';
