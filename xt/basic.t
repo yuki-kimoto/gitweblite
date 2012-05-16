@@ -401,4 +401,3 @@ my $git = $app->git;
     # Content
     ->content_like(qr#\+a#)
 }
-

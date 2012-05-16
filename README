@@ -50,6 +50,32 @@ Config
 
   These is available options.
 
+    git_bin
+    
+      git command (/usr/local/bin/git etc)
+      
+      Default:
+      
+        git command is automatically detected by PATH environment variable
+
+    hypnotoad
+    
+      Server configuration.
+    
+      Default:
+      
+        "hypnotoad" : {
+          "listen" : ["http://*:10010"]
+        }
+    
+    logo_link
+    
+      Logo link URL
+      
+      Default:
+      
+      "logo_link" : "https://github.com/yuki-kimoto/gitweblite"
+    
     search_dirs
         
       Git repository searching directories.
@@ -65,24 +91,6 @@ Config
       Default:
       
         "search_max_depth" : 10
-    
-    git_bin
-    
-      git command
-      
-      Default:
-      
-        git command is automatically detected by PATH environment variable
-    
-    hypnotoad
-    
-      Server configuration.
-    
-      Default:
-      
-        "hypnotoad" : {
-          "listen" : ["http://*:10010"]
-        }
 
 Logo and favicon
 

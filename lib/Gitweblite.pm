@@ -15,10 +15,10 @@ sub startup {
   if (-f $self->home->rel_file('gitweblite.conf')) {
     $conf = $self->plugin('JSONConfigLoose', {ext => 'conf'});
   }
-  my $search_dirs = $conf->{search_dirs} || ['/git/pub', '/home'];
-  $self->config(search_dirs => $search_dirs);
-  my $search_max_depth = $conf->{search_max_depth} || 10;
-  $self->config(search_max_depth => $search_max_depth);
+  $conf->{search_dirs} ||= ['/git/pub', '/home'];
+  $conf->{search_max_depth} ||= 10;
+  $conf->{logo_link} ||= "https://github.com/yuki-kimoto/gitweblite";
+  $self->defaults(logo_link => $conf->{logo_link});
   
   # Git
   my $git = Gitweblite::Git->new;
@@ -26,6 +26,8 @@ sub startup {
   die qq/Can't detect git command. set "git_bin" in gitweblite.conf/
     unless $git_bin;
   $git->bin($git_bin);
+  $git->search_dirs($conf->{search_dirs});
+  $git->search_max_depth($conf->{search_max_depth});
   $self->git($git);
 
   # Helper
@@ -121,12 +123,7 @@ sub startup {
   }
   
   # File cache
-  my $dirs = $self->config('search_dirs');
-  my $max_depth = $self->config('search_max_depth');
-  $git->search_projects(
-    dirs => $dirs,
-    max_depth => $max_depth
-  );
+  $git->search_projects;
 }
 
 1;

@@ -13,6 +13,8 @@ sub d($) { decode('UTF-8', shift) }
 
 # Attributes
 has 'bin';
+has 'search_dirs';
+has 'search_max_depth';
 
 sub blob_mimetype {
   my ($self, $fh, $file) = @_;
@@ -830,8 +832,8 @@ sub search_bin {
 
 sub search_projects {
   my ($self, %opt) = @_;
-  my $dirs = $opt{dirs};
-  my $max_depth = $opt{max_depth};
+  my $dirs = $self->search_dirs;
+  my $max_depth = $self->search_max_depth;
   
   # Search
   my @projects;
