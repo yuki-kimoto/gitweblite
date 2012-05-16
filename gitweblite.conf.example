@@ -9,7 +9,10 @@
   // "git_bin" : "/usr/local/bin/git",
   
   // Server config
-  "hypnotoad" : {
-    "listen" : ["http://*:10010"]
-  }
+  // "hypnotoad" : {
+  //   "listen" : ["http://*:10010"]
+  // },
+  
+  // Logo link
+  // "logo_link" : "https://github.com/yuki-kimoto/gitweblite"
 }

@@ -11,14 +11,14 @@ sub startup {
   my $self = shift;
   
   # Config
-  my $conf = {};
-  if (-f $self->home->rel_file('gitweblite.conf')) {
-    $conf = $self->plugin('JSONConfigLoose', {ext => 'conf'});
-  }
+  my $conf_file = $ENV{GITWEBLITE_CONFIG_FILE}
+    || $self->home->rel_file('gitweblite.conf');
+  $self->plugin('JSONConfigLoose', {file => $conf_file}) if -f $conf_file;
+  my $conf = $self->config;
   $conf->{search_dirs} ||= ['/git/pub', '/home'];
   $conf->{search_max_depth} ||= 10;
   $conf->{logo_link} ||= "https://github.com/yuki-kimoto/gitweblite";
-  $self->defaults(logo_link => $conf->{logo_link});
+  $conf->{hypnotoad} ||= {listen => ["http://*:10010"]};
   
   # Git
   my $git = Gitweblite::Git->new;

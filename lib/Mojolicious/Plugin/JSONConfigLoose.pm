@@ -10,8 +10,11 @@ sub load {
     or die qq/Couldn't open config file "$file": $!/;
   my $content;
   while (my $line = <$handle>) {
-    next if $line =~ m#^\s*//#;
-    $content .= $line;
+    if ($line =~ m#^\s*//#) {
+      $content .= "\n";
+      next;
+    }
+    else { $content .= $line }
   }
 
   # Process
