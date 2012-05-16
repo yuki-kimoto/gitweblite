@@ -14,5 +14,8 @@
   // },
   
   // Logo link
-  // "logo_link" : "https://github.com/yuki-kimoto/gitweblite"
+  // "logo_link" : "https://github.com/yuki-kimoto/gitweblite",
+
+  // No mean key-value for allow last conmma
+  "no_mean" : "no_mean"
 }
