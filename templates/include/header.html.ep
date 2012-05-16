@@ -6,5 +6,5 @@
   <a href="<%= $logo_link %>">
     <img src="<%= url_for('/git-logo.png') %>" class="logo"/>
   </a>
-  <a href="#"><%= $title %></a> <%= $project ? "# $project" : '' %>
+  <%= $project ? "$project /" : '' %>  <a href="#"><%= $title %></a>
 </div>
