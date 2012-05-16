@@ -7,14 +7,14 @@ Features
 
   This is gitweb.cgi clone, and has the following features.
 
-  - gitweb.cgi default features
+  - gitweb.cgi default features.
   - Written by Perl and Mojolicious web framework.
-  - Prerequisite is Perl 5.8.7+
+  - Prerequisite is Perl 5.8.7+.
   - Having HTTP server. You can run gitweblite,
     even if "apache" is not installed.
   - Multiple project homes.
   - Zero configuration.
-  - don't work on Windows
+  - don't work on Windows.
 
 Operation
 
@@ -99,3 +99,10 @@ Logo and favicon
   
     user/public/git-logo.png
     user/public/git-favicon.png
+
+COPYRIGHT & LICENSE
+
+  Copyright 2009-2012 Yuki Kimoto, all rights reserved.
+
+  This program is free software; you can redistribute it and/or modify it
+  under the same terms as Perl itself.
