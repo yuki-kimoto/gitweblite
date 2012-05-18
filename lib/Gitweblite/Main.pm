@@ -2,11 +2,7 @@ package Gitweblite::Main;
 use Mojo::Base 'Mojolicious::Controller';
 use File::Basename 'dirname';
 use Carp 'croak';
-
-# Encode
-use Encode qw/encode decode/;
-sub enc($) { encode('UTF-8', shift) }
-sub dec($) { decode('UTF-8', shift) }
+use Gitweblite::Git;
 
 sub blob {
   my $self = shift;
@@ -86,21 +82,18 @@ sub blob {
       or croak "Cannot find file";
     
     # Blob
-    my @git_cat_file = (
-      $git->cmd($project),
-      "cat-file",
-      "blob",
-      $bid
-    );
-    open my $fh, "-|", @git_cat_file
+    my @cmd = ($git->cmd($project), "cat-file", "blob", $bid);
+    open my $fh, "-|", @cmd
       or croak "Couldn't cat $file, $bid";
     
     my $mimetype = $git->blob_mimetype($fh, $file);
+    
     # Redirect to blob plane
     if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fh) {
       close $fh;
-      my $url = $self->url_for('/blob_plain', home => $home,
-        project => $project, id => $id, file => $file);
+      my $url = $self->url_for('blob_plain',
+        project => $project_ns, id_file => "$id/$file");
+      
       return $self->redirect_to($url);
     }
     
@@ -110,7 +103,7 @@ sub blob {
     # Parse line
     my @lines;
     while (my $line = <$fh>) {
-      $line = dec($line);
+      $line = Gitweblite::Git::dec($line);
       chomp $line;
       $line = $git->_untabify($line);
       push @lines, $line;
@@ -169,7 +162,7 @@ sub blobdiff {
       
       open $fh, "-|", @git_diff_tree
         or croak 500, "Open git-diff-tree failed";
-      @difftree = map { chomp; dec($_) } <$fh>;
+      @difftree = map { chomp; Gitweblite::Git::dec($_) } <$fh>;
       close $fh
         or croak 404, "Reading git-diff-tree failed";
       @difftree
@@ -353,7 +346,7 @@ sub commitdiff {
 
     # Parse output
     my @diffinfos;
-    while (my $line = dec(<$fh>)) {
+    while (my $line = Gitweblite::Git::dec(<$fh>)) {
       chomp $line;
       last unless $line;
       push @diffinfos, scalar $git->parse_difftree_raw_line($line);
@@ -743,7 +736,7 @@ sub tree {
       ($show_sizes ? '-l' : ()), $tid
       or croak 500, "Open git-ls-tree failed";
     local $/ = "\0";
-    @entries = map { chomp; dec($_) } <$fh>;
+    @entries = map { chomp; Gitweblite::Git::dec($_) } <$fh>;
     close $fh
       or croak 404, "Reading tree failed";
   }
@@ -775,7 +768,7 @@ sub _parse_blobdiff_lines {
   
   my @lines;
   for my $line (@$lines_raw) {
-    $line = dec($line);
+    $line = Gitweblite::Git::dec($line);
     chomp $line;
     my $class;
     
