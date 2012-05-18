@@ -18,10 +18,6 @@ run mvt.pl to create this module version test(t/module.t).
 
 EOS
 $tm->lib(['../extlib/lib/perl5']);
-$tm->modules([
-  ['Object::Simple' => '3.0625'],
-  ['Validator::Custom' => '0.1426']
-]);
 $tm->test_script(output => "$FindBin::Bin/t/module.t");
 
 1;
