@@ -5,8 +5,8 @@ use Carp 'croak';
 
 # Encode
 use Encode qw/encode decode/;
-sub e($) { encode('UTF-8', shift) }
-sub d($) { decode('UTF-8', shift) }
+sub enc($) { encode('UTF-8', shift) }
+sub dec($) { decode('UTF-8', shift) }
 
 sub blob {
   my $self = shift;
@@ -110,7 +110,7 @@ sub blob {
     # Parse line
     my @lines;
     while (my $line = <$fh>) {
-      $line = d$line;
+      $line = dec($line);
       chomp $line;
       $line = $git->_untabify($line);
       push @lines, $line;
@@ -169,7 +169,7 @@ sub blobdiff {
       
       open $fh, "-|", @git_diff_tree
         or croak 500, "Open git-diff-tree failed";
-      @difftree = map { chomp; d$_ } <$fh>;
+      @difftree = map { chomp; dec($_) } <$fh>;
       close $fh
         or croak 404, "Reading git-diff-tree failed";
       @difftree
@@ -353,8 +353,7 @@ sub commitdiff {
 
     # Parse output
     my @diffinfos;
-    while (my $line = <$fh>) {
-      $line = d$line;
+    while (my $line = dec(<$fh>)) {
       chomp $line;
       last unless $line;
       push @diffinfos, scalar $git->parse_difftree_raw_line($line);
@@ -744,7 +743,7 @@ sub tree {
       ($show_sizes ? '-l' : ()), $tid
       or croak 500, "Open git-ls-tree failed";
     local $/ = "\0";
-    @entries = map { chomp; d$_ } <$fh>;
+    @entries = map { chomp; dec($_) } <$fh>;
     close $fh
       or croak 404, "Reading tree failed";
   }
@@ -776,7 +775,7 @@ sub _parse_blobdiff_lines {
   
   my @lines;
   for my $line (@$lines_raw) {
-    $line = d$line;
+    $line = dec($line);
     chomp $line;
     my $class;
     

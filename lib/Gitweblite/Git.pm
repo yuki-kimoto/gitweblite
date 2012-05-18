@@ -8,8 +8,8 @@ use Fcntl ':mode';
 
 # Encode
 use Encode qw/encode decode/;
-sub e($) { encode('UTF-8', shift) }
-sub d($) { decode('UTF-8', shift) }
+sub enc($) { encode('UTF-8', shift) }
+sub dec($) { decode('UTF-8', shift) }
 
 # Attributes
 has 'bin';
@@ -141,7 +141,7 @@ sub get_difftree {
     '-M', (@$parents <= 1 ? $parent : '-c'), $cid, "--");
   open my $fh, "-|", @cmd
     or croak 500, "Open git-diff-tree failed";
-  my @difftree = map { chomp; d$_ } <$fh>;
+  my @difftree = map { chomp; dec($_) } <$fh>;
   close $fh or croak "Reading git-diff-tree failed";
   
   # Parse "git diff-tree" output
@@ -213,8 +213,7 @@ sub get_heads {
   
   # Create head info
   my @heads;
-  while (my $line = <$fh>) {
-    $line = d$line;
+  while (my $line = dec(<$fh>)) {
     my %ref_item;
 
     chomp $line;
@@ -248,8 +247,7 @@ sub get_id {
   my @cmd = ($self->cmd($project), 'rev-parse',
     '--verify', '-q', @options, $ref);
   if (open my $fh, '-|', @cmd) {
-    $id = <$fh>;
-    $id = d$id;
+    $id = dec(<$fh>);
     chomp $id if defined $id;
     close $fh;
   }
@@ -267,7 +265,7 @@ sub get_id_by_path {
   open my $fh, "-|", @cmd
     or croak "Open git-ls-tree failed";
   my $line = <$fh>;
-  $line = d$line;
+  $line = dec($line);
   close $fh or return undef;
 
   # there is no tree or hash given by $path at $base
@@ -326,8 +324,7 @@ sub get_last_activity {
     '--format=%(committer)', '--sort=-committerdate',
     '--count=1', 'refs/heads');
   open my $fh, "-|", @cmd or return;
-  my $most_recent = <$fh>;
-  $most_recent = d$most_recent;
+  my $most_recent = dec(<$fh>);
   close $fh or return;
   
   # Parse most recent
@@ -347,7 +344,7 @@ sub get_object_type {
   # Command "git cat-file" (Get object type)
   my @cmd = ($self->cmd($project), "cat-file", '-t', $cid);
   open my $fh, "-|", @cmd  or return;
-  my $type = d(<$fh>);
+  my $type = dec(<$fh>);
   close $fh or return;
   chomp $type;
   
@@ -370,7 +367,7 @@ sub get_project_urls {
   # Project URLs
   open my $fh, '<', "$project/cloneurl"
     or return;
-  my @urls = map { chomp; d$_ } <$fh>;
+  my @urls = map { chomp; dec($_) } <$fh>;
   close $fh;
 
   return \@urls;
@@ -382,7 +379,7 @@ sub get_projects {
   my $filter = $opt{filter};
   
   # Projects
-  opendir my $dh, e$home
+  opendir my $dh, enc($home)
     or croak qq/Can't open directory $home: $!/;
   my @projects;
   while (my $project = readdir $dh) {
@@ -407,8 +404,7 @@ sub get_references {
   
   # Parse references
   my %refs;
-  while (my $line = <$fh>) {
-    $line = d$line;
+  while (my $line = dec(<$fh>)) {
     chomp $line;
     if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
       if (defined $refs{$1}) { push @{$refs{$1}}, $2 }
@@ -452,8 +448,7 @@ sub get_tags {
   
   # Parse Tags
   my @tags;
-  while (my $line = <$fh>) {
-    $line = d$line;
+  while (my $line = dec(<$fh>)) {
     
     my %tag;
 
@@ -522,8 +517,7 @@ sub parse_commit {
   
   # Parse commit
   local $/ = "\0";
-  my $content = <$fh>;
-  $content = d$content;
+  my $content = dec(<$fh>);
   my $commit = $self->parse_commit_text($content, 1);
   close $fh;
 
@@ -642,8 +636,7 @@ sub parse_commits {
   # Parse rev-list results
   local $/ = "\0";
   my @commits;
-  while (my $line = <$fh>) {
-    $line = d$line;
+  while (my $line = dec(<$fh>)) {
     my $commit = $self->parse_commit_text($line);
     push @commits, $commit;
   }
@@ -1049,7 +1042,7 @@ sub _slurp {
   # Slurp
   open my $fh, '<', $file
     or croak qq/Can't open file "$file": $!/;
-  my $content = d(do { local $/; <$fh> });
+  my $content = do { local $/; dec(<$fh>) };
   close $fh;
   
   return $content;
