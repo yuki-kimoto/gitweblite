@@ -1,13 +1,10 @@
 {
-  // Search directory
-  // "search_dirs" : ["/git/pub", "/home"],
-  
-  // Serach max depth
-  // "search_max_depth" : 10,
+  // Encoding
+  // "encoding" : "UTF-8",
   
   // Git command
   // "git_bin" : "/usr/local/bin/git",
-  
+
   // Server config
   // "hypnotoad" : {
   //   "listen" : ["http://*:10010"]
@@ -18,6 +15,15 @@
   
   // Prevent XSS atack
   // "prevent_xss" : 0,
+
+  // Search directory
+  // "search_dirs" : ["/git/pub", "/home"],
+  
+  // Serach max depth
+  // "search_max_depth" : 10,
+  
+  // Text extensions
+  // "text_exts" : ["txt"],
 
   // No mean key-value for allow last conmma
   "no_mean" : "no_mean"

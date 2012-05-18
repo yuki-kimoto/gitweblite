@@ -1,3 +1,8 @@
+0.04
+  - added encoding option
+  - added text_exts option
+  - added prevent_xss option
+  - fixed many bugs.
 0.03 (beta)
   - don't overwrite gitweblite.conf
   - config file become JSON.

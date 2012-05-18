@@ -21,6 +21,8 @@ sub startup {
   $conf->{logo_link} ||= "https://github.com/yuki-kimoto/gitweblite";
   $conf->{hypnotoad} ||= {listen => ["http://*:10010"]};
   $conf->{prevent_xss} ||= 0;
+  $conf->{encoding} ||= 'UTF-8';
+  $conf->{text_exts} ||= ['txt'];
   
   # Git
   my $git = Gitweblite::Git->new;
@@ -30,6 +32,8 @@ sub startup {
   $git->bin($git_bin);
   $git->search_dirs($conf->{search_dirs});
   $git->search_max_depth($conf->{search_max_depth});
+  $git->encoding($conf->{encoding});
+  $git->text_exts($conf->{text_exts});
   $self->git($git);
 
   # Helper

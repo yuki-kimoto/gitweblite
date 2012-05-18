@@ -14,6 +14,7 @@ Features
     even if "apache" is not installed.
   - Multiple project homes.
   - Zero configuration.
+  - Default encoding is UTF-8, you can change this.
   - don't work on Windows.
 
 Operation
@@ -50,6 +51,14 @@ Config
     cp gitweblite.conf.example gitweblite.conf
 
   These is available options.
+  
+    encoding
+    
+      Text encoding.
+      
+      Default:
+      
+        "encoding" : "UTF-8"
 
     git_bin
     
@@ -100,6 +109,16 @@ Config
       Default:
       
         "search_max_depth" : 10
+    
+    text_ext
+    
+      Text file extention. If "encoding" is not "UTF-8", generally text file
+      is assumed as binary file. If "text_ext" is set, the file having the extention
+      assumed as text file.
+    
+      Default:
+      
+        "text_exts" : ["txt"]
 
 Logo and favicon
 

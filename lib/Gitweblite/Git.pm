@@ -8,13 +8,28 @@ use Fcntl ':mode';
 
 # Encode
 use Encode qw/encode decode/;
-sub enc($) { encode('UTF-8', shift) }
-sub dec($) { decode('UTF-8', shift) }
+sub enc {
+  my ($self, $str) = @_;
+  
+  my $enc = $self->encoding;
+  
+  return encode($enc, $str);
+}
+
+sub dec {
+  my ($self, $str) = @_;
+  
+  my $enc = $self->encoding;
+  
+  return decode($enc, $str);
+}
 
 # Attributes
 has 'bin';
 has 'search_dirs';
 has 'search_max_depth';
+has 'encoding';
+has 'text_exts';
 
 sub blob_mimetype {
   my ($self, $fh, $file) = @_;
@@ -22,6 +37,11 @@ sub blob_mimetype {
   return 'text/plain' unless $fh;
   
   # MIME type
+  my $text_exts = $self->text_exts;
+  for my $text_ext (@$text_exts) {
+    my $ext = quotemeta($text_ext);
+    return 'text/plain' if $file =~ /\.$ext$/i;
+  }
   if (-T $fh) { return 'text/plain' }
   elsif (! $file) { return 'application/octet-stream' }
   elsif ($file =~ m/\.png$/i) { return 'image/png' }
@@ -38,7 +58,7 @@ sub blob_contenttype {
   # Content type
   $type ||= $self->blob_mimetype($fh, $file);
   if ($type eq 'text/plain') {
-    $type .= "; charset=UTF-8";
+    $type .= "; charset=" . $self->encoding;
   }
 
   return $type;
@@ -141,7 +161,7 @@ sub get_difftree {
     '-M', (@$parents <= 1 ? $parent : '-c'), $cid, "--");
   open my $fh, "-|", @cmd
     or croak 500, "Open git-diff-tree failed";
-  my @difftree = map { chomp; dec($_) } <$fh>;
+  my @difftree = map { chomp; $self->dec($_) } <$fh>;
   close $fh or croak "Reading git-diff-tree failed";
   
   # Parse "git diff-tree" output
@@ -213,7 +233,7 @@ sub get_heads {
   
   # Create head info
   my @heads;
-  while (my $line = dec(<$fh>)) {
+  while (my $line = $self->dec(scalar <$fh>)) {
     my %ref_item;
 
     chomp $line;
@@ -247,7 +267,7 @@ sub get_id {
   my @cmd = ($self->cmd($project), 'rev-parse',
     '--verify', '-q', @options, $ref);
   if (open my $fh, '-|', @cmd) {
-    $id = dec(<$fh>);
+    $id = $self->dec(scalar <$fh>);
     chomp $id if defined $id;
     close $fh;
   }
@@ -265,7 +285,7 @@ sub get_id_by_path {
   open my $fh, "-|", @cmd
     or croak "Open git-ls-tree failed";
   my $line = <$fh>;
-  $line = dec($line);
+  $line = $self->dec(scalar $line);
   close $fh or return undef;
 
   # there is no tree or hash given by $path at $base
@@ -324,7 +344,7 @@ sub get_last_activity {
     '--format=%(committer)', '--sort=-committerdate',
     '--count=1', 'refs/heads');
   open my $fh, "-|", @cmd or return;
-  my $most_recent = dec(<$fh>);
+  my $most_recent = $self->dec(scalar <$fh>);
   close $fh or return;
   
   # Parse most recent
@@ -344,7 +364,7 @@ sub get_object_type {
   # Command "git cat-file" (Get object type)
   my @cmd = ($self->cmd($project), "cat-file", '-t', $cid);
   open my $fh, "-|", @cmd  or return;
-  my $type = dec(<$fh>);
+  my $type = $self->dec(scalar <$fh>);
   close $fh or return;
   chomp $type;
   
@@ -367,7 +387,7 @@ sub get_project_urls {
   # Project URLs
   open my $fh, '<', "$project/cloneurl"
     or return;
-  my @urls = map { chomp; dec($_) } <$fh>;
+  my @urls = map { chomp; $self->dec($_) } <$fh>;
   close $fh;
 
   return \@urls;
@@ -379,7 +399,7 @@ sub get_projects {
   my $filter = $opt{filter};
   
   # Projects
-  opendir my $dh, enc($home)
+  opendir my $dh, $self->enc($home)
     or croak qq/Can't open directory $home: $!/;
   my @projects;
   while (my $project = readdir $dh) {
@@ -404,7 +424,7 @@ sub get_references {
   
   # Parse references
   my %refs;
-  while (my $line = dec(<$fh>)) {
+  while (my $line = $self->dec(scalar <$fh>)) {
     chomp $line;
     if ($line =~ m!^([0-9a-fA-F]{40})\srefs/($type.*)$!) {
       if (defined $refs{$1}) { push @{$refs{$1}}, $2 }
@@ -448,7 +468,7 @@ sub get_tags {
   
   # Parse Tags
   my @tags;
-  while (my $line = dec(<$fh>)) {
+  while (my $line = $self->dec(scalar <$fh>)) {
     
     my %tag;
 
@@ -517,7 +537,7 @@ sub parse_commit {
   
   # Parse commit
   local $/ = "\0";
-  my $content = dec(<$fh>);
+  my $content = $self->dec(scalar <$fh>);
   my $commit = $self->parse_commit_text($content, 1);
   close $fh;
 
@@ -636,7 +656,7 @@ sub parse_commits {
   # Parse rev-list results
   local $/ = "\0";
   my @commits;
-  while (my $line = dec(<$fh>)) {
+  while (my $line = $self->dec(scalar <$fh>)) {
     my $commit = $self->parse_commit_text($line);
     push @commits, $commit;
   }
@@ -1042,7 +1062,7 @@ sub _slurp {
   # Slurp
   open my $fh, '<', $file
     or croak qq/Can't open file "$file": $!/;
-  my $content = do { local $/; dec(<$fh>) };
+  my $content = do { local $/; $self->dec(scalar <$fh>) };
   close $fh;
   
   return $content;

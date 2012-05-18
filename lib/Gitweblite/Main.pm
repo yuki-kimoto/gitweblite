@@ -103,7 +103,7 @@ sub blob {
     # Parse line
     my @lines;
     while (my $line = <$fh>) {
-      $line = Gitweblite::Git::dec($line);
+      $line = $git->dec($line);
       chomp $line;
       $line = $git->_untabify($line);
       push @lines, $line;
@@ -162,7 +162,7 @@ sub blobdiff {
       
       open $fh, "-|", @git_diff_tree
         or croak 500, "Open git-diff-tree failed";
-      @difftree = map { chomp; Gitweblite::Git::dec($_) } <$fh>;
+      @difftree = map { chomp; $git->dec($_) } <$fh>;
       close $fh
         or croak 404, "Reading git-diff-tree failed";
       @difftree
@@ -216,7 +216,7 @@ sub blobdiff {
     close $fh;
     my $content_disposition .= "inline; filename=$file";
     $self->res->headers->content_disposition($content_disposition);
-    $self->res->headers->content_type("text/plain; charset=UTF-8");
+    $self->res->headers->content_type("text/plain; charset=" . $git->encoding);
     $self->render(data => $content);
   }
   else {
@@ -332,7 +332,7 @@ sub commitdiff {
     my $content = do { local $/; <$fh> };
     my $content_disposition .= "inline; filename=$id";
     $self->res->headers->content_disposition($content_disposition);
-    $self->res->headers->content_type("text/plain;charset=UTF-8");
+    $self->res->headers->content_type("text/plain;charset=" . $git->encoding);
     $self->render_data($content);
   }
   
@@ -346,7 +346,7 @@ sub commitdiff {
 
     # Parse output
     my @diffinfos;
-    while (my $line = Gitweblite::Git::dec(<$fh>)) {
+    while (my $line = $git->dec(scalar <$fh>)) {
       chomp $line;
       last unless $line;
       push @diffinfos, scalar $git->parse_difftree_raw_line($line);
@@ -736,7 +736,7 @@ sub tree {
       ($show_sizes ? '-l' : ()), $tid
       or croak 500, "Open git-ls-tree failed";
     local $/ = "\0";
-    @entries = map { chomp; Gitweblite::Git::dec($_) } <$fh>;
+    @entries = map { chomp; $git->dec($_) } <$fh>;
     close $fh
       or croak 404, "Reading tree failed";
   }
@@ -766,9 +766,12 @@ sub tree {
 sub _parse_blobdiff_lines {
   my ($self, $lines_raw) = @_;
   
+  # Git
+  my $git = $self->app->git;
+  
   my @lines;
   for my $line (@$lines_raw) {
-    $line = Gitweblite::Git::dec($line);
+    $line = $git->dec($line);
     chomp $line;
     my $class;
     
