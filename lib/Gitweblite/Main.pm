@@ -8,8 +8,6 @@ use Encode qw/encode decode/;
 sub e($) { encode('UTF-8', shift) }
 sub d($) { decode('UTF-8', shift) }
 
-has prevent_xss => 0;
-
 sub blob {
   my $self = shift;
 
@@ -61,11 +59,11 @@ sub blob {
     if (defined $file) { $save_as = $file }
     elsif ($type =~ m/^text\//) { $save_as .= '.txt' }
 
-    my $sandbox = $self->prevent_xss &&
+    my $sandbox = $self->config('prevent_xss') &&
       $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
 
     # serve text/* as text/plain
-    if ($self->prevent_xss &&
+    if ($self->config('prevent_xss') &&
         ($type =~ m!^text/[a-z]+\b(.*)$! ||
          ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fh))) {
       my $rest = $1;

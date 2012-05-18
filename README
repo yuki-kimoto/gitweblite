@@ -77,6 +77,14 @@ Config
       
       "logo_link" : "https://github.com/yuki-kimoto/gitweblite"
     
+    prevent_xss
+    
+      Prevent XSS atack.
+      
+      Default:
+      
+        "prevent_xss" : 0
+    
     search_dirs
         
       Git repository searching directories.

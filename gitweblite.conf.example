@@ -15,6 +15,9 @@
   
   // Logo link
   // "logo_link" : "https://github.com/yuki-kimoto/gitweblite",
+  
+  // Prevent XSS atack
+  // "prevent_xss" : 0,
 
   // No mean key-value for allow last conmma
   "no_mean" : "no_mean"

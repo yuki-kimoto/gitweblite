@@ -1,3 +1,4 @@
+use 5.008007;
 package Gitweblite;
 
 our $VERSION = '0.03';
@@ -19,6 +20,7 @@ sub startup {
   $conf->{search_max_depth} ||= 10;
   $conf->{logo_link} ||= "https://github.com/yuki-kimoto/gitweblite";
   $conf->{hypnotoad} ||= {listen => ["http://*:10010"]};
+  $conf->{prevent_xss} ||= 0;
   
   # Git
   my $git = Gitweblite::Git->new;
