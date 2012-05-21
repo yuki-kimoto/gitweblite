@@ -2,7 +2,6 @@ package Gitweblite::Main;
 use Mojo::Base 'Mojolicious::Controller';
 use File::Basename 'dirname';
 use Carp 'croak';
-use Gitweblite::Git;
 
 sub blob {
   my $self = shift;
@@ -14,30 +13,11 @@ sub blob {
   my $home = "/$home_ns";
   my $id_file = $self->param('id_file');
   
+  # Id and file
+  my ($id, $file) = $self->_parse_id_path($project, $id_file);
+  
   # Git
   my $git = $self->app->git;
-
-  # ID and file
-  my $refs = $git->get_references($project);
-  my $id;
-  my $file;
-  for my $rs (values %$refs) {
-    for my $ref (@$rs) {
-      $ref =~ s#^heads/##;
-      $ref =~ s#^tags/##;
-      if ($id_file =~ s#^\Q$ref(/|$)##) {
-        $id = $ref;
-        $file = $id_file;
-        last;
-      }      
-    }
-  }
-  unless (defined $id) {
-    if ($id_file =~ s#(^[^/]+)(/|$)##) {
-      $id = $1;
-      $file = $id_file;
-    }
-  }
 
   # Blob plain
   if ($self->stash('plain')) {
@@ -693,31 +673,11 @@ sub tree {
   my $home = "/$home_ns";
   my $id_dir = $self->param('id_dir');
 
+  # Id and directory
+  my ($id, $dir) = $self->_parse_id_path($project, $id_dir);
+
   # Git
   my $git = $self->app->git;
-  
-  # References
-  my $refs = $git->get_references($project);
-  my $id;
-  my $dir;
-  for my $rs (values %$refs) {
-    for my $r (@$rs) {
-      my $ref = $r;
-      $ref =~ s#^heads/##;
-      $ref =~ s#^tags/##;
-      if ($id_dir =~ s#^\Q$ref(/|$)##) {
-        $id = $ref;
-        $dir = $id_dir;
-        last;
-      }      
-    }
-  }
-  unless (defined $id) {
-    if ($id_dir =~ s#(^[^/]+)(/|$)##) {
-      $id = $1;
-      $dir = $id_dir;
-    }
-  }
   
   my $tid;
   my $commit = $git->parse_commit($project, $id);
@@ -748,6 +708,8 @@ sub tree {
     push @trees, \%tree;
   }
   
+  # References
+  my $refs = $git->get_references($project);
   
   $self->render(
     home => $home,
@@ -786,6 +748,37 @@ sub _parse_blobdiff_lines {
   }
   
   return \@lines;
+}
+
+sub _parse_id_path {
+  my ($self, $project, $id_path) = @_;
+  
+  # Git
+  my $git = $self->app->git;
+  
+  # Parse id and path
+  my $refs = $git->get_references($project);
+  my $id;
+  my $path;
+  for my $rs (values %$refs) {
+    for my $ref (@$rs) {
+      $ref =~ s#^heads/##;
+      $ref =~ s#^tags/##;
+      if ($id_path =~ s#^\Q$ref(/|$)##) {
+        $id = $ref;
+        $path = $id_path;
+        last;
+      }      
+    }
+  }
+  unless (defined $id) {
+    if ($id_path =~ s#(^[^/]+)(/|$)##) {
+      $id = $1;
+      $path = $id_path;
+    }
+  }
+  
+  return ($id, $path);
 }
 
 sub _parse_params {
