@@ -19,14 +19,15 @@ sub blob {
   # Id and file
   my ($id, $file) = $self->_parse_id_path($project, $id_file);
 
+  # Blob content
+  my $bid = $git->get_id_by_path($project, $id, $file, 'blob')
+    or croak 'Cannot find file';
+  my @cmd = ($git->cmd($project), 'cat-file', 'blob', $bid);
+  open my $fh, '-|', @cmd
+    or croak qq/Couldn't cat "$file", "$bid"/;
+  
   # Blob plain
   if ($self->stash('plain')) {
-    # Blob id
-    my $bid = $git->get_id_by_path($project, $id, $file, "blob")
-      or croak "Cannot find file";
-    open my $fh, "-|", $git->cmd($project), "cat-file", "blob", $bid
-      or croak "Open git-cat-file blob '$bid' failed";
-
     # Content-type
     my $type = $git->blob_contenttype($fh, $file);
 
@@ -60,18 +61,10 @@ sub blob {
   
   # Blob
   else {
-    # Blob id
-    my $bid = $git->get_id_by_path($project, $id, $file, "blob")
-      or croak "Cannot find file";
-    
-    # Blob
-    my @cmd = ($git->cmd($project), "cat-file", "blob", $bid);
-    open my $fh, "-|", @cmd
-      or croak "Couldn't cat $file, $bid";
-    
+    # MIME type
     my $mimetype = $git->blob_mimetype($fh, $file);
     
-    # Redirect to blob plane
+    # Redirect to blob-plain if no display MIME type
     if ($mimetype !~ m#^(?:text/|image/(?:gif|png|jpeg)$)# && -B $fh) {
       close $fh;
       my $url = $self->url_for('blob_plain',
@@ -85,10 +78,9 @@ sub blob {
 
     # Parse line
     my @lines;
-    while (my $line = <$fh>) {
-      $line = $git->dec($line);
+    while (my $line = $git->dec(scalar <$fh>)) {
       chomp $line;
-      $line = $git->_untabify($line);
+      $line = $git->_tab_to_space($line);
       push @lines, $line;
     }
     

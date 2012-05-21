@@ -218,6 +218,16 @@ my $git = $app->git;
   ;
 }
 
+# Blob (tab)
+{
+  my $id = '26ab87d6c2640bde3807870347ea793cdf544a5c';
+  my $file = 'tab.txt';
+  $t->get_ok("$project/blob/$id/$file")
+    # Content
+    ->content_like(qr#1</a>   aaaaa#)
+  ;
+}
+
 # Blob plain
 {
   my $id = '68a698012b16490e8cfb9d66bf8bbd9085421c69';

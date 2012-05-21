@@ -1090,12 +1090,12 @@ sub _unquote {
   return $str;
 }
 
-sub _untabify {
+sub _tab_to_space {
   my ($self, $line) = @_;
   
-  # Untabify
+  # Tab to space
   while ((my $pos = index($line, "\t")) != -1) {
-    if (my $count = (8 - ($pos % 8))) {
+    if (my $count = (2 - ($pos % 2))) {
       my $spaces = ' ' x $count;
       $line =~ s/\t/$spaces/;
     }
