@@ -33,7 +33,7 @@ $t->get_ok("$home/projects")
   # Project link
   ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/summary">\s+gitweblite_devrep.git\s+</a>#)
   # Description link
-  ->content_like(qr#<a class="list" title="Test Repository\s*"\s*href="/home/kimoto/labo/gitweblite_devrep.git/summary">\s*Test Repository\s*</a>#)
+  ->content_like(qr#<a class="list" title="Test Repository テストリポジトリ\s*"\s*href="/home/kimoto/labo/gitweblite_devrep.git/summary">\s*Test Repository テストリポジトリ\s*</a>#)
   # Owner
   ->content_like(qr#<td><i>kimoto</i></td>#)
   # Content links
@@ -59,7 +59,7 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commitdiff/$head">Commitdiff</a>#)
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/$head">Tree</a>#)
     # Description
-    ->content_like(qr#<tr id="metadata_desc"><td><b>Description:</b></td><td>Test Repository\s*</td></tr>#)
+    ->content_like(qr#<tr id="metadata_desc"><td><b>Description:</b></td><td>Test Repository テストリポジトリ\s*</td></tr>#)
     # Owner
     ->content_like(qr#<tr id="metadata_owner"><td><b>Owner:</b></td><td>kimoto</td></tr>#)
     # Ripository URL
