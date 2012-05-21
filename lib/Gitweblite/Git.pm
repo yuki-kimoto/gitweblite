@@ -276,28 +276,19 @@ sub get_id {
 }
 
 sub get_id_by_path {
-  my ($self, $project, $id, $path, $type) = @_;
+  my ($self, $project, $commit_id, $path, $type) = @_;
   
+  # Get blob id or tree id (command "git ls-tree")
   $path =~ s#/+$##;
-  
-  # Command "git ls-tree"
-  my @cmd = ($self->cmd($project), "ls-tree", $id, "--", $path);
+  my @cmd = ($self->cmd($project), "ls-tree", $commit_id, "--", $path);
   open my $fh, "-|", @cmd
     or croak "Open git-ls-tree failed";
-  my $line = <$fh>;
-  $line = $self->dec(scalar $line);
-  close $fh or return undef;
+  my $line = $self->dec(scalar <$fh>);
+  close $fh or return;
+  my ($t, $id) = ($line || '') =~ m/^[0-9]+ (.+) ([0-9a-fA-F]{40})\t/;
+  return if defined $type && $type ne $t;
 
-  # there is no tree or hash given by $path at $base
-  return if !defined $line;
-  
-  # ID
-  if ($line =~ m/^[0-9]+ (.+) ([0-9a-fA-F]{40})\t/) {
-    return if defined $type && $type ne $1;
-    return $2;
-  }
-
-  return;
+  return $id;
 }
 
 sub get_path_by_id {

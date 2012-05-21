@@ -12,12 +12,12 @@ sub blob {
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
   my $id_file = $self->param('id_file');
+
+  # Git
+  my $git = $self->app->git;
   
   # Id and file
   my ($id, $file) = $self->_parse_id_path($project, $id_file);
-  
-  # Git
-  my $git = $self->app->git;
 
   # Blob plain
   if ($self->stash('plain')) {
