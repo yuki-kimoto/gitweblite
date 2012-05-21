@@ -27,29 +27,32 @@ sub blob {
     open my $fh, "-|", $git->cmd($project), "cat-file", "blob", $bid
       or croak "Open git-cat-file blob '$bid' failed";
 
-    # content-type (can include charset)
+    # Content-type
     my $type = $git->blob_contenttype($fh, $file);
 
-    # "save as" filename, even when no $file is given
-    my $save_as = "$id";
-    if (defined $file) { $save_as = $file }
-    elsif ($type =~ m/^text\//) { $save_as .= '.txt' }
-
-    my $sandbox = $self->config('prevent_xss') &&
-      $type !~ m!^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)!;
-
-    # serve text/* as text/plain
+    # Convert text/* to text/plain
     if ($self->config('prevent_xss') &&
-        ($type =~ m!^text/[a-z]+\b(.*)$! ||
-         ($type =~ m!^[a-z]+/[a-z]\+xml\b(.*)$! && -T $fh))) {
+      ($type =~ m#^text/[a-z]+\b(.*)$# ||
+      ($type =~ m#^[a-z]+/[a-z]\+xml\b(.*)$# && -T $fh)))
+    {
       my $rest = $1;
       $rest = defined $rest ? $rest : '';
       $type = "text/plain$rest";
     }
+
+    # File name
+    my $file_name = $id;
+    if (defined $file) { $file_name = $file }
+    elsif ($type =~ m/^text\//) { $file_name .= '.txt' }
     
+    # Content
     my $content = do { local $/; <$fh> };
+    my $sandbox = $self->config('prevent_xss') &&
+      $type !~ m#^(?:text/[a-z]+|image/(?:gif|png|jpeg))(?:[ ;]|$)#;
     my $content_disposition = $sandbox ? 'attachment' : 'inline';
-    $content_disposition .= "; filename=$save_as";
+    $content_disposition .= "; filename=$file_name";
+    
+    # Render
     $self->res->headers->content_disposition($content_disposition);
     $self->res->headers->content_type($type);
     $self->render_data($content);
@@ -69,7 +72,7 @@ sub blob {
     my $mimetype = $git->blob_mimetype($fh, $file);
     
     # Redirect to blob plane
-    if ($mimetype !~ m!^(?:text/|image/(?:gif|png|jpeg)$)! && -B $fh) {
+    if ($mimetype !~ m#^(?:text/|image/(?:gif|png|jpeg)$)# && -B $fh) {
       close $fh;
       my $url = $self->url_for('blob_plain',
         project => $project_ns, id_file => "$id/$file");
