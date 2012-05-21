@@ -33,7 +33,9 @@
         <div class="patch" id="<%= $i + 1 %>">
           % my $lines = $blobdiff->{lines};
           % my $file = $blobdiff->{file};
-          %= include '/include/blobdiff_body', file => $file, lines => $blobdiff->{lines};
+          % my $from_file = $blobdiff->{from_file};
+          % $from_file = $file unless defined $from_file;
+          %= include '/include/blobdiff_body', file => $file, from_file => $from_file, lines => $blobdiff->{lines};
         </div>
       % }
     </div>

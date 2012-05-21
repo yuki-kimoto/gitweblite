@@ -13,11 +13,11 @@ sub blob {
   my $home = "/$home_ns";
   my $id_file = $self->param('id_file');
 
-  # Git
-  my $git = $self->app->git;
-  
   # Id and file
   my ($id, $file) = $self->_parse_id_path($project, $id_file);
+
+  # Git
+  my $git = $self->app->git;
 
   # Blob content
   my $bid = $git->get_id_by_path($project, $id, $file, 'blob')
@@ -28,10 +28,10 @@ sub blob {
   
   # Blob plain
   if ($self->stash('plain')) {
-    # Content-type
+    # Content type
     my $type = $git->blob_contenttype($fh, $file);
 
-    # Convert text/* to text/plain
+    # Convert text/* content type to text/plain
     if ($self->config('prevent_xss') &&
       ($type =~ m#^text/[a-z]+\b(.*)$# ||
       ($type =~ m#^[a-z]+/[a-z]\+xml\b(.*)$# && -T $fh)))
@@ -90,10 +90,10 @@ sub blob {
       home_ns => $home_ns,
       project => $project,
       project_ns => $project_ns,
-      id => $id,
-      bid => $bid,
-      file => $file,
       commit => $commit,
+      id => $id,
+      file => $file,
+      bid => $bid,
       lines => \@lines,
       mimetype => $mimetype
     );
@@ -110,7 +110,8 @@ sub blobdiff {
   my $home = "/$home_ns";
   my $diff = $self->param('diff');
   my $file = $self->param('file');
-  my $from_file = $file;
+  my $from_file = $self->param('from-file');
+  $from_file = $file unless defined $from_file;
   my $plain = $self->param('plain');
   my $from_id;
   my $id;
@@ -209,6 +210,7 @@ sub blobdiff {
       id => $id,
       from_id => $from_id,
       file => $file,
+      from_file => $from_file,
       commit => $commit,
       diffinfo => \%diffinfo,
       lines => $lines
@@ -255,7 +257,6 @@ sub commit {
     project => $project,
     project_ns => $project_ns,
     project_owner => $project_owner,
-    id => $id,
     id => $id,
     commit => $commit,
     refs => $refs,

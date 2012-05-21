@@ -44,6 +44,7 @@
             % my $from_id = $parents->[$i];
             % my $from_bid = $difftree->{'from_id'}[$i];
             % my $from_file = $difftree->{'from_file'}[$i];
+            % $from_file = $file unless defined $from_file;
             % my $status = $difftree->{'status'}[$i];
             % $not_deleted ||= ($status ne 'D');
 
@@ -63,8 +64,11 @@
               % } else {
                 <td class="link">
               % }
-              <a href="<%= url_for('blobdiff',project => $project_ns,
-                  diff => "$from_id..$id", file => $file) %>">
+              % my $blobdiff_url = url_for('blobdiff',project => $project_ns,
+              %   diff => "$from_id..$id", file => $file);
+              % $blobdiff_url->query('from-file' => $from_file) if $file ne $from_file;
+              
+              <a href="<%= $blobdiff_url %>">
                 diff<%= $i + 1 %>
               </a>
               | </td>
@@ -153,8 +157,10 @@
           </td>
           <td class="link">
             % if ($status ne 'A') {
-              <a href="<%= url_for('blobdiff', project => $project_ns,
-                  diff => "$from_id..$id", file => $file) %>">
+              % my $blobdiff_url = url_for('blobdiff',project => $project_ns,
+              %   diff => "$from_id..$id", file => $file);
+              % $blobdiff_url->query('from-file' => $from_file) if $file ne $from_file;
+              <a href="<%= $blobdiff_url %>">
                 diff
               </a>
               |

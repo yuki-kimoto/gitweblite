@@ -4,8 +4,10 @@
   %= include '/include/current_directory', home_ns => $home_ns, home => $home;
   %= include '/include/page_navi', current => 'blobdiff', head_id => $id, project_ns => $project_ns;
   <div class="page_nav">
-    <a href="<%= url_for('blobdiff_plain', project => $project_ns,
-        diff => "$from_id..$id", file => $file) %>">
+    % my $blobdiff_plain_url = url_for('blobdiff_plain', project => $project_ns,
+    %   diff => "$from_id..$id", file => $file);
+    % $blobdiff_plain_url->query('from-file' => $from_file) if $file ne $from_file;
+    <a href="<%= $blobdiff_plain_url %>">
       Raw
     </a>
     <br/>
