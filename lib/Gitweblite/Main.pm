@@ -121,86 +121,35 @@ sub blobdiff {
   # Git
   my $git = $self->app->git;
 
-  my $fh;
-  my @difftree;
-  my %diffinfo;
+  # Get blob diff (command "git diff")
+  open my $fh, "-|", $git->cmd($project), "diff", '-r', '-M', '-p',
+      $from_id, $id, "--", $from_file, $file
+    or croak "Open git-diff-tree failed";
   
-  my $bid;
-  my $from_bid;
-
-  if (defined $id && defined $from_id) {
-    if (defined $file) {
-      # git diff tree
-      my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
-        '-M', $from_id, $id, "--",
-        (defined $from_file ? $from_file : ()), $file
-      );
-      
-      open $fh, "-|", @git_diff_tree
-        or croak 500, "Open git-diff-tree failed";
-      @difftree = map { chomp; $git->dec($_) } <$fh>;
-      close $fh
-        or croak 404, "Reading git-diff-tree failed";
-      @difftree
-        or croak 404, "Blob diff not found";
-
-    } elsif (defined $bid && $bid =~ /[0-9a-fA-F]{40}/) {
-
-      # read filtered raw output
-      open $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
-          $from_id, $id, "--"
-        or croak "Open git-diff-tree failed";
-      @difftree =
-        grep { /^:[0-7]{6} [0-7]{6} [0-9a-fA-F]{40} $bid/ }
-        map { chomp; d$_ } <$fh>;
-      close $fh
-        or croak("Reading git-diff-tree failed");
-      @difftree
-        or croak("Blob diff not found");
-
-    } else {
-      croak "Missing one of the blob diff parameters";
-    }
-
-    if (@difftree > 1) {
-      croak "Ambiguous blob diff specification";
-    }
-
-    %diffinfo = $git->parse_difftree_raw_line($difftree[0]);
-    $from_file ||= $diffinfo{from_file} || $file;
-    $file   ||= $diffinfo{to_file};
-
-    $from_bid ||= $diffinfo{from_id};
-    $bid        ||= $diffinfo{to_id};
-
-    # open patch output
-    open $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
-      '-p', (!$plain ? "--full-index" : ()),
-      $from_id, $id,
-      "--", (defined $from_file ? $from_file : ()), $file
-      or croak_error(500, "Open git-diff-tree failed");
-  }
-  
-  if (!%diffinfo) {
-    croak '404 Not Found', "Missing one of the blob diff parameters";
-  }
-  
-  my $commit = $git->parse_commit($project, $id);
-  
+  # Blob diff plain
   if ($plain) {
+    # Content
     my $content = do { local $/; <$fh> };
     close $fh;
+    
+    # Render
     my $content_disposition .= "inline; filename=$file";
     $self->res->headers->content_disposition($content_disposition);
     $self->res->headers->content_type("text/plain; charset=" . $git->encoding);
     $self->render(data => $content);
   }
+  
+  # Blob diff
   else {
-    # patch
-    my @lines = <$fh>;
+    # Lines
+    my @lines = map { $git->dec($_) } <$fh>;
     close $fh;
     my $lines = $self->_parse_blobdiff_lines(\@lines);
-
+    
+    # Commit
+    my $commit = $git->parse_commit($project, $id);
+    
+    # Render
     $self->render(
       '/blobdiff',
       home => $home,
@@ -212,7 +161,6 @@ sub blobdiff {
       file => $file,
       from_file => $from_file,
       commit => $commit,
-      diffinfo => \%diffinfo,
       lines => $lines
     );
   }
