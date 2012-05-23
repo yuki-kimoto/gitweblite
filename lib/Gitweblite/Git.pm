@@ -139,7 +139,7 @@ sub fill_projects {
     next unless @activity;
     ($project->{age}, $project->{age_string}) = @activity;
     if (!defined $project->{descr}) {
-      my $descr = $self->get_project_description("$home/$project->{path}") || "";
+      my $descr = $self->project_description("$home/$project->{path}") || "";
       $project->{descr_long} = $descr;
       $project->{descr} = $self->_chop_str($descr, 25, 5);
     }
@@ -317,7 +317,7 @@ sub get_path_by_id {
   return;
 }
 
-sub get_project_description {
+sub project_description {
   my ($self, $project) = @_;
   
   # Description
@@ -362,7 +362,7 @@ sub get_object_type {
   return $type;
 }
 
-sub get_project_owner {
+sub project_owner {
   my ($self, $project) = @_;
   
   # Project owner
@@ -1029,7 +1029,7 @@ sub _s_isgitlink {
   return (($mode & S_IFMT) == $s_ifgitlink)
 }
 
-sub _timestamp {
+sub timestamp {
   my ($self, $date) = @_;
   
   # Time stamp

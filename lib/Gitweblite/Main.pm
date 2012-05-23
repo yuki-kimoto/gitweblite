@@ -179,16 +179,16 @@ sub commit {
   # Git
   my $git = $self->app->git;
 
-  # Project information
-  my $project_description = $git->get_project_description($project);
-  my $project_owner = $git->get_project_owner($project);
-  
   # Commit
   my $commit = $git->parse_commit($project, $id);
-  my %committer_date = $commit ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz}) : ();
-  my %author_date = $commit ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz}) : ();
-  $commit->{author_date} = $git->_timestamp(\%author_date);
-  $commit->{committer_date} = $git->_timestamp(\%committer_date);
+  my %committer_date = $commit
+    ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz})
+    : ();
+  my %author_date = $commit
+    ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
+    : ();
+  $commit->{author_date} = $git->timestamp(\%author_date);
+  $commit->{committer_date} = $git->timestamp(\%committer_date);
   
   # References
   my $refs = $git->get_references($project);
@@ -204,7 +204,6 @@ sub commit {
     home_ns => $home_ns,
     project => $project,
     project_ns => $project_ns,
-    project_owner => $project_owner,
     id => $id,
     commit => $commit,
     refs => $refs,
@@ -240,8 +239,8 @@ sub commitdiff {
   my %committer_date = %$commit
     ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz})
     : ();
-  $commit->{author_date} = $git->_timestamp(\%author_date);
-  $commit->{committer_date} = $git->_timestamp(\%committer_date);
+  $commit->{author_date} = $git->timestamp(\%author_date);
+  $commit->{committer_date} = $git->timestamp(\%committer_date);
   $from_id = $commit->{parent} unless defined $from_id;
   
   # Plain text
@@ -390,7 +389,7 @@ sub log {
     my %author_date = %$commit
       ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
       : ();
-    $commit->{author_date} = $git->_timestamp(\%author_date);
+    $commit->{author_date} = $git->timestamp(\%author_date);
   }
   
   # References
@@ -430,7 +429,7 @@ sub projects {
   for my $project (@projects) {
     my $pname = "$home/$project->{path}";
     $project->{path_abs_ns} = "$home_ns/$project->{path}";
-    $project->{owner} = $git->get_project_owner($pname);
+    $project->{owner} = $git->project_owner($pname);
     my $head_commit = $git->parse_commit($pname, "HEAD");
     $project->{head_id} = $head_commit->{id}
   }
@@ -505,13 +504,13 @@ sub summary {
   my $git = $self->app->git;
   
   # HEAd commit
-  my $project_description = $git->get_project_description($project);
-  my $project_owner = $git->get_project_owner($project);
+  my $project_description = $git->project_description($project);
+  my $project_owner = $git->project_owner($project);
   my $head_commit = $git->parse_commit($project, "HEAD");
   my %committer_date = $head_commit
     ? $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
     : ();
-  my $last_change = $git->_timestamp(\%committer_date);
+  my $last_change = $git->timestamp(\%committer_date);
   my $head_id = $head_commit->{id};
   my $urls = $git->get_project_urls($project);
   
@@ -569,7 +568,7 @@ sub tag {
   my %author_date = %$tag
     ? $git->parse_date($tag->{author_epoch}, $tag->{author_tz})
     : ();
-  my $author_date = $git->_timestamp(\%author_date);
+  my $author_date = $git->timestamp(\%author_date);
   $tag->{author_date} = $author_date;
   
   # Render
