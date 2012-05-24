@@ -251,7 +251,7 @@ my $git = $app->git;
     # Page path (blob)
     ->content_like(qr#<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/tree/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir"\s*>\s*dir\s*</a>\s*/\s*<a title="tree home" href=\s*"/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir/a.txt">\s*a.txt\s*</a>#)
     # Content (diff header)
-    ->content_like(qr#<div class="diff header">diff --git <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/a37fbb832ab530fe9747cb128f9461211959103b/dir/a.txt">a/dir/a.txt</a> <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir/a.txt">b/dir/a.txt</a></div>#)
+    ->content_like(qr#<div class="diff header">diff --git\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/a37fbb832ab530fe9747cb128f9461211959103b/dir/a.txt">a/dir/a.txt</a>\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/68a698012b16490e8cfb9d66bf8bbd9085421c69/dir/a.txt">b/dir/a.txt</a></div>#)
     # Content (diff line)
     ->content_like(qr#<div class="diff to_file">\+aaaa</div>#)
   ;
@@ -385,7 +385,7 @@ my $git = $app->git;
     # Difftree (blob link)
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">\s*blob\s*</a>#)
     # Content (diff header)
-    ->content_like(qr#<div class="diff header">diff --git <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/efcac846dfa843dca225c6d7445e349059011a44/a_renamed.txt">a/a_renamed.txt</a> <a href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">b/a_renamed.txt</a></div>#)
+    ->content_like(qr#<div class="diff header">diff --git\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/efcac846dfa843dca225c6d7445e349059011a44/a_renamed.txt">a/a_renamed.txt</a>\s*<a href="/home/kimoto/labo/gitweblite_devrep.git/blob/db9d83440469d42dda2021ebe34e20def0c0cba6/a_renamed.txt">b/a_renamed.txt</a></div>#)
     # Content (added)
     ->content_like(qr#<div class="diff to_file">\+a</div>#)
 }

@@ -691,19 +691,17 @@ sub parse_date {
 }
 
 sub parsed_difftree_line {
-  my ($self, $line_or_ref) = @_;
+  my ($self, $line) = @_;
+  
+  return $line if ref $line eq 'HASH';
 
-  if (ref($line_or_ref) eq "HASH") {
-    return $line_or_ref;
-  } else {
-    return $self->parse_difftree_raw_line($line_or_ref);
-  }
+  return $self->parse_difftree_raw_line($line);
 }
 
 sub parse_difftree_raw_line {
   my ($self, $line) = @_;
-  my %res;
 
+  my %res;
   if ($line =~ m/^:([0-7]{6}) ([0-7]{6}) ([0-9a-fA-F]{40}) ([0-9a-fA-F]{40}) (.)([0-9]{0,3})\t(.*)$/) {
     $res{from_mode} = $1;
     $res{to_mode} = $2;
@@ -711,7 +709,7 @@ sub parse_difftree_raw_line {
     $res{to_id} = $4;
     $res{status} = $5;
     $res{similarity} = $6;
-    if ($res{status} eq 'R' || $res{status} eq 'C') { # renamed or copied
+    if ($res{status} eq 'R' || $res{status} eq 'C') {
       ($res{from_file}, $res{to_file}) = map { $self->_unquote($_) } split("\t", $7);
     } else {
       $res{from_file} = $res{to_file} = $res{file} = $self->_unquote($7);
@@ -726,12 +724,9 @@ sub parse_difftree_raw_line {
     $res{status} = [ split('', $4) ];
     $res{to_file} = $self->_unquote($5);
   }
-  # 'c512b523472485aef4fff9e57b229d9d243c967f'
-  elsif ($line =~ m/^([0-9a-fA-F]{40})$/) {
-    $res{commit} = $1;
-  }
+  elsif ($line =~ m/^([0-9a-fA-F]{40})$/) { $res{commit} = $1 }
 
-  return wantarray ? %res : \%res;
+  return \%res;
 }
 
 sub parse_ls_tree_line {
@@ -740,33 +735,26 @@ sub parse_ls_tree_line {
   my %res;
 
   if ($opts{'-l'}) {
-    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa   16717  panic.c'
     $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40}) +(-|[0-9]+)\t(.+)$/s;
 
     $res{mode} = $1;
     $res{type} = $2;
     $res{hash} = $3;
     $res{size} = $4;
-    if ($opts{'-z'}) {
-      $res{name} = $5;
-    } else {
-      $res{name} = $self->_unquote($5);
-    }
-  } else {
-    #'100644 blob 0fa3f3a66fb6a137f6ec2c19351ed4d807070ffa  panic.c'
+    if ($opts{'-z'}) { $res{name} = $5 }
+    else { $res{name} = $self->_unquote($5) }
+  }
+  else {
     $line =~ m/^([0-9]+) (.+) ([0-9a-fA-F]{40})\t(.+)$/s;
 
     $res{mode} = $1;
     $res{type} = $2;
     $res{hash} = $3;
-    if ($opts{'-z'}) {
-      $res{name} = $4;
-    } else {
-      $res{name} = $self->_unquote($4);
-    }
+    if ($opts{'-z'}) { $res{name} = $4 }
+    else { $res{name} = $self->_unquote($4) }
   }
 
-  return wantarray ? %res : \%res;
+  return \%res;
 }
 
 sub parse_tag {

@@ -269,17 +269,18 @@ sub commitdiff {
     # Parse output
     my @blobdiffs;
     while (my $line = $git->dec(scalar <$fh>)) {
-      chomp $line;
       
+      # Parse line
+      chomp $line;
       my $diffinfo = $git->parse_difftree_raw_line($line);
       my $from_file = $diffinfo->{from_file};
       my $file = $diffinfo->{to_file};
       
+      # Get blobdiff (command "git diff-tree")
       my @cmd = ($git->cmd($project), "diff-tree", '-r', '-M', '-p',
         $from_id, $id, "--", (defined $from_file ? $from_file : ()), $file);
       open my $fh_blobdiff, "-|", @cmd
         or croak 'Open git-diff-tree failed';
-      
       my @lines = map { $git->dec($_) } <$fh>;
       close $fh_blobdiff;
       my $blobdiff = {
@@ -287,6 +288,15 @@ sub commitdiff {
         from_file => $from_file,
         lines => $self->_parse_blobdiff_lines(\@lines)
       };
+      
+      # Status
+      for my $difftree (@$difftrees) {
+        if ($difftree->{to_file} eq $file) {
+          $blobdiff->{status} = $difftree->{status};
+          last;
+        }
+      }
+      
       push @blobdiffs, $blobdiff;
     }
 
@@ -618,7 +628,7 @@ sub tree {
     }
     else { $tid = $commit->{tree} }
   }
-  croak 404, "No such tree" unless defined $tid;
+  $self->render_not_found unless defined $tid;
 
   my @entries = ();
   my $show_sizes = 0;
@@ -634,9 +644,9 @@ sub tree {
   
   my @trees;
   for my $line (@entries) {
-    my %tree = $git->parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
-    $tree{mode_str} = $git->_mode_str($tree{mode});
-    push @trees, \%tree;
+    my $tree = $git->parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
+    $tree->{mode_str} = $git->_mode_str($tree->{mode});
+    push @trees, $tree;
   }
   
   # References

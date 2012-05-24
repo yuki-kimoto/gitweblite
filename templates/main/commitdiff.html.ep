@@ -35,7 +35,8 @@
           % my $file = $blobdiff->{file};
           % my $from_file = $blobdiff->{from_file};
           % $from_file = $file unless defined $from_file;
-          %= include '/include/blobdiff_body', file => $file, from_file => $from_file, lines => $blobdiff->{lines};
+          % my $status = $blobdiff->{status};
+          %= include '/include/blobdiff_body', file => $file, from_file => $from_file, status => $status, lines => $blobdiff->{lines};
         </div>
       % }
     </div>
