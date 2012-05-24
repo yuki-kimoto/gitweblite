@@ -181,14 +181,12 @@ sub commit {
 
   # Commit
   my $commit = $git->parse_commit($project, $id);
-  my %committer_date = $commit
-    ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz})
-    : ();
-  my %author_date = $commit
-    ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
-    : ();
-  $commit->{author_date} = $git->timestamp(\%author_date);
-  $commit->{committer_date} = $git->timestamp(\%committer_date);
+  my $committer_date
+    = $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz});
+  my $author_date
+    = $git->parse_date($commit->{author_epoch}, $commit->{author_tz});
+  $commit->{author_date} = $git->timestamp($author_date);
+  $commit->{committer_date} = $git->timestamp($committer_date);
   
   # References
   my $refs = $git->get_references($project);
@@ -220,27 +218,21 @@ sub commitdiff {
   my $home_ns = dirname $project_ns;
   my $home = "/$home_ns";
   my $diff = $self->param('diff');
-  my $from_id;
-  my $id;
-  if ($diff =~ /\.\./) {
-    ($from_id, $id) = $diff =~ /(.+)\.\.(.+)/;
-  }
-  else { $id = $diff }
+  my ($from_id, $id) = $diff =~ /(.+)\.\.(.+)/;
+  $id = $diff unless defined $id;
   
   # Git
   my $git = $self->app->git;
   
   # Commit
   my $commit = $git->parse_commit($project, $id)
-    or croak 404, "Unknown commit object";
-  my %author_date = %$commit
-    ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
-    : ();
-  my %committer_date = %$commit
-    ? $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz})
-    : ();
-  $commit->{author_date} = $git->timestamp(\%author_date);
-  $commit->{committer_date} = $git->timestamp(\%committer_date);
+    or croak 'Unknown commit object';
+  my $author_date
+    = $git->parse_date($commit->{author_epoch}, $commit->{author_tz});
+  my $committer_date
+    = $git->parse_date($commit->{committer_epoch}, $commit->{committer_tz});
+  $commit->{author_date} = $git->timestamp($author_date);
+  $commit->{committer_date} = $git->timestamp($committer_date);
   $from_id = $commit->{parent} unless defined $from_id;
   
   # Plain text
@@ -386,10 +378,9 @@ sub log {
     $project, $commit->{id},$page_count, $page_count * $page);
 
   for my $commit (@$commits) {
-    my %author_date = %$commit
-      ? $git->parse_date($commit->{author_epoch}, $commit->{author_tz})
-      : ();
-    $commit->{author_date} = $git->timestamp(\%author_date);
+    my $author_date
+      = $git->parse_date($commit->{author_epoch}, $commit->{author_tz});
+    $commit->{author_date} = $git->timestamp($author_date);
   }
   
   # References
@@ -507,10 +498,9 @@ sub summary {
   my $project_description = $git->project_description($project);
   my $project_owner = $git->project_owner($project);
   my $head_commit = $git->parse_commit($project, "HEAD");
-  my %committer_date = $head_commit
-    ? $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz})
-    : ();
-  my $last_change = $git->timestamp(\%committer_date);
+  my $committer_date
+    = $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz});
+  my $last_change = $git->timestamp($committer_date);
   my $head_id = $head_commit->{id};
   my $urls = $git->get_project_urls($project);
   
@@ -565,11 +555,9 @@ sub tag {
   
   # Ref names
   my $tag  = $git->parse_tag($project, $id);
-  my %author_date = %$tag
-    ? $git->parse_date($tag->{author_epoch}, $tag->{author_tz})
-    : ();
-  my $author_date = $git->timestamp(\%author_date);
-  $tag->{author_date} = $author_date;
+  my $author_date
+    = $git->parse_date($tag->{author_epoch}, $tag->{author_tz});
+  $tag->{author_date} = $git->timestamp($author_date);
   
   # Render
   $self->render(

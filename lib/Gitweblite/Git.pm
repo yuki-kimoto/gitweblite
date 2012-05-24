@@ -659,35 +659,35 @@ sub parse_commits {
 sub parse_date {
   my $self = shift;
   my $epoch = shift;
-  my $tz = shift || "-0000";
+  my $tz = shift || '-0000';
   
   # Parse data
   my %date;
-  my @months = ("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
-  my @days = ("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat");
-  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($epoch);
+  my @months = qw/Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec/;
+  my @days = qw/Sun Mon Tue Wed Thu Fri Sat/;
+  my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime $epoch;
   $date{hour} = $hour;
   $date{minute} = $min;
   $date{mday} = $mday;
   $date{day} = $days[$wday];
   $date{month} = $months[$mon];
-  $date{rfc2822} = sprintf "%s, %d %s %4d %02d:%02d:%02d +0000",
-    $days[$wday], $mday, $months[$mon], 1900+$year, $hour ,$min, $sec;
-  $date{'mday-time'} = sprintf "%d %s %02d:%02d",
+  $date{rfc2822} = sprintf '%s, %d %s %4d %02d:%02d:%02d +0000',
+    $days[$wday], $mday, $months[$mon], 1900 + $year, $hour ,$min, $sec;
+  $date{'mday-time'} = sprintf '%d %s %02d:%02d',
     $mday, $months[$mon], $hour ,$min;
-  $date{'iso-8601'}  = sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ",
+  $date{'iso-8601'}  = sprintf '%04d-%02d-%02dT%02d:%02d:%02dZ',
     1900 + $year, 1+$mon, $mday, $hour ,$min, $sec;
   my ($tz_sign, $tz_hour, $tz_min) = ($tz =~ m/^([-+])(\d\d)(\d\d)$/);
   $tz_sign = ($tz_sign eq '-' ? -1 : +1);
-  my $local = $epoch + $tz_sign*((($tz_hour*60) + $tz_min)*60);
-  ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($local);
+  my $local = $epoch + $tz_sign * ((($tz_hour*60) + $tz_min) * 60);
+  ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime $local;
   $date{hour_local} = $hour;
   $date{minute_local} = $min;
   $date{tz_local} = $tz;
-  $date{'iso-tz'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d %s",
+  $date{'iso-tz'} = sprintf('%04d-%02d-%02d %02d:%02d:%02d %s',
     1900 + $year, $mon+1, $mday, $hour, $min, $sec, $tz);
   
-  return %date;
+  return \%date;
 }
 
 sub parsed_difftree_line {
