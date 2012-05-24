@@ -47,10 +47,10 @@ $t->get_ok("$home/projects")
 my $project = "$home/gitweblite_devrep.git";
 my $git = $app->git;
 {
-  my $head = $git->get_head_id($project);
+  my $head = $git->head_id($project);
   my $commit = $git->parse_commit($project, 'HEAD');
   my $title_short = $commit->{title_short};
-  my $tag_t21 = $git->get_tag($project, 't21');
+  my $tag_t21 = $git->tag($project, 't21');
   $t->get_ok("$project/summary")
     # Page navi
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/$head">Shortlog</a>#)

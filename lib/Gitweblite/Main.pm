@@ -20,7 +20,7 @@ sub blob {
   my $git = $self->app->git;
 
   # Blob content
-  my $bid = $git->get_id_by_path($project, $id, $file, 'blob')
+  my $bid = $git->id_by_path($project, $id, $file, 'blob')
     or croak 'Cannot find file';
   my @cmd = ($git->cmd($project), 'cat-file', 'blob', $bid);
   open my $fh, '-|', @cmd
@@ -189,12 +189,12 @@ sub commit {
   $commit->{committer_date} = $git->timestamp($committer_date);
   
   # References
-  my $refs = $git->get_references($project);
+  my $refs = $git->references($project);
   
   # Diff tree
   my $parent = $commit->{parent};
   my $parents = $commit->{parents};
-  my $difftrees = $git->get_difftree($project, $commit->{id}, $parent, $parents);
+  my $difftrees = $git->difftree($project, $commit->{id}, $parent, $parents);
   
   # Render
   $self->render(
@@ -257,7 +257,7 @@ sub commitdiff {
   else {
     
     # Diff tree
-    my $difftrees = $git->get_difftree($project,
+    my $difftrees = $git->difftree($project,
       $id, $commit->{parent}, $commit->{parents});
     
     # Get blob diffs (command "git diff-tree")
@@ -301,7 +301,7 @@ sub commitdiff {
     }
 
     # References
-    my $refs = $git->get_references($project);
+    my $refs = $git->references($project);
     
     # Render
     $self->render(
@@ -352,7 +352,7 @@ sub heads {
   my $git = $self->app->git;
   
   # Ref names
-  my $heads  = $git->get_heads($project);
+  my $heads  = $git->heads($project);
   
   # Render
   $self->render(
@@ -394,7 +394,7 @@ sub log {
   }
   
   # References
-  my $refs = $git->get_references($project);
+  my $refs = $git->references($project);
 
   # Render
   $self->stash->{action} = 'shortlog' if $short;
@@ -456,7 +456,7 @@ sub snapshot {
   my $git = $self->app->git;
 
   # Object type
-  my $type = $git->get_object_type($project, "$id^{}");
+  my $type = $git->object_type($project, "$id^{}");
   if (!$type) { croak 404, 'Object does not exist' }
   elsif ($type eq 'blob') { croak 400, 'Object is not a tree-ish' }
   
@@ -511,22 +511,22 @@ sub summary {
     = $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz});
   my $last_change = $git->timestamp($committer_date);
   my $head_id = $head_commit->{id};
-  my $urls = $git->get_project_urls($project);
+  my $urls = $git->project_urls($project);
   
   # Commits
   my $commit_count = 20;
   my $commits = $head_id ? $git->parse_commits($project, $head_id, $commit_count) : ();
 
   # References
-  my $refs = $git->get_references($project);
+  my $refs = $git->references($project);
   
   # Tags
   my $tag_count = 20;
-  my $tags  = $git->get_tags($project, $tag_count - 1);
+  my $tags  = $git->tags($project, $tag_count - 1);
 
   # Heads
   my $head_count = 20;
-  my $heads = $git->get_heads($project, $head_count - 1);
+  my $heads = $git->heads($project, $head_count - 1);
   
   # Render
   $self->render(
@@ -591,7 +591,7 @@ sub tags {
   my $git = $self->app->git;
   
   # Ref names
-  my $tags  = $git->get_tags($project);
+  my $tags  = $git->tags($project);
   
   # Render
   $self->render(
@@ -623,7 +623,7 @@ sub tree {
   my $commit = $git->parse_commit($project, $id);
   unless (defined $tid) {
     if (defined $dir && $dir ne '') {
-      $tid = $git->get_id_by_path($project, $id, $dir, "tree");
+      $tid = $git->id_by_path($project, $id, $dir, "tree");
     }
     else { $tid = $commit->{tree} }
   }
@@ -649,7 +649,7 @@ sub tree {
   }
   
   # References
-  my $refs = $git->get_references($project);
+  my $refs = $git->references($project);
   
   $self->render(
     home => $home,
@@ -697,7 +697,7 @@ sub _parse_id_path {
   my $git = $self->app->git;
   
   # Parse id and path
-  my $refs = $git->get_references($project);
+  my $refs = $git->references($project);
   my $id;
   my $path;
   for my $rs (values %$refs) {

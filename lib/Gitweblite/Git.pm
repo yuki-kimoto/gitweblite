@@ -125,7 +125,7 @@ sub fill_from_file_info {
   for (my $i = 0; $i < $diff->{nparents}; $i++) {
     if ($diff->{status}[$i] eq 'R' || $diff->{status}[$i] eq 'C') {
       $diff->{from_file}[$i] =
-        $self->get_path_by_id($project, $parents->[$i], $diff->{from_id}[$i]);
+        $self->path_by_id($project, $parents->[$i], $diff->{from_id}[$i]);
     }
   }
 
@@ -138,7 +138,7 @@ sub fill_projects {
   # Fill project info
   my @projects;
   for my $project (@$ps) {
-    my (@activity) = $self->get_last_activity("$home/$project->{path}");
+    my (@activity) = $self->last_activity("$home/$project->{path}");
     next unless @activity;
     ($project->{age}, $project->{age_string}) = @activity;
     if (!defined $project->{descr}) {
@@ -153,7 +153,7 @@ sub fill_projects {
   return \@projects;
 }
 
-sub get_difftree {
+sub difftree {
   my ($self, $project, $cid, $parent, $parents) = @_;
   
   # Root
@@ -215,14 +215,14 @@ sub get_difftree {
   return $diffs;
 }
 
-sub get_head_id {
+sub head_id {
   my ($self, $project) = (shift, shift);
   
   # HEAD id
-  return $self->get_id($project, 'HEAD', @_);
+  return $self->id($project, 'HEAD', @_);
 };
 
-sub get_heads {
+sub heads {
   my ($self, $project, $limit, @classes) = @_;
   
   # Command "git for-each-ref" (get heads)
@@ -262,7 +262,7 @@ sub get_heads {
   return \@heads;
 }
 
-sub get_id {
+sub id {
   my ($self, $project, $ref, @options) = @_;
   
   # Command "git rev-parse" (get commit id)
@@ -278,7 +278,7 @@ sub get_id {
   return $id;
 }
 
-sub get_id_by_path {
+sub id_by_path {
   my ($self, $project, $commit_id, $path, $type) = @_;
   
   # Get blob id or tree id (command "git ls-tree")
@@ -294,7 +294,7 @@ sub get_id_by_path {
   return $id;
 }
 
-sub get_path_by_id {
+sub path_by_id {
   my $self = shift;
   my $project = shift;
   my $base = shift || return;
@@ -330,7 +330,7 @@ sub project_description {
   return $description;
 }
 
-sub get_last_activity {
+sub last_activity {
   my ($self, $project) = @_;
   
   # Command "git for-each-ref"
@@ -352,7 +352,7 @@ sub get_last_activity {
   return;
 }
 
-sub get_object_type {
+sub object_type {
   my ($self, $project, $cid) = @_;
   
   # Command "git cat-file" (Get object type)
@@ -375,7 +375,7 @@ sub project_owner {
   return $user;
 }
 
-sub get_project_urls {
+sub project_urls {
   my ($self, $project) = @_;
   
   # Project URLs
@@ -406,7 +406,7 @@ sub projects {
   return \@projects;
 }
 
-sub get_references {
+sub references {
   my ($self, $project, $type) = @_;
   
   $type ||= '';
@@ -430,18 +430,18 @@ sub get_references {
   return \%refs;
 }
 
-sub get_short_id {
+sub short_id {
   my ($self, $project) = (shift, shift);
   
   # Short id
-  return $self->get_id($project, @_, '--short=7');
+  return $self->id($project, @_, '--short=7');
 }
 
-sub get_tag {
+sub tag {
   my ($self, $project, $name) = @_;
   
   # Tag
-  my $tags = $self->get_tags($project);
+  my $tags = $self->tags($project);
   for my $tag (@$tags) {
     return $tag if $tag->{name} eq $name;
   }
@@ -449,7 +449,7 @@ sub get_tag {
   return;
 }
 
-sub get_tags {
+sub tags {
   my ($self, $project, $limit) = @_;
   
   # Command "git for-each-ref" (get tags)
@@ -885,9 +885,9 @@ sub snapshot_name {
 
   my $ver = $cid;
   if ($cid =~ /^[0-9a-fA-F]+$/) {
-    my $full_hash = $self->get_id($project, $cid);
+    my $full_hash = $self->id($project, $cid);
     if ($full_hash =~ /^$cid/ && length($cid) > 7) {
-      $ver = $self->get_short_id($project, $cid);
+      $ver = $self->short_id($project, $cid);
     }
   } elsif ($cid =~ m!^refs/tags/(.*)$!) {
     $ver = $1;
@@ -895,7 +895,7 @@ sub snapshot_name {
     if ($cid =~ m!^refs/(?:heads|remotes)/(.*)$!) {
       $ver = $1;
     }
-    $ver .= '-' . $self->get_short_id($project, $cid);
+    $ver .= '-' . $self->short_id($project, $cid);
   }
   $ver =~ s!/!.!g;
 
