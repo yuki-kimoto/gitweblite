@@ -32,9 +32,8 @@
         <td title="<%= $commit->{age_string_date} %>"><i><%= $commit->{age_string} %></i></td>
         <td class="author"><%= $commit->{author_name} %></td>
         <td>
-          <a class="list subject" href=
-            "<%= url_for('commit', project => $project_ns, id => $id) %>"
-          >
+          <a class="list subject"
+              href="<%= url_for('commit', project => $project_ns, id => $id) %>">
             %= $commit->{title_short};
           </a>
           %= include 'include/refs', project_ns => $project_ns, commit => $commit, refs => $refs;

@@ -772,16 +772,15 @@ sub parse_ls_tree_line {
 sub parse_tag {
   my ($self, $project, $tag_id) = @_;
   
-  # Command "git cat-file" (get tag)
-  my @cmd = ($self->cmd($project), "cat-file", "tag", $tag_id);
-  open my $fh, "-|", @cmd or return;
+  # Get tag (command "git cat-file")
+  my @cmd = ($self->cmd($project), 'cat-file', 'tag', $tag_id);
+  open my $fh, '-|', @cmd or return;
   
   # Parse tag
   my %tag;
   my @comment;
   $tag{id} = $tag_id;
   while (my $line = $self->dec(scalar <$fh>)) {
-    
     chomp $line;
     if ($line =~ m/^object ([0-9a-fA-F]{40})$/) { $tag{object} = $1 }
     elsif ($line =~ m/^type (.+)$/) { $tag{type} = $1 }

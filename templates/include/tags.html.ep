@@ -8,39 +8,32 @@
     <tr class="<%= $i % 2 ? 'light' : 'dark' %>">
       <td><i><%= $tag->{age} %></i></td>
       <td>
-        <a class="list name" href=
-          "<%= url_for("$reftype", project => $project_ns, id => $tag->{refid}) %>"
-        >
+        <a class="list name" 
+            href="<%= url_for("$reftype", project => $project_ns, id => $tag->{refid}) %>">
           %= $tag->{name};
         </a>
         % if (defined $comment) {
-          <a class="list subject" href=
-            "<%= url_for('tag', project => $project_ns, id => $tag->{id}) %>"
-          >
+          <a class="list subject"
+               href="<%= url_for('tag', project => $project_ns, id => $tag->{id}) %>">
             <%= $comment %>
           </a>
         % }
       </td>
       <td class="selflink">
         % if ($tag->{type} eq 'tag') {
-          <a href=
-            "<%= url_for('tag', project => $project_ns, id => $tag->{id}) %>"
-          >
+          <a href="<%= url_for('tag', project => $project_ns, id => $tag->{id}) %>">
             tag
           </a>
           |
         % }
       </td>
       <td class="link">
-        <a href=
-          "<%= url_for("$reftype", project => $project_ns, id => $tag->{refid}, id => $tag->{refid}) %>"
-        >
+        <a href="<%= url_for("$reftype", project => $project_ns, id => $tag->{refid}, id => $tag->{refid}) %>">
           %= $reftype;
         </a>
         % if ($reftype eq 'commit') {
           |
-          <a href="<%= url_for('shortlog', project => $project_ns, id => "refs/tags/$name") %>"
-          >
+          <a href="<%= url_for('shortlog', project => $project_ns, id => "refs/tags/$name") %>">
             shortlog
           </a>
           |
