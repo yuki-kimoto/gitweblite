@@ -240,8 +240,8 @@ sub commitdiff {
     # Get blob diffs (command "git diff-tree")
     my @cmd = ($git->cmd($project), 'diff-tree', '-r', '-M',
         '-p', $from_id, $id, '--');
-    open my $fh, "-|", @cmd
-      or croak "Open git-diff-tree failed";
+    open my $fh, '-|', @cmd
+      or croak 'Open git-diff-tree failed';
 
     # Content
     my $content = do { local $/; <$fh> };
@@ -331,6 +331,7 @@ sub home {
     max_depth => $max_depth
   );
   
+  # Home
   my $homes = {};
   $homes->{$_->{home}} = 1 for @$projects;
 
@@ -386,7 +387,6 @@ sub log {
   my $page_count = $short ? 50 : 20;
   my $commits = $git->parse_commits(
     $project, $commit->{id},$page_count, $page_count * $page);
-
   for my $commit (@$commits) {
     my $author_date
       = $git->parse_date($commit->{author_epoch}, $commit->{author_tz});
@@ -397,9 +397,8 @@ sub log {
   my $refs = $git->get_references($project);
 
   # Render
-  my $template = $short ? 'main/shortlog' : 'main/log';
+  $self->stash->{action} = 'shortlog' if $short;
   $self->render(
-    $template,
     home => $home,
     home_ns => $home_ns,
     project => $project,
