@@ -398,12 +398,20 @@ my $git = $app->git;
     ->content_like(qr#\+a#)
 }
 
-__END__
-
 # Tags page
 {
   $t->get_ok("$project/tags")
     # Tag name link
-    ->get_ok(qr#<a class="list name"\s*href= "/home/kimoto/labo/gitweblite_devrep.git/commit/6d71d9bc1ee3bd1c96a559109244c1fe745045de">\s*t21\s*</a>#)
-    
+    ->content_like(qr#<a class="list name"\s*href="/home/kimoto/labo/gitweblite_devrep.git/commit/6d71d9bc1ee3bd1c96a559109244c1fe745045de">\s*t21\s*</a>#)
+    # Tag comment link
+    ->content_like(qr#<a class="list subject"\s*href="/home/kimoto/labo/gitweblite_devrep.git/tag/38eaff4bf31775c7e32d5a62891e0e370e04d306">\s*t21\s*</a>#)
+    # Tag link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tag/38eaff4bf31775c7e32d5a62891e0e370e04d306">\s*tag\s*</a>#)
+    # Commot link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/6d71d9bc1ee3bd1c96a559109244c1fe745045de">\s*commit\s*</a>#)
+    # Shotlog link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/tags/t21">\s*shortlog\s*</a>#)
+    # Log
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/tags/t21">\s*log\s*</a>#)
+  ;
 }
