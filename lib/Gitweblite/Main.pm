@@ -422,11 +422,11 @@ sub projects {
   my $git = $self->app->git;
   
   # Fill project information
-  my @projects = $git->get_projects($home);
-  @projects = $git->fill_projects($home, \@projects);
+  my $projects = $git->projects($home);
+  $projects = $git->fill_projects($home, $projects);
   
   # Fill owner and HEAD commit id
-  for my $project (@projects) {
+  for my $project (@$projects) {
     my $pname = "$home/$project->{path}";
     $project->{path_abs_ns} = "$home_ns/$project->{path}";
     $project->{owner} = $git->project_owner($pname);
@@ -438,7 +438,7 @@ sub projects {
   $self->render(
     home => $home,
     home_ns => $home_ns,
-    projects => \@projects
+    projects => $projects
   );
 }
 

@@ -150,7 +150,7 @@ sub fill_projects {
     push @projects, $project;
   }
 
-  return @projects;
+  return \@projects;
 }
 
 sub get_difftree {
@@ -387,7 +387,7 @@ sub get_project_urls {
   return \@urls;
 }
 
-sub get_projects {
+sub projects {
   my ($self, $home, %opt) = @_;
   
   my $filter = $opt{filter};
@@ -403,7 +403,7 @@ sub get_projects {
     push @projects, { path => $project };
   }
 
-  return @projects;
+  return \@projects;
 }
 
 sub get_references {
