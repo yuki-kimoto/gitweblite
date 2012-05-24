@@ -780,35 +780,27 @@ sub parse_tag {
   my %tag;
   my @comment;
   $tag{id} = $tag_id;
-  while (my $line = <$fh>) {
-    $line = d$line;
+  while (my $line = $self->dec(scalar <$fh>)) {
     
     chomp $line;
-    if ($line =~ m/^object ([0-9a-fA-F]{40})$/) {
-      $tag{object} = $1;
-    } elsif ($line =~ m/^type (.+)$/) {
-      $tag{type} = $1;
-    } elsif ($line =~ m/^tag (.+)$/) {
-      $tag{name} = $1;
-    } elsif ($line =~ m/^tagger (.*) ([0-9]+) (.*)$/) {
+    if ($line =~ m/^object ([0-9a-fA-F]{40})$/) { $tag{object} = $1 }
+    elsif ($line =~ m/^type (.+)$/) { $tag{type} = $1 }
+    elsif ($line =~ m/^tag (.+)$/) { $tag{name} = $1 }
+    elsif ($line =~ m/^tagger (.*) ([0-9]+) (.*)$/) {
       $tag{author} = $1;
       $tag{author_epoch} = $2;
       $tag{author_tz} = $3;
       if ($tag{author} =~ m/^([^<]+) <([^>]*)>/) {
         $tag{author_name}  = $1;
         $tag{author_email} = $2;
-      } else {
-        $tag{author_name} = $tag{author};
-      }
-    } elsif ($line =~ m/--BEGIN/) {
+      } else { $tag{author_name} = $tag{author} }
+    } elsif ($line =~ m/--BEGIN/) { 
       push @comment, $line;
       last;
-    } elsif ($line eq "") {
-      last;
-    }
+    } elsif ($line eq "") { last }
   }
-  my $comment = <$fh>;
-  push @comment, d$comment;
+  my $comment = $self->dec(scalar <$fh>);
+  push @comment, $comment;
   $tag{comment} = \@comment;
   close $fh or return;
   return unless defined $tag{name};
