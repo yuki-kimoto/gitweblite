@@ -2,6 +2,7 @@ Gitweb Lite
 
   (Beta release)
   gitweb.cgi clone. Serve git repository.
+  Example: http://perlcodesample.com:10010
 
 Features
 
