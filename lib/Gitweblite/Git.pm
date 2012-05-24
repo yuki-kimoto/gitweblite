@@ -21,7 +21,10 @@ sub dec {
   
   my $enc = $self->encoding;
   
-  return decode($enc, $str);
+  my $new_str;
+  eval { $new_str = decode($enc, $str) };
+  
+  return $@ ? $str : $new_str;
 }
 
 # Attributes
