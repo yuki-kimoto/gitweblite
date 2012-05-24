@@ -428,3 +428,17 @@ my $git = $app->git;
     # Comment
     ->content_like(qr#<div class="page_body">\s*t21#)
 }
+
+# Heads page
+{
+  $t->get_ok("$project/heads")
+    # Head name link
+    ->content_like(qr#<a class="list name" href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/heads/master">\s*master\s*</a>#)
+    # Shortlog link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/shortlog/refs/heads/master">\s*shortlog\s*</a>#)
+    # Log link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/heads/master">\s*log\s*</a>#)
+    # Tree link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/tree/master">\s*tree\s*</a>#)
+  ;
+}
