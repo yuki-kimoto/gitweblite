@@ -13,10 +13,10 @@
     <br/>
   </div>
   <div class="header">
-  <a class="title" href=
-    "<%= url_for('commit', project => $project_ns, id => $id) %>">
-    <%= $commit->{title} %>
-  </a>
+    <a class="title" href=
+      "<%= url_for('commit', project => $project_ns, id => $id) %>">
+      <%= $commit->{title} %>
+    </a>
   </div>
   %= include '/include/page_path', project_ns => $project_ns, id => $id, Path => $file, type => 'blob';
   %= include '/include/blobdiff_body';

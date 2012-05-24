@@ -255,6 +255,11 @@ sub commitdiff {
   
   # HTML
   else {
+    
+    # Diff tree
+    my $difftrees = $git->get_difftree($project,
+      $id, $commit->{parent}, $commit->{parents});
+    
     # Get blob diffs (command "git diff-tree")
     my @cmd = ($git->cmd($project), 'diff-tree', '-r', '-M',
       '--no-commit-id', '--patch-with-raw', $from_id, $id, '--');
@@ -262,32 +267,27 @@ sub commitdiff {
       or croak 'Open git-diff-tree failed';
 
     # Parse output
-    my @diffinfos;
+    my @blobdiffs;
     while (my $line = $git->dec(scalar <$fh>)) {
       chomp $line;
-      last unless $line;
-      push @diffinfos, scalar $git->parse_difftree_raw_line($line);
-    }
-    
-    my $difftrees = $git->get_difftree($project,
-      $id,$commit->{parent}, $commit->{parents});
-    
-    my @blobdiffs;
-    for my $diffinfo (@diffinfos) {
       
+      my $diffinfo = $git->parse_difftree_raw_line($line);
       my $from_file = $diffinfo->{from_file};
       my $file = $diffinfo->{to_file};
-      my $from_bid = $diffinfo->{from_id};
-      my $bid = $diffinfo->{to_id};
       
       my @cmd = ($git->cmd($project), "diff-tree", '-r', '-M', '-p',
         $from_id, $id, "--", (defined $from_file ? $from_file : ()), $file);
-      open $fh, "-|", @cmd
+      open my $fh_blobdiff, "-|", @cmd
         or croak 'Open git-diff-tree failed';
       
       my @lines = map { $git->dec($_) } <$fh>;
-      close $fh;
-      push @blobdiffs, {file => $file, lines => $self->_parse_blobdiff_lines(\@lines)};
+      close $fh_blobdiff;
+      my $blobdiff = {
+        file => $file,
+        from_file => $from_file,
+        lines => $self->_parse_blobdiff_lines(\@lines)
+      };
+      push @blobdiffs, $blobdiff;
     }
 
     # References
