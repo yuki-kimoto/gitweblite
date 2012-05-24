@@ -236,16 +236,18 @@ sub commitdiff {
   $from_id = $commit->{parent} unless defined $from_id;
   
   # Plain text
-  my $plain = $self->param('plain');
-  if ($plain) {
-    # git diff-tree plain output
-    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
-        '-p', $from_id, $id, "--"
-      or croak 500, "Open git-diff-tree failed";
-    
+  if ($self->param('plain')) {
+    # Get blob diffs (command "git diff-tree")
+    my @cmd = ($git->cmd($project), 'diff-tree', '-r', '-M',
+        '-p', $from_id, $id, '--');
+    open my $fh, "-|", @cmd
+      or croak "Open git-diff-tree failed";
 
+    # Content
     my $content = do { local $/; <$fh> };
     my $content_disposition .= "inline; filename=$id";
+    
+    # Render
     $self->res->headers->content_disposition($content_disposition);
     $self->res->headers->content_type("text/plain;charset=" . $git->encoding);
     $self->render_data($content);
@@ -253,11 +255,11 @@ sub commitdiff {
   
   # HTML
   else {
-    # git diff-tree output
-    open my $fh, "-|", $git->cmd($project), "diff-tree", '-r', '-M',
-        "--no-commit-id", "--patch-with-raw", "--full-index",
-        $from_id, $id, "--"
-      or croak 500, "Open git-diff-tree failed";
+    # Get blob diffs (command "git diff-tree")
+    my @cmd = ($git->cmd($project), 'diff-tree', '-r', '-M',
+      '--no-commit-id', '--patch-with-raw', $from_id, $id, '--');
+    open my $fh, '-|', @cmd
+      or croak 'Open git-diff-tree failed';
 
     # Parse output
     my @diffinfos;
@@ -278,14 +280,12 @@ sub commitdiff {
       my $from_bid = $diffinfo->{from_id};
       my $bid = $diffinfo->{to_id};
       
-      my @git_diff_tree = ($git->cmd($project), "diff-tree", '-r',
-        '-M', '-p', (!$plain ? "--full-index" : ()), $from_id, $id,
-        "--", (defined $from_file ? $from_file : ()), $file
-      );
-      open $fh, "-|", @git_diff_tree
-        or croak 500, "Open git-diff-tree failed";
+      my @cmd = ($git->cmd($project), "diff-tree", '-r', '-M', '-p',
+        $from_id, $id, "--", (defined $from_file ? $from_file : ()), $file);
+      open $fh, "-|", @cmd
+        or croak 'Open git-diff-tree failed';
       
-      my @lines = <$fh>;
+      my @lines = map { $git->dec($_) } <$fh>;
       close $fh;
       push @blobdiffs, {file => $file, lines => $self->_parse_blobdiff_lines(\@lines)};
     }
@@ -462,7 +462,7 @@ sub snapshot {
   $file =~ s/(["\\])/\\$1/g;
 
   open my $fh, "-|", $cmd
-    or croak 500, "Execute git-archive failed";
+    or croak 'Execute git-archive failed';
   
   # Write chunk
   $self->res->headers->content_type('application/x-tar');
@@ -625,7 +625,7 @@ sub tree {
   {
     open my $fh, "-|", $git->cmd($project), "ls-tree", '-z',
       ($show_sizes ? '-l' : ()), $tid
-      or croak 500, "Open git-ls-tree failed";
+      or croak 'Open git-ls-tree failed';
     local $/ = "\0";
     @entries = map { chomp; $git->dec($_) } <$fh>;
     close $fh
