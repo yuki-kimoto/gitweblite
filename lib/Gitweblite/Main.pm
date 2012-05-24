@@ -122,8 +122,8 @@ sub blobdiff {
   my $git = $self->app->git;
 
   # Get blob diff (command "git diff")
-  open my $fh, "-|", $git->cmd($project), "diff", '-r', '-M', '-p',
-      $from_id, $id, "--", $from_file, $file
+  open my $fh, '-|', $git->cmd($project), 'diff', '-r', '-M', '-p',
+      $from_id, $id, '--', $from_file, $file
     or croak "Open git-diff-tree failed";
   
   # Blob diff plain
@@ -277,9 +277,9 @@ sub commitdiff {
       my $file = $diffinfo->{to_file};
       
       # Get blobdiff (command "git diff-tree")
-      my @cmd = ($git->cmd($project), "diff-tree", '-r', '-M', '-p',
-        $from_id, $id, "--", (defined $from_file ? $from_file : ()), $file);
-      open my $fh_blobdiff, "-|", @cmd
+      my @cmd = ($git->cmd($project), 'diff-tree', '-r', '-M', '-p',
+        $from_id, $id, '--', (defined $from_file ? $from_file : ()), $file);
+      open my $fh_blobdiff, '-|', @cmd
         or croak 'Open git-diff-tree failed';
       my @lines = map { $git->dec($_) } <$fh>;
       close $fh_blobdiff;
@@ -430,7 +430,7 @@ sub projects {
     my $pname = "$home/$project->{path}";
     $project->{path_abs_ns} = "$home_ns/$project->{path}";
     $project->{owner} = $git->project_owner($pname);
-    my $head_commit = $git->parse_commit($pname, "HEAD");
+    my $head_commit = $git->parse_commit($pname, 'HEAD');
     $project->{head_id} = $head_commit->{id}
   }
   
@@ -460,7 +460,6 @@ sub snapshot {
   if (!$type) { croak 404, 'Object does not exist' }
   elsif ($type eq 'blob') { croak 400, 'Object is not a tree-ish' }
   
-  
   my ($name, $prefix) = $git->snapshot_name($project, $id);
   my $file = "$name.tar.gz";
   my $cmd = $self->_quote_command(
@@ -470,7 +469,7 @@ sub snapshot {
 
   $file =~ s/(["\\])/\\$1/g;
 
-  open my $fh, "-|", $cmd
+  open my $fh, '-|', $cmd
     or croak 'Execute git-archive failed';
   
   # Write chunk
@@ -506,7 +505,7 @@ sub summary {
   # HEAd commit
   my $project_description = $git->project_description($project);
   my $project_owner = $git->project_owner($project);
-  my $head_commit = $git->parse_commit($project, "HEAD");
+  my $head_commit = $git->parse_commit($project, 'HEAD');
   my $committer_date
     = $git->parse_date($head_commit->{committer_epoch}, $head_commit->{committer_tz});
   my $last_change = $git->timestamp($committer_date);
@@ -619,28 +618,29 @@ sub tree {
   # Git
   my $git = $self->app->git;
   
+  # Tree id
   my $tid;
   my $commit = $git->parse_commit($project, $id);
   unless (defined $tid) {
     if (defined $dir && $dir ne '') {
-      $tid = $git->id_by_path($project, $id, $dir, "tree");
+      $tid = $git->id_by_path($project, $id, $dir, 'tree');
     }
     else { $tid = $commit->{tree} }
   }
   $self->render_not_found unless defined $tid;
 
+  # Get tree (command "git ls-tree")
   my @entries = ();
   my $show_sizes = 0;
-  {
-    open my $fh, "-|", $git->cmd($project), "ls-tree", '-z',
+  open my $fh, '-|', $git->cmd($project), 'ls-tree', '-z',
       ($show_sizes ? '-l' : ()), $tid
-      or croak 'Open git-ls-tree failed';
-    local $/ = "\0";
-    @entries = map { chomp; $git->dec($_) } <$fh>;
-    close $fh
-      or croak 404, "Reading tree failed";
-  }
+    or croak 'Open git-ls-tree failed';
+  local $/ = "\0";
+  @entries = map { chomp; $git->dec($_) } <$fh>;
+  close $fh
+    or croak 404, "Reading tree failed";
   
+  # Parse tree
   my @trees;
   for my $line (@entries) {
     my $tree = $git->parse_ls_tree_line($line, -z => 1, -l => $show_sizes);
@@ -651,6 +651,7 @@ sub tree {
   # References
   my $refs = $git->references($project);
   
+  # Render
   $self->render(
     home => $home,
     home_ns => $home_ns,
@@ -671,6 +672,7 @@ sub _parse_blobdiff_lines {
   # Git
   my $git = $self->app->git;
   
+  # Parse
   my @lines;
   for my $line (@$lines_raw) {
     $line = $git->dec($line);
@@ -719,12 +721,6 @@ sub _parse_id_path {
   }
   
   return ($id, $path);
-}
-
-sub _parse_params {
-  my $self = shift;
-  my $params = {map { $_ => scalar $self->param($_) } $self->param};
-  return $params;
 }
 
 sub _quote_command {

@@ -89,11 +89,11 @@ sub file_type {
   # File type
   if ($mode !~ m/^[0-7]+$/) { return $mode }
   else { $mode = oct $mode }
-  if ($self->_s_isgitlink($mode)) { return "submodule" }
-  elsif (S_ISDIR($mode & S_IFMT)) { return "directory" }
-  elsif (S_ISLNK($mode)) { return "symlink" }
-  elsif (S_ISREG($mode)) { return "file" }
-  else { return "unknown" }
+  if ($self->_s_isgitlink($mode)) { return 'submodule' }
+  elsif (S_ISDIR($mode & S_IFMT)) { return 'directory' }
+  elsif (S_ISLNK($mode)) { return 'symlink' }
+  elsif (S_ISREG($mode)) { return 'file' }
+  else { return 'unknown' }
   
   return
 }
@@ -104,14 +104,14 @@ sub file_type_long {
   # File type
   if ($mode !~ m/^[0-7]+$/) { return $mode }
   else { $mode = oct $mode }
-  if (S_ISGITLINK($mode)) { return "submodule" }
-  elsif (S_ISDIR($mode & S_IFMT)) { return "directory" }
-  elsif (S_ISLNK($mode)) { return "symlink" }
+  if (S_ISGITLINK($mode)) { return 'submodule' }
+  elsif (S_ISDIR($mode & S_IFMT)) { return 'directory' }
+  elsif (S_ISLNK($mode)) { return 'symlink' }
   elsif (S_ISREG($mode)) {
-    if ($mode & S_IXUSR) { return "executable" }
-    else { return "file" }
+    if ($mode & S_IXUSR) { return 'executable' }
+    else { return 'file' }
   }
-  else { return "unknown" }
+  else { return 'unknown' }
   
   return;
 }
@@ -142,7 +142,7 @@ sub fill_projects {
     next unless @activity;
     ($project->{age}, $project->{age_string}) = @activity;
     if (!defined $project->{descr}) {
-      my $descr = $self->project_description("$home/$project->{path}") || "";
+      my $descr = $self->project_description("$home/$project->{path}") || '';
       $project->{descr_long} = $descr;
       $project->{descr} = $self->_chop_str($descr, 25, 5);
     }
@@ -157,15 +157,15 @@ sub difftree {
   my ($self, $project, $cid, $parent, $parents) = @_;
   
   # Root
-  $parent = "--root" unless defined $parent;
+  $parent = '--root' unless defined $parent;
 
   # Command "git diff-tree"
-  my @cmd = ($self->cmd($project), "diff-tree", '-r', "--no-commit-id",
-    '-M', (@$parents <= 1 ? $parent : '-c'), $cid, "--");
+  my @cmd = ($self->cmd($project), "diff-tree", '-r', '--no-commit-id',
+    '-M', (@$parents <= 1 ? $parent : '-c'), $cid, '--');
   open my $fh, "-|", @cmd
     or croak 500, "Open git-diff-tree failed";
   my @difftree = map { chomp; $self->dec($_) } <$fh>;
-  close $fh or croak "Reading git-diff-tree failed";
+  close $fh or croak 'Reading git-diff-tree failed';
   
   # Parse "git diff-tree" output
   my $diffs = [];
@@ -189,14 +189,14 @@ sub difftree {
       if ($diff->{to_mode} ne ('0' x 6)) {
         $to_mode_oct = oct $diff->{to_mode};
         if (S_ISREG($to_mode_oct)) { # only for regular file
-          $to_mode_str = sprintf("%04o", $to_mode_oct & 0777); # permission bits
+          $to_mode_str = sprintf('%04o', $to_mode_oct & 0777); # permission bits
         }
         $to_file_type = $self->file_type($diff->{to_mode});
       }
       if ($diff->{from_mode} ne ('0' x 6)) {
         $from_mode_oct = oct $diff->{from_mode};
         if (S_ISREG($from_mode_oct)) { # only for regular file
-          $from_mode_str = sprintf("%04o", $from_mode_oct & 0777); # permission bits
+          $from_mode_str = sprintf('%04o', $from_mode_oct & 0777); # permission bits
         }
         $from_file_type = $self->file_type($diff->{from_mode});
       }
@@ -253,7 +253,7 @@ sub heads {
     $ref_item{epoch} = $epoch;
     if ($epoch) {
       $ref_item{age} = $self->_age_string(time - $ref_item{epoch});
-    } else { $ref_item{age} = "unknown" }
+    } else { $ref_item{age} = 'unknown' }
 
     push @heads, \%ref_item;
   }
@@ -283,9 +283,9 @@ sub id_by_path {
   
   # Get blob id or tree id (command "git ls-tree")
   $path =~ s#/+$##;
-  my @cmd = ($self->cmd($project), "ls-tree", $commit_id, "--", $path);
-  open my $fh, "-|", @cmd
-    or croak "Open git-ls-tree failed";
+  my @cmd = ($self->cmd($project), 'ls-tree', $commit_id, '--', $path);
+  open my $fh, '-|', @cmd
+    or croak 'Open git-ls-tree failed';
   my $line = $self->dec(scalar <$fh>);
   close $fh or return;
   my ($t, $id) = ($line || '') =~ m/^[0-9]+ (.+) ([0-9a-fA-F]{40})\t/;
@@ -301,8 +301,8 @@ sub path_by_id {
   my $hash = shift || return;
   
   # Command "git ls-tree"
-  my @cmd = ($self->cmd($project), "ls-tree", '-r', '-t', '-z', $base);
-  open my $fh, "-|" or return;
+  my @cmd = ($self->cmd($project), 'ls-tree', '-r', '-t', '-z', $base);
+  open my $fh, '-|' or return;
 
   # Get path
   local $/ = "\0";
@@ -337,7 +337,7 @@ sub last_activity {
   my @cmd = ($self->cmd($project), 'for-each-ref',
     '--format=%(committer)', '--sort=-committerdate',
     '--count=1', 'refs/heads');
-  open my $fh, "-|", @cmd or return;
+  open my $fh, '-|', @cmd or return;
   my $most_recent = $self->dec(scalar <$fh>);
   close $fh or return;
   
@@ -355,9 +355,9 @@ sub last_activity {
 sub object_type {
   my ($self, $project, $cid) = @_;
   
-  # Command "git cat-file" (Get object type)
-  my @cmd = ($self->cmd($project), "cat-file", '-t', $cid);
-  open my $fh, "-|", @cmd  or return;
+  # Get object type (command "git cat-file")
+  my @cmd = ($self->cmd($project), 'cat-file', '-t', $cid);
+  open my $fh, '-|', @cmd  or return;
   my $type = $self->dec(scalar <$fh>);
   close $fh or return;
   chomp $type;
@@ -412,9 +412,9 @@ sub references {
   $type ||= '';
   
   # Command "git show-ref" (get references)
-  my @cmd = ($self->cmd($project), "show-ref", "--dereference",
-    ($type ? ("--", "refs/$type") : ()));
-  open my $fh, "-|", @cmd or return;
+  my @cmd = ($self->cmd($project), 'show-ref', '--dereference',
+    ($type ? ('--', "refs/$type") : ()));
+  open my $fh, '-|', @cmd or return;
   
   # Parse references
   my %refs;
@@ -452,7 +452,7 @@ sub tag {
 sub tags {
   my ($self, $project, $limit) = @_;
   
-  # Command "git for-each-ref" (get tags)
+  # Get tags (command "git for-each-ref")
   my @cmd = ($self->cmd($project), 'for-each-ref',
     ($limit ? '--count='.($limit+1) : ()), '--sort=-creatordate',
     '--format=%(objectname) %(objecttype) %(refname) '.
@@ -477,7 +477,7 @@ sub tags {
     $tag{type} = $type;
     $tag{id} = $id;
     $tag{name} = $name;
-    if ($type eq "tag") {
+    if ($type eq 'tag') {
       $tag{subject} = $title;
       $tag{reftype} = $reftype;
       $tag{refid}   = $refid;
@@ -486,12 +486,12 @@ sub tags {
       $tag{refid}   = $id;
     }
 
-    if ($type eq "tag" || $type eq "commit") {
+    if ($type eq 'tag' || $type eq 'commit') {
       $tag{epoch} = $epoch;
       if ($epoch) {
         $tag{age} = $self->_age_string(time - $tag{epoch});
       } else {
-        $tag{age} = "unknown";
+        $tag{age} = 'unknown';
       }
     }
     
@@ -524,10 +524,10 @@ sub parse_commit {
   my ($self, $project, $id) = @_;
   
   # Git rev-list
-  my @cmd = ($self->cmd($project), "rev-list", "--parents",
-    "--header", "--max-count=1", $id, "--");
-  open my $fh, "-|", @cmd
-    or croak "Open git-rev-list failed";
+  my @cmd = ($self->cmd($project), 'rev-list', '--parents',
+    '--header', '--max-count=1', $id, '--');
+  open my $fh, '-|', @cmd
+    or croak 'Open git-rev-list failed';
   
   # Parse commit
   local $/ = "\0";
@@ -585,7 +585,7 @@ sub parse_commit_text {
 
   for my $title (@commit_lines) {
     $title =~ s/^    //;
-    if ($title ne "") {
+    if ($title ne '') {
       $commit{title} = $self->_chop_str($title, 80, 5);
       # remove leading stuff of merges to make the interesting part visible
       if (length($title) > 50) {
@@ -608,7 +608,7 @@ sub parse_commit_text {
       last;
     }
   }
-  if (! defined $commit{title} || $commit{title} eq "") {
+  if (! defined $commit{title} || $commit{title} eq '') {
     $commit{title} = $commit{title_short} = '(no commit message)';
   }
   # remove added spaces
@@ -622,11 +622,11 @@ sub parse_commit_text {
   $commit{age_string} = $self->_age_string($age);
   my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday) = gmtime($commit{committer_epoch});
   if ($age > 60*60*24*7*2) {
-    $commit{age_string_date} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{age_string_date} = sprintf '%4i-%02u-%02i', 1900 + $year, $mon+1, $mday;
     $commit{age_string_age} = $commit{age_string};
   } else {
     $commit{age_string_date} = $commit{age_string};
-    $commit{age_string_age} = sprintf "%4i-%02u-%02i", 1900 + $year, $mon+1, $mday;
+    $commit{age_string_age} = sprintf '%4i-%02u-%02i', 1900 + $year, $mon+1, $mday;
   }
   return \%commit;
 }
@@ -637,15 +637,11 @@ sub parse_commits {
   # git rev-list
   $maxcount ||= 1;
   $skip ||= 0;
-  open my $fh, "-|", $self->cmd($project), "rev-list",
-    "--header",
-    @args,
-    ("--max-count=" . $maxcount),
-    ("--skip=" . $skip),
-    $cid,
-    "--",
-    ($file ? ($file) : ())
-    or croak_error(500, "Open git-rev-list failed");
+  my @cmd = ($self->cmd($project), 'rev-list', '--header', @args,
+    ('--max-count=' . $maxcount), ('--skip=' . $skip), $cid, '--',
+    ($file ? ($file) : ()));
+  open my $fh, '-|', @cmd
+    or croak 'Open git-rev-list failed';
 
   # Parse rev-list results
   local $/ = "\0";
@@ -787,7 +783,7 @@ sub parse_tag {
     } elsif ($line =~ m/--BEGIN/) { 
       push @comment, $line;
       last;
-    } elsif ($line eq "") { last }
+    } elsif ($line eq '') { last }
   }
   my $comment = $self->dec(scalar <$fh>);
   push @comment, $comment;
@@ -910,27 +906,27 @@ sub _age_string {
 
   if ($age > 60*60*24*365*2) {
     $age_str = (int $age/60/60/24/365);
-    $age_str .= " years ago";
+    $age_str .= ' years ago';
   } elsif ($age > 60*60*24*(365/12)*2) {
     $age_str = int $age/60/60/24/(365/12);
-    $age_str .= " months ago";
+    $age_str .= ' months ago';
   } elsif ($age > 60*60*24*7*2) {
     $age_str = int $age/60/60/24/7;
-    $age_str .= " weeks ago";
+    $age_str .= ' weeks ago';
   } elsif ($age > 60*60*24*2) {
     $age_str = int $age/60/60/24;
-    $age_str .= " days ago";
+    $age_str .= ' days ago';
   } elsif ($age > 60*60*2) {
     $age_str = int $age/60/60;
-    $age_str .= " hours ago";
+    $age_str .= ' hours ago';
   } elsif ($age > 60*2) {
     $age_str = int $age/60;
-    $age_str .= " min ago";
+    $age_str .= ' min ago';
   } elsif ($age > 2) {
     $age_str = int $age;
-    $age_str .= " sec ago";
+    $age_str .= ' sec ago';
   } else {
-    $age_str .= " right now";
+    $age_str .= ' right now';
   }
   return $age_str;
 }
@@ -959,7 +955,7 @@ sub _chop_str {
     $str =~ m/^(.*?)($begre)$/;
     my ($lead, $body) = ($1, $2);
     if (length($lead) > 4) {
-      $lead = " ...";
+      $lead = ' ...';
     }
     return "$lead$body";
 
@@ -969,7 +965,7 @@ sub _chop_str {
     $str =~ m/^(.*?)($begre)$/;
     my ($mid, $right) = ($1, $2);
     if (length($mid) > 5) {
-      $mid = " ... ";
+      $mid = ' ... ';
     }
     return "$left$mid$right";
 
@@ -978,7 +974,7 @@ sub _chop_str {
     my $body = $1;
     my $tail = $2;
     if (length($tail) > 4) {
-      $tail = "... ";
+      $tail = '... ';
     }
     return "$body$tail";
   }
