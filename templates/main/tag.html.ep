@@ -18,8 +18,7 @@
         </a>
       </td>
       <td class="link">
-        <a href="<%= url_for('commit', project => $project_ns, id => $tag->{object}) %>"
-        >
+        <a href="<%= url_for('commit', project => $project_ns, id => $tag->{object}) %>">
           commit
         </a>
       </td>

@@ -415,3 +415,16 @@ my $git = $app->git;
     ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/log/refs/tags/t21">\s*log\s*</a>#)
   ;
 }
+
+# Tag page
+{
+  $t->get_ok("$project/tag/38eaff4bf31775c7e32d5a62891e0e370e04d306")
+    # Object link
+    ->content_like(qr#<a class="list" href="/home/kimoto/labo/gitweblite_devrep.git/commit/6d71d9bc1ee3bd1c96a559109244c1fe745045de">\s*6d71d9bc1ee3bd1c96a559109244c1fe745045de\s*</a>#)
+    # Commit link
+    ->content_like(qr#<a href="/home/kimoto/labo/gitweblite_devrep.git/commit/6d71d9bc1ee3bd1c96a559109244c1fe745045de">\s*commit\s*</a>#)
+    # Author
+    ->content_like(qr#<td>\s*author\s*</td>\s*<td>\s*Yuki Kimoto#)
+    # Comment
+    ->content_like(qr#<div class="page_body">\s*t21#)
+}
