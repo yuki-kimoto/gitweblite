@@ -1,7 +1,7 @@
 use 5.008007;
 package Gitweblite;
 
-our $VERSION = '0.04';
+our $VERSION = '1.00';
 
 use Mojo::Base 'Mojolicious';
 use Gitweblite::Git;
