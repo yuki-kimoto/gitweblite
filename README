@@ -1,8 +1,7 @@
 Gitweb Lite
 
-  (Beta release)
   gitweb.cgi clone. Serve git repository.
-  Example: http://perlcodesample.com:10010
+  Example: http://perlcodesample.com/gitweblite
 
 Features
 
@@ -128,6 +127,27 @@ Logo and favicon
   
     user/public/git-logo.png
     user/public/git-favicon.png
+
+Reverse proxy
+
+  You can use gitweblite with reverse proxy such as apache/mod_proxy.
+
+  Apache/mod_proxy
+
+    <VirtualHost *:80>
+      ServerName perlcodesample.com
+      <Proxy *>
+        Order deny,allow
+        Allow from all
+      </Proxy>
+      ProxyRequests Off
+      ProxyPreserveHost On
+
+      ProxyPass /gitweblite http://localhost:10010/gitweblite keepalive=On
+      ProxyPassReverse /gitweblite http://localhost:10010/gitweblite
+
+      RequestHeader set X-Forwarded-HTTPS "0"
+    </VirtualHost>
 
 COPYRIGHT & LICENSE
 

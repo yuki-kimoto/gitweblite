@@ -61,7 +61,18 @@ sub startup {
   # Added user public and templates path
   unshift @{$self->static->paths}, $self->home->rel_file('user/public');
   unshift @{$self->renderer->paths}, $self->home->rel_file('user/templates');
-
+  
+  # Reverse proxy support
+  $ENV{MOJO_REVERSE_PROXY} = 1;
+  $self->hook('before_dispatch' => sub {
+    my $self = shift;
+    
+    if ( $self->req->headers->header('X-Forwarded-Host')) {
+        my $prefix = shift @{$self->req->url->path->parts};
+        push @{$self->req->url->base->path->parts}, $prefix;
+    }
+  });
+    
   # Route
   my $r = $self->routes->route->to('main#');
     

@@ -334,7 +334,7 @@ sub home {
   # Home
   my $homes = {};
   $homes->{$_->{home}} = 1 for @$projects;
-
+  
   $self->render(homes => [keys %$homes]);
 }
 

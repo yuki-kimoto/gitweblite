@@ -47,19 +47,7 @@ sub main {
   my $version_ok;
   my $version;
   
-  plan tests => 4;
-
-  # Object::Simple
-  $require_ok = require_ok('Object::Simple');
-  $version_ok = is($Object::Simple::VERSION, '3.0625', 'Object::Simple version: 3.0625');
-  push @$modules, ['Object::Simple' => '3.0625'];
-  push @$failed, ['Object::Simple' => '3.0625'] unless $require_ok && $version_ok;
-
-  # Validator::Custom
-  $require_ok = require_ok('Validator::Custom');
-  $version_ok = is($Validator::Custom::VERSION, '0.1426', 'Validator::Custom version: 0.1426');
-  push @$modules, ['Validator::Custom' => '0.1426'];
-  push @$failed, ['Validator::Custom' => '0.1426'] unless $require_ok && $version_ok;
+  plan tests => 0;
 
   # Print module URLs
   if (defined $command) {
