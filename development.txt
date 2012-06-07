@@ -7,12 +7,12 @@ Installation
 
   Check if installation is successed.
   
-    prove t
+    prove xt
 
   All tests is successed, module installation is success.
 
 Creat tar ball
   
   APP_NAME=gitweblite
-  VERSION=0.02
+  VERSION=1.00
   git archive --format=tar --prefix=$APP_NAME-$VERSION/ v$VERSION | gzip > $APP_NAME-$VERSION.tar.gz
