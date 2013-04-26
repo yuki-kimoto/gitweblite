@@ -23,7 +23,7 @@ my $app = Gitweblite->new;
 my $t = Test::Mojo->new($app);
 
 my $home = '/home/kimoto/labo';
-my $project = "$home/gitweblite_devrep.git";
+my $project = "$home/gitprep_t.git";
 
 # Snapshot
 {
@@ -34,6 +34,6 @@ my $project = "$home/gitweblite_devrep.git";
   $t->tx->res->content->asset->move_to($tmpfile);
   my $at = Archive::Tar->new($tmpfile);
   
-  ok($at->contains_file('gitweblite_devrep-a37fbb8/README'));
-  ok($at->contains_file('gitweblite_devrep-a37fbb8/dir/a.txt'));
+  ok($at->contains_file('gitprep_t-a37fbb8/README'));
+  ok($at->contains_file('gitprep_t-a37fbb8/dir/a.txt'));
 }
