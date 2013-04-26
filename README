@@ -1,7 +1,14 @@
 Gitweb Lite
 
   gitweb.cgi clone. Serve git repository.
-  Example: http://perlcodesample.com/gitweblite
+
+Caution
+
+  Gitweb Lite project is merged into GitPrep project.
+
+    https://github.com/yuki-kimoto/gitprep
+
+  This project is finished. I don't add new features.
 
 Features
 
